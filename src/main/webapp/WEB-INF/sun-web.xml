@@ -3,7 +3,7 @@
 <sun-web-app error-url="">
 	<context-root>/latroquette</context-root>
 	<resource-ref>
-		<res-ref-name>jdbc/adreamzone</res-ref-name>
-		<jndi-name>java:jdbc/adreamzone</jndi-name>
+		<res-ref-name>jdbc/latroquette</res-ref-name>
+		<jndi-name>java:jdbc/latroquette</jndi-name>
 	</resource-ref>
 </sun-web-app>

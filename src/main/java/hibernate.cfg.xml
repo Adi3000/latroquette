@@ -9,7 +9,6 @@
   <property name="hibernate.show_sql">true</property>
   <property name="hibernate.use_outer_join">true</property>
   <property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
-  <!-- class="com.adreamzone.common.model.users.User" -->
   <mapping resource="net/latroquette/common/database/data/model/users/User.hbm.xml"/>
  </session-factory>
 </hibernate-configuration>

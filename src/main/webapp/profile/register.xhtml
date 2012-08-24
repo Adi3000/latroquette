@@ -13,7 +13,7 @@
 					<div class="loginField registerField">
 						<h:outputLabel for="loginField">#{text_profile.LOGIN_LABEL}</h:outputLabel>
 						<h:inputText id="loginField" value="#{userBean.login}" required="true">
-								<f:validator validatorId="com.adreamzone.web.validators.profile.UserLoginValidator" />
+								<f:validator validatorId="net.latroquette.web.validators.profile.UserLoginValidator" />
 						</h:inputText>
 						<h:message for="loginField" style="color:red" />
 					</div>
@@ -31,7 +31,7 @@
 					<div class="registerField">
 						<h:outputLabel for="addressMailField">#{text_profile.MAILBOX_LABEL}</h:outputLabel>
 						<h:inputText id="addressMailField" required="true"  value="#{userBean.mail}">
-							<f:validator validatorId="com.adreamzone.web.validators.profile.EmailValidator" />
+							<f:validator validatorId="net.latroquette.web.validators.profile.EmailValidator" />
 						</h:inputText>
 						<h:message for="addressMailField" style="color:red" />
 					</div>

@@ -136,6 +136,8 @@ public class UserBean extends User implements Serializable{
 	{
 		loginState = NOT_LOGGED_IN;
 		User newUser = new User();
+		newUser.setLogin(this.getLogin());
+		newUser.setPassword(this.getPassword());
 		this.setLogginUserInfo(newUser);
 		DatabaseSession db =  new DatabaseSession();
 		newUser.setDatabaseOperation(IDatabaseConstants.INSERT);
