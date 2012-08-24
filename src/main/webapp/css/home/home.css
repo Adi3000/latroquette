@@ -1,0 +1,47 @@
+@CHARSET "UTF-8";
+
+#titleHomePage{
+	clear:both;
+}
+#toolbar{
+	width: 100%;
+	min-width: 100%;
+	clear:both;
+}
+#toolbarSearch{
+	float:left;
+}
+#toolbarLogin{
+	float:right;
+}
+#bodyPart{
+	width : 100%;
+	clear:both;
+}
+#bodyPart > .floatLeft{
+	width : 900px;
+}
+#bodyPart > .floatRight{
+	width : 300px;
+}
+#newsWatcher{
+	float: right;
+}
+#menu{
+	width : 200px;	
+}
+#edito{
+	width : 100%;	
+	clear: both;
+}
+#frontPage{
+	width: 600px;
+}
+
+#menu div{
+	float: none;
+}
+#menu ul{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<body>
+	<ui:composition>
+		<div id="menu" class="floatLeft">
+			<div id="accordion" class="menuHeader">
+				<div>
+					<div class="menuHeader ui-state-default ui-corner-top">
+						<a href="#">Group 1</a>
+					</div>
+					<ul class="ui-widget-content ui-corner-bottom">
+						<li>Item 1.1</li>
+						<li>Item 1.2</li>
+						<li>Item 1.3</li>
+					</ul>
+				</div>
+				<div>
+					<div class="menuHeader ui-state-default ui-corner-top">
+						<a href="#">Group 2</a>
+					</div>
+					<ul class="ui-widget-content ui-corner-bottom">
+						<li><h:link value="My Profile" outcome="/profile/index"/></li>
+						<li><h:link value="Manage my dream" outcome="/manager/index"/></li>
+						<li><h:link value="DreamMaker" outcome="/manager/dreammaker"/></li>
+					</ul>
+				</div>
+				<div>
+					<div class="menuHeader ui-state-default ui-corner-all">
+						<a href="#">Group 3</a>
+					</div>
+					<ul class="ui-widget-content ui-corner-bottom">
+						<li>Item 2.1</li>
+						<li>Item 2.2</li>
+						<li>Item 2.3</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</ui:composition>
+</body>
+</html>

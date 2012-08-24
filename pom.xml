@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>net.latroquette</groupId>
+  <artifactId>latroquette</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>La Troquette</name>
+  <description>Site d'échange en ligne</description>
+  <dependencies>
+  		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>javax.faces-api</artifactId>
+			<version>2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>glassfish</groupId>
+			<artifactId>jaxb-api-osgi</artifactId>
+			<version>2.2.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>glassfish</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>glassfish</groupId>
+			<artifactId>javax.faces</artifactId>
+			<version>2.1.6-20111206</version>
+			<scope>provided</scope>
+		</dependency>
+				<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>3.6.8.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-902</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils-core</artifactId>
+			<version>1.8.3</version>
+		</dependency>
+	</dependencies>
+</project>
