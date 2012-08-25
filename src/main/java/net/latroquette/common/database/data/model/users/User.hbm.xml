@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 20 ao??t 2011 14:00:13 by Hibernate Tools 3.3.0.GA -->
 <hibernate-mapping>
 	<class name="net.latroquette.common.database.data.model.users.User" table="Users">
