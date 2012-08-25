@@ -24,7 +24,7 @@ public class Users extends DatabaseSession{
 
 	public boolean registerNewUser(User newUser){
 		newUser.setDatabaseOperation(IDatabaseConstants.INSERT);
-		session.persist(newUser);
+		persist(newUser);
 		return commit();
 	}
 	

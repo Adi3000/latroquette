@@ -31,7 +31,7 @@ public class DatabaseSession {
 	 */
 	public boolean isSetForCommitting() {
 		// TODO Auto-generated method stub
-		return session != null || session.getTransaction().isActive();
+		return session != null && session.getTransaction().isActive();
 	}
 
 	/**

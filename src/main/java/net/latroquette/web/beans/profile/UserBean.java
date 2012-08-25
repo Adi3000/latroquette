@@ -144,7 +144,15 @@ public class UserBean extends User implements Serializable{
 		newUser.setLogin(this.getLogin());
 		newUser.setPassword(this.getPassword());
 		this.setLogginUserInfo(newUser);
-		users.registerNewUser(newUser);
+		if(!users.registerNewUser(newUser)){
+			FacesMessage msg = new FacesMessage("Registring error", 
+					"Registering failed, please try later or ask for support");
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.addMessage(null, msg);
+			return null;
+		}
+		
 		this.loginState = NEW_USER;
 		return "test";
 
