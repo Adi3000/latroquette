@@ -44,17 +44,6 @@
 							<addClasspath>true</addClasspath>
 						</manifest>
 					</archive>
-					<webResources>
-						<resource>
-							<!-- this is relative to the pom.xml directory -->
-							<directory>src/main/resources</directory>
-							<!-- the list has a default value of ** -->
-							<targetPath>WEB-INF/classes</targetPath>
-							<includes>
-								<include>**/*.properties</include>
-							</includes>
-						</resource>
-					</webResources>
 				</configuration>
 			</plugin>
 			<plugin>
