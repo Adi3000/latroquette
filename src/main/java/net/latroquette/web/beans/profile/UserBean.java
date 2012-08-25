@@ -13,6 +13,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.data.model.users.User;
 import net.latroquette.common.database.data.model.users.Users;
@@ -103,6 +105,7 @@ public class UserBean extends User implements Serializable{
 			}
 		}
 	}
+	
 	public void validatePassword(ComponentSystemEvent event){
 
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -132,33 +135,31 @@ public class UserBean extends User implements Serializable{
 			}
 		}
 	}
+	
 	public String registerUser()
 	{
-		loginState = NOT_LOGGED_IN;
+		Users users = new Users();
 		User newUser = new User();
+		loginState = NOT_LOGGED_IN;
 		newUser.setLogin(this.getLogin());
 		newUser.setPassword(this.getPassword());
 		this.setLogginUserInfo(newUser);
-		DatabaseSession db =  new DatabaseSession();
-		newUser.setDatabaseOperation(IDatabaseConstants.INSERT);
-		db.persist(newUser);
-		db.commit();
+		users.registerNewUser(newUser);
 		this.loginState = NEW_USER;
 		return "test";
 
 	}
+	
 	public String loginUser()
 	{
 		loginState = NOT_LOGGED_IN;
 		Users userSearch = new Users();
 		User user = userSearch.getUserByLogin(this.getLogin());
-		if(user.getPassword() != null && user.getPassword().equals(this.getPassword())){
+		if(user != null && StringUtils.equals(user.getPassword(), this.getPassword())){
 			this.setLogginUserInfo(user);
 			this.loginState = LOGGED_IN;
+			userSearch.updateUser(user);
 		}
-		user.setDatabaseOperation(IDatabaseConstants.UPDATE);
-		userSearch.persist(user);
-		userSearch.commit();
 		switch (loginState) {
 		case LOGGED_IN:
 			return "index";
@@ -166,15 +167,14 @@ public class UserBean extends User implements Serializable{
 			return "login?logInFail="+loginState; 
 		}
 	}
+	
 	public String logoutUser()
 	{
 		
 		Users userSearch = new Users();
 		User user = userSearch.getUserByLogin(this.getLogin());
 		user.setToken(null);
-		user.setDatabaseOperation(IDatabaseConstants.UPDATE);
-		userSearch.persist(user);
-		userSearch.commit();
+		userSearch.updateUser(user);
 		//Unset properties of this user
 		this.copyProperties(new User());
 		loginState = NOT_LOGGED_IN;
@@ -185,6 +185,7 @@ public class UserBean extends User implements Serializable{
 			return "login#?logInFail="+loginState; 
 		}
 	}
+	
 	private void setLogginUserInfo(User user){
 		Timestamp now = new Timestamp(new java.util.Date().getTime());
 		ExternalContext externe = FacesContext.getCurrentInstance().getExternalContext();

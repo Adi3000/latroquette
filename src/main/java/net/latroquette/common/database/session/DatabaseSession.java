@@ -71,7 +71,6 @@ public class DatabaseSession {
 				session.saveOrUpdate(modelData);
 			default :
 				EngineLog.SERVER.severe("Will insert or update "+modelData +" on table " + modelData.getTableName());
-
 			}
 		}
 	}
