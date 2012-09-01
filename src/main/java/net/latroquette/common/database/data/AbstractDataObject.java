@@ -2,6 +2,8 @@ package net.latroquette.common.database.data;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 public abstract class AbstractDataObject implements Serializable{
 	/**
 	 * 
@@ -21,17 +23,11 @@ public abstract class AbstractDataObject implements Serializable{
 	/**
 	 * @return the databaseOperation
 	 */
+	@XmlTransient
 	public int getDatabaseOperation() {
 		return databaseOperation;
 	}
 	
 	public abstract Serializable getId();
-	
-	/**
-	 * Name of the Table
-	 * Must be overrided with a public static final variable for avoid changes. 
-	 */
-	public abstract String getTableName();
-	
 
 }
