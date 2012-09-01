@@ -60,6 +60,11 @@
 							<artifact>${project.build.directory}/${project.build.finalName}.war</artifact>
 						</component>
 					</components>
+					<domain>
+						<name>${project.artifactId}</name>
+						<adminPort>4848</adminPort>
+						<httpPort>8082</httpPort>
+					</domain>
 				</configuration>
 			</plugin>
 			<plugin>
