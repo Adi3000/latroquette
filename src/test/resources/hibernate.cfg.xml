@@ -4,7 +4,10 @@
 <hibernate-configuration>
  <session-factory>
   <!-- local connection properties -->
-  <property name="connection.datasource">jdbc/latroquette</property>
+  <property name="hibernate.connection.url">jdbc:postgresql://192.168.26.1:5432/latroquette</property>
+  <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+  <property name="hibernate.connection.username">latroquette</property>
+  <property name="hibernate.connection.password">latroquette</property>
   <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
   <property name="hibernate.show_sql">true</property>
   <property name="hibernate.use_outer_join">true</property>
