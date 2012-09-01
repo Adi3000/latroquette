@@ -1,4 +1,4 @@
-package net.latroquette.common.database.data.model.users;
+package net.latroquette.common.database.data.profile;
 
 import java.util.List;
 
@@ -16,10 +16,7 @@ public class Users extends DatabaseSession{
 		Criteria req = this.session.createCriteria(User.class)
 				.setMaxResults(1)
 				.add(Restrictions.eq("login", login)) ;
-		@SuppressWarnings("unchecked")
-		List<User> users = (List<User>)req.list();
-		
-		return users.isEmpty() ?  null : users.get(0);
+		return (User)req.uniqueResult();
 	}
 
 	public boolean registerNewUser(User newUser){

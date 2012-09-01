@@ -2,7 +2,7 @@ package net.latroquette.common.database.data.file;
 
 
 import net.latroquette.common.database.data.AbstractDataObject;
-import net.latroquette.common.database.data.model.users.User;
+import net.latroquette.common.database.data.profile.User;
 
 public class File extends AbstractDataObject{
     /**
@@ -102,12 +102,5 @@ public class File extends AbstractDataObject{
 	public void setFileType(FileType fileType) {
 		this.fileType = fileType;
 	}
-	@Override
-	public String getTableName() {
-		// TODO Auto-generated method stub
-		return TABLE_AND_ENTITY_NAME;
-	}
-
-
 
 }

@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
 
-import net.latroquette.common.database.data.model.users.User;
+import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.engine.EngineLog;
 import net.latroquette.common.utils.optimizer.CommonValues;
 

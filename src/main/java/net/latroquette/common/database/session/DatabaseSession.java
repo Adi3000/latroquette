@@ -61,16 +61,16 @@ public class DatabaseSession {
 			switch(modelData.getDatabaseOperation())
 			{
 			case IDatabaseConstants.DELETE :
-				EngineLog.SERVER.fine("Will delete "+modelData +" on table " + modelData.getTableName());
 				session.delete(modelData);
+				break;
 			case IDatabaseConstants.INSERT :
-				EngineLog.SERVER.fine("Will insert "+modelData +" on table" + modelData.getTableName());
 				session.save(modelData);
+				break;
 			case IDatabaseConstants.INSERT_OR_UPDATE :
-				EngineLog.SERVER.fine("Will insert or update "+modelData +" on table " + modelData.getTableName());
 				session.saveOrUpdate(modelData);
+				break;
 			default :
-				EngineLog.SERVER.severe("Will insert or update "+modelData +" on table " + modelData.getTableName());
+				break;
 			}
 		}
 	}
@@ -81,20 +81,16 @@ public class DatabaseSession {
 		switch(modelData.getDatabaseOperation())
 		{
 		case IDatabaseConstants.DELETE :
-			EngineLog.SERVER.fine("Will delete "+modelData +" on table " + modelData.getTableName());
 			session.delete(modelData);
 			break;
 		case IDatabaseConstants.INSERT :
-			EngineLog.SERVER.fine("Will insert "+modelData +" on table" + modelData.getTableName());
 			session.save(modelData);
 			break;
 		case IDatabaseConstants.INSERT_OR_UPDATE :
-			EngineLog.SERVER.fine("Will insert or update "+modelData +" on table " + modelData.getTableName());
 			session.saveOrUpdate(modelData);
 			break;
 		default :
-			EngineLog.SERVER.fine("Will insert or update "+modelData +" on table " + modelData.getTableName());
-
+			break;
 		}
 	}
 

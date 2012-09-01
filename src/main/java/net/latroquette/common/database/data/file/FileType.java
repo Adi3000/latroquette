@@ -19,10 +19,4 @@ public class FileType extends AbstractDataObject {
 		return null;
 	}
 
-	@Override
-	public String getTableName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

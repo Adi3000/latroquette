@@ -1,16 +1,22 @@
 /**
  * Account which will interact with {@link DreamedElement} to be owner and author
  */
-package net.latroquette.common.database.data.model.users;
+package net.latroquette.common.database.data.profile;
 
 
 import java.sql.Timestamp;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import net.latroquette.common.database.data.AbstractDataObject;
 
 
 
-
+@Entity
+@Table(name = "users")
 public class User extends AbstractDataObject{
 	
 	/**
@@ -21,7 +27,6 @@ public class User extends AbstractDataObject{
 	public static final String TABLE_AND_ENTITY_NAME = "USERS";
 	
 	private Integer id;
-
 	private String login;
 	private Integer token;
 	private Timestamp lastDateLogin;
@@ -30,6 +35,8 @@ public class User extends AbstractDataObject{
 	private String lastHostNameLogin;
 	private String lastIpLogin;
 	
+	@Id
+	@Column(name="user_id")
 	public Integer getId()
 	{
 		return id;
@@ -49,6 +56,7 @@ public class User extends AbstractDataObject{
 	/**
 	 * @return the login
 	 */
+	@Column(name="user_login")
 	public String getLogin() {
 		return login;
 	}
@@ -61,6 +69,7 @@ public class User extends AbstractDataObject{
 	/**
 	 * @return the token
 	 */
+	@Column(name="user_token")
 	public Integer getToken() {
 		return token;
 	}
@@ -73,12 +82,14 @@ public class User extends AbstractDataObject{
 	/**
 	 * @return the password
 	 */
+	@Column(name="user_password")
 	public String getPassword() {
 		return password;
 	}
 	/**
 	 * @return the lastHostNameLogin
 	 */
+	@Column(name="user_last_host_name_login")
 	public String getLastHostNameLogin() {
 		return lastHostNameLogin;
 	}
@@ -91,12 +102,14 @@ public class User extends AbstractDataObject{
 	/**
 	 * @return the mail
 	 */
+	@Column(name="user_mail")
 	public String getMail() {
 		return mail;
 	}
 	/**
 	 * @return the lastDateLogin
 	 */
+	@Column(name="user_last_date_login")
 	public Timestamp getLastDateLogin() {
 		return lastDateLogin;
 	}
@@ -109,6 +122,7 @@ public class User extends AbstractDataObject{
 	/**
 	 * @return the lastIpLogin
 	 */
+	@Column(name="user_last_ip_login")
 	public String getLastIpLogin() {
 		return lastIpLogin;
 	}
@@ -124,13 +138,4 @@ public class User extends AbstractDataObject{
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
-	@Override
-	public String getTableName() {
-		// TODO Auto-generated method stub
-		return TABLE_AND_ENTITY_NAME;
-	}
-
-	
-	
-
 }

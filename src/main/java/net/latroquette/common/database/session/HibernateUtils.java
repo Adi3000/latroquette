@@ -3,7 +3,6 @@ package net.latroquette.common.database.session;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistryBuilder;
 
 public class HibernateUtils {
 
@@ -20,6 +19,8 @@ public class HibernateUtils {
     	}catch (HibernateException ex) {
             // Make sure you log the exception, as it might be swallowed
             System.err.println("Initial SessionFactory creation failed. Unable to found " +HIBERNATE_CFG_PATH + ex);
+            ex.printStackTrace();
+            
             throw new ExceptionInInitializerError(ex);
         }
         

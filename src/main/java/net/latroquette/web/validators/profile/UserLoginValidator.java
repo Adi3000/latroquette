@@ -7,8 +7,8 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import net.latroquette.common.database.data.model.users.User;
-import net.latroquette.common.database.data.model.users.Users;
+import net.latroquette.common.database.data.profile.User;
+import net.latroquette.common.database.data.profile.Users;
 
 
 

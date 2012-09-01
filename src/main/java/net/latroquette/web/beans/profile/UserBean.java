@@ -13,13 +13,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
-
-import net.latroquette.common.database.IDatabaseConstants;
-import net.latroquette.common.database.data.model.users.User;
-import net.latroquette.common.database.data.model.users.Users;
-import net.latroquette.common.database.session.DatabaseSession;
+import net.latroquette.common.database.data.profile.User;
+import net.latroquette.common.database.data.profile.Users;
 import net.latroquette.common.security.Security;
+
+import org.apache.commons.lang.StringUtils;
 
 
 @ManagedBean
