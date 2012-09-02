@@ -52,6 +52,7 @@
 				<version>2.1</version>
 				<configuration>
 					<user>admin</user>
+					<echo>true</echo>
 					<passwordFile>/opt/glassfishv3/.glassfish_password</passwordFile>
 					<glassfishDirectory>/opt/glassfishv3/glassfish/</glassfishDirectory>
 					<components>
@@ -63,7 +64,7 @@
 					<domain>
 						<name>${project.artifactId}</name>
 						<adminPort>4848</adminPort>
-						<httpPort>8082</httpPort>
+						<httpPort>8019</httpPort>
 					</domain>
 				</configuration>
 			</plugin>
