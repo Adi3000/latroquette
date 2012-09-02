@@ -152,7 +152,7 @@ public class UserBean extends User implements Serializable{
 		}
 		
 		this.loginState = NEW_USER;
-		return "test";
+		return "/index";
 
 	}
 	

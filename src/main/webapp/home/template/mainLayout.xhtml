@@ -6,26 +6,26 @@
       xmlns:ui="http://java.sun.com/jsf/facelets" >
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/css/common/common.css" />
-	<link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/css/home/home.css" />
-	<link type="text/css" href="#{facesContext.externalContext.requestContextPath}/css/cupertino/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+	<h:outputStylesheet name="css/common/common.css" />
+	<h:outputStylesheet name="css/home/home.css" />
+	<h:outputStylesheet name="css/cupertino/jquery-ui-1.8.16.custom.css"/>
 	<h:outputScript name="js/jquery-1.8.0.min.js"/>
 	<title>La TroQuette</title>
 </h:head>
 <h:body>
 	<div id="wallpaper">
 		 <ui:insert name="title">
-			<ui:include src="/home/title.xhtml" />
+			<ui:include src="/home/tiles/title.xhtml" />
 		</ui:insert>
 		<div id="bodyPart">
 			<div class="floatLeft">
 				<ui:insert name="main">
-					<ui:include src="/home/main.xhtml" />
+					<ui:include src="/home/tiles/main.xhtml" />
 				</ui:insert>
 			</div>
 			<div class="floatRight">
 				<ui:insert name="newsWatcher">
-					<ui:include src="/home/newsWatcher.xhtml" />
+					<ui:include src="/home/tiles/newsWatcher.xhtml" />
 				</ui:insert>
 			</div>
 		</div>

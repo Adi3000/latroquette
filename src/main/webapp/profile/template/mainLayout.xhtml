@@ -5,14 +5,14 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
-	<ui:composition template="/template/mainLayout.xhtml">
+	<ui:composition template="/home/template/mainLayout.xhtml">
 		<ui:define name="main">
 			<div id="frontPage" class="floatRight">
 				<ui:insert name="profileDiv">
-					<ui:include src="/profile/login.xhtml"/>
+					<ui:include src="/profile/tiles/login.xhtml"/>
 				</ui:insert>
 			</div>
-			<ui:include src="/home/menu.xhtml" />
+			<ui:include src="/home/tiles/menu.xhtml" />
 		</ui:define>
 	</ui:composition>
 </body>
