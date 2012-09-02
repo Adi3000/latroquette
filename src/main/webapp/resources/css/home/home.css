@@ -1,7 +1,19 @@
 @CHARSET "UTF-8";
-#titleHomePage{
-	clear:both;
+#titleHomePage {
+	text-align:center;
+	font-family:cmr10;
 }
+
+#titleHomePage h1{
+	font-size:50px;
+	color:#180668;
+}
+
+#titleHomePage h2{
+	font-size:25px;
+	color:#18467b;
+}
+
 #toolbar{
 	width: 100%;
 	min-width: 100%;
