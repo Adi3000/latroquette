@@ -20,8 +20,10 @@ public class Locations extends DatabaseSession {
 	}
 	
 	public List<Location> getLocationByString(String value){
-		String likeValue1 = value.concat("%");
-		String likeValue2 = "(-| )".concat(value);
+		
+		String likeValue1 = value.replace(' ', '_').replace('-', '_').concat("%");
+		String replacing = "(-| |')";
+		String likeValue2 = replacing.concat(value.replace(" ", replacing).replace("-", replacing));
 		String postalCode1 = value.concat("%");
 		String postalCode2 = "%,".concat(postalCode1);
 		
