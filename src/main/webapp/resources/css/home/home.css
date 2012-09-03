@@ -1,4 +1,5 @@
 @CHARSET "UTF-8";
+
 #titleHomePage {
 	text-align:center;
 	font-family:cmr10;
@@ -16,36 +17,63 @@
 
 fieldset 
 { 
-	color:#18467b;
+	color:#FFF;
 	border:#000;
-	padding-top:10px;
+	padding-bottom: 5px;
 }
 
 
-#toolbar{
+#searchForm{
 	display: inline-block;
 	width: 100%;
+	color:#FFF;
+	border:#000;
+	background:-webkit-linear-gradient(top,#3a70d1,#001a49);
+	-webkit-border-radius:2px;
 }
 
 #searchPart1{
 	float: left;
 }
 
-#searchBox{
-	display: inline-block;
-	vertical-align: middle;
-}
-
-#cityBox{
-	display: inline-block;
-	vertical-align: middle;
+#searchPart2{
 	float: right;
 }
 
-#cityBox ul.token-input-list-facebook {
-	width : 200px;
+#searchBox{
+	display: inline-block;
 }
 
+#searchForm *{
+	vertical-align: middle;
+}
+#cityBox{
+	display: inline-block;
+	margin-right: 20px;
+}
+
+.checkbox{
+	margin-left: 15px;
+}
+#cityBox ul.token-input-list-facebook {
+	width : 200px;
+	height: 20px;
+	-webkit-border-radius:2px;
+}
+
+#searchBox ul.token-input-list-facebook {
+	height: 20px;
+	-webkit-border-radius:2px;
+}
+
+#bouton{
+	padding: 0px;
+	margin: 0px;
+}
+
+#toolbarLogin{
+	float: right;
+}
 #bodyPart{
 	width : 100%;
 }
