@@ -16,7 +16,18 @@
 		<h:outputStylesheet name="js/loopj-jquery-tokeninput/styles/token-input-facebook.css" target="head" />
 		<h:outputScript target="head">
 		    $(document).ready(function() {
-				$("#searchForm\\:searchField").tokenInput("#{facesContext.externalContext.requestContextPath}/rest/search/locations/", {theme: "facebook"});
+				$("#searchForm\\:searchField").tokenInput(
+					"#{facesContext.externalContext.requestContextPath}/rest/search/locations/",
+					 {
+					 	theme: "facebook",
+					 	hintText: "Objet recherché"
+					 });
+		    	$("#searchForm\\:searchCity").tokenInput(
+		    		"#{facesContext.externalContext.requestContextPath}/rest/search/locations/", 
+		    		{
+		    			theme: "facebook",
+		    			hintText: "Code postal ou Ville"
+		    		});
 		    });
 		</h:outputScript>
 		<div id="titleHomePage">
@@ -24,14 +35,27 @@
 			<h2>Brand your own world !!</h2>
 		</div>
 		<div id="toolbar">
-			<div id="toolbarSearch">
 				<!-- May use an include there -->
 				<h:form id="searchForm">
-					<h:outputLabel for="searchField">#{text_home.QUICK_SEARCH_LABEL}</h:outputLabel>
-					<h:inputText id="searchField" />
-					<h:commandButton value="#{text_home.QUICK_SEARCH_LABEL}" />
+					<fieldset>
+						<div id="searchPart2">					
+							<div id="cityBox">
+								<h:inputText id="searchCity" value="Code postal ou Ville"/>
+							</div>
+						</div>
+						<div id="searchPart1">
+							<div id="searchBox">
+								<h:inputText id="searchField" value="Recherche"/>
+							</div>
+							<h:selectBooleanCheckbox value="objets" />
+							<label>Objets</label>
+							<h:selectBooleanCheckbox value="membres" />
+							<label>Membres</label>
+							<h:selectBooleanCheckbox value="objesMembres" />
+							<label>Objets et Membres</label>
+						</div>					
+					</fieldset>
 				</h:form>
-			</div>
 			<h:panelGroup id="toolbarLogin">
 				<c:choose>
 					<c:when test="${userBean.loggedIn == 1}">

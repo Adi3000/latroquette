@@ -14,20 +14,40 @@
 	color:#18467b;
 }
 
+fieldset 
+{ 
+	color:#18467b;
+	border:#000;
+	padding-top:10px;
+}
+
+
 #toolbar{
+	display: inline-block;
 	width: 100%;
-	min-width: 100%;
-	clear:both;
 }
-#toolbarSearch{
-	float:left;
+
+#searchPart1{
+	float: left;
 }
-#toolbarLogin{
-	float:right;
+
+#searchBox{
+	display: inline-block;
+	vertical-align: middle;
 }
+
+#cityBox{
+	display: inline-block;
+	vertical-align: middle;
+	float: right;
+}
+
+#cityBox ul.token-input-list-facebook {
+	width : 200px;
+}
+
 #bodyPart{
 	width : 100%;
-	clear:both;
 }
 #bodyPart > .floatLeft{
 	width : 900px;
@@ -35,15 +55,11 @@
 #bodyPart > .floatRight{
 	width : 300px;
 }
-#newsWatcher{
-	float: right;
-}
 #menu{
 	width : 200px;	
 }
 #edito{
 	width : 100%;	
-	clear: both;
 }
 #frontPage{
 	width: 600px;
