@@ -6,13 +6,22 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
-		<ui:define name="main">
-			<div id="frontPage" class="floatRight">
-				<ui:insert name="profileDiv">
-					<ui:include src="/profile/tiles/login.xhtml"/>
-				</ui:insert>
+		<ui:define name="profileDiv">
+			<div>
+				<h1>
+					item list : en cours de construction aucun item.
+				</h1>
 			</div>
-			<ui:include src="/home/tiles/menu.xhtml" />
+			<table>
+			  <tr>
+				<td>Cellule 1</td>
+				<td>Cellule 2</td>
+			  </tr>
+			  <tr>
+				<td>Cellule 3</td>
+				<td>Cellule 4</td>
+			  </tr>
+			</table>
 		</ui:define>
 	</ui:composition>
 </body>

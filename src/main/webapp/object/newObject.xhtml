@@ -7,8 +7,12 @@
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<ui:define name="profileDiv">
-			<h:outputText>#{userBean.login}</h:outputText>
-			<h:link outcome="/manager/index">Manage Dreamed Elements</h:link>
+			<h:form id="newObjectForm">
+				<h:outputLabel for="title">Titre</h:outputLabel>
+				<h:inputText id="title" />
+				<h:outputLabel for="description">Description</h:outputLabel>
+				<h:inputText id="description" label="desc"></h:inputText>
+			</h:form>
 		</ui:define>
 	</ui:composition>
 </body>

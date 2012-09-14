@@ -167,10 +167,10 @@ public class UserBean extends User implements Serializable{
 			userSearch.updateUser(user);
 		}
 		switch (loginState) {
-		case LOGGED_IN:
-			return "index";
-		default:
-			return "login?logInFail="+loginState; 
+			case LOGGED_IN:
+				return "index";
+			default:
+				return "login?logInFail="+loginState; 
 		}
 	}
 	
@@ -185,10 +185,10 @@ public class UserBean extends User implements Serializable{
 		this.copyProperties(new User());
 		loginState = NOT_LOGGED_IN;
 		switch (loginState) {
-		case NOT_LOGGED_IN:
-			return "index";
-		default:
-			return "login#?logInFail="+loginState; 
+			case NOT_LOGGED_IN:
+				return "index";
+			default:
+				return "login#?logInFail="+loginState; 
 		}
 	}
 	

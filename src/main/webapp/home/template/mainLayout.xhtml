@@ -1,34 +1,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets" >
-<h:head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<h:outputStylesheet name="css/common/common.css" />
-	<h:outputStylesheet name="css/home/home.css" />
-	<h:outputStylesheet name="css/cupertino/jquery-ui-1.8.16.custom.css"/>
-	<h:outputScript name="js/jquery-1.8.0.min.js"/>
-	<title>La TroQuette</title>
-</h:head>
-<h:body>
-	<div id="wallpaper">
-		 <ui:insert name="title">
-			<ui:include src="/home/tiles/title.xhtml" />
-		</ui:insert>
-		<div id="bodyPart">
-			<div class="floatLeft">
-				<ui:insert name="main">
-					<ui:include src="/home/tiles/main.xhtml" />
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<body>
+	<ui:composition template="/home/template/homeLayout.xhtml">
+		<ui:define name="main">
+			<div id="frontPage" class="floatRight">
+				<ui:insert name="profileDiv">
+					<ui:include src="/profile/tiles/login.xhtml"/>
 				</ui:insert>
 			</div>
-			<div class="floatRight">
-				<ui:insert name="newsWatcher">
-					<ui:include src="/home/tiles/newsWatcher.xhtml" />
-				</ui:insert>
-			</div>
-		</div>
-	</div>
-</h:body>
+			<ui:include src="/home/tiles/menu.xhtml" />
+		</ui:define>
+	</ui:composition>
+</body>
 </html>
