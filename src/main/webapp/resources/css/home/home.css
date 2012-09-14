@@ -1,5 +1,10 @@
 @CHARSET "UTF-8";
 
+#enTete
+{
+	background : #C3FF8F;
+}
+
 #titleHomePage {
 	text-align:center;
 	font-family:cmr10;
@@ -8,27 +13,47 @@
 #titleHomePage h1{
 	font-size:50px;
 	color:#180668;
+	margin-bottom: 0px;
+	padding: 0px;
+	margin-top: 0px;
 }
 
 #titleHomePage h2{
 	font-size:25px;
 	color:#18467b;
+	margin-top: 0px;
+}
+
+p{
+	font-family:cmr10;
+	text-align: center;
+	margin-top: 20px;
+	padding-top: 25px;
 }
 
 fieldset 
 { 
-	color:#FFF;
+	color:#000;
 	border:#000;
 	padding-bottom: 5px;
 }
 
+.categorieJaune
+{
+	border-color: #FFFE8F;
+}
+
+.categorieVerte
+{
+	border-color: #C3FF8F;
+}
 
 #searchForm{
 	display: inline-block;
 	width: 100%;
-	color:#FFF;
-	border:#000;
-	background:-webkit-linear-gradient(top,#3a70d1,#001a49);
+	color: black;
+	border: black;
+	background:-webkit-linear-gradient(top,#C3FF8F,#FFFE8F);
 	-webkit-border-radius:2px;
 }
 
@@ -71,8 +96,9 @@ fieldset
 	margin: 0px;
 }
 
-#toolbarLogin{
-	float: right;
+#toolbarLogin
+{
+	width: 100%;
 }
 #bodyPart{
 	width : 100%;
@@ -83,20 +109,10 @@ fieldset
 #bodyPart > .floatRight{
 	width : 300px;
 }
-#menu{
-	width : 200px;	
-}
+
 #edito{
 	width : 100%;	
 }
 #frontPage{
 	width: 600px;
-}
-
-#menu div{
-	float: none;
-}
-#menu ul{
-	margin-top: 0px;
-	margin-bottom: 0px;
 }

@@ -7,20 +7,34 @@
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<ui:define name="profileDiv">
+			<h:outputStylesheet name="css/profile/login.css" target="head" />
 			<h:form id="loginForm">
 				<fieldset>
+				<div id="loginBorder">
 					<legend>#{text_profile.CONNEXION_FIELDSET}</legend>
 					<div class="loginField registerField">
-						<h:outputLabel for="loginField">#{text_profile.LOGIN_LABEL}</h:outputLabel>
-						<h:inputText id="loginField" value="#{userBean.login}" required="true"/>
-						<h:message for="loginField" style="color:red" />
+						
+						<div class="label">
+							<h:outputLabel for="loginField">#{text_profile.LOGIN_LABEL}</h:outputLabel>
+						</div>
+						<div class="field">
+							<h:inputText id="loginField" value="#{userBean.login}" class="loginBox" required="true"/>
+						</div>
+						<h:message for="loginField" class="error" />
 					</div>
 					<div class="loginField registerField">
-						<h:outputLabel for="passwordField">#{text_profile.PASSWORD_LABEL}</h:outputLabel>
-						<h:inputSecret id="passwordField" value="#{userBean.password}" required="true" />
-						<h:message for="passwordField" style="color:red" />
+						<div class="label">
+							<h:outputLabel for="passwordField">#{text_profile.PASSWORD_LABEL}</h:outputLabel>
+						</div>
+						<div class="field">
+							<h:inputSecret id="passwordField" value="#{userBean.password}" class="loginBox" required="true" />
+						</div>
+						<h:message for="passwordField" class="error" />
 					</div>
-					<h:commandButton value="Login" action="#{userBean.loginUser}" />
+					<div id="loginButton">
+						<h:commandButton value="Login" image="/resources/img/Bouton_login.png" action="#{userBean.loginUser}" />
+					</div>
+					</div>
 				</fieldset>
 			</h:form>
 		</ui:define>
