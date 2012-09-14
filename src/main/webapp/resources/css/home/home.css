@@ -1,4 +1,5 @@
 @CHARSET "UTF-8";
+
 #titleHomePage {
 	text-align:center;
 	font-family:cmr10;
@@ -14,20 +15,67 @@
 	color:#18467b;
 }
 
-#toolbar{
+fieldset 
+{ 
+	color:#FFF;
+	border:#000;
+	padding-bottom: 5px;
+}
+
+
+#searchForm{
+	display: inline-block;
 	width: 100%;
-	min-width: 100%;
-	clear:both;
+	color:#FFF;
+	border:#000;
+	background:-webkit-linear-gradient(top,#3a70d1,#001a49);
+	-webkit-border-radius:2px;
 }
-#toolbarSearch{
-	float:left;
+
+#searchPart1{
+	float: left;
 }
+
+#searchPart2{
+	float: right;
+}
+
+#searchBox{
+	display: inline-block;
+}
+
+#searchForm *{
+	vertical-align: middle;
+}
+#cityBox{
+	display: inline-block;
+	margin-right: 20px;
+}
+
+.checkbox{
+	margin-left: 15px;
+}
+#cityBox ul.token-input-list-facebook {
+	width : 200px;
+	height: 20px;
+	-webkit-border-radius:2px;
+}
+
+#searchBox ul.token-input-list-facebook {
+	height: 20px;
+	-webkit-border-radius:2px;
+}
+
+#bouton{
+	padding: 0px;
+	margin: 0px;
+}
+
 #toolbarLogin{
-	float:right;
+	float: right;
 }
 #bodyPart{
 	width : 100%;
-	clear:both;
 }
 #bodyPart > .floatLeft{
 	width : 900px;
@@ -35,15 +83,11 @@
 #bodyPart > .floatRight{
 	width : 300px;
 }
-#newsWatcher{
-	float: right;
-}
 #menu{
 	width : 200px;	
 }
 #edito{
 	width : 100%;	
-	clear: both;
 }
 #frontPage{
 	width: 600px;
