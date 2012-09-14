@@ -8,6 +8,11 @@ body{
 	margin-right:  auto;
 	width: 1260px;
 }
+
+.error{
+	color : red;
+	font-style: italic;
+}
 #wallpaper{
 	background-color: #FFFE8F;
 	width:	100%;
