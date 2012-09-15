@@ -7,41 +7,66 @@
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<ui:define name="profileDiv">
+			<h:outputStylesheet name="css/profile/login.css" target="head" />
 			<h:form id="loginForm">
 				<fieldset>
+				<div id="loginBorder">
 					<legend>#{text_profile.CONNEXION_FIELDSET}</legend>
 					<div class="loginField registerField">
-						<h:outputLabel for="loginField">#{text_profile.LOGIN_LABEL}</h:outputLabel>
-						<h:inputText id="loginField" value="#{userBean.login}" required="true">
-								<f:validator validatorId="net.latroquette.web.validators.profile.UserLoginValidator" />
-						</h:inputText>
-						<h:message for="loginField" style="color:red" />
+						<div class="label">
+							<h:outputLabel for="loginField">#{text_profile.LOGIN_LABEL}</h:outputLabel>
+						</div>
+						<div class="field">
+							<h:inputText id="loginField" class="loginBox" value="#{userBean.login}" required="true">
+									<f:validator validatorId="net.latroquette.web.validators.profile.UserLoginValidator" />
+							</h:inputText>
+						</div>
+							<h:message for="loginField" style="color:red" />
 					</div>
 					<div class="loginField registerField">
-						<h:outputLabel for="passwordField">#{text_profile.PASSWORD_LABEL}</h:outputLabel>
-						<h:inputSecret id="passwordField" value="#{userBean.password}" required="true" />
-						<h:message for="passwordField" style="color:red" />
+						<div class="label">
+							<h:outputLabel for="passwordField">#{text_profile.PASSWORD_LABEL}</h:outputLabel>
+						</div>
+						<div class="field">
+							<h:inputSecret id="passwordField" class="loginBox" value="#{userBean.password}" required="true" />
+						</div>
+							<h:message for="passwordField" style="color:red" />
 					</div>
 					<div class="registerField">
-						<h:outputLabel for="passwordFieldConfirmation">#{text_profile.PASSWORD_LABEL_CONFIRM}</h:outputLabel>
-						<h:inputSecret id="passwordFieldConfirmation" value="#{userBean.passwordConfirm}" required="true" />
-						<h:message for="passwordFieldConfirmation" style="color:red" />
-						<f:event listener="#{userBean.validatePassword}" type="postValidate" />
+						<div class="label">
+							<h:outputLabel for="passwordFieldConfirmation">#{text_profile.PASSWORD_LABEL_CONFIRM}</h:outputLabel>
+						</div>
+						<div class="field">
+							<h:inputSecret id="passwordFieldConfirmation" class="loginBox" value="#{userBean.passwordConfirm}" required="true" />
+						</div>
+							<h:message for="passwordFieldConfirmation" style="color:red" />
+							<f:event listener="#{userBean.validatePassword}" type="postValidate" />
 					</div>
 					<div class="registerField">
-						<h:outputLabel for="addressMailField">#{text_profile.MAILBOX_LABEL}</h:outputLabel>
-						<h:inputText id="addressMailField" required="true"  value="#{userBean.mail}">
-							<f:validator validatorId="net.latroquette.web.validators.profile.EmailValidator" />
-						</h:inputText>
-						<h:message for="addressMailField" style="color:red" />
+						<div class="label">
+							<h:outputLabel for="addressMailField">#{text_profile.MAILBOX_LABEL}</h:outputLabel>
+						</div>
+						<div class="field">
+							<h:inputText id="addressMailField" required="true"  class="loginBox" value="#{userBean.mail}">
+								<f:validator validatorId="net.latroquette.web.validators.profile.EmailValidator" />
+							</h:inputText>
+						</div>
+							<h:message for="addressMailField" style="color:red" />
 					</div>
 					<div class="registerField">
-						<h:outputLabel for="addressMailFieldConfirmation">#{text_profile.MAILBOX_LABEL_CONFIRM}</h:outputLabel>
-						<h:inputText id="addressMailFieldConfirmation" value="#{userBean.mailConfirm}" required="true" />
-						<h:message for="addressMailFieldConfirmation" style="color:red" />
-						<f:event listener="#{userBean.validateAddressMail}" type="postValidate" />
+						<div class="label">
+							<h:outputLabel for="addressMailFieldConfirmation">#{text_profile.MAILBOX_LABEL_CONFIRM}</h:outputLabel>
+						</div>
+						<div class="field">
+							<h:inputText id="addressMailFieldConfirmation" class="loginBox" value="#{userBean.mailConfirm}" required="true" />
+						</div>
+							<h:message for="addressMailFieldConfirmation" style="color:red" />
+							<f:event listener="#{userBean.validateAddressMail}" type="postValidate" />
 					</div>
-					<h:commandButton value="Register" action="#{userBean.registerUser}" />
+					<div id="loginButton">
+						<h:commandButton value="Register" action="#{userBean.registerUser}" />
+					</div>
+					</div>
 				</fieldset>
 			</h:form>
 		</ui:define>
