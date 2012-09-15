@@ -1,6 +1,5 @@
 package net.latroquette.common.database.data.location;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import net.latroquette.common.database.data.AbstractDataObject;
 
 @Entity
-@Table(name = "location")
+@Table(name = "locations")
 @XmlRootElement
 public class Location extends AbstractDataObject {
 
