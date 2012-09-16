@@ -10,8 +10,7 @@ import javax.persistence.Table;
 
 import net.latroquette.common.database.data.AbstractDataObject;
 import net.latroquette.common.database.data.keyword.Keyword;
-
-import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
+import net.latroquette.common.database.data.profile.User;
 
 @Entity
 @Table(name = "objects")
