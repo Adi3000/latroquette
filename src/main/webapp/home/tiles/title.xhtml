@@ -30,7 +30,7 @@
 			    		});
 			    });
 			</h:outputScript>
-		<div id="enTete">	
+			<div id="enTete">	
 				<h:panelGroup id="toolbarLogin">
 					<c:choose>
 						<c:when test="${userBean.loggedIn == 1}">
@@ -60,32 +60,7 @@
 						entre récup', écologie, solidarité.
 					</p>
 				</div>
-	
-			<div id="toolbar">
-					<!-- May use an include there -->
-					<h:form id="searchForm">
-						<fieldset>
-							<div id="searchPart2">					
-								<div id="cityBox">
-									<h:inputText id="searchCity" value="Code postal ou Ville"/>
-								</div>
-								<h:commandButton id="bouton" value="Rechercher !" type="button" />
-							</div>
-							<div id="searchPart1">
-								<div id="searchBox">
-									<h:inputText id="searchField" value="Recherche"/>
-								</div>
-								<h:selectBooleanCheckbox id="objetCheckbox" value="objets" class="checkbox"/>
-								<h:outputLabel for="objetCheckbox">Objets</h:outputLabel>
-								<h:selectBooleanCheckbox id="troQmenbersCheckbox" value="membres" class="checkbox"/>
-								<h:outputLabel for="troQmenbersCheckbox">TroQmembres</h:outputLabel>
-								<h:selectBooleanCheckbox id="ObjetsTroQmenbersCheckbox" value="objesMembres" class="checkbox"/>
-								<h:outputLabel for="ObjetsTroQmenbersCheckbox">Objets et TroQmembres</h:outputLabel>
-							</div>					
-						</fieldset>
-					</h:form>
 			</div>
-		</div>
 		</ui:composition>
 </h:body>
 </html>

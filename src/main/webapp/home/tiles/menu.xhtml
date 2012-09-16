@@ -6,199 +6,119 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition>
-		<div id="menu" class="floatLeft">
-			<div id="accordion" class="menuHeader">
-				<div>
+		<h:outputScript type='text/javascript' name="js/jquery-vertical-mega-menu-1/jquery.hoverIntent.minified.js" target="head"/>
+		<h:outputScript type='text/javascript' name="js/jquery-vertical-mega-menu-1/jquery.dcverticalmegamenu.1.1.js" target="head"/>
+		<h:outputStylesheet name="js/jquery-vertical-mega-menu-1/vertical_menu.css" rel="stylesheet" type="text/css" target="head"/>
+		<h:outputScript target="head">
+			$(document).ready(function($){
+				$('#mega-1').dcVerticalMegaMenu({
+					rowItems: '3',
+					speed: 'fast',
+					effect: 'slide',
+					direction: 'right'
+				});
+			});
+		</h:outputScript>
+		<div id="menu">
+			<ul id="mega-1" class="menu">
+				<li><a href="#" class="categorieJaune">Jeux/jouets</a>
 					<ul>
-						<li><a href="#" class="categorieJaune">Jeux/jouets</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								<li><a href="#">0-3ans</a></li>
-								<li><a href="#">+ de 3 ans</a></li>
-							</ul>
-						</li>
+						<li><a href="#">0-3ans</a></li>
+						<li><a href="#">+ de 3 ans</a></li>
 					</ul>
-				</div>
-				<div>
+				</li>
+				<li><a href="#" class="categorieVerte">Vêtements</a>
 					<ul>
-						<li><a href="#" class="categorieVerte">Vêtements</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								<li><a href="#">0-3 ans</a></li>
-								<li><a href="#">Fille / Femme</a></li>
-								<li><a href="#">Garçon / Homme</a></li>
-							</ul>
-						</li>
+						<li><a href="#">0-3 ans</a></li>
+						<li><a href="#">Fille / Femme</a></li>
+						<li><a href="#">Garçon / Homme</a></li>
 					</ul>
-				</div>
-				<div>
+				</li>
+				<li><a href="#" class="categorieJaune">Micro Multimédia</a>
 					<ul>
-						<li><a href="#" class="categorieJaune">Micro Multimédia</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								<li><a href="#">Appareil photo</a></li>
-								<li><a href="#">Camescope</a></li>
-								<li><a href="#">GPS</a></li>
-								<li><a href="#">Stockage</a></li>
-								<li><a href="#">Ordinateur</a></li>
-							</ul>
-						</li>
+						<li><a href="#">Appareil photo</a></li>
+						<li><a href="#">Camescope</a></li>
+						<li><a href="#">GPS</a></li>
+						<li><a href="#">Stockage</a></li>
+						<li><a href="#">Ordinateur</a></li>
 					</ul>
-				</div>
-				<div>
+				</li>
+				<li><a href="#" class="categorieVerte">Jeux vidéo</a>
 					<ul>
-						<li><a href="#" class="categorieVerte">Jeux vidéo</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								<li><a href="#">Consoles</a></li>
-								<li><a href="#">Jeux vidéo</a></li>
-								<li><a href="#">Accessoires</a></li>
-							</ul>
-						</li>
+						<li><a href="#">Consoles</a></li>
+						<li><a href="#">Jeux vidéo</a></li>
+						<li><a href="#">Accessoires</a></li>
 					</ul>
-				</div>
-				<div>
+				</li>
+				<li><a href="#" class="categorieJaune">Vidéo / Musique</a>
 					<ul>
-						<li><a href="#" class="categorieJaune">Vidéo / Musique</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								<li><a href="#">Cassette/VHS</a></li>
-								<li><a href="#">DVD</a></li>
-								<li><a href="#">BluRay</a></li>
-								<li><a href="#">CD</a></li>
-							</ul>
-						</li>
+						<li><a href="#">Cassette/VHS</a></li>
+						<li><a href="#">DVD</a></li>
+						<li><a href="#">BluRay</a></li>
+						<li><a href="#">CD</a></li>
 					</ul>
-				</div>
-				<div>
+				</li>
+				<li><a href="#" class="categorieVerte">Téléphonie</a>
 					<ul>
-						<li><a href="#" class="categorieVerte">Téléphonie</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								<li><a href="#">Mobiles</a></li>
-								<li><a href="#">Accessoires</a></li>
-							</ul>
-						</li>
+						<li><a href="#">Mobiles</a></li>
+						<li><a href="#">Accessoires</a></li>
 					</ul>
-				</div>
-				<div>
+				</li>
+				<li><a href="#" class="categorieJaune">Fourniture Scolaire</a>
 					<ul>
-						<li><a href="#" class="categorieJaune">Fourniture Scolaire</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								<li><a href="#">Livres et manuels</a></li>
-								<li><a href="#">Consommables</a></li>
-							</ul>
-						</li>
+						<li><a href="#">Livres et manuels</a></li>
+						<li><a href="#">Consommables</a></li>
 					</ul>
-				</div>
-				<div>
+				</li>
+				<li><a href="#" class="categorieVerte">Ammeublement</a>
+<!-- 					<ul></ul> -->
+				</li>
+				<li><a href="#" class="categorieJaune">Electroménager</a>
+<!-- 					<ul></ul> -->
+				</li>
+				<li><a href="#" class="categorieVerte">Puériculture</a>
+<!-- 					<ul></ul> -->
+				</li>
+				<li><a href="#" class="categorieJaune">Décoration</a>
+<!-- 					<ul></ul> -->
+				</li>
+				<li><a href="#" class="categorieVerte">Livres</a>
 					<ul>
-						<li><a href="#" class="categorieVerte">Ammeublement</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-							</ul>
-						</li>
+						<li><a href="#">Enfant</a></li>
+						<li><a href="#">Jeunesse</a></li>
+						<li><a href="#">Adulte</a></li>
+						<li><a href="#">Magazines</a></li>
 					</ul>
-				</div>
-				<div>
+				</li>
+				<li><a href="#" class="categorieJaune">Sport et loisir</a>
+					<ul></ul>
+				</li>
+				<li><a href="#" class="categorieVerte">Bricolage</a>
 					<ul>
-						<li><a href="#" class="categorieJaune">Electroménager</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-							</ul>
-						</li>
+						<li><a href="#">Livres et manuels</a></li>
+						<li><a href="#">Consommables</a></li>
 					</ul>
-				</div>
-				<div>
+				</li>
+				<li><a href="#" class="categorieJaune">Collectionneurs</a>
 					<ul>
-						<li><a href="#" class="categorieVerte">Matériel de puériculture</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								
-							</ul>
-						</li>
+						<li><a href="#"></a></li>
 					</ul>
-				</div>
-				<div>
+				</li>
+				<li><a href="#" class="categorieVerte">Véhicules</a>
 					<ul>
-						<li><a href="#" class="categorieJaune">Décoration</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								
-							</ul>
-						</li>
+						<li><a href="#"></a>Bateaux</li>
+						<li><a href="#"></a>2 roues</li>
+						<li><a href="#"></a>4 roues</li>
 					</ul>
-				</div>
-				<div>
+				</li>
+				<li><a href="#" class="categorieJaune">Vacances</a>
 					<ul>
-						<li><a href="#" class="categorieVerte">Livres</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								<li><a href="#">Enfant</a></li>
-								<li><a href="#">Jeunesse</a></li>
-								<li><a href="#">Adulte</a></li>
-								<li><a href="#">Magazines</a></li>
-							</ul>
-						</li>
+						<li><a href="#"></a>Billets (Parc d'attraction)</li>
+						<li><a href="#"></a>Maisons</li>
+						<li><a href="#"></a>Appartements</li>
 					</ul>
-				</div>
-				<div>
-					<ul>
-						<li><a href="#" class="categorieJaune">Sport et loisir</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-							</ul>
-						</li>
-					</ul>
-				</div>
-				<div>
-					<ul>
-						<li><a href="#" class="categorieVerte">Bricolage</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								<li><a href="#">Livres et manuels</a></li>
-								<li><a href="#">Consommables</a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-				<div>
-					<ul>
-						<li><a href="#" class="categorieJaune">Collectionneurs</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								<li><a href="#"></a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-				<div>
-					<ul>
-						<li><a href="#" class="categorieVerte">Véhicules</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								<li><a href="#"></a>Bateaux</li>
-								<li><a href="#"></a>2 roues</li>
-								<li><a href="#"></a>4 roues</li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-				<div>
-					<ul>
-						<li><a href="#" class="categorieJaune">Vacances</a></li>
-						<li>
-							<ul class="ui-widget-content ui-corner-bottom">
-								<li><a href="#"></a>Billets (Parc d'attraction)</li>
-								<li><a href="#"></a>Maisons</li>
-								<li><a href="#"></a>Appartements</li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</ui:composition>
+				</li>
+			</ul>
+		</div></ui:composition>
 </body>
 </html>

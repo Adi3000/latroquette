@@ -5,18 +5,13 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
-	<ui:composition>
-		<div id="edito">
-			<em>Edito</em>
-			<p>#{text_common.LOREM_IPSUM_1}</p>
-		</div>
-		<div id="frontPage" class="floatRight">
+	<ui:composition><!-- 
+	--><div id="mainDiv">
 			<em>PrincipalDiv</em>
 			<p>#{text_common.LOREM_IPSUM_1}</p>
 			<p>#{text_common.LOREM_IPSUM_2}</p>
 			<p>#{text_common.LOREM_IPSUM_3}</p>
-		</div>
-		<ui:include src="/home/tiles/menu.xhtml" />
-	</ui:composition>
+		</div><!-- 
+ --></ui:composition>
 </body>
 </html>

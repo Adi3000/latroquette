@@ -6,13 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition template="/home/template/homeLayout.xhtml">
-		<ui:define name="main">
-			<div id="frontPage" class="floatRight">
-				<ui:insert name="profileDiv">
-					<ui:include src="/profile/tiles/login.xhtml"/>
-				</ui:insert>
-			</div>
-			<ui:include src="/home/tiles/menu.xhtml" />
+		<ui:define name="mainDiv">
+			<ui:include src="/home/tiles/main.xhtml"/>
 		</ui:define>
 	</ui:composition>
 </body>

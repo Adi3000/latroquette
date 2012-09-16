@@ -6,7 +6,7 @@ body{
 	font-family:Arial,Comic Sans MS, Serif;
 	margin-left: auto;
 	margin-right:  auto;
-	width: 1260px;
+	width: 1000px;
 }
 
 .error{
@@ -14,20 +14,13 @@ body{
 	font-style: italic;
 }
 #wallpaper{
-	background-color: #FFFE8F;
+	background-color: #F5FFE0;
 	width:	100%;
 	height:	100%; 
 	margin :0 0 0 0;
 	padding :0 0 0 0;
-	float: left;
 }
 
-/*div{
-	float:left;
-}*/
-.floatRight{
-	float: right;
-}
-.floatLeft{
-	float: left;
+ul{
+	list-style:none;
 }

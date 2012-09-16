@@ -2,7 +2,7 @@
 
 #enTete
 {
-	background : #C3FF8F;
+	background : #F5FFE0;
 }
 
 #titleHomePage {
@@ -24,12 +24,6 @@
 	margin-top: 0px;
 }
 
-p{
-	font-family:cmr10;
-	text-align: center;
-	margin-top: 20px;
-	padding-top: 25px;
-}
 
 fieldset 
 { 
@@ -45,7 +39,7 @@ fieldset
 
 .categorieVerte
 {
-	border-color: #C3FF8F;
+	border-color: #C48254;
 }
 
 #searchForm{
@@ -53,16 +47,13 @@ fieldset
 	width: 100%;
 	color: black;
 	border: black;
-	background:-webkit-linear-gradient(top,#C3FF8F,#FFFE8F);
+	background:-webkit-linear-gradient(top,#6B3617,#C48254);
 	-webkit-border-radius:2px;
 }
 
-#searchPart1{
-	float: left;
-}
-
-#searchPart2{
-	float: right;
+#searchBox
+{
+	display: block;
 }
 
 #searchBox{
@@ -70,6 +61,7 @@ fieldset
 }
 
 #searchForm *{
+	display: inline-block;
 	vertical-align: middle;
 }
 #cityBox{
@@ -81,7 +73,7 @@ fieldset
 	margin-left: 15px;
 }
 #cityBox ul.token-input-list-facebook {
-	width : 200px;
+	width : 150px;
 	height: 20px;
 	-webkit-border-radius:2px;
 }
@@ -103,16 +95,32 @@ fieldset
 #bodyPart{
 	width : 100%;
 }
-#bodyPart > .floatLeft{
-	width : 900px;
-}
-#bodyPart > .floatRight{
-	width : 300px;
+
+#menu{
+	width: 200px;
+	margin: 0px;
+	padding: 0px;
 }
 
+#content{
+	width:800px;
+}
+#menu,
+#content{
+	display : inline-block;
+	vertical-align: top;
+}
 #edito{
 	width : 100%;	
 }
-#frontPage{
+
+#mainDiv{
 	width: 600px;
+}
+#pubs{
+	width: 200px;
+}
+#pubs,#mainDiv{
+	display: inline-block;
+	vertical-align: top;
 }
