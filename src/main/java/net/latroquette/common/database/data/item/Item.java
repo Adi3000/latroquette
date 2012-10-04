@@ -1,4 +1,4 @@
-package net.latroquette.common.database.data.object;
+package net.latroquette.common.database.data.item;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -13,8 +13,8 @@ import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.profile.User;
 
 @Entity
-@Table(name = "objects")
-public class Object extends AbstractDataObject {
+@Table(name = "items")
+public class Item extends AbstractDataObject {
 
 	/**
 	 * 
@@ -29,7 +29,7 @@ public class Object extends AbstractDataObject {
 	private String description;
 	private List<Keyword> keywordList;
 	@Override
-	@Column(name="object_id")
+	@Column(name="item_id")
 	public Serializable getId() {
 		// TODO Auto-generated method stub
 		return id;
@@ -49,7 +49,7 @@ public class Object extends AbstractDataObject {
 	/**
 	 * @return the statusId
 	 */
-	@Column(name="object_status_id")
+	@Column(name="item_status_id")
 	public Integer getStatusId() {
 		return statusId;
 	}
@@ -62,7 +62,7 @@ public class Object extends AbstractDataObject {
 	/**
 	 * @return the creationDate
 	 */
-	@Column(name="object_creation_date")
+	@Column(name="item_creation_date")
 	public Date getCreationDate() {
 		return creationDate;
 	}
@@ -75,7 +75,7 @@ public class Object extends AbstractDataObject {
 	/**
 	 * @return the updateDate
 	 */
-	@Column(name="object_update_date")
+	@Column(name="item_update_date")
 	public Date getUpdateDate() {
 		return updateDate;
 	}
@@ -88,7 +88,7 @@ public class Object extends AbstractDataObject {
 	/**
 	 * @return the title
 	 */
-	@Column(name="object_title")
+	@Column(name="item_title")
 	public String getTitle() {
 		return title;
 	}
@@ -101,7 +101,7 @@ public class Object extends AbstractDataObject {
 	/**
 	 * @return the description
 	 */
-	@Column(name="object_description")
+	@Column(name="item_description")
 	public String getDescription() {
 		return description;
 	}
