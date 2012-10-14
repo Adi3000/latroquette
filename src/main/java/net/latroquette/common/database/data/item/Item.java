@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import net.latroquette.common.database.data.AbstractDataObject;
 import net.latroquette.common.database.data.keyword.Keyword;
@@ -14,6 +15,7 @@ import net.latroquette.common.database.data.profile.User;
 
 @Entity
 @Table(name = "items")
+@XmlRootElement
 public class Item extends AbstractDataObject {
 
 	/**

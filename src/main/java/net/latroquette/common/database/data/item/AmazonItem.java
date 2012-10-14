@@ -1,0 +1,110 @@
+package net.latroquette.common.database.data.item;
+
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.amazon.ECS.client.jax.Item;
+
+import net.latroquette.common.database.data.keyword.Keyword;
+import net.latroquette.web.beans.item.ViewableItem;
+
+@XmlRootElement
+public class AmazonItem implements ViewableItem{
+	
+	private String smallImageUrl;
+	private String imageUrl;
+	private String name;
+	private String fullName;
+	private Integer id;
+	private String amazonId;
+	
+	public AmazonItem(Item amazonItem){
+		smallImageUrl = amazonItem.getSmallImage() != null ? amazonItem.getSmallImage().getURL() : null;
+		imageUrl = amazonItem.getLargeImage() != null ? amazonItem.getLargeImage().getURL() : null ;
+		name = amazonItem.getItemAttributes().getTitle();
+		amazonId = amazonItem.getASIN();
+	}
+	/**
+	 * @return the smallImageUrl
+	 */
+	public String getSmallImageUrl() {
+		return smallImageUrl;
+	}
+	/**
+	 * @param smallImageUrl the smallImageUrl to set
+	 */
+	public void setSmallImageUrl(String smallImageUrl) {
+		this.smallImageUrl = smallImageUrl;
+	}
+	/**
+	 * @return the imageUrl
+	 */
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	/**
+	 * @param imageUrl the imageUrl to set
+	 */
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	/**
+	 * @return the fullName
+	 */
+	public String getFullName() {
+		return fullName;
+	}
+	/**
+	 * @param fullName the fullName to set
+	 */
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	/**
+	 * @return the amazonId
+	 */
+	public String getAmazonId() {
+		return amazonId;
+	}
+	/**
+	 * @param amazonId the amazonId to set
+	 */
+	public void setAmazonId(String amazonId) {
+		this.amazonId = amazonId;
+	}
+	@Override
+	public int getSource() {
+		return ViewableItem.AMAZON_SOURCE;
+	}
+	@Override
+	public List<Keyword> getCategories() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

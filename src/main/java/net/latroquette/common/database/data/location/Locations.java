@@ -28,13 +28,13 @@ public class Locations extends DatabaseSession {
 		String postalCode2 = "%,".concat(postalCode1);
 		
 		String sql = 
-				" SELECT {location.*} FROM location {location} ".concat(
+				" SELECT {locations.*} FROM locations {locations} ".concat(
 				" WHERE location_name ILIKE ? or location_name ~* ?").concat(
-				" UNION SELECT {location.*} FROM location {location} ").concat(
+				" UNION SELECT {locations.*} FROM locations {locations} ").concat(
 				" WHERE location_postal_codes LIKE ?  or location_postal_codes LIKE ? ");
 		//Can't ordering this for now.
 		//.concat(	" ORDER BY {location.location_name}");
-		Query req = this.session.createSQLQuery(sql).addEntity("location",Location.class);
+		Query req = this.session.createSQLQuery(sql).addEntity("locations",Location.class);
 		req		.setString(0, likeValue1)
 				.setString(1, likeValue2)
 				.setString(2, postalCode1)
