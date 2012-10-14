@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.ws.Holder;
+import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -13,7 +14,6 @@ import com.amazon.ECS.client.jax.ItemSearch;
 import com.amazon.ECS.client.jax.ItemSearchRequest;
 import com.amazon.ECS.client.jax.OperationRequest;
 import com.amazon.ECS.client.jax.tools.AwsHandlerResolver;
-import com.sun.xml.internal.ws.client.ClientTransportException;
 
 public class AmazonWServiceClient {
 	
@@ -56,7 +56,7 @@ public class AmazonWServiceClient {
 		try{
 			port.itemSearch("", AWS_ACCESS_KEY, AWS_ASSOCIATE_TAG, "", "", 
 					itemSearch, request.getRequest(),operationRequest, items);
-		}catch(ClientTransportException e){
+		}catch(WebServiceException e){
 			throw e;
 		}
 		
