@@ -19,7 +19,7 @@ public class Items/* extends DatabaseSession*/{
 		AWSECommerceServicePortType port =  AmazonWServiceClient.CLIENT.getPort();
 
 		ItemSearchRequest itemSearch = new ItemSearchRequest();
-		itemSearch.setKeywords(pattern);
+		itemSearch.setKeywords(pattern.replaceAll("\\W", "+"));
 		if(!AmazonWServiceClient.isValideCategory(cat)){
 			cat = "All";
 		}
