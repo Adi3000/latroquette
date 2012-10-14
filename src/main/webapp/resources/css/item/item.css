@@ -1,0 +1,47 @@
+#itemImages,
+#itemDescription
+{
+	display: inline-block;
+	vertical-align: top;
+}
+
+#itemImage{
+	width : 300px;
+}
+
+#itemDescription{
+	width: 380px;
+}
+#itemImage img{
+	width: 100%;
+}
+
+#itemTitle{
+	width: 100%;
+}
+#suggestedItem{
+	width: 100%;
+	background-color: #ffffff;
+	heigth: 100px;
+	border: 1px solid #000000;
+}
+#suggestedItem ul,
+#suggestedItem li{
+	padding : 0px; 
+	margin : 0px; 
+}
+#suggestedItem li{
+	cursor: pointer;
+	font-size: 8pt;
+}
+#suggestedItem li.selected{
+	background-color: #4285F4;
+	color: #ffffff;
+	border: 1px dotted #ffffff;
+}
+.label{
+	width : 100px;
+}
+#newItemForm\:title{
+	border: 1px solid;
+}

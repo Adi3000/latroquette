@@ -5,17 +5,45 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
-	<ui:composition template="/home/template/mainLayout.xhtml">
-		<ui:define name="mainDiv">
-			<h:form id="newObjectForm">
-				<h:outputLabel for="title">Titre</h:outputLabel>
-				<h:inputText id="title" />
-				<h:outputLabel for="description">Description</h:outputLabel>
-				<h:inputText id="description" label="desc"></h:inputText>
-				
-				
-			</h:form>
-		</ui:define>
-	</ui:composition>
+	<ui:composition template="/home/template/mainLayout.xhtml"><!--  
+	--><ui:define name="mainDiv"><!-- 
+		--><h:outputStylesheet name="css/item/item.css" target="head" /><!--
+		--><div id="mainDiv">
+			
+				<h:form id="newItemForm">
+					<div id="itemImages">
+						<div><h:graphicImage url="/resources/img/aucune_image.jpg" width="300"/></div>
+					</div>
+					<div id="itemDescription">
+						<div id="itemTitle">
+							<div>
+								<div class="field">
+									<div class="labelTop">
+										<h:outputLabel for="title">Titre</h:outputLabel>
+									</div>
+									<h:inputText id="title" size="45"/>
+								</div>
+							</div>
+							<div id="suggestedItem" class="field">
+								<ul>
+									<li class="selected">Choix1</li>
+									<li>Choix1</li>
+									<li>Choix1</li>
+									<li>Choix1</li>
+									<li>Choix1</li>
+								</ul>
+							</div>
+						</div>
+						<div>
+							<div class="field">
+								<div class="labelTop"><h:outputLabel for="description">Description</h:outputLabel></div>
+								<h:inputTextarea id="description" label="desc"/>
+							</div>
+						</div>
+					</div>
+				</h:form>
+			</div><!--  
+  	 --></ui:define><!-- 
+	--></ui:composition>
 </body>
 </html>

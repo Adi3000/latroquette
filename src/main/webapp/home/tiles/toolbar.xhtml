@@ -6,6 +6,31 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition>
+		<h:outputScript name="js/loopj-jquery-tokeninput/src/jquery.tokeninput.js" target="head" />
+		<h:outputStylesheet name="js/loopj-jquery-tokeninput/styles/token-input.css" target="head" />
+		<h:outputStylesheet name="js/loopj-jquery-tokeninput/styles/token-input-mac.css" target="head" />
+		<h:outputStylesheet name="js/loopj-jquery-tokeninput/styles/token-input-facebook.css" target="head" />
+		<h:outputScript target="head">
+		    $(document).ready(function() {
+				$("#searchForm\\:searchObjet").tokenInput(
+					"#{facesContext.externalContext.requestContextPath}/rest/providers/amazon/",
+					 {
+					 	theme: "facebook",
+					 	hintText: "Objet recherché",
+					 	tokenValue: "amazonId",
+	 	                resultsFormatter: 
+	 	                	function(item){
+		 	                	 return '<li><div style="display:inline-block;"><img src="' + item.smallImageUrl + '" title="' + item.name + '" height="25px"/></div><div style="display:inline-block; width:80px;" >' +item.name +'</div></li>'; 
+		 	                }
+					 });
+		    	$('#searchForm\\:searchCity').tokenInput(
+		    		'#{facesContext.externalContext.requestContextPath}/rest/search/locations/', 
+		    		{
+		    			theme: 'facebook',
+		    			hintText: 'Code postal ou Ville'
+		    		});
+		    });
+		</h:outputScript>
 		<div id="toolbar">
 			<!-- May use an include there -->
 			<h:form id="searchForm">
@@ -18,7 +43,7 @@
 					</div>
 					<div id="searchPart1">
 						<div id="searchObjetBox" class="searchBox">
-							<h:inputText id="searchObjet" value="Recherche" />
+							<h:inputText id="searchObjet" value="Recherche d'objet" />
 						</div>
 						<div id="searchMemberBox" class="searchBox">
 							<h:inputText id="searchMember" value="Recherche" />

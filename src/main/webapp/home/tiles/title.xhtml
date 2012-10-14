@@ -10,26 +10,6 @@
 			xmlns:h="http://java.sun.com/jsf/html"
 			xmlns:f="http://java.sun.com/jsf/core"
 			xmlns:c="http://java.sun.com/jsp/jstl/core">
-			<h:outputScript name="js/loopj-jquery-tokeninput/src/jquery.tokeninput.js" target="head" />
-			<h:outputStylesheet name="js/loopj-jquery-tokeninput/styles/token-input.css" target="head" />
-			<h:outputStylesheet name="js/loopj-jquery-tokeninput/styles/token-input-mac.css" target="head" />
-			<h:outputStylesheet name="js/loopj-jquery-tokeninput/styles/token-input-facebook.css" target="head" />
-			<h:outputScript target="head">
-			    $(document).ready(function() {
-					$("#searchForm\\:searchField").tokenInput(
-						"#{facesContext.externalContext.requestContextPath}/rest/search/locations/",
-						 {
-						 	theme: "facebook",
-						 	hintText: "Objet recherché"
-						 });
-			    	$("#searchForm\\:searchCity").tokenInput(
-			    		"#{facesContext.externalContext.requestContextPath}/rest/search/locations/", 
-			    		{
-			    			theme: "facebook",
-			    			hintText: "Code postal ou Ville"
-			    		});
-			    });
-			</h:outputScript>
 			<div id="enTete">	
 				<h:panelGroup id="toolbarLogin">
 					<c:choose>
