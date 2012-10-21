@@ -24,7 +24,11 @@
 				            $("#searchForm\\:searchObjet").val(ui.item.name);
 				            $("#searchForm\\:searchObjetHidden").val(ui.item.id);
 				            return false;
-			            }
+			            },
+			            open: function(){
+							$(this).autocomplete("widget").css("z-index", 100);
+							return false;
+					   	}
 		    		})
 		    		.val("Recherche").toggleClass("backgroundText", true)
 					.focus(function(){
