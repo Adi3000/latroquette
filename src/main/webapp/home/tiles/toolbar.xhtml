@@ -12,24 +12,55 @@
 		<h:outputStylesheet name="js/loopj-jquery-tokeninput/styles/token-input-facebook.css" target="head" />
 		<h:outputScript target="head">
 		    $(document).ready(function() {
-				$("#searchForm\\:searchObjet").tokenInput(
-					"#{facesContext.externalContext.requestContextPath}/rest/providers/amazon/",
+		    	$("#searchForm\\:searchObjet")
+		    		.autocomplete({
+				    	source: "#{facesContext.externalContext.requestContextPath}/rest/providers/amazon/",
+			    		minLength: 2,
+			    		focus: function(event, ui) {
+				            $("#searchForm\\:searchCity").val(ui.item.name);
+				            return false;
+				        },
+			    		select: function( event, ui ) {
+				            $("#searchForm\\:searchObjet").val(ui.item.name);
+				            $("#searchForm\\:searchObjetHidden").val(ui.item.id);
+				            return false;
+			            }
+		    		})
+		    		.val("Recherche").toggleClass("backgroundText", true)
+					.focus(function(){
+		    			$(this).val("").toggleClass("backgroundText", false);
+		    		})
+		    		.blur(function(){
+		    			$(this).val("Recherche").toggleClass("backgroundText", true)
+		    		});
+		    		
+				$("#searchForm\\:searchCity").tokenInput(
+					"#{facesContext.externalContext.requestContextPath}/rest/search/locations/",
 					 {
 					 	theme: "facebook",
-					 	hintText: "Objet recherché",
-					 	tokenValue: "amazonId",
-	 	                resultsFormatter: 
-	 	                	function(item){
-		 	                	 return '<li><div style="display:inline-block;vertical-align:middle;"><img src="' + item.smallImageUrl + '" title="' + item.name + '" height="25px"/></div><div style="display:inline-block;vertical-align:middle; width:250px;" >' +item.name +'</div></li>'; 
-		 	                }
-					 });
-		    	$('#searchForm\\:searchCity').tokenInput(
-		    		'#{facesContext.externalContext.requestContextPath}/rest/search/locations/', 
-		    		{
-		    			theme: 'facebook',
-		    			hintText: 'Code postal ou Ville'
+		    			hintText: "Code postal ou Ville",
+					 	tokenValue: "amazonId",	
+					 	queryParam: "term"
+					 }       
+				);
+		    	$("#token-input-searchForm\\:searchCity")
+		    		.val("Lieu(x)").toggleClass("backgroundText", true)
+					.focus(function(){
+		    			$(this).val("").toggleClass("backgroundText", false);
+		    		})
+		    		.blur(function(){
+		    			$(this).val("Lieu(x)").toggleClass("backgroundText", true)
 		    		});
-		    });
+		    	//TODO : make a function to render input with label
+		    	$("#searchForm\\:searchMember")
+		    		.val("TroQMember").toggleClass("backgroundText", true)
+					.focus(function(){
+		    			$(this).val("").toggleClass("backgroundText", false);
+		    		})
+		    		.blur(function(){
+		    			$(this).val("TroQMember").toggleClass("backgroundText", true)
+		    		});
+    		});
 		</h:outputScript>
 		<div id="toolbar">
 			<!-- May use an include there -->
@@ -37,18 +68,20 @@
 				<fieldset>
 					<div id="searchPart2">
 						<div id="cityBox">
-							<h:inputText id="searchCity" value="Code postal ou Ville" />
+							<h:inputText id="searchCity"  />
+							<h:inputHidden id="searchCityId"  />
 						</div>
-						<h:commandButton id="bouton" value="Rechercher !" type="button" />
 					</div>
 					<div id="searchPart1">
 						<div id="searchObjetBox" class="searchBox">
-							<h:inputText id="searchObjet" value="Recherche d'objet" />
+							<h:inputText id= "searchObjet" value="Recherche d'objet" />
+							<h:inputHidden id="searchObjetHidden"  />
 						</div>
 						<div id="searchMemberBox" class="searchBox">
 							<h:inputText id="searchMember" value="Recherche" />
 						</div>
 					</div>
+					<h:commandButton id="bouton" value="Rechercher !" type="button" />
 				</fieldset>
 			</h:form>
 		</div>

@@ -28,7 +28,7 @@ public class LocationSearch {
 	
 	
 	@GET
-	public GenericEntity<List<Location>> getLocations (@QueryParam("q") String pattern){
+	public GenericEntity<List<Location>> getLocations (@QueryParam("term") String pattern){
 		Locations locations = new Locations();
 		List<Location> locationsFound = locations.getLocationByString(pattern);
 		return new GenericEntity<List<Location>>(locationsFound) {};

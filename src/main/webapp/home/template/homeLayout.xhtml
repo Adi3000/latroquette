@@ -6,9 +6,10 @@
       xmlns:ui="http://java.sun.com/jsf/facelets" >
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link type="text/css" rel="stylesheet" href="/resources/css/custom-theme/jquery-ui-1.9.0.custom.min.css"/>
+	<script type="text/javascript" src="/resources/js/jquery-1.8.2.js"/>
+	<script type="text/javascript" src="/resources/js/jquery-ui-1.9.0.custom.min.js"/>
 	<h:outputStylesheet name="css/common/common.css" />
-	<h:outputStylesheet name="css/cupertino/jquery-ui-1.8.16.custom.css"/>
-	<h:outputScript name="js/jquery-1.8.0.min.js"/>
 	<title>La TroQuette</title>
 </h:head>
 <h:body>
@@ -17,8 +18,9 @@
 			<ui:include src="/home/tiles/title.xhtml" />
 		</ui:insert>
 		<div id="bodyPart">
-			<ui:include src="/home/tiles/menu.xhtml" /><div id="content">
-				<ui:include src="/home/tiles/toolbar.xhtml" />
+			<ui:include src="/home/tiles/toolbar.xhtml" />
+			<ui:include src="/home/tiles/menu.xhtml" /><!-- 
+		 --><div id="content">
 				<ui:insert name="mainDiv">
 					<ui:include src="/home/tiles/main.xhtml" /><!-- 
 				 --></ui:insert><!-- 

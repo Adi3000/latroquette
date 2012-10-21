@@ -62,6 +62,18 @@ public class AmazonItem implements ViewableItem{
 		this.name = name;
 	}
 	/**
+	 * @return the name
+	 */
+	public String getLabel() {
+		return getName();
+	}
+	/**
+	 * @param name the name to set
+	 */
+	public void setLabel(String name) {
+		this.setName(name);
+	}
+	/**
 	 * @return the fullName
 	 */
 	public String getFullName() {
@@ -84,6 +96,18 @@ public class AmazonItem implements ViewableItem{
 	 */
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	/**
+	 * @return the id
+	 */
+	public String getValue() {
+		return getAmazonId();
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setValue(String id) {
+		this.setAmazonId(id);
 	}
 	/**
 	 * @return the amazonId

@@ -25,7 +25,7 @@ public class AmazonProducts {
 	
 	
 	@GET
-	public GenericEntity<List<AmazonItem>> getLocations (@QueryParam("q") String pattern, 
+	public GenericEntity<List<AmazonItem>> getLocations (@QueryParam("term") String pattern, 
 			@QueryParam("cat") String category ){
 		Items items = new Items();
 		List<AmazonItem> itemsFound = items.searchAmazonItems(category, pattern);

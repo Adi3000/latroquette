@@ -169,3 +169,13 @@ ul{
 	width: 175px;
 	display: inline-block;
 }
+
+/* Override JQUERY UI settings*/
+.ui-autocomplete{
+	font-size : 0.8em;
+}
+
+.backgroundText{
+	color: #888888;
+	font-style: italic;
+}
