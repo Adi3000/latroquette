@@ -28,10 +28,14 @@
 		    		})
 		    		.val("Recherche").toggleClass("backgroundText", true)
 					.focus(function(){
-		    			$(this).val("").toggleClass("backgroundText", false);
+						if($(this).hasClass("backgroundText")){
+		    				$(this).val("").toggleClass("backgroundText", false);
+	    				}
 		    		})
 		    		.blur(function(){
-		    			$(this).val("Recherche").toggleClass("backgroundText", true)
+		    			if($(this).val() == ""){
+		    				$(this).val("Recherche").toggleClass("backgroundText", true);
+	    				}
 		    		});
 		    		
 				$("#searchForm\\:searchCity").tokenInput(
@@ -55,10 +59,14 @@
 		    	$("#searchForm\\:searchMember")
 		    		.val("TroQMember").toggleClass("backgroundText", true)
 					.focus(function(){
-		    			$(this).val("").toggleClass("backgroundText", false);
+						if($(this).hasClass("backgroundText")){
+			    			$(this).val("").toggleClass("backgroundText", false);
+		    			}
 		    		})
 		    		.blur(function(){
-		    			$(this).val("TroQMember").toggleClass("backgroundText", true)
+		    			if($(this).val() == ""){
+		    				$(this).val("TroQMember").toggleClass("backgroundText", true)
+	    				}
 		    		});
     		});
 		</h:outputScript>
