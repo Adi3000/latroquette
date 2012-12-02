@@ -7,10 +7,9 @@
 <body>
 	<ui:composition>
 		<h:outputStylesheet name="css/profile/login.css" target="head" /><!--
-	 --><div id="mainDiv"><h:form id="loginForm">
-			<fieldset>
+	 --><h:form id="loginForm">
 			<div id="loginBorder">
-				<span>#{text_profile.CONNEXION_FIELDSET}</span>
+				<h2 id="loginTitle">#{text_profile.CONNEXION_FIELDSET}</h2>
 				<div class="loginField registerField">
 					<div class="label">
 						<h:outputLabel for="loginField">#{text_profile.LOGIN_LABEL}</h:outputLabel>
@@ -30,11 +29,10 @@
 					<h:message for="passwordField" class="error" />
 				</div>
 				<div id="loginButton">
-					<h:commandButton value="Login" image="/resources/img/Bouton_login.png" action="#{userBean.loginUser}" />
+					<h:commandButton value="Login" action="#{userBean.loginUser}" />
 				</div>
 			</div>
-			</fieldset>
-		</h:form></div><!-- 
+		</h:form><!-- 
 	--></ui:composition>
 </body>
 </html>

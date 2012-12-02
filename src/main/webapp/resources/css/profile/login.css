@@ -11,12 +11,11 @@ legend
 
 #loginBorder 
 {
-	background: #FFF;
-	padding: 15px;
-	border-style: solid;
-	border-width: 1px;
-	-webkit-border-radius : 5px 5px;
-	
+	background: url("/resources/img/wood-billboard.png") no-repeat;
+	padding-top: 15px;
+	padding-left: 30px;
+	min-height : 150px;
+	height : auto;
 }
 
 .field input.loginBox
@@ -29,17 +28,33 @@ legend
 	-webkit-border-radius : 5px 5px;
 }
 
+form#loginForm{
+	margin-left: auto;
+	margin-right: auto;
+
+}
+
 form#loginForm .loginField
 {
 	vertical-align: middle;
 }
+form#loginForm .loginField .label
+{
+	width: 130px;
+}
+form#loginForm h2
+{
+	font-size: 1.0em;
+	text-align: center;
+	color: #5B3720;
+}
 
-
+#loginForm{
+	width:344px;
+}
 
 #loginButton
 {
 	width: 100%;
 	text-align: center;
-	padding: 15px;
-	padding-bottom: 0px;
 }
