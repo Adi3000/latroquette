@@ -41,20 +41,39 @@ form#loginForm .loginField
 form#loginForm .loginField .label
 {
 	width: 130px;
+	text-shadow: 1px 1px 2px #FFF;
 }
 form#loginForm h2
 {
 	font-size: 1.0em;
 	text-align: center;
 	color: #5B3720;
+	text-shadow: 1px 1px 2px #FFF;
+	
 }
-
+#topHomepage{
+	height: 220px; 
+}
 #loginForm{
 	width:344px;
 }
-
+#loginDiv, #arrowDiv{
+	width:700px;
+	position: absolute;
+	margin-top: 10px;
+}
+#arrowDiv{
+	background: url("/resources/img/arrow_homepage.png") no-repeat;
+	min-height: 215px;
+	height: auto;
+}
 #loginButton
 {
 	width: 100%;
 	text-align: center;
+}
+#switchToLogin{
+	position: relative;
+	left: 516px;
+	top: 178px;
 }

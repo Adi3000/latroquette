@@ -6,33 +6,58 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition>
-		<h:outputStylesheet name="css/profile/login.css" target="head" /><!--
-	 --><h:form id="loginForm">
-			<div id="loginBorder">
-				<h2 id="loginTitle">#{text_profile.CONNEXION_FIELDSET}</h2>
-				<div class="loginField registerField">
-					<div class="label">
-						<h:outputLabel for="loginField">#{text_profile.LOGIN_LABEL}</h:outputLabel>
-					</div>
-					<div class="field">
-						<h:inputText id="loginField" value="#{userBean.login}" class="loginBox" required="true"/>
-					</div>
-					<h:message for="loginField" class="error" />
-				</div>
-				<div class="loginField registerField">
-					<div class="label">
-						<h:outputLabel for="passwordField">#{text_profile.PASSWORD_LABEL}</h:outputLabel>
-					</div>
-					<div class="field">
-						<h:inputSecret id="passwordField" value="#{userBean.password}" class="loginBox" required="true" />
-					</div>
-					<h:message for="passwordField" class="error" />
-				</div>
-				<div id="loginButton">
-					<h:commandButton value="Login" action="#{userBean.loginUser}" />
-				</div>
+		<h:outputStylesheet name="css/profile/login.css" target="head" />
+		<h:outputScript target="head">
+			$(function() {
+				$("#loginDiv").hide(0);
+				$("#switchToLogin").click(function(){
+					$("#loginDiv").slideDown(600,"easeOutBounce");
+				});
+				$("#switchToLogin").click(function(){
+					$("#arrowDiv").hide(600);
+				});
+				$("#switchToArrow").click(function(){
+					$("#arrowDiv").show(600);
+				});
+				$("#switchToArrow").click(function(){
+					$("#loginDiv").slideUp(600);
+				});
+			});
+		</h:outputScript><!--
+	 --><div id="topHomepage">
+			<div id="arrowDiv">
+				<div id="switchToLogin">#{text_profile.CONNEXION_FIELDSET}</div>
 			</div>
-		</h:form><!-- 
+			<div id="loginDiv">
+			 	<h:form id="loginForm">
+					<div id="loginBorder">
+						<h2 id="loginTitle">#{text_profile.CONNEXION_FIELDSET}</h2>
+						<div class="loginField registerField">
+							<div class="label">
+								<h:outputLabel for="loginField">#{text_profile.LOGIN_LABEL}</h:outputLabel>
+							</div>
+							<div class="field">
+								<h:inputText id="loginField" value="#{userBean.login}" class="loginBox" required="true"/>
+							</div>
+							<h:message for="loginField" class="error" />
+						</div>
+						<div class="loginField registerField">
+							<div class="label">
+								<h:outputLabel for="passwordField">#{text_profile.PASSWORD_LABEL}</h:outputLabel>
+							</div>
+							<div class="field">
+								<h:inputSecret id="passwordField" value="#{userBean.password}" class="loginBox" required="true" />
+							</div>
+							<h:message for="passwordField" class="error" />
+						</div>
+						<div id="loginButton">
+							<input type="button" id="switchToArrow" value="Retour"/>
+							<h:commandButton value="Login" action="#{userBean.loginUser}" />
+						</div>
+					</div>
+				</h:form>
+			</div>
+		</div><!-- 
 	--></ui:composition>
 </body>
 </html>
