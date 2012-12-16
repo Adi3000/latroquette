@@ -52,7 +52,7 @@
                 <version>0.11-SNAPSHOT</version>
                 <configuration>
                     <virtualservers>latroquette</virtualservers>
-                    <glassfishHome>/home/adi/dreamzone/glassfish3</glassfishHome>
+                    <glassfishHome>/opt/glassfishv3/glassfish</glassfishHome>
                     <domain>domain1</domain>
                     <host>localhost</host>
                     <port>4848</port>
