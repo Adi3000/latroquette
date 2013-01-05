@@ -35,6 +35,10 @@ public class UserBean extends User implements Serializable{
 	private transient String passwordConfirm;
 	private transient String mailConfirm;
 	private int loginState;
+	
+	public UserBean(){
+		loginState = ANONYMOUS;
+	}
 
 	/**
 	 * @return the passwordConfirm
@@ -139,18 +143,34 @@ public class UserBean extends User implements Serializable{
 		Users users = new Users();
 		User newUser = new User();
 		loginState = NOT_LOGGED_IN;
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if(!users.registerNewUser(newUser)){
+			FacesMessage msg = new FacesMessage("Registring error", 
+					"User already usedRegistering failed, please try later or ask for support");
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			fc.addMessage(null, msg);
+			fc.validationFailed();
+		}
+		if(StringUtils.isEmpty(getMail())){
+			FacesMessage msg = new FacesMessage("Registring error", 
+					"Email Empty : Registering failed, please try later or ask for support");
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			fc.addMessage(null, msg);
+			fc.validationFailed();
+		}
+		if(StringUtils.isEmpty(passwordConfirm)){
+			FacesMessage msg = new FacesMessage("Registring error", 
+					"Confirm password Empty : Registering failed, please try later or ask for support");
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			fc.addMessage(null, msg);
+			fc.validationFailed();
+		}
+		if(fc.isValidationFailed()){
+			return null;
+		}
 		newUser.setLogin(this.getLogin());
 		newUser.setPassword(this.getPassword());
 		this.setLogginUserInfo(newUser);
-		if(!users.registerNewUser(newUser)){
-			FacesMessage msg = new FacesMessage("Registring error", 
-					"Registering failed, please try later or ask for support");
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.addMessage(null, msg);
-			return null;
-		}
-		
 		this.loginState = NEW_USER;
 		return "/index";
 
@@ -176,20 +196,14 @@ public class UserBean extends User implements Serializable{
 	
 	public String logoutUser()
 	{
-		
 		Users userSearch = new Users();
 		User user = userSearch.getUserByLogin(this.getLogin());
 		user.setToken(null);
 		userSearch.updateUser(user);
 		//Unset properties of this user
 		this.copyProperties(new User());
-		loginState = NOT_LOGGED_IN;
-		switch (loginState) {
-			case NOT_LOGGED_IN:
-				return "index";
-			default:
-				return "login#?logInFail="+loginState; 
-		}
+		loginState = ANONYMOUS;
+		return "index";
 	}
 	
 	private void setLogginUserInfo(User user){
@@ -214,9 +228,9 @@ public class UserBean extends User implements Serializable{
 		this.setToken(user.getToken());
 	}
 	
-	public Integer getLoggedIn()
+	public boolean getLoggedIn()
 	{
-		return (loginState == LOGGED_IN || loginState == NEW_USER) ? new Integer(1) : null ;
+		return (loginState == LOGGED_IN || loginState == NEW_USER) ;
 	}
 	
 }

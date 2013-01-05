@@ -8,7 +8,10 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import net.latroquette.common.database.data.AbstractDataObject;
@@ -17,6 +20,7 @@ import net.latroquette.common.database.data.AbstractDataObject;
 
 @Entity
 @Table(name = "users")
+@SequenceGenerator(name = "users_user_id_seq", sequenceName = "users_user_id_seq")
 public class User extends AbstractDataObject{
 	
 	/**
@@ -37,6 +41,7 @@ public class User extends AbstractDataObject{
 	
 	@Id
 	@Column(name="user_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_user_id_seq")
 	public Integer getId()
 	{
 		return id;

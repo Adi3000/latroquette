@@ -13,17 +13,16 @@
 			<div id="enTete">	
 				<h:panelGroup id="toolbarLogin">
 					<c:choose>
-						<c:when test="${userBean.loggedIn == 1}">
+						<c:when  test="${not userBean.loggedIn}">
+							<h:link outcome="/profile/login" value="#{text_home.CONNEXION}" />
+						</c:when>
+						<c:otherwise>
 							<h:form id="logoutForm">
 								<h:outputFormat value="#{text_home.WELCOME_MESSAGE}">
 									<f:param value="#{userBean.login}" />
 								</h:outputFormat>&nbsp;
 								<h:commandButton value="Logout" action="#{userBean.logoutUser}" />
 							</h:form>
-						</c:when>
-						<c:otherwise>
-							<h:link outcome="/profile/login" value="#{text_home.CONNEXION}" />&nbsp;
-							<h:link outcome="/profile/register" value="#{text_home.REGISTER}" />
 						</c:otherwise>
 					</c:choose>
 				</h:panelGroup>

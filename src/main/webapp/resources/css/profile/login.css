@@ -9,13 +9,18 @@ legend
 }
 
 
-#loginBorder 
+#loginBorder, #registerBorder
 {
 	background: url("/resources/img/wood-billboard.png") no-repeat;
 	padding-top: 15px;
+	display: inline-block;
+	vertical-align: middle;
 	padding-left: 30px;
 	min-height : 150px;
 	height : auto;
+}
+#registerBorder{
+	padding-top : 30px;
 }
 
 .field input.loginBox
@@ -67,13 +72,16 @@ form#loginForm h2
 	min-height: 215px;
 	height: auto;
 }
-#loginButton
+#loginButtons div{
+	display: inline-block;
+}
+#loginButtons
 {
 	width: 100%;
 	text-align: center;
 }
 #switchToLogin{
 	position: relative;
-	left: 516px;
+	left: 624px;
 	top: 178px;
 }

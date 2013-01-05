@@ -1,7 +1,5 @@
 package net.latroquette.common.database.data.profile;
 
-import java.util.List;
-
 import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.session.DatabaseSession;
 
