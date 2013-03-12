@@ -52,12 +52,12 @@
                 <version>0.11</version>
                 <configuration>
                     <virtualservers>latroquette</virtualservers>
-                    <glassfishHome>/opt/glassfishv3/glassfish</glassfishHome>
+                    <glassfishHome>/opt/glassfish3/glassfish</glassfishHome>
                     <domain>domain1</domain>
                     <host>localhost</host>
                     <port>4848</port>
                     <user>admin</user>
-                    <passwordfile>/opt/glassfishv3/.glassfish_password</passwordfile>
+                    <passwordfile>/opt/glassfish3/.glassfish_password</passwordfile>
                     <appArchive>${project.build.directory}/${project.build.finalName}.${project.artifact.artifactHandler.extension}</appArchive>
                     <virtualservers>latroquette</virtualservers>
                     <appName>latroquette</appName>
