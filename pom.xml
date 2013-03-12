@@ -23,13 +23,13 @@
 		<repository>
 			<id>releases</id>
 			<name>Nexus Snapshot Repository</name>
-			<url>http://code.a-dream-zone.com/nexus/content/repositories/releases</url>
+			<url>http://code.adi3000.com/nexus/content/repositories/releases</url>
 		</repository>
 		<!-- use the following if you ARE using a snapshot version. -->
 		<snapshotRepository>
 			<id>snapshots</id>
 			<name>Nexus Snapshot Repository</name>
-			<url>http://code.a-dream-zone.com/nexus/content/repositories/snapshots</url>
+			<url>http://code.adi3000.com/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 	<build>
