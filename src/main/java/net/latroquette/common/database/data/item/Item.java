@@ -1,12 +1,18 @@
 package net.latroquette.common.database.data.item;
 
-import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.latroquette.common.database.data.AbstractDataObject;
@@ -16,6 +22,7 @@ import net.latroquette.common.database.data.profile.User;
 @Entity
 @Table(name = "items")
 @XmlRootElement
+@SequenceGenerator(name = "items_item_id_seq", sequenceName = "items_item_id_seq")
 public class Item extends AbstractDataObject {
 
 	/**
@@ -29,16 +36,20 @@ public class Item extends AbstractDataObject {
 	private Date updateDate;
 	private String title;
 	private String description;
-	private List<Keyword> keywordList;
+	private transient List<Keyword> keywordList;
 	@Override
-	@Column(name="item_id")
-	public Serializable getId() {
+	@Id
+	@Column(name="item_id")    
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "items_item_id_seq")
+	public Integer getId() {
 		// TODO Auto-generated method stub
 		return id;
 	}
 	/**
 	 * @return the user
 	 */
+	@ManyToOne
+	@JoinColumn(name="user_id")
 	public User getUser() {
 		return user;
 	}
@@ -62,6 +73,12 @@ public class Item extends AbstractDataObject {
 		this.statusId = statusId;
 	}
 	/**
+	 * @param statusId the statusId to set
+	 */
+	public void setStatusId(ItemStatus status) {
+		this.statusId = status.getValue();
+	}
+	/**
 	 * @return the creationDate
 	 */
 	@Column(name="item_creation_date")
@@ -75,6 +92,12 @@ public class Item extends AbstractDataObject {
 		this.creationDate = creationDate;
 	}
 	/**
+	 * @param creationDate the creationDate to set
+	 */
+	public void setCreationDate(java.util.Date creationDate) {
+		this.creationDate = new Date(creationDate.getTime());
+	}
+	/**
 	 * @return the updateDate
 	 */
 	@Column(name="item_update_date")
@@ -86,6 +109,12 @@ public class Item extends AbstractDataObject {
 	 */
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
+	}
+	/**
+	 * @param updateDate the updateDate to set
+	 */
+	public void setUpdateDate(java.util.Date updateDate) {
+		this.updateDate = new Date(updateDate.getTime());
 	}
 	/**
 	 * @return the title
@@ -116,6 +145,7 @@ public class Item extends AbstractDataObject {
 	/**
 	 * @return the keywordList
 	 */
+	@Transient
 	public List<Keyword> getKeywordList() {
 		return keywordList;
 	}

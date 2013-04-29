@@ -20,7 +20,7 @@ import net.latroquette.common.security.Security;
 import org.apache.commons.lang.StringUtils;
 
 
-@ManagedBean
+@ManagedBean(name = "userBean")
 @SessionScoped
 public class UserBean extends User implements Serializable{
 	

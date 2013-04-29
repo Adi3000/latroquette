@@ -1,19 +1,23 @@
 package net.latroquette.common.database.data.item;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
+import net.latroquette.common.database.IDatabaseConstants;
+import net.latroquette.common.database.data.profile.User;
+import net.latroquette.common.database.session.DatabaseSession;
 import net.latroquette.service.amazon.AmazonWServiceClient;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 
 import com.amazon.ECS.client.jax.AWSECommerceServicePortType;
 import com.amazon.ECS.client.jax.ItemSearchRequest;
 
-public class Items/* extends DatabaseSession*/{
+public class Items extends DatabaseSession{
 	
-	
-	public List<AmazonItem> searchAmazonItems(String cat, String pattern){
+	public static List<AmazonItem> searchAmazonItems(String cat, String pattern){
 		List<AmazonItem> listItem = new ArrayList<AmazonItem>();
 		
 		AWSECommerceServicePortType port =  AmazonWServiceClient.CLIENT.getPort();
@@ -44,5 +48,29 @@ public class Items/* extends DatabaseSession*/{
 		}
 		
 		return listItem;
+	}
+	
+	public Item getItemById(String itemId){
+		Criteria req = this.session.createCriteria(Item.class)
+				.setMaxResults(1)
+				.add(Restrictions.eq("id", itemId)) ;
+		return (Item)req.uniqueResult();
+	}
+	
+	public Item modifyItem(Item item, User user){
+		item.setUser(user);
+		item.setUpdateDate(new Date());
+		if(item.getId() == null){
+			item.setCreationDate(new Date());
+			item.setDatabaseOperation(IDatabaseConstants.INSERT);
+		}else{
+			item.setDatabaseOperation(IDatabaseConstants.UPDATE);
+		}
+		persist(item);
+		if(!commit()){
+			return null;
+		}else{
+			return item;
+		}
 	}
 }

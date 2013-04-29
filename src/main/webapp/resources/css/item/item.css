@@ -1,23 +1,20 @@
-#itemImages,
-#itemDescription
-{
-	display: inline-block;
-	vertical-align: top;
-}
-
 #itemImage{
 	width : 300px;
 }
+#itemImages > div{
+	max-width : 200px;
+	display: inline-block;
+}
 
 #itemDescription{
-	width: 380px;
+	width: 100%;
 }
 #itemImage img{
 	width: 100%;
 }
 
 #itemTitle{
-	width: 100%;
+	width: 380px;
 }
 #suggestedItem{
 	width: 100%;
@@ -44,4 +41,8 @@
 }
 #newItemForm\:title{
 	border: 1px solid;
+}
+
+#itemTitle, #clueForIdentifiecation{
+	display: inline-block;
 }

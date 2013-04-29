@@ -3,17 +3,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:t="http://myfaces.apache.org/tomahawk">
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml"><!--  
 	--><ui:define name="mainDiv"><!-- 
 		--><h:outputStylesheet name="css/item/item.css" target="head" /><!--
 		--><div id="mainDiv">
-			
-				<h:form id="newItemForm">
-					<div id="itemImages">
-						<div><h:graphicImage url="/resources/img/aucune_image.jpg" width="300"/></div>
-					</div>
+				<h:form id="newItemForm" method="post" enctype="multipart/form-data">
+					<h:messages></h:messages>
 					<div id="itemDescription">
 						<div id="itemTitle">
 							<div>
@@ -21,10 +19,10 @@
 									<div class="labelTop">
 										<h:outputLabel for="title">Titre</h:outputLabel>
 									</div>
-									<h:inputText id="title" size="45"/>
+									<h:inputText id="title" size="58" value="#{itemBean.title}" required="true"/>
 								</div>
 							</div>
-							<div id="suggestedItem" class="field">
+							<!--<div id="suggestedItem" class="field">
 								<ul>
 									<li class="selected">Choix1</li>
 									<li>Choix1</li>
@@ -32,15 +30,31 @@
 									<li>Choix1</li>
 									<li>Choix1</li>
 								</ul>
-							</div>
+							</div>-->
+						</div>
+						<div id="clueForIdentifiecation">
+							<input type="text" id="keywordField" value=""/>
+							<h:inputHidden id="keywordList" value="#{itemBean.keywordListString}"/>
 						</div>
 						<div>
 							<div class="field">
 								<div class="labelTop"><h:outputLabel for="description">Description</h:outputLabel></div>
-								<h:inputTextarea id="description" label="desc"/>
+								<h:inputTextarea id="description" label="desc" cols="45" rows="18" value="#{itemBean.description}" required="true"/>
 							</div>
 						</div>
 					</div>
+					<div id="itemImages">
+						<div><t:inputFileUpload id="firstFile" value="#{itemBean.file1}"/></div>
+						<div><t:inputFileUpload value="#{itemBean.file2}"/></div>
+						<div><t:inputFileUpload value="#{itemBean.file3}"/></div>
+					</div>
+					<ul id="wishies">
+						<li>
+							<label>Categorie : </label> <input type="text" id="wishiesCategory" value="" />
+							<label>Objet : </label> <input type="text" id="wishiesField" value=""/>	<h:inputHidden id="wishiesList" value="#{itemBean.wishiesListString}"/>
+						</li>
+					</ul>
+					<div><h:commandButton value="Cr&eacute;er" id="saveButton" action="#{itemBean.createItem}"/></div>
 				</h:form>
 			</div><!--  
   	 --></ui:define><!-- 

@@ -11,5 +11,6 @@
   <property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
   <mapping class="net.latroquette.common.database.data.profile.User"/>
   <mapping class="net.latroquette.common.database.data.location.Location"/>
+  <mapping class="net.latroquette.common.database.data.item.Item"/>
  </session-factory>
 </hibernate-configuration>

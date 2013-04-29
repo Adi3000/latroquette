@@ -89,6 +89,9 @@ public class DatabaseSession {
 		case IDatabaseConstants.INSERT_OR_UPDATE :
 			session.saveOrUpdate(modelData);
 			break;
+		case IDatabaseConstants.UPDATE :
+			session.update(modelData);
+			break;
 		default :
 			break;
 		}
