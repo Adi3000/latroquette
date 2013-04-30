@@ -5,12 +5,9 @@ import java.util.List;
 
 import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.data.AbstractDataObject;
-import net.latroquette.common.engine.EngineLog;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-
-
 
 
 public class DatabaseSession {
@@ -113,11 +110,11 @@ public class DatabaseSession {
 		return false;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<AbstractDataObject> getListOfSqlRequest(String sqlRequest)
 	{
 		openSession();
 		SQLQuery sqlQuery = session.createSQLQuery(sqlRequest);
+		@SuppressWarnings("unchecked")
 		List<AbstractDataObject> list =  sqlQuery.list();
 		return list;
 	}

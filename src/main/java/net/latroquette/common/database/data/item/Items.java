@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import net.latroquette.common.database.IDatabaseConstants;
+import net.latroquette.common.database.data.AbstractDAO;
 import net.latroquette.common.database.data.profile.User;
-import net.latroquette.common.database.session.DatabaseSession;
 import net.latroquette.service.amazon.AmazonWServiceClient;
 
 import org.hibernate.Criteria;
@@ -15,7 +15,7 @@ import org.hibernate.criterion.Restrictions;
 import com.amazon.ECS.client.jax.AWSECommerceServicePortType;
 import com.amazon.ECS.client.jax.ItemSearchRequest;
 
-public class Items extends DatabaseSession{
+public class Items extends AbstractDAO{
 	
 	public static List<AmazonItem> searchAmazonItems(String cat, String pattern){
 		List<AmazonItem> listItem = new ArrayList<AmazonItem>();

@@ -2,13 +2,13 @@ package net.latroquette.common.database.data.location;
 
 import java.util.List;
 
+import net.latroquette.common.database.data.AbstractDAO;
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 
-import net.latroquette.common.database.session.DatabaseSession;
-
-public class Locations extends DatabaseSession {
+public class Locations extends AbstractDAO {
 	
 	public List<Location> getLocationByType(LocationType locationType){
 		Criteria req = this.session.createCriteria(Location.class)

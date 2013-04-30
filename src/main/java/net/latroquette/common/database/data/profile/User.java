@@ -143,4 +143,8 @@ public class User extends AbstractDataObject{
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
+	
+	public String toString(){
+		return this.login.concat("@").concat(this.id.toString());
+	}
 }

@@ -30,4 +30,7 @@ public abstract class AbstractDataObject implements Serializable{
 	
 	public abstract Serializable getId();
 
+	public String toString(){
+		return this.getId().toString();
+	}
 }

@@ -1,6 +1,7 @@
 package net.latroquette.common.database.data.profile;
 
 import net.latroquette.common.database.IDatabaseConstants;
+import net.latroquette.common.database.data.AbstractDAO;
 import net.latroquette.common.database.session.DatabaseSession;
 
 import org.hibernate.Criteria;
@@ -8,7 +9,7 @@ import org.hibernate.criterion.Restrictions;
 
 
 
-public class Users extends DatabaseSession{
+public class Users extends AbstractDAO{
 	
 	public User getUserByLogin(String login){
 		Criteria req = this.session.createCriteria(User.class)
