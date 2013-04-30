@@ -1,9 +1,9 @@
-package net.latroquette.common.utils;
+package net.latroquette.common.util;
 
 import java.util.Arrays;
 import java.util.List;
 
-import net.latroquette.common.utils.optimizer.CommonValues;
+import net.latroquette.common.util.optimizer.CommonValues;
 
 import org.apache.commons.lang.StringUtils;
 

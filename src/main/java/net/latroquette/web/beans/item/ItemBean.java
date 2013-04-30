@@ -15,7 +15,7 @@ import javax.faces.context.FacesContext;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemStatus;
 import net.latroquette.common.database.data.item.Items;
-import net.latroquette.common.utils.CommonUtils;
+import net.latroquette.common.util.CommonUtils;
 import net.latroquette.web.beans.profile.UserBean;
 
 import org.apache.commons.lang.StringUtils;

@@ -1,0 +1,8 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd">
+	<cache name="parameters" maxElementsInMemory="100" eternal="false"
+		overflowToDisk="true" timeToIdleSeconds="0" timeToLiveSeconds="0"
+		diskPersistent="true" diskExpiryThreadIntervalSeconds="120" />
+	<cache name="menu" maxElementsInMemory="100" eternal="false"
+		overflowToDisk="true" timeToIdleSeconds="0" timeToLiveSeconds="0"
+		diskPersistent="true" diskExpiryThreadIntervalSeconds="120" />
+</ehcache>

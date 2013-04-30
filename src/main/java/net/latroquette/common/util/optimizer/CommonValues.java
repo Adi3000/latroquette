@@ -1,4 +1,4 @@
-package net.latroquette.common.utils.optimizer;
+package net.latroquette.common.util.optimizer;
 
 public class CommonValues {
 
