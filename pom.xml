@@ -47,9 +47,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-					<excludes>
-                            <exclude>/resources/development-bundle/**</exclude>
-                     </excludes>
+					<warSourceExcludes>resources/development-bundle/**</warSourceExcludes>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
