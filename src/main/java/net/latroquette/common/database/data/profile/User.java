@@ -145,6 +145,6 @@ public class User extends AbstractDataObject{
 	}
 	
 	public String toString(){
-		return this.login.concat("@").concat(this.id.toString());
+		return this.login + "@" + this.id;
 	}
 }

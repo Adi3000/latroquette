@@ -54,5 +54,15 @@ public class Security {
 		}
 		return ERROR;
 	}
+	
+	public static boolean isUserLogged(User user){
+		return user != null && user != User.ANONYMOUS_USER && !User.ANONYMOUS_USER.equals(user);
+	}
+	
+	public static void checkUserLogged(User user){
+		if(!isUserLogged(user)){
+			throw new IllegalArgumentException("User is not logged in ! ");
+		}
+	}
 
 }

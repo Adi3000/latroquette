@@ -12,5 +12,7 @@
   <mapping class="net.latroquette.common.database.data.profile.User"/>
   <mapping class="net.latroquette.common.database.data.location.Location"/>
   <mapping class="net.latroquette.common.database.data.item.Item"/>
+  <mapping class="net.latroquette.common.database.data.file.File"/>
+  <mapping class="net.latroquette.common.util.parameters.Parameter"/>
  </session-factory>
 </hibernate-configuration>

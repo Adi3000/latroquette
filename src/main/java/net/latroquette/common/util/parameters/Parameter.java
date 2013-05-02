@@ -4,14 +4,19 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import net.latroquette.common.database.data.AbstractDataObject;
+import net.latroquette.common.util.optimizer.DataType;
 
 @Entity
 @Table(name="parameters")
+@SequenceGenerator(name = "parameters_param_id_seq", sequenceName = "parameters_param_id_seq")
 public class Parameter extends AbstractDataObject{
 
 	private static final long serialVersionUID = -3918158862432820274L;
@@ -20,11 +25,12 @@ public class Parameter extends AbstractDataObject{
 	private String name;
 	private String description;
 	private String value;
-	private Boolean isList;
+	private String dataTypeId;
 	private List<String> valueList;
 	
 	@Id
-	@Column(name="param_id")    
+	@Column(name="param_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "parameters_param_id_seq")
 	public Integer getId() {
 		return id;
 	}
@@ -48,12 +54,17 @@ public class Parameter extends AbstractDataObject{
 		this.value = value;
 	}
 
-	@Column(name="param_is_list")
-	public Boolean getIsList() {
-		return isList;
+	@Column(name="param_data_type")
+	public String getDataTypeId() {
+		return dataTypeId;
 	}
-	public void setIsList(Boolean isList) {
-		this.isList = isList;
+	public void setDataTypeId(String dataTypeId) {
+		this.dataTypeId = dataTypeId;
+	}
+	
+	@Transient
+	public DataType getDataType(){
+		return DataType.getDataType(dataTypeId);
 	}
 
 	@Transient
@@ -63,7 +74,7 @@ public class Parameter extends AbstractDataObject{
 	public void setValueList(List<String> valueList) {
 		this.valueList = valueList;
 	}
-	@Column(name="param_desc")
+	@Column(name="param_description")
 	public String getDescription() {
 		return description;
 	}

@@ -1,6 +1,6 @@
 package net.latroquette.common.database.data.item;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -32,8 +32,8 @@ public class Item extends AbstractDataObject {
 	private Integer id;
 	private User user;
 	private Integer statusId;
-	private Date creationDate;
-	private Date updateDate;
+	private Timestamp creationDate;
+	private Timestamp updateDate;
 	private String title;
 	private String description;
 	private transient List<Keyword> keywordList;
@@ -82,39 +82,27 @@ public class Item extends AbstractDataObject {
 	 * @return the creationDate
 	 */
 	@Column(name="item_creation_date")
-	public Date getCreationDate() {
+	public Timestamp getCreationDate() {
 		return creationDate;
 	}
 	/**
 	 * @param creationDate the creationDate to set
 	 */
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
-	}
-	/**
-	 * @param creationDate the creationDate to set
-	 */
-	public void setCreationDate(java.util.Date creationDate) {
-		this.creationDate = new Date(creationDate.getTime());
 	}
 	/**
 	 * @return the updateDate
 	 */
 	@Column(name="item_update_date")
-	public Date getUpdateDate() {
+	public Timestamp getUpdateDate() {
 		return updateDate;
 	}
 	/**
 	 * @param updateDate the updateDate to set
 	 */
-	public void setUpdateDate(Date updateDate) {
+	public void setUpdateDate(Timestamp updateDate) {
 		this.updateDate = updateDate;
-	}
-	/**
-	 * @param updateDate the updateDate to set
-	 */
-	public void setUpdateDate(java.util.Date updateDate) {
-		this.updateDate = new Date(updateDate.getTime());
 	}
 	/**
 	 * @return the title

@@ -1,5 +1,6 @@
 package net.latroquette.common.database.data.item;
 
+
 public enum ItemStatus {
 	DRAFT(0),
 	CREATED(1),
@@ -14,8 +15,15 @@ public enum ItemStatus {
 		this.value = value;
 	}
 	
-	public int getValue(){
+	public Integer getValue(){
 		return value;
 	}
-	
+	public static ItemStatus valueOf(Integer value) {
+        for (ItemStatus itemStatus : ItemStatus.values()) {
+            if (itemStatus.getValue().equals(value)) {
+                return itemStatus;
+            }
+        }
+        return null;
+    }	
 }

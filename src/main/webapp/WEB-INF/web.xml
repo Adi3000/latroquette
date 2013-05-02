@@ -58,6 +58,14 @@
 		<servlet-name>jersey-serlvet</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
+	<servlet>
+	    <servlet-name>imageServlet</servlet-name>
+	    <servlet-class>net.latroquette.web.servlet.ImageServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>imageServlet</servlet-name>
+	    <url-pattern>/image/*</url-pattern>
+	</servlet-mapping>
 	<resource-ref>
 		<res-ref-name>jdbc/latroquette</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>

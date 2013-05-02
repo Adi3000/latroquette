@@ -12,7 +12,6 @@ import javax.ws.rs.ext.Provider;
 
 import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.Items;
-import net.latroquette.web.beans.item.ViewableItem;
 
 /**
  * @author adi
@@ -28,6 +27,7 @@ public class AmazonProducts {
 	public GenericEntity<List<AmazonItem>> getLocations (@QueryParam("term") String pattern, 
 			@QueryParam("cat") String category ){
 		Items items = new Items();
+		@SuppressWarnings("static-access")
 		List<AmazonItem> itemsFound = items.searchAmazonItems(category, pattern);
 		return new GenericEntity<List<AmazonItem>>(itemsFound) {};
 	}

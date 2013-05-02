@@ -12,7 +12,7 @@ public class Locations extends AbstractDAO {
 	
 	public List<Location> getLocationByType(LocationType locationType){
 		Criteria req = this.session.createCriteria(Location.class)
-				.add(Restrictions.eq("locationTypeId", locationType.getId())) ;
+				.add(Restrictions.eq("locationTypeId", locationType.getValue())) ;
 		@SuppressWarnings("unchecked")
 		List<Location> locations = (List<Location>)req.list();
 		

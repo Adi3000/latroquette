@@ -1,6 +1,8 @@
 package net.latroquette.common.util;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import net.latroquette.common.util.optimizer.CommonValues;
@@ -39,4 +41,11 @@ public class CommonUtils {
 		return sb.toString();
 	}
 
+	/**
+	 * Get timestamp for Now
+	 * @return timestamp
+	 */
+	public static Timestamp getTimestamp(){
+		return new Timestamp(new Date().getTime());
+	}
 }

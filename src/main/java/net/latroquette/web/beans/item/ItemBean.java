@@ -1,17 +1,22 @@
 package net.latroquette.web.beans.item;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import net.latroquette.common.database.IDatabaseConstants;
+import net.latroquette.common.database.data.file.File;
+import net.latroquette.common.database.data.file.Files;
+import net.latroquette.common.database.data.file.GarbageFileStatus;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemStatus;
 import net.latroquette.common.database.data.item.Items;
@@ -35,11 +40,10 @@ public class ItemBean implements Serializable {
 
 	private static final long serialVersionUID = 8400549541055176853L;
 	private Item item;
-	private UploadedFile file1;
-	private UploadedFile file2;
-	private UploadedFile file3;
+	private UploadedFile newFile;
 	private List<String> wishies;
 	private List<String> keywords;
+	private List<File> fileList;
 	
 	@PostConstruct
 	public void init(){
@@ -47,7 +51,7 @@ public class ItemBean implements Serializable {
 		String itemId = parameterMap.get("item");
 		if(StringUtils.isNotEmpty(itemId) ){
 			Items itemSearch = new Items();
-			item = itemSearch.getItemById(itemId);
+			item = itemSearch.getItemById(Integer.valueOf(itemId));
 		}else if(item == null){
 			item = new Item();
 		}
@@ -79,56 +83,44 @@ public class ItemBean implements Serializable {
 	/**
 	 * @return the file1
 	 */
-	public UploadedFile getFile1() {
-		return file1;
+	public UploadedFile getFile() {
+		return newFile;
 	}
 	/**
 	 * @param file1 the file1 to set
 	 */
-	public void setFile1(UploadedFile file1) {
-		this.file1 = file1;
+	public void setNewFile(UploadedFile file) {
+		this.newFile = file;
 	}
-	/**
-	 * @return the file2
-	 */
-	public UploadedFile getFile2() {
-		return file2;
-	}
-	/**
-	 * @param file2 the file2 to set
-	 */
-	public void setFile2(UploadedFile file2) {
-		this.file2 = file2;
-	}
-	/**
-	 * @return the file3
-	 */
-	public UploadedFile getFile3() {
-		return file3;
-	}
-	/**
-	 * @param file3 the file3 to set
-	 */
-	public void setFile3(UploadedFile file3) {
-		this.file3 = file3;
-	}
-
+	
 	public String createItem(){
 		item.setStatusId(ItemStatus.DRAFT);
 		Items items = new Items();
 		item = items.modifyItem(item, userBean);
+		Files files = new Files(items);
+		for(File file : fileList){
+			file.setGarbageStatus(GarbageFileStatus.VALIDATE);
+			file.setDatabaseOperation(IDatabaseConstants.UPDATE);
+			files.modifyFile(file, userBean);
+		}
 		return null;
 	}
 	
-	/*public String uploadPic(int id){
-		//TODO : Create small and resized image
-		//TODO : Drop the rest
-		return null;
-	}*/
-	
-	/*private boolean itemFound(){
-		return item != null;
-	}*/
+	public void uploadPic(){
+		Files files = new Files();
+		File file = files.uploadNewPicFile(newFile, userBean);
+		if(file == null){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			FacesMessage msg = new FacesMessage("Uploading error", 
+					"Adding file : upload failed, please try later or ask for support");
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			fc.addMessage(null, msg);
+			fc.validationFailed();
+		}else{
+			getFileList().add(file);
+		}
+		newFile = null;
+	}
 	
 	public void setKeywordListString(String keywordsListString){
 		keywords = CommonUtils.parseStringToList(keywordsListString);
@@ -151,4 +143,20 @@ public class ItemBean implements Serializable {
 	public void setUserBean(UserBean userBean) {
 		this.userBean = userBean;
 	}
+	
+	public List<File> getFileList(){
+		if(this.fileList == null){
+			this.fileList = new ArrayList<File>(5);
+		}
+		return this.fileList;
+	}
+	
+	public void setFileList(List<File> fileList){
+		this.fileList = fileList;
+	}
+	
+	public UploadedFile getNewFile(){
+		return newFile;
+	}
+	
 }

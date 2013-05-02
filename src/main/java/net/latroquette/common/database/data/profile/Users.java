@@ -2,7 +2,6 @@ package net.latroquette.common.database.data.profile;
 
 import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.data.AbstractDAO;
-import net.latroquette.common.database.session.DatabaseSession;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;

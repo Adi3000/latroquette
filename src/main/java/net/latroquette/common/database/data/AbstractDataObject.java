@@ -33,4 +33,18 @@ public abstract class AbstractDataObject implements Serializable{
 	public String toString(){
 		return this.getId().toString();
 	}
+	
+	@Override
+	public int hashCode(){
+		if(getId() != null){
+			return getId().hashCode();
+		}else{
+			return 0;
+		}
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		return this.hashCode() == o.hashCode();
+	}
 }

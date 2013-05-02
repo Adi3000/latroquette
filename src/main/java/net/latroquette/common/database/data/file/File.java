@@ -1,15 +1,35 @@
 package net.latroquette.common.database.data.file;
 
 
+import java.sql.Timestamp;
+
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import net.latroquette.common.database.data.AbstractDataObject;
 import net.latroquette.common.database.data.profile.User;
 
+@Entity
+@Table(name = "files")
+@XmlRootElement
+@SequenceGenerator(name = "files_file_id_seq", sequenceName = "files_file_id_seq")
 public class File extends AbstractDataObject{
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1381954874430138843L;
-	public static final String TABLE_AND_ENTITY_NAME = "Files";
+	public static final String TABLE_AND_ENTITY_NAME = "files";
 
 	private String name;
     private java.io.File file;
@@ -17,22 +37,24 @@ public class File extends AbstractDataObject{
     private User owner;
     private String checksum;
     private Integer garbageStatus;
-    private FileType fileType;
+    private Timestamp uploadDate;
 	/**
 	 * @return the title
 	 */
-	public String getTitle() {
+    @Column(name="file_name")
+	public String getName() {
 		return name;
 	}
 	/**
 	 * @param title the title to set
 	 */
-	public void setTitle(String title) {
-		this.name = title;
+	public void setName(String name) {
+		this.name = name;
 	}
 	/**
 	 * @return the file
 	 */
+	@Transient
 	public java.io.File getFile() {
 		return file;
 	}
@@ -45,6 +67,9 @@ public class File extends AbstractDataObject{
 	/**
 	 * @return the id
 	 */
+	@Id
+	@Column(name="file_id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "files_file_id_seq")
 	public Integer getId() {
 		return id;
 	}
@@ -57,6 +82,8 @@ public class File extends AbstractDataObject{
 	/**
 	 * @return the owner
 	 */
+	@ManyToOne(fetch= FetchType.LAZY)
+	@JoinColumn(name="user_id")
 	public User getOwner() {
 		return owner;
 	}
@@ -69,6 +96,7 @@ public class File extends AbstractDataObject{
 	/**
 	 * @return the checksum
 	 */
+	@Column(name="file_checksum")
 	public String getChecksum() {
 		return checksum;
 	}
@@ -81,6 +109,7 @@ public class File extends AbstractDataObject{
 	/**
 	 * @return the garbageStatus
 	 */
+	@Column(name="file_garbage_status")
 	public Integer getGarbageStatus() {
 		return garbageStatus;
 	}
@@ -91,16 +120,22 @@ public class File extends AbstractDataObject{
 		this.garbageStatus = garbageStatus;
 	}	
 	/**
-	 * @return the fileType
+	 * @param garbageStatus the garbageStatus to set
 	 */
-	public FileType getFileType() {
-		return fileType;
+	public void setGarbageStatus(GarbageFileStatus garbageStatus) {
+		this.garbageStatus = garbageStatus.getValue();
 	}
 	/**
-	 * @param fileType the fileType to set
+	 * @return the uploadDate
 	 */
-	public void setFileType(FileType fileType) {
-		this.fileType = fileType;
+	@Column(name="file_upload_date")
+	public Timestamp getUploadDate() {
+		return uploadDate;
 	}
-
+	/**
+	 * @param uploadDate the uploadDate to set
+	 */
+	public void setUploadDate(Timestamp uploadDate) {
+		this.uploadDate = uploadDate;
+	}
 }

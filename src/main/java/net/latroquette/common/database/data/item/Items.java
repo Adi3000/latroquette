@@ -7,6 +7,7 @@ import java.util.List;
 import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.data.AbstractDAO;
 import net.latroquette.common.database.data.profile.User;
+import net.latroquette.common.util.CommonUtils;
 import net.latroquette.service.amazon.AmazonWServiceClient;
 
 import org.hibernate.Criteria;
@@ -50,18 +51,15 @@ public class Items extends AbstractDAO{
 		return listItem;
 	}
 	
-	public Item getItemById(String itemId){
-		Criteria req = this.session.createCriteria(Item.class)
-				.setMaxResults(1)
-				.add(Restrictions.eq("id", itemId)) ;
-		return (Item)req.uniqueResult();
+	public Item getItemById(Integer itemId){
+		return (Item)this.getDataObjectById(itemId,	Item.class);
 	}
 	
 	public Item modifyItem(Item item, User user){
 		item.setUser(user);
-		item.setUpdateDate(new Date());
+		item.setUpdateDate(CommonUtils.getTimestamp());
 		if(item.getId() == null){
-			item.setCreationDate(new Date());
+			item.setCreationDate(CommonUtils.getTimestamp());
 			item.setDatabaseOperation(IDatabaseConstants.INSERT);
 		}else{
 			item.setDatabaseOperation(IDatabaseConstants.UPDATE);

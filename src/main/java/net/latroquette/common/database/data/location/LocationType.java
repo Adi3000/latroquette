@@ -6,23 +6,23 @@ public enum LocationType {
 	DEPARTMENT(2, "Department"),
 	PROVINCE(3, "Province"),
 	COUNTRY(4, "Country");
-	private Integer id;
+	private Integer value;
 	private String label;
 	
 	private LocationType(Integer id, String label){
-		this.id = id;
+		this.value = id;
 		this.label = label;
 	}
 	public static LocationType valueOf(Integer id) {
         for (LocationType item : LocationType.values()) {
-            if (item.getId().intValue() == id.intValue()) {
+            if (item.getValue().equals(id)) {
                 return item;
             }
         }
         return null;
     }
-	public Integer getId(){
-		return id;
+	public Integer getValue(){
+		return value;
 	}
 
 	
@@ -30,7 +30,7 @@ public enum LocationType {
 		return label;
 	}
 	public String toString(){
-		return id.toString();
+		return value.toString();
 	}
 	
 	

@@ -3,6 +3,7 @@ package net.latroquette.web.beans.profile;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -231,6 +232,18 @@ public class UserBean extends User implements Serializable{
 	public boolean getLoggedIn()
 	{
 		return (loginState == LOGGED_IN || loginState == NEW_USER) ;
+	}
+	
+	public void checkUserLogged(){
+		 
+		if (!Security.isUserLogged(this) || !getLoggedIn()){
+	 
+			ConfigurableNavigationHandler nav 
+			   = (ConfigurableNavigationHandler) 
+					   FacesContext.getCurrentInstance().getApplication().getNavigationHandler();
+	 
+			nav.performNavigation("/profile/login");
+		}
 	}
 	
 }

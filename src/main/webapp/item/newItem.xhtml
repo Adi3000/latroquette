@@ -6,7 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:t="http://myfaces.apache.org/tomahawk">
 <body>
-	<ui:composition template="/home/template/mainLayout.xhtml"><!--  
+	<ui:composition template="/home/template/mainLayout.xhtml"><!-- 
+	--><f:metadata><f:event listener="#{userBean.checkUserLogged}" type="preRenderView" /></f:metadata><!--  
 	--><ui:define name="mainDiv"><!-- 
 		--><h:outputStylesheet name="css/item/item.css" target="head" /><!--
 		--><div id="mainDiv">
@@ -19,7 +20,7 @@
 									<div class="labelTop">
 										<h:outputLabel for="title">Titre</h:outputLabel>
 									</div>
-									<h:inputText id="title" size="58" value="#{itemBean.title}" required="true"/>
+									<h:inputText id="title" size="58" value="#{itemBean.title}" />
 								</div>
 							</div>
 							<!--<div id="suggestedItem" class="field">
@@ -39,14 +40,16 @@
 						<div>
 							<div class="field">
 								<div class="labelTop"><h:outputLabel for="description">Description</h:outputLabel></div>
-								<h:inputTextarea id="description" label="desc" cols="45" rows="18" value="#{itemBean.description}" required="true"/>
+								<h:inputTextarea id="description" label="desc" cols="45" rows="18" value="#{itemBean.description}"/>
 							</div>
 						</div>
 					</div>
 					<div id="itemImages">
-						<div><t:inputFileUpload id="firstFile" value="#{itemBean.file1}"/></div>
-						<div><t:inputFileUpload value="#{itemBean.file2}"/></div>
-						<div><t:inputFileUpload value="#{itemBean.file3}"/></div>
+						<ui:repeat var="image" value="#{itemBean.fileList}">
+							<div><h:graphicImage value="/image/#{image.id}" /></div>
+						</ui:repeat>
+						<div><t:inputFileUpload accept="image/png,image/jpeg" value="#{itemBean.newFile}"/></div>
+						<div><h:commandButton value="Ajouter" id="addPicButton" action="#{itemBean.uploadPic}"/></div>
 					</div>
 					<ul id="wishies">
 						<li>

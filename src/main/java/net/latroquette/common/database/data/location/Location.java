@@ -144,7 +144,7 @@ public class Location extends AbstractDataObject {
 	 * @param locationType the locationType to set
 	 */
 	public void setLocationType(LocationType locationType) {
-		setLocationTypeId(locationType.getId());
+		setLocationTypeId(locationType.getValue());
 	}
 	public void setLocationTypeId(Integer locationTypeId) {
 		this.locationTypeId = locationTypeId;
