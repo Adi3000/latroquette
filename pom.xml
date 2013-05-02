@@ -35,7 +35,7 @@
 	<build>
 		<resources>
 			<resource>
-				<directory>src/main/webapp/resources/development-bundle</directory>
+				<directory>resources/development-bundle</directory>
 				<excludes>
 					<exclude>**/*</exclude>
 				</excludes>
@@ -47,6 +47,9 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
+					<excludes>
+                            <exclude>/resources/development-bundle/**</exclude>
+                     </excludes>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
