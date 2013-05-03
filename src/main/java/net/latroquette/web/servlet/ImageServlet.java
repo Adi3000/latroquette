@@ -51,6 +51,7 @@ public class ImageServlet extends HttpServlet {
         
         Files files = new Files(); 
         File file = files.getFileById(Integer.valueOf(requestedImage.substring(1))) ;
+        files.closeSession();
         if(file == null){
             // Do your thing if the file appears to be non-existing.
             // Throw an exception, or send 404, or show default/warning image, or just ignore it.

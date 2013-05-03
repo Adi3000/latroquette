@@ -7,10 +7,12 @@
 	xmlns:t="http://myfaces.apache.org/tomahawk">
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml"><!-- 
-	--><f:metadata><f:event listener="#{userBean.checkUserLogged}" type="preRenderView" /></f:metadata><!--  
-	--><ui:define name="mainDiv"><!-- 
-		--><h:outputStylesheet name="css/item/item.css" target="head" /><!--
-		--><div id="mainDiv">
+	 --><f:metadata><f:event listener="#{userBean.checkUserLogged}" type="preRenderView" /></f:metadata><!--  
+	 --><ui:define name="mainDiv"><!-- 
+		 --><h:outputStylesheet name="css/item/item.css" target="head" /><!-- 
+		 --><h:outputStylesheet name="js/lightbox/lightbox.css" target="head" /><!-- 
+		 --><h:outputScript name="js/lightbox/lightbox.js" target="head" /><!-- 
+		 --><div id="mainDiv">
 				<h:form id="newItemForm" method="post" enctype="multipart/form-data">
 					<h:messages></h:messages>
 					<div id="itemDescription">
@@ -46,7 +48,7 @@
 					</div>
 					<div id="itemImages">
 						<ui:repeat var="image" value="#{itemBean.fileList}">
-							<div><h:graphicImage value="/image/#{image.id}" /></div>
+							<div><a href="/image/#{image.id}" rel="lightbox[uploadPic]"><h:graphicImage value="/image/#{image.id}" /></a></div>
 						</ui:repeat>
 						<div><t:inputFileUpload accept="image/png,image/jpeg" value="#{itemBean.newFile}"/></div>
 						<div><h:commandButton value="Ajouter" id="addPicButton" action="#{itemBean.uploadPic}"/></div>

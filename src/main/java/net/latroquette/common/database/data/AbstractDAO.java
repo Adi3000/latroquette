@@ -17,7 +17,6 @@ public abstract class AbstractDAO extends DatabaseSession{
 	
 	public AbstractDataObject getDataObjectById(Integer id, Class<? extends AbstractDataObject> clazz){
 		Criteria req = this.session.createCriteria(clazz)
-				.setMaxResults(1)
 				.add(Restrictions.eq("id", id)) ;
 		return clazz.cast(req.uniqueResult());
 	}

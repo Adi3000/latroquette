@@ -11,6 +11,7 @@ import net.latroquette.common.util.CommonUtils;
 import net.latroquette.service.amazon.AmazonWServiceClient;
 
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.criterion.Restrictions;
 
 import com.amazon.ECS.client.jax.AWSECommerceServicePortType;
@@ -52,7 +53,10 @@ public class Items extends AbstractDAO{
 	}
 	
 	public Item getItemById(Integer itemId){
-		return (Item)this.getDataObjectById(itemId,	Item.class);
+		Criteria req = this.session.createCriteria(Item.class)
+				.add(Restrictions.eq("id", itemId))
+				.setFetchMode("imageList", FetchMode.JOIN);
+		return (Item)req.uniqueResult();
 	}
 	
 	public Item modifyItem(Item item, User user){

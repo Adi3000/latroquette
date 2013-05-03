@@ -121,8 +121,9 @@ public class DatabaseSession {
 
 	private void openSession()
 	{
-		if(session == null)
+		if(session == null){
 			session = HibernateUtils.getSessionFactory().openSession();
+		}
 	}
 
 	public AbstractDataObject getDataObject(AbstractDataObject model)
@@ -131,5 +132,10 @@ public class DatabaseSession {
 		AbstractDataObject toReturn = (AbstractDataObject)session.get(model.getClass(), model.getId());
 
 		return toReturn;
+	}
+	public void closeSession(){
+		if(session != null){
+			session.close();
+		}
 	}
 }

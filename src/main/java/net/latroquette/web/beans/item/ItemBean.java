@@ -94,16 +94,16 @@ public class ItemBean implements Serializable {
 	}
 	
 	public String createItem(){
-		item.setStatusId(ItemStatus.DRAFT);
 		Items items = new Items();
-		item = items.modifyItem(item, userBean);
-		Files files = new Files(items);
 		for(File file : fileList){
 			file.setGarbageStatus(GarbageFileStatus.VALIDATE);
-			file.setDatabaseOperation(IDatabaseConstants.UPDATE);
-			files.modifyFile(file, userBean);
 		}
-		return null;
+		item.setImageList(fileList);
+		item.setStatusId(ItemStatus.DRAFT);
+		item.setDatabaseOperation(IDatabaseConstants.INSERT);
+		item = items.modifyItem(item, userBean);
+		items.closeSession();
+		return "viewItem?item="+item.getId();
 	}
 	
 	public void uploadPic(){
@@ -119,6 +119,7 @@ public class ItemBean implements Serializable {
 		}else{
 			getFileList().add(file);
 		}
+		files.closeSession();
 		newFile = null;
 	}
 	
@@ -145,8 +146,11 @@ public class ItemBean implements Serializable {
 	}
 	
 	public List<File> getFileList(){
+		if(this.fileList == null && item != null){
+			this.fileList = item.getImageList();
+		}
 		if(this.fileList == null){
-			this.fileList = new ArrayList<File>(5);
+			this.fileList = new ArrayList<File>();
 		}
 		return this.fileList;
 	}

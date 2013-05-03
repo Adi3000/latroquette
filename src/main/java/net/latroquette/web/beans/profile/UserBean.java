@@ -152,6 +152,9 @@ public class UserBean extends User implements Serializable{
 			fc.addMessage(null, msg);
 			fc.validationFailed();
 		}
+		
+		users.closeSession();
+		
 		if(StringUtils.isEmpty(getMail())){
 			FacesMessage msg = new FacesMessage("Registring error", 
 					"Email Empty : Registering failed, please try later or ask for support");

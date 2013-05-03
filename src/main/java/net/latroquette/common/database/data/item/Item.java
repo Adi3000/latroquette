@@ -3,12 +3,16 @@ package net.latroquette.common.database.data.item;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -16,6 +20,7 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.latroquette.common.database.data.AbstractDataObject;
+import net.latroquette.common.database.data.file.File;
 import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.profile.User;
 
@@ -36,6 +41,7 @@ public class Item extends AbstractDataObject {
 	private Timestamp updateDate;
 	private String title;
 	private String description;
+	private List<File> imageList;
 	private transient List<Keyword> keywordList;
 	@Override
 	@Id
@@ -48,7 +54,7 @@ public class Item extends AbstractDataObject {
 	/**
 	 * @return the user
 	 */
-	@ManyToOne
+	@ManyToOne(optional=false)
 	@JoinColumn(name="user_id")
 	public User getUser() {
 		return user;
@@ -148,6 +154,16 @@ public class Item extends AbstractDataObject {
 	 */
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	@ManyToMany(cascade = {CascadeType.ALL},fetch=FetchType.EAGER)
+    @JoinTable(name="items_files", 
+                joinColumns={@JoinColumn(name="item_id")}, 
+                inverseJoinColumns={@JoinColumn(name="file_id")})
+	public List<File> getImageList() {
+		return imageList;
+	}
+	public void setImageList(List<File> imageList) {
+		this.imageList = imageList;
 	}
 
 }

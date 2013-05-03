@@ -1,8 +1,6 @@
 #itemImage{
-	width : 300px;
 }
 #itemImages > div{
-	max-width : 200px;
 	display: inline-block;
 }
 
