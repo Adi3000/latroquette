@@ -15,6 +15,7 @@ import org.hibernate.FetchMode;
 import org.hibernate.criterion.Restrictions;
 
 import com.amazon.ECS.client.jax.AWSECommerceServicePortType;
+import com.amazon.ECS.client.jax.BrowseNodeLookupRequest;
 import com.amazon.ECS.client.jax.ItemSearchRequest;
 
 public class Items extends AbstractDAO{
@@ -23,7 +24,6 @@ public class Items extends AbstractDAO{
 		List<AmazonItem> listItem = new ArrayList<AmazonItem>();
 		
 		AWSECommerceServicePortType port =  AmazonWServiceClient.CLIENT.getPort();
-
 		ItemSearchRequest itemSearch = new ItemSearchRequest();
 		itemSearch.setKeywords(pattern.replaceAll("\\W", "+"));
 		if(!AmazonWServiceClient.isValideCategory(cat)){
@@ -34,6 +34,7 @@ public class Items extends AbstractDAO{
 		//Retrieve images and title informations
 		itemSearch.getResponseGroup().add("Small");
 		itemSearch.getResponseGroup().add("Images");
+		itemSearch.getResponseGroup().add("BrowseNodes");
 		
 		List<com.amazon.ECS.client.jax.Items> results = AmazonWServiceClient.itemSearch(port,itemSearch);
 		if(results != null && !results.isEmpty()){

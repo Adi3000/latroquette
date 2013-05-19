@@ -116,19 +116,45 @@ public class Files extends AbstractDAO {
         return file;
 	}
 	
+	public boolean removeFile(File file){
+		boolean success = false;
+		if(file.getFile() == null){
+			file.setFile(new java.io.File(getPath(file)));
+		}
+		
+		if(file.getFile().delete()){
+			file.setDatabaseOperation(IDatabaseConstants.DELETE);
+			success = true;
+		}else{
+			LOGGER.log(Level.WARNING, "Asked for remove but can't delete "+file.getFile().getPath());
+			file.setGarbageStatus(GarbageFileStatus.ERROR_ON_DELETE);
+			file.setDatabaseOperation(IDatabaseConstants.UPDATE);
+			success = false;
+		}
+		persist(file);
+		if(!commit()){
+			return false;
+		}else{
+			return success;
+		}
+		
+	}
+	
 	public File getFileById(Integer id){
 		File file = (File)this.getDataObjectById(id, File.class);
 		if(file == null){
 			return null;
 		}
 		//Retrive java.io.File
-    	Parameters parameters = new Parameters(this);
-        java.io.File binaryFile = new java.io.File(
-        		parameters.getStringValue(ParameterName.DATA_DIR_PATH)
-	        		.concat(java.io.File.separator)
-	        		.concat(file.getName()));
-        file.setFile(binaryFile);
+        file.setFile(new java.io.File(getPath(file)));
     	return file;
+	}
+	
+	private String getPath(File file){
+    	Parameters parameters = new Parameters(this);
+        return	parameters.getStringValue(ParameterName.DATA_DIR_PATH)
+	        		.concat(java.io.File.separator)
+	        		.concat(file.getName());
 	}
 	
 	/**

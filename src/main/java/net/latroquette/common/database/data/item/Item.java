@@ -27,7 +27,7 @@ import net.latroquette.common.database.data.profile.User;
 @Entity
 @Table(name = "items")
 @XmlRootElement
-@SequenceGenerator(name = "items_item_id_seq", sequenceName = "items_item_id_seq")
+@SequenceGenerator(name = "items_item_id_seq", sequenceName = "items_item_id_seq", allocationSize=1)
 public class Item extends AbstractDataObject {
 
 	/**

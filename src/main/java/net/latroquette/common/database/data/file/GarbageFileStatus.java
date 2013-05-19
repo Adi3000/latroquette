@@ -4,7 +4,8 @@ public enum GarbageFileStatus {
 	
 	VALIDATE(0),
 	NOT_LINKED(1),
-	FORCE_DELETE(2);
+	FORCE_DELETE(2),
+	ERROR_ON_DELETE(3);
 
 	private int value;
 	private GarbageFileStatus(int id){

@@ -23,7 +23,7 @@ import net.latroquette.common.database.data.profile.User;
 @Entity
 @Table(name = "files")
 @XmlRootElement
-@SequenceGenerator(name = "files_file_id_seq", sequenceName = "files_file_id_seq")
+@SequenceGenerator(name = "files_file_id_seq", sequenceName = "files_file_id_seq", allocationSize=1)
 public class File extends AbstractDataObject{
     /**
 	 * 

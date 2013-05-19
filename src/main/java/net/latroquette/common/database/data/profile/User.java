@@ -20,7 +20,7 @@ import net.latroquette.common.database.data.AbstractDataObject;
 
 @Entity
 @Table(name = "users")
-@SequenceGenerator(name = "users_user_id_seq", sequenceName = "users_user_id_seq")
+@SequenceGenerator(name = "users_user_id_seq", sequenceName = "users_user_id_seq", allocationSize=1)
 public class User extends AbstractDataObject{
 	
 	/**

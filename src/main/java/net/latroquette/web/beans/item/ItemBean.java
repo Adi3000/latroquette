@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -20,6 +21,7 @@ import net.latroquette.common.database.data.file.GarbageFileStatus;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemStatus;
 import net.latroquette.common.database.data.item.Items;
+import net.latroquette.common.security.Security;
 import net.latroquette.common.util.CommonUtils;
 import net.latroquette.web.beans.profile.UserBean;
 
@@ -103,7 +105,7 @@ public class ItemBean implements Serializable {
 		item.setDatabaseOperation(IDatabaseConstants.INSERT);
 		item = items.modifyItem(item, userBean);
 		items.closeSession();
-		return "viewItem?item="+item.getId();
+		return "viewItem?faces-redirect=true&item="+item.getId();
 	}
 	
 	public void uploadPic(){
@@ -121,6 +123,12 @@ public class ItemBean implements Serializable {
 		}
 		files.closeSession();
 		newFile = null;
+	}
+	
+	public void removePic(File image){
+		Files files = new Files();
+		fileList.remove(fileList.indexOf(image));
+		files.removeFile(image);
 	}
 	
 	public void setKeywordListString(String keywordsListString){
@@ -161,6 +169,18 @@ public class ItemBean implements Serializable {
 	
 	public UploadedFile getNewFile(){
 		return newFile;
+	}
+	
+	public void checkItemForUser(){
+		//First check if user is logged
+		userBean.checkUserLogged();
+		//Next check if user is available to modify this item
+		if (!userBean.getId().equals(item.getUser().getId())){
+			ConfigurableNavigationHandler nav 
+			   = (ConfigurableNavigationHandler) 
+					   FacesContext.getCurrentInstance().getApplication().getNavigationHandler();
+			nav.performNavigation("viewItem");
+		}
 	}
 	
 }

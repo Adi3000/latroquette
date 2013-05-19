@@ -10,6 +10,10 @@
 			xmlns:h="http://java.sun.com/jsf/html"
 			xmlns:f="http://java.sun.com/jsf/core"
 			xmlns:c="http://java.sun.com/jsp/jstl/core">	
+			<div id="loadingDiv" style="display: none;">
+				<div id="loadingBackground" class="ui-widget-overlay" >&nbsp;</div>
+				<div id="loadingImage"><h:graphicImage value="/resources/img/loading.gif" width="50" height="50" /></div><div id="loadingText">&nbsp;</div>
+			</div>
 			<div id="enTete">	
 				<h:panelGroup id="toolbarLogin">
 					<c:choose>
