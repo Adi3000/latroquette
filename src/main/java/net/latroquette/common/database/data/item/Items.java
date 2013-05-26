@@ -1,21 +1,22 @@
 package net.latroquette.common.database.data.item;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.data.AbstractDAO;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.util.CommonUtils;
+import net.latroquette.common.util.parameters.ParameterName;
+import net.latroquette.common.util.parameters.Parameters;
 import net.latroquette.service.amazon.AmazonWServiceClient;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 
 import com.amazon.ECS.client.jax.AWSECommerceServicePortType;
-import com.amazon.ECS.client.jax.BrowseNodeLookupRequest;
 import com.amazon.ECS.client.jax.ItemSearchRequest;
 
 public class Items extends AbstractDAO{
@@ -34,7 +35,7 @@ public class Items extends AbstractDAO{
 		//Retrieve images and title informations
 		itemSearch.getResponseGroup().add("Small");
 		itemSearch.getResponseGroup().add("Images");
-		itemSearch.getResponseGroup().add("BrowseNodes");
+		//itemSearch.getResponseGroup().add("BrowseNodes");
 		
 		List<com.amazon.ECS.client.jax.Items> results = AmazonWServiceClient.itemSearch(port,itemSearch);
 		if(results != null && !results.isEmpty()){
@@ -75,5 +76,26 @@ public class Items extends AbstractDAO{
 		}else{
 			return item;
 		}
+	}
+	
+	public List<Item> searchItem(String searchString, boolean searchOnDescription, int page){
+		int nbResultToLoad = Parameters.getIntValue(ParameterName.NB_RESULT_TO_LOAD);
+		int cursor = nbResultToLoad * (page -1);
+		
+		String searchPattern = searchString.replaceAll("\\W", " & ");
+		String index = searchOnDescription ? "item.title " : "item.title || ' ' || item.description ";
+		String sql = 
+				" SELECT item, file.id, user.id, user.login FROM Item item ".concat(
+				" INNER JOIN item.user user ").concat(
+				" LEFT JOIN item.imageList file ").concat(
+				" WHERE fulltextsearch('french', ").concat(index).concat(", :search ) = true").concat(
+				" order by item.creationDate" );
+		Query req = this.session.createQuery(sql)
+				.setFirstResult(cursor)
+				.setMaxResults(nbResultToLoad)
+				.setString("search", searchPattern);
+		@SuppressWarnings("unchecked")
+		List<Item> items = (List<Item>)req.list();
+		return items;
 	}
 }

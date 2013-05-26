@@ -24,7 +24,7 @@ public class AmazonProducts {
 	
 	
 	@GET
-	public GenericEntity<List<AmazonItem>> getLocations (@QueryParam("term") String pattern, 
+	public GenericEntity<List<AmazonItem>> getItems (@QueryParam("term") String pattern, 
 			@QueryParam("cat") String category ){
 		Items items = new Items();
 		@SuppressWarnings("static-access")

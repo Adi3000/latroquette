@@ -48,4 +48,5 @@ public class CommonUtils {
 	public static Timestamp getTimestamp(){
 		return new Timestamp(new Date().getTime());
 	}
+
 }

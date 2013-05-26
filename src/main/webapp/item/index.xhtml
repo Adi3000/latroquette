@@ -6,23 +6,33 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
-		<ui:define name="mainDiv">
-			<div>
-				<h1>
-					item list : en cours de construction aucun item.
-				</h1>
-			</div>
-			<table>
-			  <tr>
-				<td>Cellule 1</td>
-				<td>Cellule 2</td>
-			  </tr>
-			  <tr>
-				<td>Cellule 3</td>
-				<td>Cellule 4</td>
-			  </tr>
-			</table>
-		</ui:define>
+		<ui:define name="mainDiv"><!-- 
+		 --><h:outputScript name="js/item.js" target="head" /><!-- 
+		 --><h:outputScript target="head" >
+				$(function() {
+					$("#itemList").addItems();
+				});
+	 		</h:outputScript><!-- 
+		 --><div id="mainDiv">
+				<div>
+					<h1>
+						item list : en cours de construction aucun item.
+					</h1>
+				</div>
+				<div id="itemList">
+					<div id="addItems" style="display:none;">
+						<div class="item">
+							<div class="itemImages" />
+							<div class="itemInfos" />
+							<div class="itemDetails">
+								<h2 class="itemTitle" >HHHHH</h2>
+								<p class="itemDescription" >Desc</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- 
+	   --></ui:define>
 	</ui:composition>
 </body>
 </html>

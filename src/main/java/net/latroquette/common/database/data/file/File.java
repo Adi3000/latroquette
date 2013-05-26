@@ -16,6 +16,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import net.latroquette.common.database.data.AbstractDataObject;
 import net.latroquette.common.database.data.profile.User;
@@ -55,6 +56,7 @@ public class File extends AbstractDataObject{
 	 * @return the file
 	 */
 	@Transient
+	@XmlTransient
 	public java.io.File getFile() {
 		return file;
 	}
@@ -84,6 +86,7 @@ public class File extends AbstractDataObject{
 	 */
 	@ManyToOne(fetch= FetchType.LAZY)
 	@JoinColumn(name="user_id")
+	@XmlTransient
 	public User getOwner() {
 		return owner;
 	}
@@ -97,6 +100,7 @@ public class File extends AbstractDataObject{
 	 * @return the checksum
 	 */
 	@Column(name="file_checksum")
+	@XmlTransient
 	public String getChecksum() {
 		return checksum;
 	}
@@ -110,6 +114,7 @@ public class File extends AbstractDataObject{
 	 * @return the garbageStatus
 	 */
 	@Column(name="file_garbage_status")
+	@XmlTransient
 	public Integer getGarbageStatus() {
 		return garbageStatus;
 	}
@@ -129,6 +134,7 @@ public class File extends AbstractDataObject{
 	 * @return the uploadDate
 	 */
 	@Column(name="file_upload_date")
+	@XmlTransient
 	public Timestamp getUploadDate() {
 		return uploadDate;
 	}

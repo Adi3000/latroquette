@@ -69,8 +69,7 @@ public class Files extends AbstractDAO {
         OutputStream output = null;
         InputStream md5Is = null;
         InputStream fis = null;
-        Parameters parameters = new Parameters(this);
-        java.io.File dataDir = new java.io.File(parameters.getStringValue(ParameterName.DATA_DIR_PATH));
+        java.io.File dataDir = new java.io.File(Parameters.getStringValue(ParameterName.DATA_DIR_PATH));
 
         File file = null;
         try {
@@ -145,14 +144,13 @@ public class Files extends AbstractDAO {
 		if(file == null){
 			return null;
 		}
-		//Retrive java.io.File
+		//Retrieve java.io.File
         file.setFile(new java.io.File(getPath(file)));
     	return file;
 	}
 	
 	private String getPath(File file){
-    	Parameters parameters = new Parameters(this);
-        return	parameters.getStringValue(ParameterName.DATA_DIR_PATH)
+        return	Parameters.getStringValue(ParameterName.DATA_DIR_PATH)
 	        		.concat(java.io.File.separator)
 	        		.concat(file.getName());
 	}
@@ -180,13 +178,12 @@ public class Files extends AbstractDAO {
 	}
 	
     private BufferedImage resizeImage(BufferedImage originalImage){
-    	Parameters parameters = new Parameters(this);
 
     	int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
 		int finalHeight = originalImage.getHeight();
 		int finalWidth = originalImage.getWidth();
-		int imgMaxHeight = parameters.getIntValue(ParameterName.IMG_MAX_HEIGHT);
-		int imgMaxWidth = parameters.getIntValue(ParameterName.IMG_MAX_WIDTH);
+		int imgMaxHeight = Parameters.getIntValue(ParameterName.IMG_MAX_HEIGHT);
+		int imgMaxWidth = Parameters.getIntValue(ParameterName.IMG_MAX_WIDTH);
 		
 		//Resize keeping the ratio.
 		if(finalHeight > imgMaxHeight){

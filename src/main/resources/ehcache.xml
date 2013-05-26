@@ -5,4 +5,7 @@
 	<cache name="menu" maxElementsInMemory="100" eternal="false"
 		overflowToDisk="true" timeToIdleSeconds="0" timeToLiveSeconds="0"
 		diskPersistent="true" diskExpiryThreadIntervalSeconds="120" />
+	<cache name="keywords" maxElementsInMemory="10000" eternal="false"
+		overflowToDisk="true" timeToIdleSeconds="0" timeToLiveSeconds="0"
+		diskPersistent="true" diskExpiryThreadIntervalSeconds="120" />
 </ehcache>

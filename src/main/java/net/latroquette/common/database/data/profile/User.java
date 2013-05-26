@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 import net.latroquette.common.database.data.AbstractDataObject;
 
@@ -75,6 +76,7 @@ public class User extends AbstractDataObject{
 	 * @return the token
 	 */
 	@Column(name="user_token")
+	@XmlTransient
 	public Integer getToken() {
 		return token;
 	}
@@ -88,6 +90,7 @@ public class User extends AbstractDataObject{
 	 * @return the password
 	 */
 	@Column(name="user_password")
+	@XmlTransient
 	public String getPassword() {
 		return password;
 	}
@@ -95,6 +98,7 @@ public class User extends AbstractDataObject{
 	 * @return the lastHostNameLogin
 	 */
 	@Column(name="user_last_host_name_login")
+	@XmlTransient
 	public String getLastHostNameLogin() {
 		return lastHostNameLogin;
 	}
@@ -108,6 +112,7 @@ public class User extends AbstractDataObject{
 	 * @return the mail
 	 */
 	@Column(name="user_mail")
+	@XmlTransient
 	public String getMail() {
 		return mail;
 	}
@@ -128,6 +133,7 @@ public class User extends AbstractDataObject{
 	 * @return the lastIpLogin
 	 */
 	@Column(name="user_last_ip_login")
+	@XmlTransient
 	public String getLastIpLogin() {
 		return lastIpLogin;
 	}

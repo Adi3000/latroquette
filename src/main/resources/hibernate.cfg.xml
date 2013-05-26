@@ -5,7 +5,7 @@
  <session-factory>
   <!-- local connection properties -->
   <property name="connection.datasource">jdbc/latroquette</property>
-  <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+  <property name="hibernate.dialect">net.latroquette.common.util.database.hibernate.PostgresEnhancedSQLDialect</property>
   <property name="hibernate.show_sql">true</property>
   <property name="hibernate.use_outer_join">true</property>
   <property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>

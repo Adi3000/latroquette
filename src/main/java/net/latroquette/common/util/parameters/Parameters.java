@@ -4,7 +4,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.latroquette.common.database.data.AbstractDAO;
-import net.latroquette.common.database.session.DatabaseSession;
 import net.latroquette.common.util.optimizer.CommonValues;
 
 import org.hibernate.Criteria;
@@ -14,16 +13,14 @@ import com.googlecode.ehcache.annotations.Cacheable;
 
 public class Parameters extends AbstractDAO {
 	private static final Logger LOGGER = Logger.getLogger(Parameters.class.getName());
+	private static Parameters instance = new Parameters();
 
-	public Parameters(DatabaseSession db){
-		super(db);
-	}
-	public Parameters(){
+	private Parameters(){
 		super();
 	}
 	@Cacheable(cacheName="parameters")
-	private String getValue(ParameterName name){
-		Criteria req = this.session.createCriteria(Parameter.class)
+	private static String getValue(ParameterName name){
+		Criteria req = instance.session.createCriteria(Parameter.class)
 				.setMaxResults(1)
 				.add(Restrictions.eq("name", name.toString())) ;
 		Parameter parameter =  (Parameter)req.uniqueResult();
@@ -39,7 +36,7 @@ public class Parameters extends AbstractDAO {
 	 * @param name
 	 * @return the value or {@link CommonValues.ERROR_OR_INFINITE} if not able to parse
 	 */
-	public int getIntValue(ParameterName name){
+	public static int getIntValue(ParameterName name){
 		int value = CommonValues.ERROR_OR_INFINITE;
 		try{
 			value = Integer.valueOf(getValue(name));
@@ -54,7 +51,7 @@ public class Parameters extends AbstractDAO {
 	 * @param name
 	 * @return the value or {@code null} if parameter {@code name} not found
 	 */
-	public String getStringValue(ParameterName name){
+	public static String getStringValue(ParameterName name){
 		String value = null;
 		try{
 			value = getValue(name).toString();
