@@ -7,20 +7,39 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"	
 	xmlns:t="http://myfaces.apache.org/tomahawk">
 <body>
-	<ui:composition template="/home/template/mainLayout.xhtml"><!-- 
-	 --><f:metadata>
-	 		<f:event listener="#{item.checkItemForUser}" type="preRenderView" />
-	 </f:metadata><!--  
-	 --><ui:define name="mainDiv"><!-- 
-		 --><h:outputStylesheet name="css/item/item.css" target="head" /><!-- 
-		 --><h:outputStylesheet name="js/rondell/jquery.rondell.css" target="head" /><!-- 
-		 --><h:outputScript name="js/modernizr-2.0.6.min.js" target="head" /><!-- 
-		 --><h:outputScript name="js/jquery.mousewheel-3.0.6.min.js" target="head" /><!-- 
-		 --><h:outputScript name="js/rondell/jquery.rondell.js" target="head" /><!-- 
-		 --><h:outputScript target="head" >
+	<ui:composition template="/home/template/mainLayout.xhtml"> 
+		<f:metadata>
+	 		<f:event listener="#{itemBean.checkItemForUser}" type="preRenderView" />
+	 	</f:metadata>
+		<ui:define name="mainDiv"> 
+		<h:outputStylesheet name="css/item/item.css" target="head" />
+		<h:outputStylesheet name="js/rondell/jquery.rondell.css" target="head" />
+		<h:outputScript name="js/modernizr-2.0.6.min.js" target="head" />
+		<h:outputScript name="js/jquery.mousewheel-3.0.6.min.js" target="head" />
+		<h:outputScript name="js/rondell/jquery.rondell.js" target="head" />
+		<h:outputScript target="head" >
 		  $(function() {
 		    $("#itemImages > *").rondell({
-		      preset: "carousel",
+				preset: "scroller",
+				theme: "light",
+				center: {left: 350, top: 100 },
+				visibleItems: "2",
+				caption: true,
+				strings: { 
+					prev : "&lt;&lt;", next : "&gt;&gt;", more: "Plus...", 
+					loadingError : "Erreur au chargement de l&sbquo;image %s"},
+				repeating: true,
+				autoRotation: {
+					enabled: true,
+					direction: 1,
+					once: false,
+					delay: 5000
+				},
+				currentLayer : 1,
+				lightbox: {
+				    enabled: true,
+				    displayReferencedImages: false
+				} 
 		    });
 		    $("#editItemForm\\:choosePicButton").change(function(){
 		    	if($(this).val() != ""){
@@ -30,8 +49,8 @@
 		    });
 		    $("#uploadPicButton").hide(0);
 		  });
-		 </h:outputScript><!-- 
-		 --><div id="mainDiv">
+		</h:outputScript>
+		<div id="mainDiv">
 				<h:form id="editItemForm" method="post" enctype="multipart/form-data">
 					<h:messages></h:messages>
 					<div id="itemDescription">
@@ -46,7 +65,6 @@
 							</div>
 						</div>
 						<div id="clueForIdentifiecation">
-							<input type="text" id="keywordField" value=""/>
 							<h:inputHidden id="keywordList" value="#{itemBean.keywordListString}"/>
 						</div>
 						<div>
@@ -59,8 +77,10 @@
 					<div id="itemImages">
 						<ui:repeat var="image" value="#{itemBean.fileList}">
 							<div class="uploadedImage">
-								<a href="/image/#{image.id}" rel="lightbox[uploadPic]"><h:graphicImage value="/image/#{image.id}" /></a>
-								<h:commandLink action="#{itemBean.removePic(image)}" value="[Supprimer]" />
+								<a href="#" rel="lightbox[uploadPic]">
+									<h:graphicImage value="/image/#{image.id}" />
+								</a>
+								<div class="removePic"><h:commandLink action="#{itemBean.removePic(image)}" value="Supprimer" /></div>
 							</div>
 						</ui:repeat>
 					</div>
@@ -83,8 +103,8 @@
 						</c:otherwise>
 					</c:choose>
 				</h:form>
-			</div><!--  
-  	 --></ui:define><!-- 
-	--></ui:composition>
+			</div> 
+	  	</ui:define>
+	</ui:composition>
 </body>
 </html>

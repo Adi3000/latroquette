@@ -4,10 +4,11 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.amazon.ECS.client.jax.Item;
-
 import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.web.beans.item.ViewableItem;
+
+import com.amazon.ECS.client.jax.BrowseNode;
+import com.amazon.ECS.client.jax.Item;
 
 @XmlRootElement
 public class AmazonItem implements ViewableItem{
@@ -18,12 +19,14 @@ public class AmazonItem implements ViewableItem{
 	private String fullName;
 	private Integer id;
 	private String amazonId;
+	private List<BrowseNode> browseNodes;
 	
 	public AmazonItem(Item amazonItem){
 		smallImageUrl = amazonItem.getSmallImage() != null ? amazonItem.getSmallImage().getURL() : null;
 		imageUrl = amazonItem.getLargeImage() != null ? amazonItem.getLargeImage().getURL() : null ;
 		name = amazonItem.getItemAttributes().getTitle();
 		amazonId = amazonItem.getASIN();
+		browseNodes = amazonItem.getBrowseNodes() != null ? amazonItem.getBrowseNodes().getBrowseNode() : null;
 	}
 	/**
 	 * @return the smallImageUrl
@@ -129,6 +132,18 @@ public class AmazonItem implements ViewableItem{
 	public List<Keyword> getCategories() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	/**
+	 * @return the browseNodes
+	 */
+	public List<BrowseNode> getBrowseNodes() {
+		return browseNodes;
+	}
+	/**
+	 * @param browseNodes the browseNodes to set
+	 */
+	public void setBrowseNodes(List<BrowseNode> browseNodes) {
+		this.browseNodes = browseNodes;
 	}
 
 }

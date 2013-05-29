@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +15,9 @@ import net.latroquette.common.database.data.file.File;
 import net.latroquette.common.database.data.file.Files;
 import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.common.util.parameters.Parameters;
+import net.latroquette.web.util.ServletUtils;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -25,7 +28,8 @@ import org.apache.commons.io.IOUtils;
 public class ImageServlet extends HttpServlet {
 
     // Constants ----------------------------------------------------------------------------------
-
+	public static final String BY_PATH = "p";
+	public static final String GET_SMALL_SIZE = "s";
     /**
 	 * 
 	 */
@@ -40,7 +44,9 @@ public class ImageServlet extends HttpServlet {
     {
         // Get requested image by path info.
         String requestedImage = request.getPathInfo();
-
+        boolean smallSize = false;
+        boolean byPath = false;
+        java.io.File image = null;
         // Check if file name is actually supplied to the request URI.
         if (requestedImage == null) {
             // Do your thing if the image is not supplied to the request URI.
@@ -48,21 +54,31 @@ public class ImageServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
             return;
         }
-        
-        Files files = new Files(); 
-        File file = files.getFileById(Integer.valueOf(requestedImage.substring(1))) ;
-        files.closeSession();
-        if(file == null){
-            // Do your thing if the file appears to be non-existing.
-            // Throw an exception, or send 404, or show default/warning image, or just ignore it.
-            response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
-            return;
+        String[] pathRequest = requestedImage.substring(1).split(ServletUtils.HTML_SEPARATOR);
+        Files files = new Files();
+        //Analyse path to check parameters
+        for(int i = 0; i < pathRequest.length ; i++){
+    		if(GET_SMALL_SIZE.equals(pathRequest[i])){
+    			smallSize = true;
+    		}else if(BY_PATH.equals(pathRequest[i])){
+    			byPath = true;
+    		}else{
+    			requestedImage = pathRequest[i];
+    		}
         }
-        java.io.File image = file.getFile();
+        if(byPath){
+        	image = new java.io.File(files.getPath(requestedImage));
+        }else{
+	        File file = files.getFileById(Integer.valueOf(requestedImage)) ;
+	        if(file == null){
+	            response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+	            return;
+	        }
+	        image = file.getFile();
+        }
 
         // Check if file actually exists in filesystem.
         if (!image.exists()) {
-            // Do your thing if the file appears to be non-existing.
             // Throw an exception, or send 404, or show default/warning image, or just ignore it.
             response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
             return;
@@ -72,20 +88,38 @@ public class ImageServlet extends HttpServlet {
         String contentType = getServletContext().getMimeType(image.getName());
 
         // Check if file is actually an image (avoid download of other files by hackers!).
-        // For all content types, see: http://www.w3schools.com/media/media_mimeref.asp
         if (contentType == null || !contentType.startsWith("image")) {
-            // Do your thing if the file appears not being a real image.
             // Throw an exception, or send 404, or show default/warning image, or just ignore it.
             response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
             return;
         }
+        java.io.File outputImage = image;
+        
+        //Resize image to avoid huge download (maybe useless and more stressfull than deliver non cropped images)
+        java.io.File resizedFile = null;
+        if(smallSize){
+        	Parameters parameters = new Parameters(files);
+        	//TODO check if a separate folder should be provided for resized image due to massive read and write
+        	java.io.File dataDir = new java.io.File(parameters.getStringValue(ParameterName.DATA_DIR_PATH));
+        	// Create file with unique name in upload folder and write to it.
+        	String suffix = FilenameUtils.getExtension(image.getName());
+        	resizedFile = java.io.File.createTempFile("small_", suffix, dataDir);
+
+            //Create a resized image
+        	InputStream fis = new FileInputStream(image);
+    		int imgMaxHeight = parameters.getIntValue(ParameterName.IMG_SMALL_HEIGHT);
+    		int imgMaxWidth = parameters.getIntValue(ParameterName.IMG_SMALL_WIDTH);
+    		resizedFile = Files.resizeImage(fis, imgMaxWidth, imgMaxHeight, suffix, resizedFile);
+    		outputImage = resizedFile;
+        }
+        files.closeSession();
 
         // Init servlet response.
         response.reset();
         response.setBufferSize(DEFAULT_BUFFER_SIZE);
         response.setContentType(contentType);
-        response.setHeader("Content-Length", String.valueOf(image.length()));
-        response.setHeader("Content-Disposition", "inline; filename=\"" + image.getName() + "\"");
+        response.setHeader("Content-Length", String.valueOf(outputImage.length()));
+        response.setHeader("Content-Disposition", "inline; filename=\"" + outputImage.getName() + "\"");
 
         // Prepare streams.
         BufferedInputStream input = null;
@@ -93,7 +127,7 @@ public class ImageServlet extends HttpServlet {
 
         try {
             // Open streams.
-            input = new BufferedInputStream(new FileInputStream(image), DEFAULT_BUFFER_SIZE);
+            input = new BufferedInputStream(new FileInputStream(outputImage), DEFAULT_BUFFER_SIZE);
             output = new BufferedOutputStream(response.getOutputStream(), DEFAULT_BUFFER_SIZE);
 
             // Write file contents to response.
@@ -101,6 +135,9 @@ public class ImageServlet extends HttpServlet {
             int length;
             while ((length = input.read(buffer)) > 0) {
                 output.write(buffer, 0, length);
+            }
+            if(resizedFile != null){
+            	resizedFile.delete();
             }
         } finally {
             // Gently close streams.

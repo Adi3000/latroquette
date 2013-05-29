@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -21,9 +20,9 @@ import net.latroquette.common.database.data.file.GarbageFileStatus;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemStatus;
 import net.latroquette.common.database.data.item.Items;
-import net.latroquette.common.security.Security;
 import net.latroquette.common.util.CommonUtils;
 import net.latroquette.web.beans.profile.UserBean;
+import net.latroquette.web.util.BeanUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
@@ -38,8 +37,6 @@ public class ItemBean implements Serializable {
 	 */
 	@ManagedProperty(value="#{userBean}")
 	private UserBean userBean;
-	
-
 	private static final long serialVersionUID = 8400549541055176853L;
 	private Item item;
 	private UploadedFile newFile;
@@ -54,6 +51,7 @@ public class ItemBean implements Serializable {
 		if(StringUtils.isNotEmpty(itemId) ){
 			Items itemSearch = new Items();
 			item = itemSearch.getItemById(Integer.valueOf(itemId));
+			itemSearch.closeSession();
 		}else if(item == null){
 			item = new Item();
 		}
@@ -95,6 +93,13 @@ public class ItemBean implements Serializable {
 		this.newFile = file;
 	}
 	
+	public Item getItem(){
+		return item;
+	}
+	public void setItem(Item item){
+		this.item = item;
+	}
+	//TODO Refactor code here (Dirty silly code) !!!!
 	public String createItem(){
 		Items items = new Items();
 		for(File file : fileList){
@@ -103,6 +108,18 @@ public class ItemBean implements Serializable {
 		item.setImageList(fileList);
 		item.setStatusId(ItemStatus.DRAFT);
 		item.setDatabaseOperation(IDatabaseConstants.INSERT);
+		item = items.modifyItem(item, userBean);
+		items.closeSession();
+		return "viewItem?faces-redirect=true&item="+item.getId();
+	}
+	public String updateItem(){
+		Items items = new Items();
+		for(File file : fileList){
+			file.setGarbageStatus(GarbageFileStatus.VALIDATE);
+		}
+		item.setImageList(fileList);
+		item.setStatusId(ItemStatus.DRAFT);
+		item.setDatabaseOperation(IDatabaseConstants.UPDATE);
 		item = items.modifyItem(item, userBean);
 		items.closeSession();
 		return "viewItem?faces-redirect=true&item="+item.getId();
@@ -127,8 +144,14 @@ public class ItemBean implements Serializable {
 	
 	public void removePic(File image){
 		Files files = new Files();
-		fileList.remove(fileList.indexOf(image));
-		files.removeFile(image);
+		if(item.getId() != null){
+			image.setGarbageStatus(GarbageFileStatus.NOT_LINKED);
+			files.modifyFile(image, userBean);
+		}else{
+			files.removeFile(image);
+		}
+		fileList.remove(image);
+		files.closeSession();
 	}
 	
 	public void setKeywordListString(String keywordsListString){
@@ -173,13 +196,11 @@ public class ItemBean implements Serializable {
 	
 	public void checkItemForUser(){
 		//First check if user is logged
-		userBean.checkUserLogged();
+		boolean userCheck = UserBean.checkUserLogged(userBean);
 		//Next check if user is available to modify this item
-		if (!userBean.getId().equals(item.getUser().getId())){
-			ConfigurableNavigationHandler nav 
-			   = (ConfigurableNavigationHandler) 
-					   FacesContext.getCurrentInstance().getApplication().getNavigationHandler();
-			nav.performNavigation("viewItem");
+		//Pass to viewItem only if user is logged for this check
+		if (item.getId() != null && userCheck && !userBean.getId().equals(item.getUser().getId())){
+			BeanUtils.navigationRedirect("viewItem");
 		}
 	}
 	

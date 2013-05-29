@@ -11,6 +11,7 @@ public class UsersTest {
 		String login = "adi3000";
 		Users users = new Users();
 		User user = users.getUserByLogin(login);
+		users.closeSession();
 		assertNotNull(user);
 		assertEquals(login, user.getLogin());
 	}

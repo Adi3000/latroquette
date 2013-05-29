@@ -2,24 +2,38 @@ package net.latroquette.common.database.session;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.data.AbstractDataObject;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 
 public class DatabaseSession {
+	private static final Logger LOGGER = Logger.getLogger(DatabaseSession.class.getName());
 
 	protected Session session;
-
+	private boolean initDbSession;
+	private Transaction transaction;
 	public DatabaseSession(DatabaseSession db){
+		setInitDbSession(true);
 		this.session = db.getSession();
+		this.transaction = db.transaction;
 	}
 	
+	public DatabaseSession(boolean initDbSession){
+		if(initDbSession){
+			setInitDbSession(true);
+			this.session = this.getSession();
+		}else{
+			setInitDbSession(false);
+		}
+	}
 	public DatabaseSession(){
-		this.session = this.getSession();
+		this(true);
 	}
 	/**
 	 * Return true if a persist is engaged on this session. (It means 
@@ -27,7 +41,6 @@ public class DatabaseSession {
 	 * @return
 	 */
 	public boolean isSetForCommitting() {
-		// TODO Auto-generated method stub
 		return session != null && session.getTransaction().isActive();
 	}
 
@@ -35,9 +48,10 @@ public class DatabaseSession {
 	 * Initialize session for a modification request
 	 */
 	private void initTransaction() {
-		// TODO Auto-generated method stub
-		openSession();		
-		this.session.beginTransaction();
+		openSession();
+		if(transaction == null){
+			this.transaction = 	this.session.beginTransaction();
+		}
 	}
 	
 	/**
@@ -54,7 +68,6 @@ public class DatabaseSession {
 		initTransaction();
 		for(AbstractDataObject modelData : toCommitList)
 		{
-			//TODO Set case for update, delete or insert
 			switch(modelData.getDatabaseOperation())
 			{
 			case IDatabaseConstants.DELETE :
@@ -74,7 +87,6 @@ public class DatabaseSession {
 
 	public void persist(AbstractDataObject modelData){
 		initTransaction();
-		//TODO Set case for update, delete or insert
 		switch(modelData.getDatabaseOperation())
 		{
 		case IDatabaseConstants.DELETE :
@@ -126,16 +138,23 @@ public class DatabaseSession {
 		}
 	}
 
-	public AbstractDataObject getDataObject(AbstractDataObject model)
-	{
-		openSession();
-		AbstractDataObject toReturn = (AbstractDataObject)session.get(model.getClass(), model.getId());
-
-		return toReturn;
-	}
 	public void closeSession(){
 		if(session != null){
 			session.close();
 		}
+	}
+
+	/**
+	 * @return the initDbSession
+	 */
+	public boolean hasInitDbSession() {
+		return initDbSession;
+	}
+
+	/**
+	 * @param initDbSession the initDbSession to set
+	 */
+	protected void setInitDbSession(boolean initDbSession) {
+		this.initDbSession = initDbSession;
 	}
 }

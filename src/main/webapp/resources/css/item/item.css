@@ -37,9 +37,6 @@
 .label{
 	width : 100px;
 }
-#editItemForm\:title{
-	border: 1px solid;
-}
 
 #itemTitle, #clueForIdentifiecation{
 	display: inline-block;

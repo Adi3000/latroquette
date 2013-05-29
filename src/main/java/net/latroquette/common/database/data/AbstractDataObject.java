@@ -11,7 +11,6 @@ public abstract class AbstractDataObject implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private int databaseOperation;
 	
-	//TODO constructor with parameter FOR_INSERT FOR_DELETE or FOR UPDATE
 
 	/**
 	 * @param databaseOperation the databaseOperation to set

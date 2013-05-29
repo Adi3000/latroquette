@@ -24,7 +24,6 @@ public class Keyword extends AbstractDataObject{
 	@Override
 	@Column(name = "keyword_id")
 	public Serializable getId() {
-		// TODO Auto-generated method stub
 		return id;
 	}
 	/**

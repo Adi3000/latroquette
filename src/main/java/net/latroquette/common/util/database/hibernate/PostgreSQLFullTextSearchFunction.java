@@ -13,13 +13,11 @@ public class PostgreSQLFullTextSearchFunction implements SQLFunction {
 
 	@Override
 	public boolean hasArguments() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean hasParenthesesIfNoArguments() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

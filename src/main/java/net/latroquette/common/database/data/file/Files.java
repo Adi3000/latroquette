@@ -31,7 +31,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 
-public class Files extends AbstractDAO {
+public class Files extends AbstractDAO<File> {
 	private static final Logger LOGGER = Logger.getLogger(Files.class.getName());
 	private static final String MDSUM_ALGORITHM = "MD5";
 	
@@ -69,17 +69,17 @@ public class Files extends AbstractDAO {
         OutputStream output = null;
         InputStream md5Is = null;
         InputStream fis = null;
-        java.io.File dataDir = new java.io.File(Parameters.getStringValue(ParameterName.DATA_DIR_PATH));
-
+        Parameters parameters = new Parameters(this);
+        java.io.File dataDir = new java.io.File(parameters.getStringValue(ParameterName.DATA_DIR_PATH));
         File file = null;
         try {
         	// Create file with unique name in upload folder and write to it.
         	resizedFile = java.io.File.createTempFile(prefix + "_", "." + suffix, dataDir);
             
             //Create a resized image
-        	fis = newFile.getInputStream();
-    		ImageIO.write(resizeImage(ImageIO.read(fis)), suffix, resizedFile);
-    		fis.close();
+    		int imgMaxHeight = parameters.getIntValue(ParameterName.IMG_MAX_HEIGHT);
+    		int imgMaxWidth = parameters.getIntValue(ParameterName.IMG_MAX_WIDTH);
+    		resizedFile = resizeImage(newFile.getInputStream(), imgMaxWidth, imgMaxHeight, suffix, resizedFile);
     		
     		//Watch for checksum
     		fis = new FileInputStream(resizedFile);
@@ -140,7 +140,7 @@ public class Files extends AbstractDAO {
 	}
 	
 	public File getFileById(Integer id){
-		File file = (File)this.getDataObjectById(id, File.class);
+		File file = this.getDataObjectById(id, File.class);
 		if(file == null){
 			return null;
 		}
@@ -150,9 +150,14 @@ public class Files extends AbstractDAO {
 	}
 	
 	private String getPath(File file){
-        return	Parameters.getStringValue(ParameterName.DATA_DIR_PATH)
+		return getPath(file.getName());
+	}
+	public String getPath(String  pathFile){
+		Parameters parameters = new Parameters(this);
+        String path = parameters.getStringValue(ParameterName.DATA_DIR_PATH)
 	        		.concat(java.io.File.separator)
-	        		.concat(file.getName());
+	        		.concat(pathFile);
+        return path;
 	}
 	
 	/**
@@ -165,48 +170,59 @@ public class Files extends AbstractDAO {
 		file.setOwner(user);
 		if(file.getId() == null){
 			file.setUploadDate(CommonUtils.getTimestamp());
-			file.setDatabaseOperation(IDatabaseConstants.INSERT);
-		}else{
-			file.setDatabaseOperation(IDatabaseConstants.UPDATE);
 		}
-		persist(file);
-		if(!commit()){
-			return null;
-		}else{
-			return file;
-		}
+		return super.modifyDataObject(file);
 	}
 	
-    private BufferedImage resizeImage(BufferedImage originalImage){
-
+    public static java.io.File resizeImage(InputStream fisOriginalImage, int imgMaxWidth, int imgMaxHeight, String format, java.io.File fileResized) {
+    	BufferedImage originalImage = null;
+    	try {
+			originalImage = ImageIO.read(fisOriginalImage);
+		} catch (IOException e) {
+			LOGGER.log(Level.SEVERE, "Can't read file for resize "+fileResized.getName(), e);
+			return null;
+		}
+    	boolean imageModified = false;
     	int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
 		int finalHeight = originalImage.getHeight();
 		int finalWidth = originalImage.getWidth();
-		int imgMaxHeight = Parameters.getIntValue(ParameterName.IMG_MAX_HEIGHT);
-		int imgMaxWidth = Parameters.getIntValue(ParameterName.IMG_MAX_WIDTH);
-		
 		//Resize keeping the ratio.
 		if(finalHeight > imgMaxHeight){
 			finalWidth = (int) Math.ceil( finalWidth * (imgMaxHeight / (double)finalHeight) );
 			finalHeight = imgMaxHeight;
+			imageModified = true;
 		}
 		if(finalWidth > imgMaxWidth){
 			finalHeight = (int) Math.ceil(finalHeight * (imgMaxWidth / (double)finalWidth));
 			finalWidth = imgMaxWidth;
+			imageModified = true;
+		}
+		BufferedImage resizedImage = originalImage;
+		if(imageModified){
+			resizedImage = new BufferedImage(finalWidth, finalHeight, type);
+			Graphics2D g = resizedImage.createGraphics();
+			g.drawImage(originalImage, 0, 0, finalWidth, finalHeight, null);
+			g.dispose();
+
+			//Comment this if you feel some performance lack 
+			g.setComposite(AlphaComposite.Src);
+			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+					RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g.setRenderingHint(RenderingHints.KEY_RENDERING,
+					RenderingHints.VALUE_RENDER_QUALITY);
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+			//End of image processing variable
+			
 		}
 		
-		BufferedImage resizedImage = new BufferedImage(finalWidth, finalHeight, type);
-		Graphics2D g = resizedImage.createGraphics();
-		g.drawImage(originalImage, 0, 0, finalWidth, finalHeight, null);
-		g.dispose();
-		
-		g.setComposite(AlphaComposite.Src);
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-		RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.setRenderingHint(RenderingHints.KEY_RENDERING,
-		RenderingHints.VALUE_RENDER_QUALITY);
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-		RenderingHints.VALUE_ANTIALIAS_ON);
-		return resizedImage;
+		try{
+			ImageIO.write(resizedImage, format,  fileResized);
+			fisOriginalImage.close();
+	    } catch (IOException e) {
+	    	LOGGER.log(Level.SEVERE, "Can't write file for resize "+fileResized.getName(), e);
+	    	return null;
+	    }
+		return fileResized;
     }
 }

@@ -8,7 +8,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 
-public class Locations extends AbstractDAO {
+public class Locations extends AbstractDAO<Location> {
 	
 	public List<Location> getLocationByType(LocationType locationType){
 		Criteria req = this.session.createCriteria(Location.class)
