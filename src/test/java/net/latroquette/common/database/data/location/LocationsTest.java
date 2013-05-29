@@ -12,6 +12,7 @@ public class LocationsTest {
 	public void testgetLocationByType() {
 		Locations locations = new Locations();
 		List<Location> countryLocation = locations.getLocationByType(LocationType.COUNTRY);
+		locations.closeSession();
 		assertEquals(1, countryLocation.size());
 		assertEquals("France", countryLocation.get(0).getName());
 	}

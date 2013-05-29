@@ -123,7 +123,6 @@ public class Location extends AbstractDataObject {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	@Column(name = "location_id")
 	public Integer getId() {
-		// TODO Auto-generated method stub
 		return id;
 	}
 

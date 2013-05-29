@@ -3,7 +3,6 @@ package net.latroquette.web.beans.profile;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -17,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.Users;
 import net.latroquette.common.security.Security;
+import net.latroquette.web.util.BeanUtils;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -190,6 +190,7 @@ public class UserBean extends User implements Serializable{
 			this.loginState = LOGGED_IN;
 			userSearch.updateUser(user);
 		}
+		userSearch.closeSession();
 		switch (loginState) {
 			case LOGGED_IN:
 				return "index";
@@ -204,6 +205,7 @@ public class UserBean extends User implements Serializable{
 		User user = userSearch.getUserByLogin(this.getLogin());
 		user.setToken(null);
 		userSearch.updateUser(user);
+		userSearch.closeSession();
 		//Unset properties of this user
 		this.copyProperties(new User());
 		loginState = ANONYMOUS;
@@ -238,14 +240,12 @@ public class UserBean extends User implements Serializable{
 	}
 	
 	public void checkUserLogged(){
-		 
-		if (!Security.isUserLogged(this) || !getLoggedIn()){
-	 
-			ConfigurableNavigationHandler nav 
-			   = (ConfigurableNavigationHandler) 
-					   FacesContext.getCurrentInstance().getApplication().getNavigationHandler();
-	 
-			nav.performNavigation("/profile/login");
+		checkUserLogged(this);
+	}
+	
+	public static void checkUserLogged(UserBean user){
+		if (!Security.isUserLogged(user) || !user.getLoggedIn()){
+			BeanUtils.navigationRedirect("/profile/login");
 		}
 	}
 	

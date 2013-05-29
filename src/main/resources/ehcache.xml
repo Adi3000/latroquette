@@ -1,4 +1,5 @@
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd">
+    <diskStore path="java.io.tmpdir"/>        
 	<cache name="parameters" maxElementsInMemory="100" eternal="false"
 		overflowToDisk="true" timeToIdleSeconds="0" timeToLiveSeconds="0"
 		diskPersistent="true" diskExpiryThreadIntervalSeconds="120" />

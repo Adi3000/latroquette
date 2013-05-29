@@ -26,9 +26,10 @@ public class AmazonProducts {
 	@GET
 	public GenericEntity<List<AmazonItem>> getItems (@QueryParam("term") String pattern, 
 			@QueryParam("cat") String category ){
-		Items items = new Items();
+		Items items = new Items(false);
 		@SuppressWarnings("static-access")
 		List<AmazonItem> itemsFound = items.searchAmazonItems(category, pattern);
+		items.closeSession();
 		return new GenericEntity<List<AmazonItem>>(itemsFound) {};
 	}
 

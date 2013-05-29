@@ -192,7 +192,9 @@ ul{
 	width: 175px;
 	display: inline-block;
 }
-
+.field input{
+	border: 1px solid;
+}
 /* Override JQUERY UI settings*/
 .ui-autocomplete{
 	font-size : 0.8em;

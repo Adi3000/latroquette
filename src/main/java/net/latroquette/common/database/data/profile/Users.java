@@ -7,8 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
 
-
-public class Users extends AbstractDAO{
+public class Users extends AbstractDAO<User>{
 	
 	public User getUserByLogin(String login){
 		Criteria req = this.session.createCriteria(User.class)

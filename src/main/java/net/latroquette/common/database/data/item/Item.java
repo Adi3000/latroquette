@@ -48,7 +48,6 @@ public class Item extends AbstractDataObject {
 	@Column(name="item_id")    
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "items_item_id_seq")
 	public Integer getId() {
-		// TODO Auto-generated method stub
 		return id;
 	}
 	/**

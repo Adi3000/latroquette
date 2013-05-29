@@ -13,8 +13,9 @@
 		<h:outputScript target="head">
 		    $(document).ready(function() {
 		    	$("#searchForm\\:searchObjet")
-		    		.autocomplete({
-				    	source: "#{facesContext.externalContext.requestContextPath}/rest/providers/amazon/",
+		    		/*.autocomplete({
+				    	source: "#{facesContext.externalContext.requestContextPath}/rest/search/item/",
+				    	queryParam: "q",
 			    		minLength: 2,
 			    		focus: function(event, ui) {
 				            $("#searchForm\\:searchCity").val(ui.item.name);
@@ -29,7 +30,7 @@
 							$(this).autocomplete("widget").css("z-index", 100);
 							return false;
 					   	}
-		    		})
+		    		})*/
 		    		.val("Recherche").toggleClass("backgroundText", true)
 					.focus(function(){
 						if($(this).hasClass("backgroundText")){
@@ -75,7 +76,6 @@
     		});
 		</h:outputScript>
 		<div id="toolbar">
-			<!-- May use an include there -->
 			<h:form id="searchForm">
 				<fieldset>
 					<div id="searchPart2">
@@ -86,14 +86,14 @@
 					</div>
 					<div id="searchPart1">
 						<div id="searchObjetBox" class="searchBox">
-							<h:inputText id= "searchObjet" value="Recherche d'objet" />
+							<h:inputText id= "searchObjet" value="#{itemSearchBean.request}" />
 							<h:inputHidden id="searchObjetHidden"  />
 						</div>
 						<div id="searchMemberBox" class="searchBox">
 							<h:inputText id="searchMember" value="Recherche" />
 						</div>
 					</div>
-					<h:commandButton id="bouton" value="Rechercher !" type="button" />
+					<h:commandButton value="Rechercher" action="#{itemSearchBean.search}" />
 					<h:link outcome="/item/editItem">Déposer une annonce</h:link>
 				</fieldset>
 			</h:form>

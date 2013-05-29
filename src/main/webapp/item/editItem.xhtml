@@ -9,7 +9,7 @@
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml"><!-- 
 	 --><f:metadata>
-	 		<f:event listener="#{item.checkItemForUser}" type="preRenderView" />
+	 		<f:event listener="#{itemBean.checkItemForUser}" type="preRenderView" />
 	 </f:metadata><!--  
 	 --><ui:define name="mainDiv"><!-- 
 		 --><h:outputStylesheet name="css/item/item.css" target="head" /><!-- 
@@ -20,7 +20,26 @@
 		 --><h:outputScript target="head" >
 		  $(function() {
 		    $("#itemImages > *").rondell({
-		      preset: "carousel",
+				preset: "scroller",
+				theme: "light",
+				center: {left: 350, top: 100 },
+				visibleItems: "2",
+				caption: true,
+				strings: { 
+					prev : "&lt;&lt;", next : "&gt;&gt;", more: "Plus...", 
+					loadingError : "Erreur au chargement de l&sbquo;image %s"},
+				repeating: true,
+				autoRotation: {
+					enabled: true,
+					direction: 1,
+					once: false,
+					delay: 5000
+				},
+				currentLayer : 1,
+				lightbox: {
+				    enabled: true,
+				    displayReferencedImages: false
+				} 
 		    });
 		    $("#editItemForm\\:choosePicButton").change(function(){
 		    	if($(this).val() != ""){
@@ -46,7 +65,7 @@
 							</div>
 						</div>
 						<div id="clueForIdentifiecation">
-							<input type="text" id="keywordField" value=""/>
+							
 							<h:inputHidden id="keywordList" value="#{itemBean.keywordListString}"/>
 						</div>
 						<div>
@@ -59,8 +78,10 @@
 					<div id="itemImages">
 						<ui:repeat var="image" value="#{itemBean.fileList}">
 							<div class="uploadedImage">
-								<a href="/image/#{image.id}" rel="lightbox[uploadPic]"><h:graphicImage value="/image/#{image.id}" /></a>
-								<h:commandLink action="#{itemBean.removePic(image)}" value="[Supprimer]" />
+								<a href="#" title="Cliquez pour supprimer" rel="lightbox[uploadPic]">
+									<h:graphicImage value="/image/#{image.id}" title="Cliquez pour supprimer" />
+									<br /><h:commandLink action="#{itemBean.removePic(image)}" value="[Supprimer]" />
+								</a>
 							</div>
 						</ui:repeat>
 					</div>

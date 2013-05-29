@@ -27,7 +27,6 @@ public class Security {
 	private static Set<Integer> ANONYMOUS_SESSION_ID = new TreeSet<Integer>();
 
 	public static int generateSessionID(int clientHashCode,SocketAddress client) {
-		// TODO Auto-generated method stub
 		LOGGER.info("Anonymous UUID Session asked from " + client.toString());
 		UUID uuid = UUID.randomUUID(); 
 		int uuidHash = uuid.hashCode();
@@ -39,12 +38,10 @@ public class Security {
 		return ERROR;
 	}
 	public static int generateSessionID(int clientHashCode,User user) {
-		// TODO Auto-generated method stub
 		LOGGER.info("User UUID Session asked from " + user.toString());
 		return generateSessionID(clientHashCode);
 	}
 	private static int generateSessionID(int clientHashCode) {
-		// TODO Auto-generated method stub
 		UUID uuid = UUID.randomUUID(); 
 		int uuidHash = uuid.hashCode();
 		LOGGER.finer("UUID computed : " + uuid);

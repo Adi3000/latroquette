@@ -10,13 +10,19 @@
 		 --><h:outputScript name="js/item.js" target="head" /><!-- 
 		 --><h:outputScript target="head" >
 				$(function() {
-					$("#itemList").addItems();
+					var result = $.getJSON("/rest/search/item", {
+						r : "#{itemSearchBean.request}", 
+						p : "#{itemSearchBean.page}"
+					}, 
+					function(data){
+						$("#itemList").addItems(data);
+					});		
 				});
 	 		</h:outputScript><!-- 
 		 --><div id="mainDiv">
 				<div>
 					<h1>
-						item list : en cours de construction aucun item.
+						Résultat de la recherche "#{itemSearchBean.request}" : #{itemSearchBean.count} résultats
 					</h1>
 				</div>
 				<div id="itemList">
@@ -25,8 +31,9 @@
 							<div class="itemImages" />
 							<div class="itemInfos" />
 							<div class="itemDetails">
-								<h2 class="itemTitle" >HHHHH</h2>
-								<p class="itemDescription" >Desc</p>
+								<h2 class="itemTitle" />
+								<p class="itemDescription" />
+								<ul class="itemWishies" />
 							</div>
 						</div>
 					</div>
