@@ -7,9 +7,13 @@
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<ui:define name="mainDiv">
-			<h:form id="createKeyword">
-				<h:inputText ></h:inputText>
-			</h:form>
+			<div id="mainDiv">
+				<h:form id="createKeyword">
+					<h:outputLabel for="newKeyword" >Nouvelle cat&eacute;gorie</h:outputLabel>
+					<h:inputText id="newKeyword" styleClass="field" value="#{keywordBean.newKeywordName}" />
+					<h:commandButton value="Cr&eacute;er" action="#{keywordBean.create}"/>
+				</h:form>
+			</div>	
 		</ui:define>
 	</ui:composition>
 </body>
