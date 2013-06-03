@@ -6,9 +6,14 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
-		<ui:define name="mainDiv"><!-- 
-		 --><h:outputScript name="js/item.js" target="head" /><!-- 
-		 --><h:outputScript target="head" >
+		<f:metadata>
+		    <f:viewParam name="r" value="#{itemSearchBean.request}"/>            
+		    <f:viewParam name="p" value="#{itemSearchBean.page}"/>            
+	 		<f:event listener="#{itemSearchBean.initCount}" type="preRenderView" />
+	 	</f:metadata>
+		<ui:define name="mainDiv"> 
+		 	<h:outputScript name="js/item.js" target="head" /> 
+		 	<h:outputScript target="head" >
 				$(function() {
 					var result = $.getJSON("/rest/search/item", {
 						r : "#{itemSearchBean.request}", 
@@ -18,8 +23,8 @@
 						$("#itemList").addItems(data);
 					});		
 				});
-	 		</h:outputScript><!-- 
-		 --><div id="mainDiv">
+	 		</h:outputScript> 
+		 	<div id="mainDiv">
 				<div>
 					<h1>
 						Résultat de la recherche "#{itemSearchBean.request}" : #{itemSearchBean.count} résultats
@@ -38,8 +43,8 @@
 						</div>
 					</div>
 				</div>
-			</div><!-- 
-	   --></ui:define>
+			</div> 
+		</ui:define>
 	</ui:composition>
 </body>
 </html>

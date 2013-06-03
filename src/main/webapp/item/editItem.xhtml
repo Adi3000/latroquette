@@ -9,7 +9,8 @@
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml"> 
 		<f:metadata>
-	 		<f:event listener="#{itemBean.checkItemForUser}" type="preRenderView" />
+		    <f:viewParam name="item" value="#{itemBean.itemId}"/>            
+	 		<f:event listener="#{itemBean.loadItem}" type="preRenderView" />
 	 	</f:metadata>
 		<ui:define name="mainDiv"> 
 		<h:outputStylesheet name="css/item/item.css" target="head" />

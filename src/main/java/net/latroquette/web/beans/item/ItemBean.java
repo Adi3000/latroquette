@@ -3,10 +3,8 @@ package net.latroquette.web.beans.item;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -43,19 +41,8 @@ public class ItemBean implements Serializable {
 	private List<String> wishies;
 	private List<String> keywords;
 	private List<File> fileList;
-	
-	@PostConstruct
-	public void init(){
-		Map<String, String> parameterMap = (Map<String, String>) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		String itemId = parameterMap.get("item");
-		if(StringUtils.isNotEmpty(itemId) ){
-			Items itemSearch = new Items();
-			item = itemSearch.getItemById(Integer.valueOf(itemId));
-			itemSearch.closeSession();
-		}else if(item == null){
-			item = new Item();
-		}
-	}
+	private String itemId;
+
 	/**
 	 * @return the title
 	 */
@@ -193,11 +180,35 @@ public class ItemBean implements Serializable {
 	public UploadedFile getNewFile(){
 		return newFile;
 	}
+	/**
+	 * @return the itemId
+	 */
+	public String getItemId() {
+		return itemId;
+	}
+	/**
+	 * @param itemId the itemId to set
+	 */
+	public void setItemId(String itemId) {
+		this.itemId = itemId;
+	}
 	
-	public void checkItemForUser(){
+	public void loadItem(){
+		if(StringUtils.isNotEmpty(itemId) ){
+			Items itemSearch = new Items();
+			item = itemSearch.getItemById(Integer.valueOf(itemId));
+			itemSearch.closeSession();
+		}else if(item == null){
+			item = new Item();
+		}
+	}
+
+	public void checkItemAndUser(){
 		//First check if user is logged
 		boolean userCheck = UserBean.checkUserLogged(userBean);
-		//Next check if user is available to modify this item
+
+		//Next get item and check if user is available to modify this item
+		loadItem();
 		//Pass to viewItem only if user is logged for this check
 		if (item.getId() != null && userCheck && !userBean.getId().equals(item.getUser().getId())){
 			BeanUtils.navigationRedirect("viewItem");

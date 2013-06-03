@@ -6,14 +6,18 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:t="http://myfaces.apache.org/tomahawk">
 <body>
-	<ui:composition template="/home/template/mainLayout.xhtml"><!-- 
-	 --><ui:define name="mainDiv"><!-- 
-		 --><h:outputStylesheet name="css/item/item.css" target="head" /><!-- 
-		 --><h:outputStylesheet name="js/rondell/jquery.rondell.css" target="head" /><!-- 
-		 --><h:outputScript name="js/modernizr-2.0.6.min.js" target="head" /><!-- 
-		 --><h:outputScript name="js/jquery.mousewheel-3.0.6.min.js" target="head" /><!-- 
-		 --><h:outputScript name="js/rondell/jquery.rondell.js" target="head" /><!-- 
-		 --><h:outputScript target="head" >
+	<ui:composition template="/home/template/mainLayout.xhtml">
+	<f:metadata>
+		<f:viewParam name="item" value="#{itemBean.itemId}"/>
+		<f:event listener="#{itemBean.loadItem}" type="preRenderView" />
+	</f:metadata>	 
+	<ui:define name="mainDiv">
+		<h:outputStylesheet name="css/item/item.css" target="head" />
+		<h:outputStylesheet name="js/rondell/jquery.rondell.css" target="head" />
+		<h:outputScript name="js/modernizr-2.0.6.min.js" target="head" />
+		<h:outputScript name="js/jquery.mousewheel-3.0.6.min.js" target="head" />
+		<h:outputScript name="js/rondell/jquery.rondell.js" target="head" />
+		<h:outputScript target="head" >
 		  $(function() {
 		    $("#itemImages > *").rondell({
 				preset: "scroller",
@@ -38,8 +42,8 @@
 				} 
 		    });
 		  });
-		 </h:outputScript><!-- 
-		 --><div id="mainDiv">
+		 </h:outputScript>
+		<div id="mainDiv">
 				<h:messages></h:messages>
 				<div id="itemDescription">
 					<div id="itemTitle">
@@ -77,8 +81,8 @@
 						<span>Categorie : </span><span>Objet : </span>
 					</li>
 				</ul>
-			</div><!--  
-  	 --></ui:define><!-- 
-	--></ui:composition>
+			</div> 
+  	</ui:define>
+	</ui:composition>
 </body>
 </html>
