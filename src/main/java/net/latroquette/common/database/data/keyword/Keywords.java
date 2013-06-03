@@ -14,32 +14,32 @@ import org.hibernate.criterion.Restrictions;
 
 import com.amazon.ECS.client.jax.BrowseNode;
 
-public class Keywords extends AbstractDAO<Keyword> {
+public class Keywords extends AbstractDAO<MainKeyword> {
 
 	public static final String KEYWORD_ANCESTOR_SEPARATOR = " > ";
 	
-	public Keyword getKeywordById(Integer id){
-		return super.getDataObjectById(id, Keyword.class);
+	public MainKeyword getKeywordById(Integer id){
+		return super.getDataObjectById(id, MainKeyword.class);
 	}
-	public Keyword getKeyword(Keyword keyword){
+	public MainKeyword getKeyword(MainKeyword keyword){
 		return super.getDataObject(keyword);
 	}
 	
-	public Keyword modifyKeyword(Keyword keyword){
+	public MainKeyword modifyKeyword(MainKeyword keyword){
 		return modifyDataObject(keyword);
 	}
 	
-	public boolean deleteKeyword(Keyword keyword){
+	public boolean deleteKeyword(MainKeyword keyword){
 		return deleteDataObject(keyword);
 	}
 	
-	public List<AmazonKeyword> getAmazonKeywordsForTitle(String title){
+	public List<ExternalKeyword> getAmazonKeywordsForTitle(String title){
 		List<AmazonItem> amazonItems = Items.searchAmazonItems(null, title);
-		List<AmazonKeyword> amazonKeywords = new ArrayList<AmazonKeyword>();
+		List<ExternalKeyword> amazonKeywords = new ArrayList<ExternalKeyword>();
 		for(AmazonItem amazonItem : amazonItems){
 			if(amazonItem.getBrowseNodes() !=null){
 				for(BrowseNode browseNode : amazonItem.getBrowseNodes()){
-					AmazonKeyword amazonKeyword= getAmazonKeyword(browseNode);
+					ExternalKeyword amazonKeyword= getAmazonKeyword(browseNode);
 					if(amazonKeyword == null){
 						amazonKeyword = createAmazonKeyword(browseNode);
 					}
@@ -54,17 +54,19 @@ public class Keywords extends AbstractDAO<Keyword> {
 		return amazonKeywords;
 	}
 	
-	public AmazonKeyword getAmazonKeyword(BrowseNode amazonBrowseNode){
-		Criteria req = this.session.createCriteria(AmazonKeyword.class)
-				.add(Restrictions.eq("id", amazonBrowseNode.getBrowseNodeId()))
+	public ExternalKeyword getAmazonKeyword(BrowseNode amazonBrowseNode){
+		Criteria req = this.session.createCriteria(ExternalKeyword.class)
+				.add(Restrictions.eq("uid", amazonBrowseNode.getBrowseNodeId()))
+				.add(Restrictions.eq("source", ExternalKeyword.AMAZON_SOURCE))
 				.setFetchMode("", FetchMode.SELECT);
-		return (AmazonKeyword)req.uniqueResult();
+		return (ExternalKeyword)req.uniqueResult();
 	}
 	
-	public AmazonKeyword createAmazonKeyword(BrowseNode amazonBrowseNode){
-		AmazonKeyword newAmazonKeyWord = new AmazonKeyword();
-		newAmazonKeyWord.setId(amazonBrowseNode.getBrowseNodeId());
+	public ExternalKeyword createAmazonKeyword(BrowseNode amazonBrowseNode){
+		ExternalKeyword newAmazonKeyWord = new ExternalKeyword();
+		newAmazonKeyWord.setUid(amazonBrowseNode.getBrowseNodeId());
 		newAmazonKeyWord.setName(amazonBrowseNode.getName());
+		newAmazonKeyWord.setSource(ExternalKeyword.AMAZON_SOURCE);
 		
 		//Search and build hierarchy
 		BrowseNode parentNode =  
@@ -75,7 +77,7 @@ public class Keywords extends AbstractDAO<Keyword> {
 					amazonBrowseNode.getAncestors().getBrowseNode().get(0) : null;
 		if(parentNode != null){
 			
-			AmazonKeyword amazonKeyWordAncestor = getAmazonKeyword(parentNode);
+			ExternalKeyword amazonKeyWordAncestor = getAmazonKeyword(parentNode);
 			if(amazonKeyWordAncestor == null){
 				amazonKeyWordAncestor = createAmazonKeyword(parentNode);
 			}

@@ -12,7 +12,7 @@ public class KeywordsTest {
 	@Test
 	public void testgetAmazonKeywordsForTitle() {
 		Keywords keywordService = new Keywords();
-		List<AmazonKeyword> keywords = keywordService.getAmazonKeywordsForTitle("Lego");
+		List<ExternalKeyword> keywords = keywordService.getAmazonKeywordsForTitle("Lego");
 		assertFalse(keywords.isEmpty());
 	}
 

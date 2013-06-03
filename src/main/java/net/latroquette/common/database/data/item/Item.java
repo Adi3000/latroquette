@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import net.latroquette.common.database.data.AbstractDataObject;
 import net.latroquette.common.database.data.file.File;
-import net.latroquette.common.database.data.keyword.Keyword;
+import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.database.data.profile.User;
 
 @Entity
@@ -42,7 +42,7 @@ public class Item extends AbstractDataObject {
 	private String title;
 	private String description;
 	private List<File> imageList;
-	private transient List<Keyword> keywordList;
+	private transient List<MainKeyword> keywordList;
 	@Override
 	@Id
 	@Column(name="item_id")    
@@ -139,13 +139,13 @@ public class Item extends AbstractDataObject {
 	 * @return the keywordList
 	 */
 	@Transient
-	public List<Keyword> getKeywordList() {
+	public List<MainKeyword> getKeywordList() {
 		return keywordList;
 	}
 	/**
 	 * @param keywordList the keywordList to set
 	 */
-	public void setKeywordList(List<Keyword> keywordList) {
+	public void setKeywordList(List<MainKeyword> keywordList) {
 		this.keywordList = keywordList;
 	}
 	/**

@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import net.latroquette.common.database.data.keyword.Keyword;
+import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.web.beans.item.ViewableItem;
 
 import com.amazon.ECS.client.jax.BrowseNode;
@@ -129,7 +129,7 @@ public class AmazonItem implements ViewableItem{
 		return ViewableItem.AMAZON_SOURCE;
 	}
 	@Override
-	public List<Keyword> getCategories() {
+	public List<MainKeyword> getCategories() {
 		// TODO Auto-generated method stub
 		return null;
 	}

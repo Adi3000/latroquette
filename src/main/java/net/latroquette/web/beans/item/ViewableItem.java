@@ -2,7 +2,7 @@ package net.latroquette.web.beans.item;
 
 import java.util.List;
 
-import net.latroquette.common.database.data.keyword.Keyword;
+import net.latroquette.common.database.data.keyword.MainKeyword;
 
 public interface ViewableItem {
 	
@@ -19,6 +19,6 @@ public interface ViewableItem {
 	 * @return  {@code AMAZON_SOURCE} or  {@code LATROQUETTE_SOURCE}
 	 */
 	int getSource();
-	List<Keyword> getCategories();
+	List<MainKeyword> getCategories();
 
 }

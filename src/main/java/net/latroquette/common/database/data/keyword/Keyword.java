@@ -1,75 +1,28 @@
 package net.latroquette.common.database.data.keyword;
 
-import java.io.Serializable;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+public interface Keyword {
+	
+	public static final Integer MAIN_ANCESTOR_RELATIONSHIP = 1;
+	public static final Integer CHILDREN_RELATIONSHIP = 2;
+	public static final Integer EXTERNAL_KEYWORD_RELATIONSHIP = 3;
 
-import net.latroquette.common.database.data.AbstractDataObject;
 
-@Entity
-@Table(name = "keywords")
-public class Keyword extends AbstractDataObject{
-
+	public Integer getId() ;
 	/**
-	 * 
+	 * @return the name
 	 */
-	private static final long serialVersionUID = -5039813933386523713L;
-
-	private Double id;
-	private String label;
-	private Integer type;
-	private Double precision;
-	@Override
-	@Column(name = "keyword_id")
-	public Serializable getId() {
-		return id;
-	}
+	public String getName();
+	
 	/**
-	 * @return the label
+	 * @return the mainAncestor
 	 */
-	@Column(name = "keyword_label")
-	public String getLabel() {
-		return label;
-	}
+	public Keyword getAncestor();
+	
 	/**
-	 * @param label the label to set
+	 * @return the childrens
 	 */
-	public void setLabel(String label) {
-		this.label = label;
-	}
-	/**
-	 * @return the type
-	 */
-	@Column(name = "keyword_type_id")
-	public Integer getType() {
-		return type;
-	}
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(Integer type) {
-		this.type = type;
-	}
-	/**
-	 * @return the precision
-	 */
-	@Column(name = "keyword_precision")
-	public Double getPrecision() {
-		return precision;
-	}
-	/**
-	 * @param precision the precision to set
-	 */
-	public void setPrecision(Double precision) {
-		this.precision = precision;
-	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Double id) {
-		this.id = id;
-	}
-
+	public List<? extends Keyword> getChildren() ;
+	
 }
