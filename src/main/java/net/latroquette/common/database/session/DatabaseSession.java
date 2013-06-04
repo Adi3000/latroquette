@@ -1,11 +1,13 @@
 package net.latroquette.common.database.session;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
 import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.data.AbstractDataObject;
+import net.latroquette.common.database.data.keyword.DataObject;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -64,9 +66,9 @@ public class DatabaseSession {
 	}
 	
 
-	public void persist(ArrayList<AbstractDataObject> toCommitList){
+	public void persist(Collection<DataObject> toCommitList){
 		initTransaction();
-		for(AbstractDataObject modelData : toCommitList)
+		for(DataObject modelData : toCommitList)
 		{
 			switch(modelData.getDatabaseOperation())
 			{
@@ -79,33 +81,24 @@ public class DatabaseSession {
 			case IDatabaseConstants.INSERT_OR_UPDATE :
 				session.saveOrUpdate(modelData);
 				break;
+			case IDatabaseConstants.UPDATE :
+				session.update(modelData);
+				break;
+			case IDatabaseConstants.MERGE :
+				session.merge(modelData);
+				break;
+			case IDatabaseConstants.NO_ACTION:
 			default :
 				break;
 			}
 		}
 	}
 
-	public void persist(AbstractDataObject modelData){
-		initTransaction();
-		switch(modelData.getDatabaseOperation())
-		{
-		case IDatabaseConstants.DELETE :
-			session.delete(modelData);
-			break;
-		case IDatabaseConstants.INSERT :
-			session.save(modelData);
-			break;
-		case IDatabaseConstants.INSERT_OR_UPDATE :
-			session.saveOrUpdate(modelData);
-			break;
-		case IDatabaseConstants.UPDATE :
-			session.update(modelData);
-			break;
-		default :
-			break;
-		}
+	public void persist(DataObject modelData){
+		persist(Collections.singleton(modelData));
 	}
-
+	
+	
 	public boolean commit(){
 		if(isSetForCommitting()){
 			session.getTransaction().commit();
@@ -140,6 +133,7 @@ public class DatabaseSession {
 
 	public void closeSession(){
 		if(session != null){
+			session.clear();
 			session.close();
 		}
 	}

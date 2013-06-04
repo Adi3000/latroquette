@@ -1,0 +1,63 @@
+.keywordName, .keywordFullName{
+	display: block;
+}
+.keywordFullname{
+	font-size: 0.7em;
+	font-style: italic;
+	color: #888888;
+}
+.orphanKeyword{
+	margin : 0;
+	padding: 0px 2px 0px 2px;
+	max-width: 300px;
+}
+#childrenKeyword .childrenZone{
+	width: 310px;
+	background-color: #DDDDDD;
+}
+
+#childrenKeyword .childrenZone em, #childrenKeyword .synonymZone em{
+	display:block;
+	font-size: 0.7em;
+}
+#childrenKeyword .synonymZone .dropTip{
+	min-height: 60px;
+}
+#childrenKeyword .childrenZone .dropTip{
+	min-height: 20px;
+}
+#childrenKeyword, #orphanMainKeyword{
+	display: inline-block;
+	vertical-align: top;
+}
+#orphanExternalKeyword .orphanKeyword{
+	display: inline-block;
+	vertical-align: top;
+}
+#childrenKeyword .synonymZone{
+	width: 310px;
+	background-color: #8FDB32;
+}
+#childrenKeyword .hoverDroppable{
+	background-color: #F5F5F5;
+}
+
+#childrenKeyword h3 {
+	margin : 5px 0 0 0 ;
+}
+#childrenKeyword h3 em, #modifyKeyword h2 em{
+	font-size: 0.8em;
+	font-weight: normal;
+	padding-left: 20px;
+}
+.existingChild{
+	border-style: solid;
+	border-color: #000000;
+	border-width: 1px;
+	display: inline;
+	vertical-align: middle;
+}
+#mainDiv .ui-icon {
+	display: inline-block;
+	vertical-align: middle;
+}

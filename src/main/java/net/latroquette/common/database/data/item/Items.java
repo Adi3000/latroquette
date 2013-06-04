@@ -106,7 +106,7 @@ public class Items extends AbstractDAO<Item>{
 			cursor = nbResultToLoad * (page -1);
 		}
 		String searchPattern = searchString.replaceAll("\\W", " & ");
-		String index = searchOnDescription ? "item.title " : "item.title || ' ' || item.description ";
+		String index = searchOnDescription ? "item.title || ' ' || item.description " : "item.title " ;
 		String sql = 
 				" SELECT ".concat(field).concat(" FROM Item item ").concat(
 				" WHERE fulltextsearch('french', ").concat(index).concat(", :search ) = true").concat(

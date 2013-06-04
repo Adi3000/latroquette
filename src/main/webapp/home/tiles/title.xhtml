@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -8,27 +7,20 @@
 		<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 			xmlns:ui="http://java.sun.com/jsf/facelets"
 			xmlns:h="http://java.sun.com/jsf/html"
-			xmlns:f="http://java.sun.com/jsf/core"
-			xmlns:c="http://java.sun.com/jsp/jstl/core">	
+			xmlns:f="http://java.sun.com/jsf/core">	
 			<div id="loadingDiv" style="display: none;">
-				<div id="loadingBackground" class="ui-widget-overlay" >&nbsp;</div>
-				<div id="loadingImage"><h:graphicImage value="/resources/img/loading.gif" width="50" height="50" /></div><div id="loadingText">&nbsp;</div>
+				<div id="loadingBackground" class="ui-widget-overlay" ></div>
+				<div id="loadingImage"><h:graphicImage value="/resources/img/loading.gif" width="50" height="50" /></div><div id="loadingText"></div>
 			</div>
 			<div id="enTete">	
 				<h:panelGroup id="toolbarLogin">
-					<c:choose>
-						<c:when  test="${not userBean.loggedIn}">
-							<h:link outcome="/profile/login?register=true" value="#{text_home.CONNEXION}" />
-						</c:when>
-						<c:otherwise>
-							<h:form id="logoutForm">
-								<h:outputFormat value="#{text_home.WELCOME_MESSAGE}">
-									<f:param value="#{userBean.login}" />
-								</h:outputFormat>&nbsp;
-								<h:commandButton value="Logout" action="#{userBean.logoutUser}" />
-							</h:form>
-						</c:otherwise>
-					</c:choose>
+						<h:link outcome="/profile/login?register=true" value="#{text_home.CONNEXION}" rendered="#{!userBean.loggedIn}"/>
+						<h:form id="logoutForm" rendered="#{userBean.loggedIn}">
+							<h:outputFormat value="#{text_home.WELCOME_MESSAGE}">
+								<f:param value="#{userBean.login}" />
+							</h:outputFormat>
+							<h:commandButton value="Logout" action="#{userBean.logoutUser}" />
+						</h:form>
 				</h:panelGroup>
 			
 				<div id="titleHomePage">
