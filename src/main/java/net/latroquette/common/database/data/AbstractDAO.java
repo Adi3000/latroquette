@@ -1,10 +1,18 @@
 package net.latroquette.common.database.data;
 
-import net.latroquette.common.database.IDatabaseConstants;
-import net.latroquette.common.database.session.DatabaseSession;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public abstract class AbstractDAO<T extends AbstractDataObject> extends DatabaseSession{
+import net.latroquette.common.database.IDatabaseConstants;
+import net.latroquette.common.database.data.keyword.DataObject;
+import net.latroquette.common.database.session.DatabaseSession;
+import net.latroquette.common.util.optimizer.CommonValues;
+
+public abstract class AbstractDAO<T extends DataObject> extends DatabaseSession{
 	
+
 	public AbstractDAO(DatabaseSession db){
 		super(db);
 	}
@@ -22,13 +30,38 @@ public abstract class AbstractDAO<T extends AbstractDataObject> extends Database
 		return data ;
 	}
 	
-	public T  modifyDataObject(T data){
-		if(data.getId() == null){
+	public void modify(T data){
+		if(data.getId() == null && data.getDatabaseOperation() == IDatabaseConstants.DEFAULT){
 			data.setDatabaseOperation(IDatabaseConstants.INSERT);
 		}else{
 			data.setDatabaseOperation(IDatabaseConstants.UPDATE);
 		}
 		persist(data);
+	}
+	
+	public Collection<T>  modifyDataObject(Collection<T> data){
+		return modifyDataObject(data, false);
+	}
+	public Collection<T>  modifyDataObject(Collection<T> data, boolean merge){
+		Set<T> dataSet = null;
+		if(data instanceof Set){
+			dataSet = (Set<T>) data;
+		}else{
+			dataSet  = new HashSet<T>(data);
+		}
+		for(T datum : dataSet){
+			if(datum != null){
+				modify(datum);
+			}
+		}
+		if(commit()){
+			return data;
+		}else{
+			return null;
+		}
+	}
+	public T  modifyDataObject(T data){
+		modify(data);
 		if(commit()){
 			return data;
 		}else{

@@ -1,10 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html[
+    <!ENTITY eacute "&#225;"> 
+]>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"	
 	xmlns:t="http://myfaces.apache.org/tomahawk">
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml"> 
@@ -13,44 +13,12 @@
 	 		<f:event listener="#{itemBean.loadItem}" type="preRenderView" />
 	 	</f:metadata>
 		<ui:define name="mainDiv"> 
-		<h:outputStylesheet name="css/item/item.css" target="head" />
+		<h:outputStylesheet name="css/item.css" target="head" />
 		<h:outputStylesheet name="js/rondell/jquery.rondell.css" target="head" />
 		<h:outputScript name="js/modernizr-2.0.6.min.js" target="head" />
 		<h:outputScript name="js/jquery.mousewheel-3.0.6.min.js" target="head" />
 		<h:outputScript name="js/rondell/jquery.rondell.js" target="head" />
-		<h:outputScript target="head" >
-		  $(function() {
-		    $("#itemImages > *").rondell({
-				preset: "scroller",
-				theme: "light",
-				center: {left: 350, top: 100 },
-				visibleItems: "2",
-				caption: true,
-				strings: { 
-					prev : "&lt;&lt;", next : "&gt;&gt;", more: "Plus...", 
-					loadingError : "Erreur au chargement de l&sbquo;image %s"},
-				repeating: true,
-				autoRotation: {
-					enabled: true,
-					direction: 1,
-					once: false,
-					delay: 5000
-				},
-				currentLayer : 1,
-				lightbox: {
-				    enabled: true,
-				    displayReferencedImages: false
-				} 
-		    });
-		    $("#editItemForm\\:choosePicButton").change(function(){
-		    	if($(this).val() != ""){
-		    		showLoadingDiv("Ajout de l'image en cours... Veuillez patienter...");
-		    		$("#uploadPicButton > input").click();
-	    		}
-		    });
-		    $("#uploadPicButton").hide(0);
-		  });
-		</h:outputScript>
+		<h:outputScript name="js/_initEditItem.js" target="head" />
 		<div id="mainDiv">
 				<h:form id="editItemForm" method="post" enctype="multipart/form-data">
 					<h:messages></h:messages>
@@ -91,18 +59,14 @@
 					</div>
 					<ul id="wishies">
 						<li>
-							<label>Categorie : </label> <input type="text" id="wishiesCategory" value="" />
-							<label>Objet : </label> <input type="text" id="wishiesField" value=""/>	<h:inputHidden id="wishiesList" value="#{itemBean.wishiesListString}"/>
+							<label>Cat#233;gorie : </label> <input type="text" id="wishiesCategory" value="" />
+							<label>D#233;tails : </label> <input type="text" id="wishiesField" value=""/>	<h:inputHidden id="wishiesList" value="#{itemBean.wishiesListString}"/>
 						</li>
 					</ul>
-					<c:choose>
-						<c:when test="${empty itemBean.item.id}">
-							<div><h:commandButton value="Cr&eacute;er" id="saveButton" action="#{itemBean.createItem}"/></div>
-						</c:when>
-						<c:otherwise>
-							<div><h:commandButton value="Modifier" id="saveButton" action="#{itemBean.updateItem}"/></div>
-						</c:otherwise>
-					</c:choose>
+					<div id="saveButton">
+						<h:commandButton value="Cr&#233;er" action="#{itemBean.createItem}" rendered="#{empty itemBean.item.id}"/>
+						<h:commandButton value="Modifier" action="#{itemBean.updateItem}" rendered="#{!empty itemBean.item.id}"/>
+					</div>
 				</h:form>
 			</div> 
 	  	</ui:define>

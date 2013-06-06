@@ -4,13 +4,19 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlTransient;
 
-public abstract class AbstractDataObject implements Serializable{
+import net.latroquette.common.database.IDatabaseConstants;
+import net.latroquette.common.database.data.keyword.DataObject;
+import net.latroquette.common.util.optimizer.CommonValues;
+
+public abstract class AbstractDataObject implements DataObject{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private int databaseOperation;
-	
+	public AbstractDataObject(){
+		this.databaseOperation = IDatabaseConstants.DEFAULT; 
+	}
 
 	/**
 	 * @param databaseOperation the databaseOperation to set

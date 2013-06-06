@@ -1,147 +1,140 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition>
-		<h:outputStylesheet name="css/profile/login.css" target="head" />
-		<c:if test="${not userBean.loggedIn}">
-			<h:outputScript target="head">
-				var registerDisplayed = false;
-				var forceLogin = "${param.register}";
-				$(function() {
-					$("#loginDiv").hide(0);
-					$("#switchToLogin").click(function(){
-						$("#loginDiv").slideDown(600,"easeOutBounce");
-					});
-					$("#switchToLogin").click(function(){
-						$("#arrowDiv").hide(600);
-					});
-					$("#switchToArrow").click(function(){
-						$("#arrowDiv").show(600);
-					});
-					$("#switchToArrow").click(function(){
-						$("#loginDiv").slideUp(600);
-					});
-					$("#displayRegister").click(function(){
-						if(registerDisplayed){
-							$("#registerBorder").slideUp(400, function(){
-								$("#loginForm").animate({'width' : 344 }); 
-							});
-							$(this).val("S'inscrire");
-							$("#loginTitle").show(0);
-							$("#registerTitle").hide(0);
-							$("#loginButton").show(0).removeAttr("disabled");
-							$("#registerButton").hide(0).attr("disabled","disabled");
-							registerDisplayed = false;
-						}else{
-							$("#loginForm").animate({'width' : 700 }, function(){
-								$("#registerBorder").slideDown(400);
-							});
-							$(this).val("Annuler");
-							$("#loginTitle").hide(0);
-							$("#loginButton").hide(0).attr("disabled","disabled");
-							$("#registerTitle").show(0);
-							$("#registerButton").show(0).removeAttr("disabled");
-							registerDisplayed = true;
-						}
-					});
-					$("#registerBorder").hide(0);
-					$("#registerTitle").hide(0);
-					$("#registerButton").hide(0).attr("disabled","disabled");
-					if(forceLogin  == "true"){
-						$("#switchToLogin").click();
+		<h:outputStylesheet name="css/profile.css" target="head" />
+		<h:outputScript target="head" rendered="#{!userBean.loggedIn}">
+			var registerDisplayed = false;
+			var forceLogin = "${param.register}";
+			$(function() {
+				$("#loginDiv").hide(0);
+				$("#switchToLogin").click(function(){
+					$("#loginDiv").slideDown(600,"easeOutBounce");
+				});
+				$("#switchToLogin").click(function(){
+					$("#arrowDiv").hide(600);
+				});
+				$("#switchToArrow").click(function(){
+					$("#arrowDiv").show(600);
+				});
+				$("#switchToArrow").click(function(){
+					$("#loginDiv").slideUp(600);
+				});
+				$("#displayRegister").click(function(){
+					if(registerDisplayed){
+						$("#registerBorder").slideUp(400, function(){
+							$("#loginForm").animate({'width' : 344 }); 
+						});
+						$(this).val("S'inscrire");
+						$("#loginTitle").show(0);
+						$("#registerTitle").hide(0);
+						$("#loginButton").show(0).removeAttr("disabled");
+						$("#registerButton").hide(0).attr("disabled","disabled");
+						registerDisplayed = false;
+					}else{
+						$("#loginForm").animate({'width' : 700 }, function(){
+							$("#registerBorder").slideDown(400);
+						});
+						$(this).val("Annuler");
+						$("#loginTitle").hide(0);
+						$("#loginButton").hide(0).attr("disabled","disabled");
+						$("#registerTitle").show(0);
+						$("#registerButton").show(0).removeAttr("disabled");
+						registerDisplayed = true;
 					}
 				});
-			</h:outputScript><!-- 
-	 --></c:if><!--
-	 --><div id="topHomepage">
-	 	
-			<c:choose>
-				<c:when test="${not userBean.loggedIn}">
-					<div id="arrowDiv">
-						<div id="switchToLogin">Connexion</div>
-					</div>
-					<div id="loginDiv">
-					 	<h:form id="loginForm">
-							<div id="loginBorder">
-								<h2 id="loginTitle">#{text_profile.CONNEXION_FIELDSET}</h2>
-								<h2 id="registerTitle">#{text_profile.REGISTER_FIELDSET}</h2>
-								<div class="loginField">
-									<div class="label">
-										<h:outputLabel for="loginField">#{text_profile.LOGIN_LABEL}</h:outputLabel>
-									</div>
-									<div class="field">
-										<h:inputText id="loginField" value="#{userBean.login}" class="loginBox" required="true"/>
-									</div>
-									<span class="error"><h:message for="loginField"/></span>
+				$("#registerBorder").hide(0);
+				$("#registerTitle").hide(0);
+				$("#registerButton").hide(0).attr("disabled","disabled");
+				if(forceLogin  == "true"){
+					$("#switchToLogin").click();
+				}
+			});
+		</h:outputScript>
+	 	<div id="topHomepage">
+			<h:panelGroup rendered="#{!userBean.loggedIn}">
+				<div id="arrowDiv">
+					<div id="switchToLogin">Connexion</div>
+				</div>
+				<div id="loginDiv">
+				 	<h:form id="loginForm">
+						<div id="loginBorder">
+							<h2 id="loginTitle">#{text_profile.CONNEXION_FIELDSET}</h2>
+							<h2 id="registerTitle">#{text_profile.REGISTER_FIELDSET}</h2>
+							<div class="loginField">
+								<div class="label">
+									<h:outputLabel for="loginField">#{text_profile.LOGIN_LABEL}</h:outputLabel>
 								</div>
-								<div class="loginField">
-									<div class="label">
-										<h:outputLabel for="passwordField">#{text_profile.PASSWORD_LABEL}</h:outputLabel>
-									</div>
-									<div class="field">
-										<h:inputSecret id="passwordField" value="#{userBean.password}" class="loginBox" required="true" />
-										<span class="error"><h:message for="passwordField" /></span>
-									</div>
+								<div class="field">
+									<h:inputText id="loginField" value="#{userBean.login}" class="loginBox" required="true"/>
 								</div>
-								<div id="loginButtons">
-									<div>
-										<input type="button" id="switchToArrow" value="&lt;.Retour"/>
-										<input type="button" id="displayRegister" value="S'inscrire"/>
-									</div>
-									<div id="loginButton">
-										<h:commandButton value="Login" action="#{userBean.loginUser}" />
-									</div>
-									<div id="registerButton">
-										<h:commandButton value="S'enregistrer" action="#{userBean.registerUser}" />
-									</div>
+								<span class="error"><h:message for="loginField"/></span>
+							</div>
+							<div class="loginField">
+								<div class="label">
+									<h:outputLabel for="passwordField">#{text_profile.PASSWORD_LABEL}</h:outputLabel>
+								</div>
+								<div class="field">
+									<h:inputSecret id="passwordField" value="#{userBean.password}" class="loginBox" required="true" />
+									<span class="error"><h:message for="passwordField" /></span>
 								</div>
 							</div>
-							<div id="registerBorder">
-								<div class="loginField">
-									<div class="label">
-										<h:outputLabel for="mailField">#{text_profile.MAILBOX_LABEL}</h:outputLabel>
-									</div>
-									<div class="field">
-										<h:inputText id="mailField" value="#{userBean.mailConfirm}" class="loginBox">
-											<f:validator validatorId="net.latroquette.web.validators.profile.EmailValidator" />
-										</h:inputText>
-										<span class="error"><h:message for="mailField"/></span>
-									</div>
-								</div>						
-								<div class="loginField">
-									<div class="label">
-										<h:outputLabel for="mailConfirmField">#{text_profile.MAILBOX_LABEL_CONFIRM}</h:outputLabel>
-									</div>
-									<div class="field">
-										<h:inputText id="mailConfirmField" value="#{userBean.mailConfirm}" class="loginBox"/>
-										<span class="error"><h:message for="mailConfirmField"/></span>
-									</div>
-								</div>						
-								<div class="loginField">
-									<div class="label">
-										<h:outputLabel for="passwordConfirmField">#{text_profile.PASSWORD_LABEL_CONFIRM}</h:outputLabel>
-									</div>
-									<div class="field">
-										<h:inputSecret id="passwordConfirmField" value="#{userBean.passwordConfirm}" class="loginBox"/>
-										<span class="error"><h:message for="passwordConfirmField" /></span>
-									</div>
-								</div>						
+							<div id="loginButtons">
+								<div>
+									<input type="button" id="switchToArrow" value="&lt;.Retour"/>
+									<input type="button" id="displayRegister" value="S'inscrire"/>
+								</div>
+								<div id="loginButton">
+									<h:commandButton value="Login" action="#{userBean.loginUser}" />
+								</div>
+								<div id="registerButton">
+									<h:commandButton value="S'enregistrer" action="#{userBean.registerUser}" />
+								</div>
 							</div>
-						</h:form>
-					</div>
-				</c:when>
-				<c:otherwise>
-					<div id="arrowDiv">
-						<div id="switchToLogin">${userBean.login}</div>
-					</div>
-				</c:otherwise>
-			</c:choose>
-		</div><!-- 
-	--></ui:composition>
+						</div>
+						<div id="registerBorder">
+							<div class="loginField">
+								<div class="label">
+									<h:outputLabel for="mailField">#{text_profile.MAILBOX_LABEL}</h:outputLabel>
+								</div>
+								<div class="field">
+									<h:inputText id="mailField" value="#{userBean.mailConfirm}" class="loginBox">
+										<f:validator validatorId="net.latroquette.web.validators.profile.EmailValidator" />
+									</h:inputText>
+									<span class="error"><h:message for="mailField"/></span>
+								</div>
+							</div>						
+							<div class="loginField">
+								<div class="label">
+									<h:outputLabel for="mailConfirmField">#{text_profile.MAILBOX_LABEL_CONFIRM}</h:outputLabel>
+								</div>
+								<div class="field">
+									<h:inputText id="mailConfirmField" value="#{userBean.mailConfirm}" class="loginBox"/>
+									<span class="error"><h:message for="mailConfirmField"/></span>
+								</div>
+							</div>						
+							<div class="loginField">
+								<div class="label">
+									<h:outputLabel for="passwordConfirmField">#{text_profile.PASSWORD_LABEL_CONFIRM}</h:outputLabel>
+								</div>
+								<div class="field">
+									<h:inputSecret id="passwordConfirmField" value="#{userBean.passwordConfirm}" class="loginBox"/>
+									<span class="error"><h:message for="passwordConfirmField" /></span>
+								</div>
+							</div>						
+						</div>
+					</h:form>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{userBean.loggedIn}">
+				<div id="arrowDiv">
+					<div id="switchToLogin">#{userBean.login}</div>
+				</div>
+			</h:panelGroup>
+		</div>
+	</ui:composition>
 </body>
 </html>

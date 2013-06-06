@@ -34,6 +34,7 @@ public class ExternalKeyword extends AbstractDataObject implements Keyword {
 	private List<ExternalKeyword> children;
 	private String fullname;
 	private ExternalKeyword ancestor;
+	private Character excluded;
 	
 	@Override
 	@Id
@@ -126,5 +127,17 @@ public class ExternalKeyword extends AbstractDataObject implements Keyword {
 	public void setChildren(List<ExternalKeyword> children) {
 		this.children = children;
 	}
-
+	/**
+	 * @return the excluded
+	 */
+	@Column(name = "ext_keyword_excluded")
+	public Character getExcluded() {
+		return excluded;
+	}
+	/**
+	 * @param excluded the excluded to set
+	 */
+	public void setExcluded(Character excluded) {
+		this.excluded = excluded;
+	}
 }

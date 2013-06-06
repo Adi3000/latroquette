@@ -14,5 +14,7 @@
   <mapping class="net.latroquette.common.database.data.item.Item"/>
   <mapping class="net.latroquette.common.database.data.file.File"/>
   <mapping class="net.latroquette.common.util.parameters.Parameter"/>
+  <mapping class="net.latroquette.common.database.data.keyword.ExternalKeyword"/>
+  <mapping class="net.latroquette.common.database.data.keyword.MainKeyword"/>
  </session-factory>
 </hibernate-configuration>

@@ -29,16 +29,16 @@ public class Locations extends AbstractDAO<Location> {
 		
 		String sql = 
 				" SELECT {locations.*} FROM locations {locations} ".concat(
-				" WHERE location_name ILIKE ? or location_name ~* ?").concat(
+				" WHERE location_name ILIKE :nameStart or location_name ~* :nameInner").concat(
 				" UNION SELECT {locations.*} FROM locations {locations} ").concat(
-				" WHERE location_postal_codes LIKE ?  or location_postal_codes LIKE ? ");
+				" WHERE location_postal_codes LIKE :codeStart  or location_postal_codes LIKE :oneCodeStart ");
 		//Can't ordering this for now.
 		//.concat(	" ORDER BY {location.location_name}");
 		Query req = this.session.createSQLQuery(sql).addEntity("locations",Location.class);
-		req		.setString(0, likeValue1)
-				.setString(1, likeValue2)
-				.setString(2, postalCode1)
-				.setString(3, postalCode2);
+		req		.setString(":nameStart", likeValue1)
+				.setString(":nameInner", likeValue2)
+				.setString(":codeStart", postalCode1)
+				.setString(":oneCodeStart", postalCode2);
 		@SuppressWarnings("unchecked")
 		List<Location> locations = (List<Location>)req.list();
 		return locations;
