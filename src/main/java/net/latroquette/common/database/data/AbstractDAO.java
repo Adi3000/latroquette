@@ -31,10 +31,12 @@ public abstract class AbstractDAO<T extends DataObject> extends DatabaseSession{
 	}
 	
 	public void modify(T data){
-		if(data.getId() == null && data.getDatabaseOperation() == IDatabaseConstants.DEFAULT){
-			data.setDatabaseOperation(IDatabaseConstants.INSERT);
-		}else{
-			data.setDatabaseOperation(IDatabaseConstants.UPDATE);
+		if(data.getDatabaseOperation() == IDatabaseConstants.DEFAULT){
+			if(data.getId() == null){
+				data.setDatabaseOperation(IDatabaseConstants.INSERT);
+			}else{
+				data.setDatabaseOperation(IDatabaseConstants.UPDATE);
+			}
 		}
 		persist(data);
 	}

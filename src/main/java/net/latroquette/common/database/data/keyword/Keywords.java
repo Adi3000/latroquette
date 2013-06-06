@@ -8,6 +8,7 @@ import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.data.AbstractDAO;
 import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.Items;
+import net.latroquette.common.util.CommonUtils;
 import net.latroquette.common.util.optimizer.CommonValues;
 
 import org.hibernate.Criteria;
@@ -88,7 +89,7 @@ public class Keywords extends AbstractDAO<Keyword> {
 		newAmazonKeyWord.setUid(amazonBrowseNode.getBrowseNodeId());
 		newAmazonKeyWord.setName(amazonBrowseNode.getName());
 		newAmazonKeyWord.setSource(ExternalKeyword.AMAZON_SOURCE);
-		
+		newAmazonKeyWord.setExcluded(CommonUtils.toChar(false));
 		//Search and build hierarchy
 		BrowseNode parentNode =  
 				(amazonBrowseNode.isIsCategoryRoot() == null || ! amazonBrowseNode.isIsCategoryRoot() ) &&
