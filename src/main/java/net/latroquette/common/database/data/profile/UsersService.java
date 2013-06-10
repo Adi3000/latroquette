@@ -1,10 +1,11 @@
 package net.latroquette.common.database.data.profile;
 
-import net.latroquette.common.database.IDatabaseConstants;
-import net.latroquette.common.database.data.AbstractDAO;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+
+import com.adi3000.common.database.hibernate.IDatabaseConstants;
+import com.adi3000.common.database.hibernate.data.AbstractDAO;
 
 
 public class UsersService extends AbstractDAO<User>{

@@ -19,7 +19,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import net.latroquette.common.database.data.AbstractDataObject;
+import com.adi3000.common.database.hibernate.data.AbstractDataObject;
+
 import net.latroquette.common.database.data.file.File;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.database.data.profile.User;

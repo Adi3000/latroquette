@@ -14,16 +14,17 @@ import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.data.keyword.ExternalKeyword;
 import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
-import net.latroquette.common.util.CommonUtils;
-import net.latroquette.common.util.optimizer.CommonValues;
 
 import org.apache.commons.io.filefilter.OrFileFilter;
 import org.apache.commons.lang.StringUtils;
+
+import com.adi3000.common.database.hibernate.IDatabaseConstants;
+import com.adi3000.common.util.CommonUtils;
+import com.adi3000.common.util.optimizer.CommonValues;
 
 @ManagedBean
 @ViewScoped

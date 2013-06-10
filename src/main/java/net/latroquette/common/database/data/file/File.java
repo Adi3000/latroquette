@@ -18,7 +18,8 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import net.latroquette.common.database.data.AbstractDataObject;
+import com.adi3000.common.database.hibernate.data.AbstractDataObject;
+
 import net.latroquette.common.database.data.profile.User;
 
 @Entity

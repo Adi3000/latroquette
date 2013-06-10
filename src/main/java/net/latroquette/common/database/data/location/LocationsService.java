@@ -2,11 +2,12 @@ package net.latroquette.common.database.data.location;
 
 import java.util.List;
 
-import net.latroquette.common.database.data.AbstractDAO;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
+
+import com.adi3000.common.database.hibernate.data.AbstractDAO;
 
 public class LocationsService extends AbstractDAO<Location> {
 	

@@ -16,8 +16,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import net.latroquette.common.database.data.AbstractDataObject;
-import net.latroquette.common.util.CommonUtils;
+import com.adi3000.common.database.hibernate.data.AbstractDataObject;
+import com.adi3000.common.util.CommonUtils;
+
 
 @Entity
 @Table(name = "keywords")

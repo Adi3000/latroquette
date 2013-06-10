@@ -15,10 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.UsersService;
-import net.latroquette.common.security.Security;
-import net.latroquette.web.util.BeanUtils;
 
 import org.apache.commons.lang.StringUtils;
+
+import com.adi3000.common.security.Security;
+import com.adi3000.common.web.faces.FacesUtils;
 
 
 @ManagedBean(name = "userBean")
@@ -245,7 +246,7 @@ public class UserBean extends User implements Serializable{
 	
 	public static boolean checkUserLogged(UserBean user){
 		if (!Security.isUserLogged(user) || !user.getLoggedIn()){
-			BeanUtils.navigationRedirect("/profile/login");
+			FacesUtils.navigationRedirect("/profile/login");
 			return false;
 		}
 		return true;

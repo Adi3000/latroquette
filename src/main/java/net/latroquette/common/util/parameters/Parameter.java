@@ -8,11 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import net.latroquette.common.database.data.AbstractDataObject;
-import net.latroquette.common.util.optimizer.DataType;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.adi3000.common.database.hibernate.data.AbstractDataObject;
+import com.adi3000.common.util.optimizer.DataType;
 
 @Entity
 @Table(name="parameters")

@@ -18,18 +18,19 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-import net.latroquette.common.database.IDatabaseConstants;
-import net.latroquette.common.database.data.AbstractDAO;
 import net.latroquette.common.database.data.profile.User;
-import net.latroquette.common.database.session.DatabaseSession;
-import net.latroquette.common.security.Security;
-import net.latroquette.common.util.CommonUtils;
 import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.common.util.parameters.Parameters;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
+
+import com.adi3000.common.database.hibernate.IDatabaseConstants;
+import com.adi3000.common.database.hibernate.data.AbstractDAO;
+import com.adi3000.common.database.hibernate.session.DatabaseSession;
+import com.adi3000.common.security.Security;
+import com.adi3000.common.util.CommonUtils;
 
 public class FilesService extends AbstractDAO<File> {
 	private static final Logger LOGGER = Logger.getLogger(FilesService.class.getName());

@@ -15,7 +15,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
 
-import net.latroquette.common.database.data.AbstractDataObject;
+import com.adi3000.common.database.hibernate.data.AbstractDataObject;
+
 
 
 

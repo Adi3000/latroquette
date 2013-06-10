@@ -8,7 +8,7 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
 import net.latroquette.common.database.data.profile.User;
-import net.latroquette.common.database.data.profile.Users;
+import net.latroquette.common.database.data.profile.UsersService;
 
 
 
@@ -16,7 +16,7 @@ import net.latroquette.common.database.data.profile.Users;
 public class UserLoginValidator implements Validator {
 		
 	public void validate(FacesContext arg0, UIComponent arg1, Object value)	throws ValidatorException {
-		Users userSearch = new Users();
+		UsersService userSearch = new UsersService();
 		User user = userSearch.getUserByLogin(value.toString());
 		userSearch.closeSession();
 		if(user != null){

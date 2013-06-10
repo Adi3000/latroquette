@@ -11,19 +11,20 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.data.file.File;
 import net.latroquette.common.database.data.file.FilesService;
 import net.latroquette.common.database.data.file.GarbageFileStatus;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemStatus;
 import net.latroquette.common.database.data.item.ItemsService;
-import net.latroquette.common.util.CommonUtils;
 import net.latroquette.web.beans.profile.UserBean;
-import net.latroquette.web.util.BeanUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
+
+import com.adi3000.common.database.hibernate.IDatabaseConstants;
+import com.adi3000.common.util.CommonUtils;
+import com.adi3000.common.web.faces.FacesUtils;
 
 @ManagedBean
 @ViewScoped
@@ -211,7 +212,7 @@ public class ItemBean implements Serializable {
 		loadItem();
 		//Pass to viewItem only if user is logged for this check
 		if (item.getId() != null && userCheck && !userBean.getId().equals(item.getUser().getId())){
-			BeanUtils.navigationRedirect("viewItem");
+			FacesUtils.navigationRedirect("viewItem");
 		}
 	}
 	

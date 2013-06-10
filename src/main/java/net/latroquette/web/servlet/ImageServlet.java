@@ -15,10 +15,11 @@ import net.latroquette.common.database.data.file.File;
 import net.latroquette.common.database.data.file.FilesService;
 import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.common.util.parameters.Parameters;
-import net.latroquette.web.util.ServletUtils;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+
+import com.adi3000.common.web.ServletUtils;
 
 /**
  * The Image servlet for serving from absolute path.

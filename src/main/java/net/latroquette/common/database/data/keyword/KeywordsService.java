@@ -9,12 +9,8 @@ import javax.persistence.DiscriminatorType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
-import net.latroquette.common.database.IDatabaseConstants;
-import net.latroquette.common.database.data.AbstractDAO;
 import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.ItemsService;
-import net.latroquette.common.util.CommonUtils;
-import net.latroquette.common.util.optimizer.CommonValues;
 
 import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
@@ -22,6 +18,10 @@ import org.hibernate.FetchMode;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 
+import com.adi3000.common.database.hibernate.IDatabaseConstants;
+import com.adi3000.common.database.hibernate.data.AbstractDAO;
+import com.adi3000.common.util.CommonUtils;
+import com.adi3000.common.util.optimizer.CommonValues;
 import com.amazon.ECS.client.jax.BrowseNode;
 
 public class KeywordsService extends AbstractDAO<Keyword> {

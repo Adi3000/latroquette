@@ -3,12 +3,13 @@ package net.latroquette.common.util.parameters;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.latroquette.common.database.data.AbstractDAO;
-import net.latroquette.common.database.session.DatabaseSession;
-import net.latroquette.common.util.optimizer.CommonValues;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+
+import com.adi3000.common.database.hibernate.data.AbstractDAO;
+import com.adi3000.common.database.hibernate.session.DatabaseSession;
+import com.adi3000.common.util.optimizer.CommonValues;
 
 public class Parameters extends AbstractDAO<Parameter> {
 	private static final Logger LOGGER = Logger.getLogger(Parameters.class.getName());

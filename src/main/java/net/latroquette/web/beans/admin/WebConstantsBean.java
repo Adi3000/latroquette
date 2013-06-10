@@ -3,7 +3,8 @@ package net.latroquette.web.beans.admin;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 
-import net.latroquette.common.util.optimizer.CommonValues;
+import com.adi3000.common.util.optimizer.CommonValues;
+
 
 @ManagedBean(eager=true)
 @ApplicationScoped
