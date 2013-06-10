@@ -19,7 +19,6 @@
 			<base-name>l18n.web.text.profile</base-name>
 			<var>text_profile</var>
 		</resource-bundle>
-		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
 		<view-handler>net.latroquette.web.util.ViewHandlerExtended</view-handler>
 	</application>		
 </faces-config>

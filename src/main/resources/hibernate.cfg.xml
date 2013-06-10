@@ -9,6 +9,11 @@
   <property name="hibernate.show_sql">true</property>
   <property name="hibernate.use_outer_join">true</property>
   <property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+  <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
+  <property name="hibernate.cache.use_query_cache">true</property>
+  <property name="hibernate.cache.use_second_level_cache">true</property>
+  <property name="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</property>
+  <property name="hibernate.cache.provider_configuration_file_resource_path">ehcache.xml</property>
   <mapping class="net.latroquette.common.database.data.profile.User"/>
   <mapping class="net.latroquette.common.database.data.location.Location"/>
   <mapping class="net.latroquette.common.database.data.item.Item"/>
@@ -16,5 +21,6 @@
   <mapping class="net.latroquette.common.util.parameters.Parameter"/>
   <mapping class="net.latroquette.common.database.data.keyword.ExternalKeyword"/>
   <mapping class="net.latroquette.common.database.data.keyword.MainKeyword"/>
+<!--   <mapping class="net.latroquette.common.database.data.keyword.MenuKeyword"/> -->
  </session-factory>
 </hibernate-configuration>
