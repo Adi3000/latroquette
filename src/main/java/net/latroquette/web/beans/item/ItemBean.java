@@ -13,11 +13,11 @@ import javax.faces.context.FacesContext;
 
 import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.data.file.File;
-import net.latroquette.common.database.data.file.Files;
+import net.latroquette.common.database.data.file.FilesService;
 import net.latroquette.common.database.data.file.GarbageFileStatus;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemStatus;
-import net.latroquette.common.database.data.item.Items;
+import net.latroquette.common.database.data.item.ItemsService;
 import net.latroquette.common.util.CommonUtils;
 import net.latroquette.web.beans.profile.UserBean;
 import net.latroquette.web.util.BeanUtils;
@@ -88,32 +88,32 @@ public class ItemBean implements Serializable {
 	}
 	//TODO Refactor code here (Dirty silly code) !!!!
 	public String createItem(){
-		Items items = new Items();
+		ItemsService itemsService = new ItemsService();
 		for(File file : fileList){
 			file.setGarbageStatus(GarbageFileStatus.VALIDATE);
 		}
 		item.setImageList(fileList);
 		item.setStatusId(ItemStatus.DRAFT);
 		item.setDatabaseOperation(IDatabaseConstants.INSERT);
-		item = items.modifyItem(item, userBean);
-		items.closeSession();
+		item = itemsService.modifyItem(item, userBean);
+		itemsService.closeSession();
 		return "viewItem?faces-redirect=true&item="+item.getId();
 	}
 	public String updateItem(){
-		Items items = new Items();
+		ItemsService itemsService = new ItemsService();
 		for(File file : fileList){
 			file.setGarbageStatus(GarbageFileStatus.VALIDATE);
 		}
 		item.setImageList(fileList);
 		item.setStatusId(ItemStatus.DRAFT);
 		item.setDatabaseOperation(IDatabaseConstants.UPDATE);
-		item = items.modifyItem(item, userBean);
-		items.closeSession();
+		item = itemsService.modifyItem(item, userBean);
+		itemsService.closeSession();
 		return "viewItem?faces-redirect=true&item="+item.getId();
 	}
 	
 	public void uploadPic(){
-		Files files = new Files();
+		FilesService files = new FilesService();
 		File file = files.uploadNewPicFile(newFile, userBean);
 		if(file == null){
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -130,15 +130,15 @@ public class ItemBean implements Serializable {
 	}
 	
 	public void removePic(File image){
-		Files files = new Files();
+		FilesService filesService = new FilesService();
 		if(item.getId() != null){
 			image.setGarbageStatus(GarbageFileStatus.NOT_LINKED);
-			files.modifyFile(image, userBean);
+			filesService.modifyFile(image, userBean);
 		}else{
-			files.removeFile(image);
+			filesService.removeFile(image);
 		}
 		fileList.remove(image);
-		files.closeSession();
+		filesService.closeSession();
 	}
 	
 	public void setKeywordListString(String keywordsListString){
@@ -195,7 +195,7 @@ public class ItemBean implements Serializable {
 	
 	public void loadItem(){
 		if(StringUtils.isNotEmpty(itemId) ){
-			Items itemSearch = new Items();
+			ItemsService itemSearch = new ItemsService();
 			item = itemSearch.getItemById(Integer.valueOf(itemId));
 			itemSearch.closeSession();
 		}else if(item == null){

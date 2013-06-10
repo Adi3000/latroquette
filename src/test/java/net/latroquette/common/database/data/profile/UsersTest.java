@@ -9,7 +9,7 @@ public class UsersTest {
 	@Test
 	public void testGetUserByLogin() {
 		String login = "adi3000";
-		Users users = new Users();
+		UsersService users = new UsersService();
 		User user = users.getUserByLogin(login);
 		users.closeSession();
 		assertNotNull(user);

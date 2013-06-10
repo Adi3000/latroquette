@@ -20,16 +20,16 @@ import org.hibernate.criterion.Restrictions;
 import com.amazon.ECS.client.jax.AWSECommerceServicePortType;
 import com.amazon.ECS.client.jax.ItemSearchRequest;
 
-public class Items extends AbstractDAO<Item>{
+public class ItemsService extends AbstractDAO<Item>{
 	
 	
-	public Items() {
+	public ItemsService() {
 		super();
 	}
-	public Items(boolean initDbSession) {
+	public ItemsService(boolean initDbSession) {
 		super(initDbSession);
 	}
-	public Items(DatabaseSession db) {
+	public ItemsService(DatabaseSession db) {
 		super(db);
 	}
 	public static List<AmazonItem> searchAmazonItems(String cat, String pattern){
@@ -95,14 +95,14 @@ public class Items extends AbstractDAO<Item>{
 	
 	private Query searchItemQuery(String searchString, boolean searchOnDescription, int page, boolean countOnly){
 		//Optimize when just checking for nbResult
-		Parameters parameters = null;
+		Parameters parametersService = null;
 		int nbResultToLoad = CommonValues.ERROR_OR_INFINITE ; 
 		int cursor = CommonValues.ERROR_OR_INFINITE;
 		String field = "count(item)";
 		if(!countOnly){
 			field = "item";
-			parameters = new Parameters();
-			nbResultToLoad = parameters.getIntValue(ParameterName.NB_RESULT_TO_LOAD);
+			parametersService = new Parameters();
+			nbResultToLoad = parametersService.getIntValue(ParameterName.NB_RESULT_TO_LOAD);
 			cursor = nbResultToLoad * (page -1);
 		}
 		String searchPattern = searchString.replaceAll("\\W", " & ");

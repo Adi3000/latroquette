@@ -3,14 +3,12 @@ package net.latroquette.common.util.parameters;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
-
 import net.latroquette.common.database.data.AbstractDAO;
 import net.latroquette.common.database.session.DatabaseSession;
 import net.latroquette.common.util.optimizer.CommonValues;
 
-import com.googlecode.ehcache.annotations.Cacheable;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 
 public class Parameters extends AbstractDAO<Parameter> {
 	private static final Logger LOGGER = Logger.getLogger(Parameters.class.getName());
@@ -22,12 +20,8 @@ public class Parameters extends AbstractDAO<Parameter> {
 		super(db);
 	}
 	//TODO make this work and enable load in memory for this cache for fast access
-	@Cacheable(cacheName="parameters")
 	private String getValue(ParameterName name){
-		Criteria req = this.session.createCriteria(Parameter.class)
-				.setMaxResults(1)
-				.add(Restrictions.eq("name", name.toString())) ;
-		Parameter parameter =  (Parameter)req.uniqueResult();
+		Parameter parameter =  (Parameter)this.session.get(Parameter.class,name.toString());
 		if(parameter == null){
 			return null;
 		}else{

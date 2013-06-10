@@ -31,15 +31,15 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 
-public class Files extends AbstractDAO<File> {
-	private static final Logger LOGGER = Logger.getLogger(Files.class.getName());
+public class FilesService extends AbstractDAO<File> {
+	private static final Logger LOGGER = Logger.getLogger(FilesService.class.getName());
 	private static final String MDSUM_ALGORITHM = "MD5";
 	
-	public Files(){
+	public FilesService(){
 		super();
 	}
 	
-	public Files(DatabaseSession db){
+	public FilesService(DatabaseSession db){
 		super(db);
 	}
 	

@@ -4,24 +4,24 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import net.latroquette.common.database.data.AbstractDataObject;
 import net.latroquette.common.util.optimizer.DataType;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 @Entity
 @Table(name="parameters")
-@SequenceGenerator(name = "parameters_param_id_seq", sequenceName = "parameters_param_id_seq")
+@Cache(region = "parameters", usage = CacheConcurrencyStrategy.READ_ONLY)
 public class Parameter extends AbstractDataObject{
 
 	private static final long serialVersionUID = -3918158862432820274L;
 	
-	private Integer id;
+	private String id;
 	private String name;
 	private String description;
 	private String value;
@@ -29,16 +29,15 @@ public class Parameter extends AbstractDataObject{
 	private List<String> valueList;
 	
 	@Id
-	@Column(name="param_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "parameters_param_id_seq")
-	public Integer getId() {
+	@Column(name="param_name")
+	public String getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	
-	@Column(name="param_name")
+	@Column(name="param_name", insertable=false, updatable=false)
 	public String getName() {
 		return name;
 	}

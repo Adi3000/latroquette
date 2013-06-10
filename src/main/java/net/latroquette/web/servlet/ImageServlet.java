@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.latroquette.common.database.data.file.File;
-import net.latroquette.common.database.data.file.Files;
+import net.latroquette.common.database.data.file.FilesService;
 import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.common.util.parameters.Parameters;
 import net.latroquette.web.util.ServletUtils;
@@ -55,7 +55,7 @@ public class ImageServlet extends HttpServlet {
             return;
         }
         String[] pathRequest = requestedImage.substring(1).split(ServletUtils.HTML_SEPARATOR);
-        Files files = new Files();
+        FilesService filesService = new FilesService();
         //Analyse path to check parameters
         for(int i = 0; i < pathRequest.length ; i++){
     		if(GET_SMALL_SIZE.equals(pathRequest[i])){
@@ -67,9 +67,9 @@ public class ImageServlet extends HttpServlet {
     		}
         }
         if(byPath){
-        	image = new java.io.File(files.getPath(requestedImage));
+        	image = new java.io.File(filesService.getPath(requestedImage));
         }else{
-	        File file = files.getFileById(Integer.valueOf(requestedImage)) ;
+	        File file = filesService.getFileById(Integer.valueOf(requestedImage)) ;
 	        if(file == null){
 	            response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
 	            return;
@@ -98,7 +98,7 @@ public class ImageServlet extends HttpServlet {
         //Resize image to avoid huge download (maybe useless and more stressfull than deliver non cropped images)
         java.io.File resizedFile = null;
         if(smallSize){
-        	Parameters parameters = new Parameters(files);
+        	Parameters parameters = new Parameters(filesService);
         	//TODO check if a separate folder should be provided for resized image due to massive read and write
         	java.io.File dataDir = new java.io.File(parameters.getStringValue(ParameterName.DATA_DIR_PATH));
         	// Create file with unique name in upload folder and write to it.
@@ -109,10 +109,10 @@ public class ImageServlet extends HttpServlet {
         	InputStream fis = new FileInputStream(image);
     		int imgMaxHeight = parameters.getIntValue(ParameterName.IMG_SMALL_HEIGHT);
     		int imgMaxWidth = parameters.getIntValue(ParameterName.IMG_SMALL_WIDTH);
-    		resizedFile = Files.resizeImage(fis, imgMaxWidth, imgMaxHeight, suffix, resizedFile);
+    		resizedFile = FilesService.resizeImage(fis, imgMaxWidth, imgMaxHeight, suffix, resizedFile);
     		outputImage = resizedFile;
         }
-        files.closeSession();
+        filesService.closeSession();
 
         // Init servlet response.
         response.reset();

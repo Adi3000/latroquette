@@ -14,7 +14,7 @@ import javax.faces.event.ComponentSystemEvent;
 import javax.servlet.http.HttpServletRequest;
 
 import net.latroquette.common.database.data.profile.User;
-import net.latroquette.common.database.data.profile.Users;
+import net.latroquette.common.database.data.profile.UsersService;
 import net.latroquette.common.security.Security;
 import net.latroquette.web.util.BeanUtils;
 
@@ -141,11 +141,11 @@ public class UserBean extends User implements Serializable{
 	
 	public String registerUser()
 	{
-		Users users = new Users();
+		UsersService usersService = new UsersService();
 		User newUser = new User();
 		loginState = NOT_LOGGED_IN;
 		FacesContext fc = FacesContext.getCurrentInstance();
-		if(!users.registerNewUser(newUser)){
+		if(!usersService.registerNewUser(newUser)){
 			FacesMessage msg = new FacesMessage("Registring error", 
 					"User already usedRegistering failed, please try later or ask for support");
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -153,7 +153,7 @@ public class UserBean extends User implements Serializable{
 			fc.validationFailed();
 		}
 		
-		users.closeSession();
+		usersService.closeSession();
 		
 		if(StringUtils.isEmpty(getMail())){
 			FacesMessage msg = new FacesMessage("Registring error", 
@@ -183,7 +183,7 @@ public class UserBean extends User implements Serializable{
 	public String loginUser()
 	{
 		loginState = NOT_LOGGED_IN;
-		Users userSearch = new Users();
+		UsersService userSearch = new UsersService();
 		User user = userSearch.getUserByLogin(this.getLogin());
 		if(user != null && StringUtils.equals(user.getPassword(), this.getPassword())){
 			this.setLogginUserInfo(user);
@@ -201,7 +201,7 @@ public class UserBean extends User implements Serializable{
 	
 	public String logoutUser()
 	{
-		Users userSearch = new Users();
+		UsersService userSearch = new UsersService();
 		User user = userSearch.getUserByLogin(this.getLogin());
 		user.setToken(null);
 		userSearch.updateUser(user);

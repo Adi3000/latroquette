@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import net.latroquette.common.database.data.location.Location;
-import net.latroquette.common.database.data.location.Locations;
+import net.latroquette.common.database.data.location.LocationsService;
 
 /**
  * @author adi
@@ -28,9 +28,9 @@ public class LocationSearch {
 	
 	@GET
 	public GenericEntity<List<Location>> getLocations (@QueryParam("term") String pattern){
-		Locations locations = new Locations();
-		List<Location> locationsFound = locations.getLocationByString(pattern);
-		locations.closeSession();
+		LocationsService locationsService = new LocationsService();
+		List<Location> locationsFound = locationsService.getLocationByString(pattern);
+		locationsService.closeSession();
 		return new GenericEntity<List<Location>>(locationsFound) {};
 	}
 }

@@ -11,7 +11,7 @@ public class KeywordsTest {
 
 	@Test
 	public void testgetAmazonKeywordsForTitle() {
-		Keywords keywordService = new Keywords();
+		KeywordsService keywordService = new KeywordsService();
 		List<ExternalKeyword> keywords = keywordService.getAmazonKeywordsForTitle("Lego");
 		assertFalse(keywords.isEmpty());
 	}

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import net.latroquette.common.database.data.item.Items;
+import net.latroquette.common.database.data.item.ItemsService;
 @ManagedBean
 @RequestScoped
 public class ItemSearchBean implements Serializable {
@@ -24,9 +24,9 @@ public class ItemSearchBean implements Serializable {
 	}
 	
 	public void initCount(){
-		Items items = new Items();
-		this.count = items.countItem(request, searchOnDescription);
-		items.closeSession();
+		ItemsService itemsService = new ItemsService();
+		this.count = itemsService.countItem(request, searchOnDescription);
+		itemsService.closeSession();
 	}
 	/**
 	 * @return the request

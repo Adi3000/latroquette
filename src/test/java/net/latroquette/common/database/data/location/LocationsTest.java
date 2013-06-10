@@ -10,7 +10,7 @@ public class LocationsTest {
 
 	@Test
 	public void testgetLocationByType() {
-		Locations locations = new Locations();
+		LocationsService locations = new LocationsService();
 		List<Location> countryLocation = locations.getLocationByType(LocationType.COUNTRY);
 		locations.closeSession();
 		assertEquals(1, countryLocation.size());

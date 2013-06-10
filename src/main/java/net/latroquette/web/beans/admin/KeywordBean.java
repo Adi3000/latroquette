@@ -17,7 +17,7 @@ import javax.faces.bean.ViewScoped;
 import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.data.keyword.ExternalKeyword;
 import net.latroquette.common.database.data.keyword.Keyword;
-import net.latroquette.common.database.data.keyword.Keywords;
+import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.util.CommonUtils;
 import net.latroquette.common.util.optimizer.CommonValues;
@@ -55,9 +55,9 @@ public class KeywordBean implements Serializable{
 	}
 	public void loadKeyword(){
 		
-		Keywords keywords = new Keywords();
+		KeywordsService keywordsService = new KeywordsService();
 		if(StringUtils.isNotBlank(keywordId)){
-			parentKeyword = keywords.getKeywordById(Integer.valueOf(keywordId));
+			parentKeyword = keywordsService.getKeywordById(Integer.valueOf(keywordId));
 			newParentKeywordName = new String(parentKeyword.getName());
 			breadcrumb = new ArrayList<MainKeyword>();
 			MainKeyword currentKeyword = parentKeyword.getAncestor();
@@ -69,9 +69,9 @@ public class KeywordBean implements Serializable{
 		}else{
 			parentKeyword = null;
 		}
-		orphanMainKeywords = keywords.getOrphaMainKeywords();
-		orphanExternalKeywords = keywords.getOrphanExternalKeywords();
-		keywords.closeSession();
+		orphanMainKeywords = keywordsService.getOrphanMainKeywords();
+		orphanExternalKeywords = keywordsService.getOrphanExternalKeywords();
+		keywordsService.closeSession();
 	}
 	/**
 	 * Create a new keyword
@@ -88,9 +88,9 @@ public class KeywordBean implements Serializable{
 			parentKeyword.setDatabaseOperation(IDatabaseConstants.UPDATE);
 		}
 		newKeyword.setDatabaseOperation(IDatabaseConstants.INSERT);
-		Keywords keywords = new Keywords();
-		keywords.modifyKeyword(newKeyword, parentKeyword);
-		keywords.closeSession();
+		KeywordsService keywordsService = new KeywordsService();
+		keywordsService.modifyKeyword(newKeyword, parentKeyword);
+		keywordsService.closeSession();
 	}
 	
 	public void save(){
@@ -104,7 +104,7 @@ public class KeywordBean implements Serializable{
 			modifyRelationship(parentKeyword,childrenToAdd,false);
 			modifyRelationship(parentKeyword,synonymToAdd,true);
 		}
-		Keywords keywords = new Keywords();
+		KeywordsService keywords = new KeywordsService();
 		keywords.modifyKeywords(modifiedKeywords);
 		keywords.closeSession();
 	}
@@ -120,9 +120,9 @@ public class KeywordBean implements Serializable{
 				child.setInMenu(CommonUtils.toChar(false));
 				child.setIsSynonym(CommonUtils.toChar(false));
 				child.setAncestor(null);
-				Keywords keywords =  new Keywords();
-				keywords.modifyKeyword(child, parent);
-				keywords.closeSession();
+				KeywordsService keywordsService =  new KeywordsService();
+				keywordsService.modifyKeyword(child, parent);
+				keywordsService.closeSession();
 			}
 		}
 	}

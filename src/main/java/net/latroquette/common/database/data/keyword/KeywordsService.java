@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+
 import net.latroquette.common.database.IDatabaseConstants;
 import net.latroquette.common.database.data.AbstractDAO;
 import net.latroquette.common.database.data.item.AmazonItem;
-import net.latroquette.common.database.data.item.Items;
+import net.latroquette.common.database.data.item.ItemsService;
 import net.latroquette.common.util.CommonUtils;
 import net.latroquette.common.util.optimizer.CommonValues;
 
+import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Query;
@@ -18,7 +24,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.amazon.ECS.client.jax.BrowseNode;
 
-public class Keywords extends AbstractDAO<Keyword> {
+public class KeywordsService extends AbstractDAO<Keyword> {
 
 	public static final String KEYWORD_ANCESTOR_SEPARATOR = " > ";
 	
@@ -52,7 +58,7 @@ public class Keywords extends AbstractDAO<Keyword> {
 	}
 	
 	public List<ExternalKeyword> getAmazonKeywordsForTitle(String title){
-		List<AmazonItem> amazonItems = Items.searchAmazonItems(null, title);
+		List<AmazonItem> amazonItems = ItemsService.searchAmazonItems(null, title);
 		List<ExternalKeyword> amazonKeywords = new ArrayList<ExternalKeyword>();
 		for(AmazonItem amazonItem : amazonItems){
 			if(amazonItem.getBrowseNodes() !=null){
@@ -135,7 +141,7 @@ public class Keywords extends AbstractDAO<Keyword> {
 		List<ExternalKeyword> list = (List<ExternalKeyword>) req.list(); 
 		return list; 
 	}
-	public List<MainKeyword> getOrphaMainKeywords(){
+	public List<MainKeyword> getOrphanMainKeywords(){
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = (List<MainKeyword>) getOrphanKeywords(MainKeyword.class); 
 		return list;
@@ -153,6 +159,16 @@ public class Keywords extends AbstractDAO<Keyword> {
 		Query req = this.session.createQuery(hsql).setParameterList("list", ids);
 		@SuppressWarnings("unchecked")
 		List<ExternalKeyword> list = (List<ExternalKeyword>)req.list();
+		return list;
+	}
+	
+	public List<MenuKeyword> getMenuKeywords(){
+		Criteria req = this.session.createCriteria(MainKeyword.class)
+				.add(Restrictions.eq("inMenu", CommonValues.TRUE))
+				.setCacheable(true)
+				.setCacheRegion("menu");
+		@SuppressWarnings("unchecked")
+		List<MenuKeyword> list = req.list();
 		return list;
 	}
 

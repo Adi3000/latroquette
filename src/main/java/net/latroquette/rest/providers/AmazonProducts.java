@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import net.latroquette.common.database.data.item.AmazonItem;
-import net.latroquette.common.database.data.item.Items;
+import net.latroquette.common.database.data.item.ItemsService;
 
 /**
  * @author adi
@@ -26,7 +26,7 @@ public class AmazonProducts {
 	@GET
 	public GenericEntity<List<AmazonItem>> getItems (@QueryParam("term") String pattern, 
 			@QueryParam("cat") String category ){
-		Items items = new Items(false);
+		ItemsService items = new ItemsService(false);
 		@SuppressWarnings("static-access")
 		List<AmazonItem> itemsFound = items.searchAmazonItems(category, pattern);
 		items.closeSession();
