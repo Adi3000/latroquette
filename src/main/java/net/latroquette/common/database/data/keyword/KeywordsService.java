@@ -162,13 +162,13 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 		return list;
 	}
 	
-	public List<MenuKeyword> getMenuKeywords(){
+	public List<MainKeyword> getMenuKeywords(){
 		Criteria req = this.session.createCriteria(MainKeyword.class)
 				.add(Restrictions.eq("inMenu", CommonValues.TRUE))
 				.setCacheable(true)
 				.setCacheRegion("menu");
 		@SuppressWarnings("unchecked")
-		List<MenuKeyword> list = req.list();
+		List<MainKeyword> list = req.list();
 		return list;
 	}
 
