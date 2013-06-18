@@ -24,7 +24,7 @@ import com.adi3000.common.web.faces.FacesUtils;
 
 @ManagedBean(name = "userBean")
 @SessionScoped
-public class UserBean extends User implements Serializable{
+public class UserBean implements Serializable, com.adi3000.common.util.security.User{
 	
 	public static final int ANONYMOUS = -1;
 	public static final int NOT_LOGGED_IN = 0;
@@ -36,9 +36,11 @@ public class UserBean extends User implements Serializable{
 	private static final long serialVersionUID = 173422903879328102L;
 	private transient String passwordConfirm;
 	private transient String mailConfirm;
+	private User user;
 	private int loginState;
 	
 	public UserBean(){
+		user = new User();
 		loginState = ANONYMOUS;
 	}
 
@@ -145,26 +147,18 @@ public class UserBean extends User implements Serializable{
 		UsersService usersService = new UsersService();
 		User newUser = new User();
 		loginState = NOT_LOGGED_IN;
+		
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		if(!usersService.registerNewUser(newUser)){
-			FacesMessage msg = new FacesMessage("Registring error", 
-					"User already usedRegistering failed, please try later or ask for support");
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			fc.addMessage(null, msg);
-			fc.validationFailed();
-		}
-		
-		usersService.closeSession();
-		
 		if(StringUtils.isEmpty(getMail())){
-			FacesMessage msg = new FacesMessage("Registring error", 
+			FacesMessage msg = new FacesMessage("Registring error[301]", 
 					"Email Empty : Registering failed, please try later or ask for support");
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			fc.addMessage(null, msg);
 			fc.validationFailed();
 		}
 		if(StringUtils.isEmpty(passwordConfirm)){
-			FacesMessage msg = new FacesMessage("Registring error", 
+			FacesMessage msg = new FacesMessage("Registring error[302]", 
 					"Confirm password Empty : Registering failed, please try later or ask for support");
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			fc.addMessage(null, msg);
@@ -176,6 +170,14 @@ public class UserBean extends User implements Serializable{
 		newUser.setLogin(this.getLogin());
 		newUser.setPassword(this.getPassword());
 		this.setLogginUserInfo(newUser);
+		if(!usersService.registerNewUser(newUser)){
+			FacesMessage msg = new FacesMessage("Registring error[303]", 
+					"User already usedRegistering failed, please try later or ask for support");
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			fc.addMessage(null, msg);
+			fc.validationFailed();
+		}
+		usersService.closeSession();
 		this.loginState = NEW_USER;
 		return "/index";
 
@@ -208,7 +210,7 @@ public class UserBean extends User implements Serializable{
 		userSearch.updateUser(user);
 		userSearch.closeSession();
 		//Unset properties of this user
-		this.copyProperties(new User());
+		this.user = new User();
 		loginState = ANONYMOUS;
 		return "index";
 	}
@@ -221,19 +223,9 @@ public class UserBean extends User implements Serializable{
 		user.setLastDateLogin(now);
 		user.setLastIpLogin(ip);
 		user.setLastHostNameLogin(host);
-		user.setToken(Security.generateSessionID(this.hashCode(), user) );
-		this.copyProperties(user);
+		user.setToken(Security.generateSessionID(user.hashCode(), user) );
 	}
 	
-	private void copyProperties(User user){
-		this.setId(user.getId());
-		this.setMail(user.getMail());
-		this.setLogin(user.getLogin());
-		this.setLastDateLogin(user.getLastDateLogin());
-		this.setLastIpLogin(user.getLastIpLogin());
-		this.setLastHostNameLogin(user.getLastHostNameLogin());
-		this.setToken(user.getToken());
-	}
 	
 	public boolean getLoggedIn()
 	{
@@ -251,5 +243,65 @@ public class UserBean extends User implements Serializable{
 		}
 		return true;
 	}
+
+	@Override
+	public Integer getId() {
+		return user.getId();
+	}
+
+	@Override
+	public String getLogin() {
+		return user.getLogin();
+	}
+	
+	public void setLogin(String login) {
+		user.setLogin(login);
+	}
+
+	@Override
+	public Integer getToken() {
+		return user.getToken();
+	}
+
+	@Override
+	public String getPassword() {
+		return user.getPassword();
+	}
+
+	public void setPassword(String password) {
+		user.setPassword(password);
+	}
+
+	@Override
+	public String getLastHostNameLogin() {
+		return user.getLastHostNameLogin();
+	}
+
+	@Override
+	public String getMail() {
+		return user.getMail();
+	}
+	public void setMail(String mail) {
+		user.setMail(mail);
+	}
+
+	@Override
+	public Timestamp getLastDateLogin() {
+		return user.getLastDateLogin();
+	}
+
+	@Override
+	public String getLastIpLogin() {
+		return user.getLastIpLogin();
+	}
+
+	/**
+	 * @return the user
+	 */
+	public User getUser() {
+		return user;
+	}
+	
+	
 	
 }

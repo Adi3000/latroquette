@@ -6,9 +6,9 @@ import java.util.TreeSet;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import net.latroquette.common.database.data.profile.User;
 
 import com.adi3000.common.util.optimizer.CommonValues;
+import com.adi3000.common.util.security.User;
 
 
 
@@ -54,7 +54,7 @@ public class Security {
 	}
 	
 	public static boolean isUserLogged(User user){
-		return user != null && user != User.ANONYMOUS_USER && !User.ANONYMOUS_USER.equals(user);
+		return user != null && user.getId() != null;
 	}
 	
 	public static void checkUserLogged(User user){

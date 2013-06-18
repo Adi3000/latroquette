@@ -23,13 +23,12 @@ import com.adi3000.common.database.hibernate.data.AbstractDataObject;
 @Entity
 @Table(name = "users")
 @SequenceGenerator(name = "users_user_id_seq", sequenceName = "users_user_id_seq", allocationSize=1)
-public class User extends AbstractDataObject{
+public class User extends AbstractDataObject implements com.adi3000.common.util.security.User{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1345564181714215141L;
-	public static final User ANONYMOUS_USER = new User();
 	public static final String TABLE_AND_ENTITY_NAME = "USERS";
 	
 	private Integer id;

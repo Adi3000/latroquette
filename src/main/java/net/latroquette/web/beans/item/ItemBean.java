@@ -96,7 +96,7 @@ public class ItemBean implements Serializable {
 		item.setImageList(fileList);
 		item.setStatusId(ItemStatus.DRAFT);
 		item.setDatabaseOperation(IDatabaseConstants.INSERT);
-		item = itemsService.modifyItem(item, userBean);
+		item = itemsService.modifyItem(item, userBean.getUser());
 		itemsService.closeSession();
 		return "viewItem?faces-redirect=true&item="+item.getId();
 	}
@@ -108,14 +108,14 @@ public class ItemBean implements Serializable {
 		item.setImageList(fileList);
 		item.setStatusId(ItemStatus.DRAFT);
 		item.setDatabaseOperation(IDatabaseConstants.UPDATE);
-		item = itemsService.modifyItem(item, userBean);
+		item = itemsService.modifyItem(item, userBean.getUser());
 		itemsService.closeSession();
 		return "viewItem?faces-redirect=true&item="+item.getId();
 	}
 	
 	public void uploadPic(){
 		FilesService files = new FilesService();
-		File file = files.uploadNewPicFile(newFile, userBean);
+		File file = files.uploadNewPicFile(newFile, userBean.getUser());
 		if(file == null){
 			FacesContext fc = FacesContext.getCurrentInstance();
 			FacesMessage msg = new FacesMessage("Uploading error", 
@@ -134,7 +134,7 @@ public class ItemBean implements Serializable {
 		FilesService filesService = new FilesService();
 		if(item.getId() != null){
 			image.setGarbageStatus(GarbageFileStatus.NOT_LINKED);
-			filesService.modifyFile(image, userBean);
+			filesService.modifyFile(image, userBean.getUser());
 		}else{
 			filesService.removeFile(image);
 		}

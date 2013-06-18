@@ -101,7 +101,7 @@
 									<h:outputLabel for="mailField">#{text_profile.MAILBOX_LABEL}</h:outputLabel>
 								</div>
 								<div class="field">
-									<h:inputText id="mailField" value="#{userBean.mailConfirm}" class="loginBox">
+									<h:inputText id="mailField" value="#{userBean.mail}" class="loginBox">
 										<f:validator validatorId="net.latroquette.web.validators.profile.EmailValidator" />
 									</h:inputText>
 									<span class="error"><h:message for="mailField"/></span>
