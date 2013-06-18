@@ -18,7 +18,7 @@ import net.latroquette.common.database.data.profile.UsersService;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.adi3000.common.security.Security;
+import com.adi3000.common.util.security.Security;
 import com.adi3000.common.web.faces.FacesUtils;
 
 

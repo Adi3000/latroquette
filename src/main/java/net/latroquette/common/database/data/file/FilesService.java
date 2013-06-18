@@ -29,8 +29,8 @@ import org.apache.myfaces.custom.fileupload.UploadedFile;
 import com.adi3000.common.database.hibernate.IDatabaseConstants;
 import com.adi3000.common.database.hibernate.data.AbstractDAO;
 import com.adi3000.common.database.hibernate.session.DatabaseSession;
-import com.adi3000.common.security.Security;
 import com.adi3000.common.util.CommonUtils;
+import com.adi3000.common.util.security.Security;
 
 public class FilesService extends AbstractDAO<File> {
 	private static final Logger LOGGER = Logger.getLogger(FilesService.class.getName());
