@@ -30,7 +30,7 @@ public class ItemSearch {
 			@QueryParam("ot") String onlyTitle, @QueryParam("p") String page  ){
 		ItemsService itemsService = new ItemsService();
 		Integer pageNum = StringUtils.isNotEmpty(page)  ? Integer.valueOf(page) : Integer.valueOf(1);
-		List<Item> itemsFound = itemsService.searchItem(pattern, !Boolean.valueOf(onlyTitle), pageNum, false);
+		List<Item> itemsFound = itemsService.searchItem(pattern, !Boolean.valueOf(onlyTitle), pageNum);
 		itemsService.closeSession();
 		return new GenericEntity<List<Item>>(itemsFound) {};
 	}

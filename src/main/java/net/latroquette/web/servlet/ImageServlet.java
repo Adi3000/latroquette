@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,6 +36,7 @@ public class ImageServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = -9123476715208295532L;
+	private static final Logger LOGGER = Logger.getLogger(ImageServlet.class.getName());
 
 	private static final int DEFAULT_BUFFER_SIZE = 10240; // 10KB.
 
@@ -73,6 +75,7 @@ public class ImageServlet extends HttpServlet {
 	        File file = filesService.getFileById(Integer.valueOf(requestedImage)) ;
 	        if(file == null){
 	            response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+	            LOGGER.warning(request.getLocalAddr() + " requested for non existing File id : " + requestedImage );
 	            return;
 	        }
 	        image = file.getFile();
@@ -82,6 +85,7 @@ public class ImageServlet extends HttpServlet {
         if (!image.exists()) {
             // Throw an exception, or send 404, or show default/warning image, or just ignore it.
             response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+            LOGGER.warning(request.getLocalAddr() + " requested for File id : " + requestedImage +", path :"+ image.getPath());
             return;
         }
 
@@ -92,6 +96,7 @@ public class ImageServlet extends HttpServlet {
         if (contentType == null || !contentType.startsWith("image")) {
             // Throw an exception, or send 404, or show default/warning image, or just ignore it.
             response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
+            LOGGER.warning(request.getLocalAddr() + " requested for non image File id : " + requestedImage +", path :"+ image.getPath());
             return;
         }
         java.io.File outputImage = image;
@@ -104,7 +109,7 @@ public class ImageServlet extends HttpServlet {
         	java.io.File dataDir = new java.io.File(parameters.getStringValue(ParameterName.DATA_DIR_PATH));
         	// Create file with unique name in upload folder and write to it.
         	String suffix = FilenameUtils.getExtension(image.getName());
-        	resizedFile = java.io.File.createTempFile("small_", suffix, dataDir);
+        	resizedFile = java.io.File.createTempFile("small_", ".".concat(suffix), dataDir);
 
             //Create a resized image
         	InputStream fis = new FileInputStream(image);

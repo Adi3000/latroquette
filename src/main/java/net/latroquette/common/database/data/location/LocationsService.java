@@ -20,6 +20,11 @@ public class LocationsService extends AbstractDAO<Location> {
 		return locations;
 	}
 	
+	/**
+	 * Return a {@link Location} by its name or code postal
+	 * @param value
+	 * @return
+	 */
 	public List<Location> getLocationByString(String value){
 		
 		String likeValue1 = value.replace(' ', '_').replace('-', '_').concat("%");

@@ -4,15 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-
 import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.ItemsService;
 
-import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Query;
@@ -90,6 +84,11 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 		return (ExternalKeyword)req.uniqueResult();
 	}
 	
+	/**
+	 * Create a new {@link ExternalKeyword} from Amazon {@link BrowseNode} (given by AmazonWebservice
+	 * @param amazonBrowseNode
+	 * @return
+	 */
 	public ExternalKeyword createAmazonKeyword(BrowseNode amazonBrowseNode){
 		ExternalKeyword newAmazonKeyWord = new ExternalKeyword();
 		newAmazonKeyWord.setUid(amazonBrowseNode.getBrowseNodeId());
@@ -131,6 +130,10 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 		return list;
 	}
 	
+	/**
+	 * Return {@link ExternalKeyword} without ancestor
+	 * @return
+	 */
 	public List<ExternalKeyword> getOrphanExternalKeywords(){
 		String sql = 
 					" SELECT {keyword.*} FROM external_keywords {keyword} ".concat(
@@ -141,12 +144,22 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 		List<ExternalKeyword> list = (List<ExternalKeyword>) req.list(); 
 		return list; 
 	}
+	
+	/**
+	 * Return MainKeyword without ancestor
+	 * @return
+	 */
 	public List<MainKeyword> getOrphanMainKeywords(){
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = (List<MainKeyword>) getOrphanKeywords(MainKeyword.class); 
 		return list;
 	}
 	
+	/**
+	 * Return {@link MainKeyword} list filtered by an Ids list
+	 * @param ids
+	 * @return
+	 */
 	public List<MainKeyword> getMainKeywordByIds(List<Integer> ids){
 		String hsql = "SELECT keyword FROM MainKeyword keyword WHERE keyword.id IN :list";
 		Query req = this.session.createQuery(hsql).setParameterList("list", ids);
@@ -154,6 +167,12 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 		List<MainKeyword> list = (List<MainKeyword>)req.list();
 		return list;
 	}
+	
+	/**
+	 * Return {@link ExternalKeyword} list filtered by an Ids list
+	 * @param ids
+	 * @return
+	 */
 	public List<ExternalKeyword> getExternalKeywordByIds(List<Integer> ids){
 		String hsql = "SELECT keyword FROM ExternalKeyword keyword WHERE keyword.id IN :list";
 		Query req = this.session.createQuery(hsql).setParameterList("list", ids);
@@ -162,14 +181,29 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 		return list;
 	}
 	
-	public List<MainKeyword> getMenuKeywords(){
+	/**
+	 * Return all root menu entry (with no ancestor and marked as displayed in menu)
+	 * @return
+	 */
+	public List<MainKeyword> getMenuRootEntries(){
 		Criteria req = this.session.createCriteria(MainKeyword.class)
 				.add(Restrictions.eq("inMenu", CommonValues.TRUE))
+				.add(Restrictions.isNull("ancestor"))
 				.setCacheable(true)
 				.setCacheRegion("menu");
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = req.list();
 		return list;
+	}
+	
+	/**
+	 * Return a Keyword with no name and an ID set to 0
+	 * @return
+	 */
+	public static MainKeyword getRootForMenu(){
+		MainKeyword rootKeyword = new MainKeyword();
+		rootKeyword.setId(0);
+		return rootKeyword;
 	}
 
 }

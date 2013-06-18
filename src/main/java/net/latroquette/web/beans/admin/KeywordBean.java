@@ -2,7 +2,6 @@ package net.latroquette.web.beans.admin;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import net.latroquette.common.database.data.keyword.ExternalKeyword;
@@ -19,12 +19,12 @@ import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 
-import org.apache.commons.io.filefilter.OrFileFilter;
 import org.apache.commons.lang.StringUtils;
 
 import com.adi3000.common.database.hibernate.IDatabaseConstants;
 import com.adi3000.common.util.CommonUtils;
 import com.adi3000.common.util.optimizer.CommonValues;
+import com.adi3000.common.util.tree.Breadcrumb;
 
 @ManagedBean
 @ViewScoped
@@ -34,6 +34,8 @@ public class KeywordBean implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -3518984670303172622L;
+	@ManagedProperty(value="#{menuBean}")
+	private MenuBean menuBean;
 	private String newKeywordName;
 	private String newParentKeywordName;
 	private MainKeyword parentKeyword;
@@ -60,12 +62,7 @@ public class KeywordBean implements Serializable{
 		if(StringUtils.isNotBlank(keywordId)){
 			parentKeyword = keywordsService.getKeywordById(Integer.valueOf(keywordId));
 			newParentKeywordName = new String(parentKeyword.getName());
-			breadcrumb = new ArrayList<MainKeyword>();
-			MainKeyword currentKeyword = parentKeyword.getAncestor();
-			while(currentKeyword != null){
-				breadcrumb.add(currentKeyword);
-				currentKeyword = currentKeyword.getAncestor();
-			}
+			breadcrumb = new Breadcrumb<MainKeyword>(parentKeyword).getBreadcrumb();
 			Collections.reverse(breadcrumb);
 		}else{
 			parentKeyword = null;
@@ -108,6 +105,8 @@ public class KeywordBean implements Serializable{
 		KeywordsService keywords = new KeywordsService();
 		keywords.modifyKeywords(modifiedKeywords);
 		keywords.closeSession();
+		//Rebuild menu if something has changed
+		menuBean.reloadMenuEntries();
 	}
 	
 	public void remove(Integer childId, Integer parentId){
@@ -336,5 +335,17 @@ public class KeywordBean implements Serializable{
 	 */
 	public void setBreadcrumb(List<MainKeyword> breadcrumb) {
 		this.breadcrumb = breadcrumb;
+	}
+	/**
+	 * @return the menuBean
+	 */
+	public MenuBean getMenuBean() {
+		return menuBean;
+	}
+	/**
+	 * @param menuBean the menuBean to set
+	 */
+	public void setMenuBean(MenuBean menuBean) {
+		this.menuBean = menuBean;
 	}
 }

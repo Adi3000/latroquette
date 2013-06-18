@@ -18,12 +18,13 @@ import javax.persistence.Transient;
 
 import com.adi3000.common.database.hibernate.data.AbstractDataObject;
 import com.adi3000.common.util.CommonUtils;
+import com.adi3000.common.util.tree.TreeNode;
 
 
 @Entity
 @Table(name = "keywords")
 @SequenceGenerator(name = "keywords_keyword_id_seq", sequenceName = "keywords_keyword_id_seq", allocationSize=1)
-public class MainKeyword extends AbstractDataObject implements Keyword{
+public class MainKeyword extends AbstractDataObject implements Keyword, TreeNode<MainKeyword>{
 	public static final Integer MAIN_ANCESTOR_RELATIONSHIP = 1;
 	public static final Integer CHILDREN_RELATIONSHIP = 2;
 	public static final Integer EXTERNAL_KEYWORD_RELATIONSHIP = 3;
@@ -135,6 +136,11 @@ public class MainKeyword extends AbstractDataObject implements Keyword{
 	}
 	public void setMenu(boolean inMenu){
 		setInMenu(CommonUtils.toChar(inMenu));
+	}
+	
+	@Transient
+	public boolean isRoot(){
+		return ancestor == null;
 	}
 	
 }

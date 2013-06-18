@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <body>
 	<ui:composition>
 		<h:outputScript type='text/javascript' name="js/jquery-vertical-mega-menu-1/jquery.hoverIntent.minified.js" target="head"/>
@@ -18,106 +19,29 @@
 				});
 			});
 		</h:outputScript>
+		<div>
+		</div>
 		<div id="menu">
 			<ul id="mega-1" class="menu">
-				<li><a href="#" class="categorieJaune">Jeux/jouets</a>
-					<ul>
-						<li><a href="#">0-3ans</a></li>
-						<li><a href="#">+ de 3 ans</a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="categorieVerte">Vêtements</a>
-					<ul>
-						<li><a href="#">0-3 ans</a></li>
-						<li><a href="#">Fille / Femme</a></li>
-						<li><a href="#">Garçon / Homme</a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="categorieJaune">Micro Multimédia</a>
-					<ul>
-						<li><a href="#">Appareil photo</a></li>
-						<li><a href="#">Camescope</a></li>
-						<li><a href="#">GPS</a></li>
-						<li><a href="#">Stockage</a></li>
-						<li><a href="#">Ordinateur</a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="categorieVerte">Jeux vidéo</a>
-					<ul>
-						<li><a href="#">Consoles</a></li>
-						<li><a href="#">Jeux vidéo</a></li>
-						<li><a href="#">Accessoires</a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="categorieJaune">Vidéo / Musique</a>
-					<ul>
-						<li><a href="#">Cassette/VHS</a></li>
-						<li><a href="#">DVD</a></li>
-						<li><a href="#">BluRay</a></li>
-						<li><a href="#">CD</a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="categorieVerte">Téléphonie</a>
-					<ul>
-						<li><a href="#">Mobiles</a></li>
-						<li><a href="#">Accessoires</a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="categorieJaune">Fourniture Scolaire</a>
-					<ul>
-						<li><a href="#">Livres et manuels</a></li>
-						<li><a href="#">Consommables</a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="categorieVerte">Ammeublement</a>
-<!-- 					<ul></ul> -->
-				</li>
-				<li><a href="#" class="categorieJaune">Electroménager</a>
-<!-- 					<ul></ul> -->
-				</li>
-				<li><a href="#" class="categorieVerte">Puériculture</a>
-<!-- 					<ul></ul> -->
-				</li>
-				<li><a href="#" class="categorieJaune">Décoration</a>
-<!-- 					<ul></ul> -->
-				</li>
-				<li><a href="#" class="categorieVerte">Livres</a>
-					<ul>
-						<li><a href="#">Enfant</a></li>
-						<li><a href="#">Jeunesse</a></li>
-						<li><a href="#">Adulte</a></li>
-						<li><a href="#">Magazines</a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="categorieJaune">Sport et loisir</a>
-					<ul></ul>
-				</li>
-				<li><a href="#" class="categorieVerte">Bricolage</a>
-					<ul>
-						<li><a href="#">Livres et manuels</a></li>
-						<li><a href="#">Consommables</a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="categorieJaune">Collectionneurs</a>
-					<ul>
-						<li><a href="#"></a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="categorieVerte">Véhicules</a>
-					<ul>
-						<li><a href="#"></a>Bateaux</li>
-						<li><a href="#"></a>2 roues</li>
-						<li><a href="#"></a>4 roues</li>
-					</ul>
-				</li>
-				<li><a href="#" class="categorieJaune">Vacances</a>
-					<ul>
-						<li><a href="#"></a>Billets (Parc d'attraction)</li>
-						<li><a href="#"></a>Maisons</li>
-						<li><a href="#"></a>Appartements</li>
-					</ul>
-				</li>
-			</ul>
-		</div></ui:composition>
+		      <c:forEach items="${menuBean.menuEntries}" var="node">
+		      	<c:if test="${node.hasParent}">
+		      		<c:if test="${node.differenceLevel > 0}">
+	   					<c:forEach begin="1" end="${node.differenceLevel}" var="i">
+	   						<!-- closing tag ul/li if last child -->
+		        			<h:outputText value="&lt;/li&gt;&lt;/ul&gt;" escape="false" />
+	        			</c:forEach>
+        			</c:if>
+		   			<!-- open tag li -->
+	        		<h:outputText value="&lt;li&gt;" escape="false" />
+	          		<a href="#">#{node.value.name}</a>
+	   				<!-- open tag ul on the first child  -->
+	        		<h:outputText rendered="#{node.hasChild}" value="&lt;ul&gt;" escape="false" />
+	   				<!-- do not close li directly if there is child -->
+	        		<h:outputText rendered="#{!node.lastChild and !node.hasChild}" value="&lt;/li&gt;" escape="false" />
+               </c:if>
+		      </c:forEach>
+		    </ul>
+		</div>
+	</ui:composition>
 </body>
 </html>

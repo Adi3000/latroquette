@@ -32,6 +32,13 @@ public class ItemsService extends AbstractDAO<Item>{
 	public ItemsService(DatabaseSession db) {
 		super(db);
 	}
+	
+	/**
+	 * Search an item via Amazon Webservice
+	 * @param cat
+	 * @param pattern
+	 * @return
+	 */
 	public static List<AmazonItem> searchAmazonItems(String cat, String pattern){
 		List<AmazonItem> listItem = new ArrayList<AmazonItem>();
 		
@@ -65,6 +72,11 @@ public class ItemsService extends AbstractDAO<Item>{
 		return listItem;
 	}
 	
+	/**
+	 * Get an item by its Id
+	 * @param itemId
+	 * @return
+	 */
 	public Item getItemById(Integer itemId){
 		Criteria req = this.session.createCriteria(Item.class)
 				.add(Restrictions.eq("id", itemId))
@@ -72,6 +84,12 @@ public class ItemsService extends AbstractDAO<Item>{
 		return (Item)req.uniqueResult();
 	}
 	
+	/**
+	 * Modify an item and update its user modification and its update date
+	 * @param item
+	 * @param user
+	 * @return
+	 */
 	public Item modifyItem(Item item, User user){
 		item.setUser(user);
 		item.setUpdateDate(CommonUtils.getTimestamp());
@@ -81,12 +99,29 @@ public class ItemsService extends AbstractDAO<Item>{
 		return super.modifyDataObject(item);
 	}
 	
-	public List<Item> searchItem(String searchString, boolean searchOnDescription, int page, boolean countOnly){
-		Query req = searchItemQuery(searchString, searchOnDescription, page, countOnly);
+	/**
+	 * Search an item in database, return only {@link ParameterName}.NB_RESULT_TO_LOAD
+	 * @param searchString
+	 * @param searchOnDescription
+	 * @param page
+	 * @param countOnly
+	 * @return
+	 */
+	public List<Item> searchItem(String searchString, boolean searchOnDescription, int page){
+		Query req = searchItemQuery(searchString, searchOnDescription, page, false);
 		@SuppressWarnings("unchecked")
 		List<Item> items = (List<Item>)req.list();
 		return items;
 	}
+	
+	/**
+	 * Return the number of item which match with the searchString request in database
+	 * @param searchString
+	 * @param searchOnDescription
+	 * @param page
+	 * @param countOnly
+	 * @return
+	 */
 	public Integer countItem(String searchString, boolean searchOnDescription){
 		Query req = searchItemQuery(searchString, searchOnDescription, CommonValues.ERROR_OR_INFINITE, true);
 		Integer nbItems = ((Long)req.iterate().next()).intValue();

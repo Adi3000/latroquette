@@ -1,5 +1,11 @@
 package net.latroquette.common.util.parameters;
 
+/**
+ * List of all parameter available and registered in database
+ * to manage application configuration
+ * @author adi
+ *
+ */
 public enum ParameterName {
 	
 	DATA_DIR_PATH,

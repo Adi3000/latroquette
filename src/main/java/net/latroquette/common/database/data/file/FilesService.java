@@ -45,7 +45,8 @@ public class FilesService extends AbstractDAO<File> {
 	}
 	
 	/**
-	 * Upload and resize a new picture 
+	 * Upload and resize a new picture with the {@link ParameterName}.IMG_MAX_HEIGHT
+	 * and {@ParameterName.IMG_MAX_WIDTH} max size
 	 * @param newFile
 	 * @param user
 	 * @return
@@ -116,6 +117,11 @@ public class FilesService extends AbstractDAO<File> {
         return file;
 	}
 	
+	/**
+	 * Delete a file in repository and database
+	 * @param file
+	 * @return
+	 */
 	public boolean removeFile(File file){
 		boolean success = false;
 		if(file.getFile() == null){
@@ -140,6 +146,11 @@ public class FilesService extends AbstractDAO<File> {
 		
 	}
 	
+	/**
+	 * Retrieve a file by its database ID
+	 * @param id
+	 * @return
+	 */
 	public File getFileById(Integer id){
 		File file = this.getDataObjectById(id, File.class);
 		if(file == null){
@@ -153,6 +164,12 @@ public class FilesService extends AbstractDAO<File> {
 	private String getPath(File file){
 		return getPath(file.getName());
 	}
+	
+	/**
+	 * Compute the physical path of a {@link File} name with the  {@link ParameterName}.DATA_DIR_PATH
+	 * @param pathFile
+	 * @return
+	 */
 	public String getPath(String  pathFile){
 		Parameters parameters = new Parameters(this);
         String path = parameters.getStringValue(ParameterName.DATA_DIR_PATH)
@@ -175,6 +192,15 @@ public class FilesService extends AbstractDAO<File> {
 		return super.modifyDataObject(file);
 	}
 	
+	/**
+	 * Resize an image if needed to {@code imgMaxWidth} and {@code imgMaxHeight} max resolution
+	 * @param fisOriginalImage
+	 * @param imgMaxWidth
+	 * @param imgMaxHeight
+	 * @param format
+	 * @param fileResized
+	 * @return
+	 */
     public static java.io.File resizeImage(InputStream fisOriginalImage, int imgMaxWidth, int imgMaxHeight, String format, java.io.File fileResized) {
     	BufferedImage originalImage = null;
     	try {
