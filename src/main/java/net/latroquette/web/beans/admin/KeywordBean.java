@@ -63,7 +63,6 @@ public class KeywordBean implements Serializable{
 			parentKeyword = keywordsService.getKeywordById(Integer.valueOf(keywordId));
 			newParentKeywordName = new String(parentKeyword.getName());
 			breadcrumb = new Breadcrumb<MainKeyword>(parentKeyword).getBreadcrumb();
-			Collections.reverse(breadcrumb);
 		}else{
 			parentKeyword = null;
 		}
