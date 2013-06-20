@@ -39,7 +39,7 @@ public class ItemsService extends AbstractDAO<Item>{
 	 * @param pattern
 	 * @return
 	 */
-	public static List<AmazonItem> searchAmazonItems(String cat, String pattern){
+	public List<AmazonItem> searchAmazonItems(String cat, String pattern){
 		List<AmazonItem> listItem = new ArrayList<AmazonItem>();
 		
 		AWSECommerceServicePortType port =  AmazonWServiceClient.CLIENT.getPort();

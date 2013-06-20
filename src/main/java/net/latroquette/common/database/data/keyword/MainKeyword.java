@@ -40,7 +40,7 @@ import com.adi3000.common.util.CommonUtils;
 @FetchProfile(name=KeywordsService.FETCH_CHILDREN_PROFILE, fetchOverrides={
 		@FetchOverride(entity=MainKeyword.class, association="children", mode=FetchMode.JOIN)
 })
-@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
+@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> implements Keyword{
 	public static final Integer MAIN_ANCESTOR_RELATIONSHIP = 1;
 	public static final Integer CHILDREN_RELATIONSHIP = 2;
@@ -110,7 +110,7 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	    inverseJoinColumns={@JoinColumn(name="keyword_to_id")}
 	)
 	@Filter(name=KeywordsService.MENU_KEYWORD_ONLY_FILTER, condition="keyword_in_menu = 'Y'")
-	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
+	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_WRITE)
 	public List<MainKeyword> getChildren() {
 		return children;
 	}

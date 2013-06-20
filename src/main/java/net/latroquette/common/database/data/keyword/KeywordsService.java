@@ -10,6 +10,7 @@ import net.latroquette.common.database.data.item.ItemsService;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -39,6 +40,11 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 					.setCacheRegion("keywords");
 			keyword = (MainKeyword) req.uniqueResult();
 			keyword.initializeRecursively();
+			Hibernate.initialize(keyword.getExternalKeywords());
+			//For admin keywords : only one level is needed
+			for(MainKeyword child : keyword.getChildren()){
+				Hibernate.initialize(child.getExternalKeywords());
+			}
 		}else{
 			keyword = (MainKeyword) super.getDataObjectById(id, MainKeyword.class);
 		}		
@@ -117,27 +123,31 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 	 * @param title
 	 * @return
 	 */
-	public List<ExternalKeyword> getAmazonKeywordsFromItem(String title){
-		List<AmazonItem> amazonItems = ItemsService.searchAmazonItems(null, title);
+	public List<ExternalKeyword> getAmazonKeywordsFromItem(String title, boolean createNotFound){
+		ItemsService itemsService = new ItemsService(this);
+		List<AmazonItem> amazonItems = itemsService.searchAmazonItems(null, title);
 		List<ExternalKeyword> amazonKeywords = new ArrayList<ExternalKeyword>();
+		boolean newKeywordCreated = false;
 		for(AmazonItem amazonItem : amazonItems){
 			if(amazonItem.getBrowseNodes() !=null){
 				for(BrowseNode browseNode : amazonItem.getBrowseNodes()){
 					ExternalKeyword amazonKeyword= getAmazonKeyword(browseNode);
 					if(amazonKeyword == null){
-						amazonKeyword = createAmazonKeyword(browseNode);
+						//Create a new keyword if asked to do so
+						if(createNotFound){
+							amazonKeyword = createAmazonKeyword(browseNode);
+							newKeywordCreated = true;
+						}
 					}
-					if(!amazonKeywords.contains(amazonKeyword)){
+					if(amazonKeyword != null && !amazonKeywords.contains(amazonKeyword)){
 						amazonKeywords.add(amazonKeyword);
 					}
 				}
 			}
 		}
-		
-		if(true){
+		//Commit if necessary (avability to commit at the end of transaction with setWillCommit(false)
+		if(newKeywordCreated){
 			sendForCommit();
-		}else{
-			//TODO remove commit : just for testing
 		}
 		return amazonKeywords;
 	}
@@ -222,6 +232,9 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 		Query req = createQuery(hql);
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = req.list();
+		for(MainKeyword keyword : list){
+			Hibernate.initialize(keyword.getExternalKeywords());
+		}
 		return list;
 	}
 	
@@ -256,7 +269,7 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 	 * @return
 	 */
 	public List<MainKeyword> getMenuRootEntries(){
-		this.session.enableFilter(MENU_KEYWORD_ONLY_FILTER);
+		getSession().enableFilter(MENU_KEYWORD_ONLY_FILTER);
 		Criteria req = createCriteria(MainKeyword.class)
 				.add(Restrictions.isNull("ancestor"))
 				.setFetchMode("children", FetchMode.SELECT)
@@ -264,7 +277,7 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 				.setCacheRegion("menu");
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = req.list();
-		this.session.disableFilter(MENU_KEYWORD_ONLY_FILTER);
+		getSession().disableFilter(MENU_KEYWORD_ONLY_FILTER);
 		return list;
 	}
 	
@@ -290,6 +303,12 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 				.setCacheRegion("keywords");
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = req.list();
+		return list;
+	}
+	
+	public Collection<ExternalKeyword> searchExternalKeyword(String name, boolean createIfNotFound){
+		List<ExternalKeyword> list = getAmazonKeywordsFromItem(name, createIfNotFound);
+		
 		return list;
 	}
 }

@@ -40,7 +40,7 @@ public class LocationsService extends AbstractDAO<Location> {
 				" WHERE location_postal_codes LIKE :codeStart  or location_postal_codes LIKE :oneCodeStart ");
 		//Can't ordering this for now.
 		//.concat(	" ORDER BY {location.location_name}");
-		Query req = this.session.createSQLQuery(sql).addEntity("locations",Location.class);
+		Query req = createSQLQuery(sql).addEntity("locations",Location.class);
 		req		.setString(":nameStart", likeValue1)
 				.setString(":nameInner", likeValue2)
 				.setString(":codeStart", postalCode1)

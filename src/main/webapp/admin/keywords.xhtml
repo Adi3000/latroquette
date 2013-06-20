@@ -59,6 +59,12 @@
 											<h:commandLink action="#{keywordBean.remove(child.id,keywordBean.parentKeyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
 										</h:panelGroup>
 									</ui:repeat>
+									<ui:repeat var="child" value="#{keywordBean.parentKeyword.externalKeywords}">
+										<h:panelGroup styleClass="existingChild ui-corner-all">
+											<h:outputText value="#{child.name}" />
+											<h:commandLink action="#{keywordBean.remove(child.id,keywordBean.parentKeyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
+										</h:panelGroup>
+									</ui:repeat>
 								</em>
 								<span class="synonymIds"><h:inputHidden value="#{keywordBean.childrenIds[keyword.id]}" /></span>
 							</div>
@@ -91,6 +97,12 @@
 												<h:commandLink action="#{keywordBean.remove(child.id,keyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
 											</h:panelGroup>
 										</ui:repeat>
+										<ui:repeat var="child" value="#{keyword.externalKeywords}">
+											<h:panelGroup styleClass="existingChild ui-corner-all">
+												<h:outputText value="#{child.name}" />
+												<h:commandLink action="#{keywordBean.removeExternal(child.id,keyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
+											</h:panelGroup>
+										</ui:repeat>
 									</em>
 									<span class="synonymIds"><h:inputHidden value="#{keywordBean.synonymsIds[keyword.id]}" /></span>
 								</div>
@@ -98,7 +110,7 @@
 						</ui:repeat>
 					</div>
 					
-					<div id="orphanMainKeyword">
+					<div id="orphanMainKeywords">
 						<h2>Mots-clés orphelins</h2>
 						<ui:repeat var="keyword" value="#{keywordBean.orphanMainKeywords}">
 							<div class="ui-widget-content ui-corner-all orphanKeyword" data-id="#{keyword.id}">
@@ -121,6 +133,11 @@
 								<span class="keywordName">#{keyword.name}</span>
 							</div>
 						</ui:repeat>
+						<ui:repeat var="keyword" value="#{keywordBean.additionnalExternalKeywords}">
+							<div class="ui-widget-content ui-corner-all orphanKeyword orphanExternalKeyword" data-id="#{webConstantsBean.additionnalKeywordPrefix}#{keyword.id}">
+								<span class="keywordName">#{keyword.name}</span>
+							</div>
+						</ui:repeat>
 					</div>
 					
 				</h:form>
@@ -130,10 +147,10 @@
 					<h:inputText id="newKeyword" styleClass="field" value="#{keywordBean.newKeywordName}" />
 					<h:commandButton value="Cr&#233;er" action="#{keywordBean.create}"/>
 				</h:form>
-				<h:form id="orphanExternalKeyword">
+				<h:form id="orphanExternalKeywords">
 					<h2>Synonymes externes orphelins</h2>
 					<ui:repeat var="keyword" value="#{keywordBean.orphanExternalKeywords}">
-						<div class="ui-widget-content ui-corner-all orphanKeyword" data-id="#{webConstantsBean.externalKeywordPrefix}#{keyword.id}">
+						<div class="ui-widget-content ui-corner-all orphanKeyword orphanExternalKeyword" data-id="#{webConstantsBean.externalKeywordPrefix}#{keyword.id}">
 							<span class="keywordName">#{keyword.name}</span>
 							<span class="keywordFullname">#{keyword.fullname}</span>
 							<h:commandLink action="#{keywordBean.excludeExternalKeyword(keyword.id)}" styleClass="ui-icon ui-icon ui-icon-trash" />

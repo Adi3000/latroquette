@@ -22,7 +22,7 @@ public class Parameters extends AbstractDAO<Parameter> {
 	}
 	//TODO make this work and enable load in memory for this cache for fast access
 	private String getValue(ParameterName name){
-		Parameter parameter =  (Parameter)this.session.get(Parameter.class,name.toString());
+		Parameter parameter =  (Parameter)getSession().get(Parameter.class,name.toString());
 		if(parameter == null){
 			return null;
 		}else{

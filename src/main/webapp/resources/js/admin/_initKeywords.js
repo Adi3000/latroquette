@@ -10,7 +10,9 @@ $(function(){
 	$("#childrenKeyword .childrenZone").droppable({
 		hoverClass: "hoverDroppable",
 		accept: function(e){
-			return $(e).is("#orphanMainKeyword .orphanKeyword") && $(this).attr("data-id") != $(e).attr("data-id");
+			return $(e).is("#orphanMainKeywords .orphanKeyword") 
+						&& ! $(e).is("#orphanMainKeywords .orphanExternalKeyword") 
+						&& $(this).attr("data-id") != $(e).attr("data-id");
 		},
 		drop: function(event, ui){
 			var ids = ""+$(".childrenIds input",this).val();
@@ -27,7 +29,7 @@ $(function(){
 				var draggedDiv = $(this).parent(".orphanKeyword");
 				var id = draggedDiv.attr("data-id");
 				$(this).parent(".orphanKeyword").remove();
-				$("#orphanMainKeyword .orphanKeyword[data-id="+id+"], #orphanExternalKeyword .orphanKeyword[data-id="+id+"]").show(400);
+				$("#orphanMainKeywords .orphanKeyword[data-id="+id+"], #orphanExternalKeywords .orphanKeyword[data-id="+id+"]").show(400);
 			});
 			ui.draggable.hide();
 		}
@@ -52,7 +54,7 @@ $(function(){
 				var draggedDiv = $(this).parent(".orphanKeyword");
 				var id = draggedDiv.attr("data-id");
 				$(this).parent(".orphanKeyword").remove();
-				$("#orphanMainKeyword .orphanKeyword[data-id="+id+"], #orphanExternalKeyword .orphanKeyword[data-id="+id+"]").show(400);
+				$("#orphanMainKeywords .orphanKeyword[data-id="+id+"], #orphanExternalKeywords .orphanKeyword[data-id="+id+"]").show(400);
 			});
 			ui.draggable.hide();
 		}

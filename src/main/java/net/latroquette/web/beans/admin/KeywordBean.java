@@ -80,6 +80,7 @@ public class KeywordBean implements Serializable{
 	public String searchKeyword(){
 		KeywordsService keywordsService = new KeywordsService();
 		additionnalMainKeywords.addAll(keywordsService.searchMainKeyword(keywordToSearch));
+		additionnalExternalKeywords.addAll(keywordsService.searchExternalKeyword(keywordToSearch,createOnSearch));
 		keywordsService.close();
 		return null;
 	}
@@ -106,7 +107,7 @@ public class KeywordBean implements Serializable{
 	}
 	
 	/**
-	 * Remove {@link Keyword} child from its parent
+	 * Remove {@link MainKeyword} child from its parent
 	 * @param childId
 	 * @param parentId
 	 * @return
@@ -124,6 +125,27 @@ public class KeywordBean implements Serializable{
 				child.setAncestor(null);
 				KeywordsService keywordsService =  new KeywordsService();
 				keywordsService.modifyKeyword(child, parent);
+				keywordsService.close();
+			}
+		}
+		return null;
+	}
+	/**
+	 * Remove {@link ExternalKeyword} child from its parent
+	 * @param childId
+	 * @param parentId
+	 * @return
+	 */
+	public String removeExternal(Integer childId, Integer parentId){
+		if(!isRoot() && parentId.equals(parentKeyword.getId())){
+			//TODO manage deleting from here deleting the current categorie
+		}else{
+			MainKeyword parent = (MainKeyword) CommonUtils.findById(getKeywordList(), parentId);
+			ExternalKeyword child = (ExternalKeyword) CommonUtils.findById(parent.getExternalKeywords(), childId);
+			if(child != null){
+				parent.getExternalKeywords().remove(child);
+				KeywordsService keywordsService =  new KeywordsService();
+				keywordsService.modifyKeyword(parent);
 				keywordsService.close();
 			}
 		}
@@ -164,6 +186,7 @@ public class KeywordBean implements Serializable{
 	 */
 	public String save(){
 		
+		KeywordsService keywords = new KeywordsService();
 		modifiedKeywords = new HashSet<Keyword>(getKeywordList());
 		modifyChildrenRelationship(false);
 		modifyChildrenRelationship(true);
@@ -173,7 +196,6 @@ public class KeywordBean implements Serializable{
 			modifyRelationship(parentKeyword,childrenToAdd,false);
 			modifyRelationship(parentKeyword,synonymToAdd,true);
 		}
-		KeywordsService keywords = new KeywordsService();
 		keywords.modifyKeywords(modifiedKeywords);
 		keywords.close();
 		//Rebuild menu if something has changed
@@ -218,13 +240,13 @@ public class KeywordBean implements Serializable{
 				parent.setDatabaseOperation(DatabaseOperation.UPDATE);
 				child.setDatabaseOperation(DatabaseOperation.UPDATE);
 				modifiedKeywords.add(child);
-				modified |= true;
+				modified = true;
 			}
 			if(!externalKeywords.isEmpty()){
 				for(ExternalKeyword externalKeyword : externalKeywords){
 					parent.getExternalKeywords().add(externalKeyword);
 					modifiedKeywords.add(parent);
-					modified |= true;
+					modified = true;
 				}
 			}
 		}

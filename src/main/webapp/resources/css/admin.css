@@ -16,7 +16,8 @@
 	background-color: #DDDDDD;
 }
 
-#childrenKeyword .childrenZone em, #childrenKeyword .synonymZone em{
+#childrenKeyword .childrenZone em, 
+#childrenKeyword .synonymZone em{
 	display:block;
 	font-size: 0.7em;
 }
@@ -26,11 +27,12 @@
 #childrenKeyword .childrenZone .dropTip{
 	min-height: 20px;
 }
-#childrenKeyword, #orphanMainKeyword{
+#childrenKeyword, 
+#orphanMainKeywords{
 	display: inline-block;
 	vertical-align: top;
 }
-#orphanExternalKeyword .orphanKeyword{
+#orphanExternalKeywords .orphanKeyword{
 	display: inline-block;
 	vertical-align: top;
 }
@@ -45,7 +47,8 @@
 #childrenKeyword h3 {
 	margin : 5px 0 0 0 ;
 }
-#childrenKeyword h3 em, #modifyKeyword h2 em{
+#childrenKeyword h3 em, 
+#modifyKeyword h2 em{
 	font-size: 0.8em;
 	font-weight: normal;
 	padding-left: 20px;

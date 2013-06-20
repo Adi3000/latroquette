@@ -21,7 +21,8 @@ public class MenuBean {
 
 	@PostConstruct
 	public void reloadMenuEntries(){
-		treeNodeList = new TreeNodeList<MainKeyword>(KeywordsService.getRootForMenu());
+		MenuNode rootNode = new MenuNode(KeywordsService.getRootForMenu());
+		treeNodeList = new TreeNodeList<MainKeyword>(rootNode);
 		KeywordsService keywordsService  = new KeywordsService();
 		treeNodeList.getRootNode().addChildren(keywordsService.getMenuRootEntries());
 		keywordsService.close();
