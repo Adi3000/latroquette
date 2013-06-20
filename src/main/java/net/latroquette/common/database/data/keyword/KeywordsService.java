@@ -125,6 +125,7 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 	 */
 	public List<ExternalKeyword> getAmazonKeywordsFromItem(String title, boolean createNotFound){
 		ItemsService itemsService = new ItemsService(this);
+		//TODO replace searchAmazonItem by a SearchCategorie, this will be more correct
 		List<AmazonItem> amazonItems = itemsService.searchAmazonItems(null, title);
 		List<ExternalKeyword> amazonKeywords = new ArrayList<ExternalKeyword>();
 		boolean newKeywordCreated = false;
@@ -139,7 +140,7 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 							newKeywordCreated = true;
 						}
 					}
-					if(amazonKeyword != null && !amazonKeywords.contains(amazonKeyword)){
+					if(amazonKeyword != null && !amazonKeyword.isExcluded() && !amazonKeywords.contains(amazonKeyword) ){
 						amazonKeywords.add(amazonKeyword);
 					}
 				}

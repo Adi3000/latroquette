@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.adi3000.common.database.hibernate.data.AbstractDataObject;
+import com.adi3000.common.util.optimizer.CommonValues;
 import com.adi3000.common.util.tree.TreeNode;
 
 
@@ -137,6 +138,10 @@ public class ExternalKeyword extends AbstractDataObject implements Keyword, Tree
 	@Column(name = "ext_keyword_excluded")
 	public Character getExcluded() {
 		return excluded;
+	}
+	@Transient
+	public boolean isExcluded(){
+		return CommonValues.TRUE.equals(getExcluded());
 	}
 	/**
 	 * @param excluded the excluded to set

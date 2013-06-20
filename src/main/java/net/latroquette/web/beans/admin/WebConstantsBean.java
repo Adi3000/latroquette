@@ -15,6 +15,7 @@ public class WebConstantsBean {
 	private final String separator = CommonValues.SEPARATOR;
 	private final String externalKeywordPrefix = EXTERNAL_KEYWORD_PREFIX;
 	private final String additionnalKeywordPrefix = ADDITIONNAL_KEYWORD_PREFIX;
+	private final String additionnalExternalKeywordPrefix = ADDITIONNAL_EXTERNAL_KEYWORD_PREFIX;
 	public String getSeparator(){
 		return separator;
 	}
@@ -29,5 +30,11 @@ public class WebConstantsBean {
 	 */
 	public String getAdditionnalKeywordPrefix() {
 		return additionnalKeywordPrefix;
+	}
+	/**
+	 * @return the additionnalExternalKeywordPrefix
+	 */
+	public String getAdditionnalExternalKeywordPrefix() {
+		return additionnalExternalKeywordPrefix;
 	}
 }

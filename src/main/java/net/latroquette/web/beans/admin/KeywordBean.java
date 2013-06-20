@@ -2,6 +2,7 @@ package net.latroquette.web.beans.admin;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -41,8 +42,8 @@ public class KeywordBean implements Serializable{
 	private String keywordId;
 	private List<MainKeyword> orphanMainKeywords;
 	private List<ExternalKeyword> orphanExternalKeywords;
-	private List<MainKeyword> additionnalMainKeywords;
-	private List<ExternalKeyword> additionnalExternalKeywords;
+	private Collection<MainKeyword> additionnalMainKeywords;
+	private Collection<ExternalKeyword> additionnalExternalKeywords;
 	private Map<String,String> childrenIds;
 	private Map<String,String> synonymsIds;
 	private String childrenToAdd;
@@ -71,8 +72,11 @@ public class KeywordBean implements Serializable{
 		}
 		orphanMainKeywords = keywordsService.getOrphanMainKeywords();
 		orphanExternalKeywords = keywordsService.getOrphanExternalKeywords();
+		if(additionnalExternalKeywords == null){
+			additionnalExternalKeywords = new HashSet<ExternalKeyword>();
+		}
 		if(additionnalMainKeywords == null){
-			additionnalMainKeywords = new ArrayList<MainKeyword>();
+			additionnalMainKeywords = new HashSet<MainKeyword>();
 		}
 		keywordsService.close();
 	}
@@ -436,26 +440,13 @@ public class KeywordBean implements Serializable{
 	 * @return the additionnalMainKeywords
 	 */
 	public List<MainKeyword> getAdditionnalMainKeywords() {
-		return additionnalMainKeywords;
-	}
-	/**
-	 * @param additionnalMainKeywords the additionnalMainKeywords to set
-	 */
-	public void setAdditionnalMainKeywords(List<MainKeyword> additionnalMainKeywords) {
-		this.additionnalMainKeywords = additionnalMainKeywords;
+		return new ArrayList<MainKeyword>(additionnalMainKeywords);
 	}
 	/**
 	 * @return the additionnalExternalKeywords
 	 */
 	public List<ExternalKeyword> getAdditionnalExternalKeywords() {
-		return additionnalExternalKeywords;
-	}
-	/**
-	 * @param additionnalExternalKeywords the additionnalExternalKeywords to set
-	 */
-	public void setAdditionnalExternalKeywords(
-			List<ExternalKeyword> additionnalExternalKeywords) {
-		this.additionnalExternalKeywords = additionnalExternalKeywords;
+		return new ArrayList<ExternalKeyword>(additionnalExternalKeywords);
 	}
 	/**
 	 * @return the createOnSearch
