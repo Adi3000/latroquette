@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
-import com.adi3000.common.database.hibernate.data.AbstractDAO;
+import com.adi3000.common.database.hibernate.session.AbstractDAO;
 import com.adi3000.common.database.hibernate.session.DatabaseSession;
 import com.adi3000.common.util.optimizer.CommonValues;
 

@@ -177,7 +177,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 			fc.addMessage(null, msg);
 			fc.validationFailed();
 		}
-		usersService.closeSession();
+		usersService.close();
 		this.loginState = NEW_USER;
 		return "/index";
 
@@ -193,7 +193,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 			this.loginState = LOGGED_IN;
 			userSearch.updateUser(user);
 		}
-		userSearch.closeSession();
+		userSearch.close();
 		switch (loginState) {
 			case LOGGED_IN:
 				return "index";
@@ -208,7 +208,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		User user = userSearch.getUserByLogin(this.getLogin());
 		user.setToken(null);
 		userSearch.updateUser(user);
-		userSearch.closeSession();
+		userSearch.close();
 		//Unset properties of this user
 		this.user = new User();
 		loginState = ANONYMOUS;

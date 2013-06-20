@@ -2,7 +2,6 @@ package net.latroquette.web.beans.admin;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +20,7 @@ import net.latroquette.common.database.data.keyword.MainKeyword;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.adi3000.common.database.hibernate.IDatabaseConstants;
+import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.util.CommonUtils;
 import com.adi3000.common.util.optimizer.CommonValues;
 import com.adi3000.common.util.tree.Breadcrumb;
@@ -42,12 +41,16 @@ public class KeywordBean implements Serializable{
 	private String keywordId;
 	private List<MainKeyword> orphanMainKeywords;
 	private List<ExternalKeyword> orphanExternalKeywords;
+	private List<MainKeyword> additionnalMainKeywords;
+	private List<ExternalKeyword> additionnalExternalKeywords;
 	private Map<String,String> childrenIds;
 	private Map<String,String> synonymsIds;
 	private String childrenToAdd;
 	private String synonymToAdd;
 	private Set<Keyword> modifiedKeywords;
 	private List<MainKeyword> breadcrumb;
+	private String keywordToSearch;
+	private boolean createOnSearch;
 
 	
 	
@@ -60,7 +63,7 @@ public class KeywordBean implements Serializable{
 		
 		KeywordsService keywordsService = new KeywordsService();
 		if(StringUtils.isNotBlank(keywordId)){
-			parentKeyword = keywordsService.getKeywordById(Integer.valueOf(keywordId));
+			parentKeyword = keywordsService.getKeywordById(Integer.valueOf(keywordId), true);
 			newParentKeywordName = new String(parentKeyword.getName());
 			breadcrumb = new Breadcrumb<MainKeyword>(parentKeyword).getBreadcrumb();
 		}else{
@@ -68,12 +71,22 @@ public class KeywordBean implements Serializable{
 		}
 		orphanMainKeywords = keywordsService.getOrphanMainKeywords();
 		orphanExternalKeywords = keywordsService.getOrphanExternalKeywords();
-		keywordsService.closeSession();
+		if(additionnalMainKeywords == null){
+			additionnalMainKeywords = new ArrayList<MainKeyword>();
+		}
+		keywordsService.close();
+	}
+	
+	public String searchKeyword(){
+		KeywordsService keywordsService = new KeywordsService();
+		additionnalMainKeywords.addAll(keywordsService.searchMainKeyword(keywordToSearch));
+		keywordsService.close();
+		return null;
 	}
 	/**
-	 * Create a new keyword
+	 * Create a new {@link MainKeyword}
 	 */
-	public void create(){
+	public String create(){
 		MainKeyword newKeyword = new MainKeyword();
 		newKeyword.setName(newKeywordName);
 		newKeyword.setIsSynonym(CommonValues.FALSE);
@@ -82,16 +95,75 @@ public class KeywordBean implements Serializable{
 		if(!isRoot()){
 			newKeyword.setAncestor(parentKeyword);
 			parentKeyword.getChildren().add(newKeyword);
-			parentKeyword.setDatabaseOperation(IDatabaseConstants.UPDATE);
+			parentKeyword.setDatabaseOperation(DatabaseOperation.UPDATE);
 		}
-		newKeyword.setDatabaseOperation(IDatabaseConstants.INSERT);
+		newKeyword.setDatabaseOperation(DatabaseOperation.INSERT);
 		KeywordsService keywordsService = new KeywordsService();
 		keywordsService.modifyKeyword(newKeyword, parentKeyword);
-		keywordsService.closeSession();
+		keywordsService.close();
+		
+		return null;
 	}
 	
-	public void save(){
-
+	/**
+	 * Remove {@link Keyword} child from its parent
+	 * @param childId
+	 * @param parentId
+	 * @return
+	 */
+	public String remove(Integer childId, Integer parentId){
+		if(!isRoot() && parentId.equals(parentKeyword.getId())){
+			//TODO manage deleting from here deleting the current categorie
+		}else{
+			MainKeyword parent = (MainKeyword) CommonUtils.findById(getKeywordList(), parentId);
+			MainKeyword child = (MainKeyword) CommonUtils.findById(parent.getChildren(), childId);
+			if(child != null){
+				parent.getChildren().remove(child);
+				child.setInMenu(CommonUtils.toChar(false));
+				child.setIsSynonym(CommonUtils.toChar(false));
+				child.setAncestor(null);
+				KeywordsService keywordsService =  new KeywordsService();
+				keywordsService.modifyKeyword(child, parent);
+				keywordsService.close();
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Delete a {@link MainKeyword} from database
+	 * @param keywordId
+	 * @return
+	 */
+	public String deleteMainKeyword(Integer keywordId){
+		MainKeyword keyword = (MainKeyword) CommonUtils.findById(orphanMainKeywords, keywordId);
+		KeywordsService keywordsService = new KeywordsService();
+		keywordsService.deleteKeyword(keyword);
+		orphanMainKeywords = keywordsService.getOrphanMainKeywords();
+		keywordsService.close();
+		return null;
+	}
+	
+	/**
+	 * Exclude an {@link ExternalKeyword} from the view
+	 * @param keywordId
+	 * @return
+	 */
+	public String excludeExternalKeyword(Integer keywordId){
+		ExternalKeyword keyword = (ExternalKeyword) CommonUtils.findById(orphanExternalKeywords, keywordId);
+		KeywordsService keywordsService = new KeywordsService();
+		keywordsService.excludeExternalKeyword(keyword);
+		orphanExternalKeywords = keywordsService.getOrphanExternalKeywords();
+		keywordsService.close();
+		return null;
+	}
+	
+	/**
+	 * Save the actual configuration of {@link Keyword} elements
+	 * @return
+	 */
+	public String save(){
+		
 		modifiedKeywords = new HashSet<Keyword>(getKeywordList());
 		modifyChildrenRelationship(false);
 		modifyChildrenRelationship(true);
@@ -103,28 +175,12 @@ public class KeywordBean implements Serializable{
 		}
 		KeywordsService keywords = new KeywordsService();
 		keywords.modifyKeywords(modifiedKeywords);
-		keywords.closeSession();
+		keywords.close();
 		//Rebuild menu if something has changed
 		menuBean.reloadMenuEntries();
+		return null;
 	}
 	
-	public void remove(Integer childId, Integer parentId){
-		if(!isRoot() && parentId.equals(parentKeyword.getId())){
-			//TODO manage deleting from here
-		}else{
-			MainKeyword parent = (MainKeyword) CommonUtils.findById(getKeywordList(), parentId);
-			MainKeyword child = (MainKeyword) CommonUtils.findById(parent.getChildren(), childId);
-			if(child != null){
-				parent.getChildren().remove(child);
-				child.setInMenu(CommonUtils.toChar(false));
-				child.setIsSynonym(CommonUtils.toChar(false));
-				child.setAncestor(null);
-				KeywordsService keywordsService =  new KeywordsService();
-				keywordsService.modifyKeyword(child, parent);
-				keywordsService.closeSession();
-			}
-		}
-	}
 	private boolean modifyParentKeywordName(){
 		boolean modified = false;
 		if(!isRoot() && StringUtils.isNotBlank(newKeywordName) && ! parentKeyword.getName().equals(newKeywordName)){
@@ -141,8 +197,16 @@ public class KeywordBean implements Serializable{
 			List<ExternalKeyword> externalKeywords = new ArrayList<ExternalKeyword>();
 			List<MainKeyword> mainKeywords = new ArrayList<MainKeyword>();
 			for(String keywordId : parsedKeywordIds){
-				if(keywordId.startsWith(CommonValues.EXTERNAL_KEYWORD_PREFIX)){
-					externalKeywords.add((ExternalKeyword) CommonUtils.findById(orphanExternalKeywords, keywordId.substring(CommonValues.EXTERNAL_KEYWORD_PREFIX.length())));
+				//Id is an additionnal+external keyword
+				if(keywordId.startsWith(WebConstantsBean.ADDITIONNAL_EXTERNAL_KEYWORD_PREFIX)){
+					externalKeywords.add((ExternalKeyword) CommonUtils.findById(additionnalExternalKeywords, keywordId.substring(WebConstantsBean.ADDITIONNAL_EXTERNAL_KEYWORD_PREFIX.length())));
+				//Id is an additionnal+main keyword
+				}else if(keywordId.startsWith(WebConstantsBean.ADDITIONNAL_KEYWORD_PREFIX)){
+					mainKeywords.add((MainKeyword) CommonUtils.findById(additionnalMainKeywords, keywordId.substring(WebConstantsBean.ADDITIONNAL_KEYWORD_PREFIX.length())));
+				//Id is an external orphan keyword
+				}else if(keywordId.startsWith(WebConstantsBean.EXTERNAL_KEYWORD_PREFIX)){
+					externalKeywords.add((ExternalKeyword) CommonUtils.findById(orphanExternalKeywords, keywordId.substring(WebConstantsBean.EXTERNAL_KEYWORD_PREFIX.length())));
+				//Id is a main orphan keyword
 				}else{
 					mainKeywords.add((MainKeyword) CommonUtils.findById(orphanMainKeywords, keywordId));
 				}
@@ -151,17 +215,16 @@ public class KeywordBean implements Serializable{
 				parent.getChildren().add(child);
 				child.setAncestor(parent);
 				child.setIsSynonym(CommonUtils.toChar(isSynonym));
-				parent.setDatabaseOperation(IDatabaseConstants.UPDATE);
-				child.setDatabaseOperation(IDatabaseConstants.UPDATE);
+				parent.setDatabaseOperation(DatabaseOperation.UPDATE);
+				child.setDatabaseOperation(DatabaseOperation.UPDATE);
 				modifiedKeywords.add(child);
 				modified |= true;
 			}
 			if(!externalKeywords.isEmpty()){
-				//TODO Implement in ExternalKeyword class the proper association
 				for(ExternalKeyword externalKeyword : externalKeywords){
-					/*externalKeyword.setDatabaseOperation(IDatabaseConstants.UPDATE);
-					modifiedKeywords.add(externalKeyword);
-					modified |= true;*/
+					parent.getExternalKeywords().add(externalKeyword);
+					modifiedKeywords.add(parent);
+					modified |= true;
 				}
 			}
 		}
@@ -346,5 +409,54 @@ public class KeywordBean implements Serializable{
 	 */
 	public void setMenuBean(MenuBean menuBean) {
 		this.menuBean = menuBean;
+	}
+	/**
+	 * @return the additionnalMainKeywords
+	 */
+	public List<MainKeyword> getAdditionnalMainKeywords() {
+		return additionnalMainKeywords;
+	}
+	/**
+	 * @param additionnalMainKeywords the additionnalMainKeywords to set
+	 */
+	public void setAdditionnalMainKeywords(List<MainKeyword> additionnalMainKeywords) {
+		this.additionnalMainKeywords = additionnalMainKeywords;
+	}
+	/**
+	 * @return the additionnalExternalKeywords
+	 */
+	public List<ExternalKeyword> getAdditionnalExternalKeywords() {
+		return additionnalExternalKeywords;
+	}
+	/**
+	 * @param additionnalExternalKeywords the additionnalExternalKeywords to set
+	 */
+	public void setAdditionnalExternalKeywords(
+			List<ExternalKeyword> additionnalExternalKeywords) {
+		this.additionnalExternalKeywords = additionnalExternalKeywords;
+	}
+	/**
+	 * @return the createOnSearch
+	 */
+	public boolean isCreateOnSearch() {
+		return createOnSearch;
+	}
+	/**
+	 * @param createOnSearch the createOnSearch to set
+	 */
+	public void setCreateOnSearch(boolean createOnSearch) {
+		this.createOnSearch = createOnSearch;
+	}
+	/**
+	 * @return the keywordToSearch
+	 */
+	public String getKeywordToSearch() {
+		return keywordToSearch;
+	}
+	/**
+	 * @param keywordToSearch the keywordToSearch to set
+	 */
+	public void setKeywordToSearch(String keywordToSearch) {
+		this.keywordToSearch = keywordToSearch;
 	}
 }

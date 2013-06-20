@@ -16,15 +16,32 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.adi3000.common.database.hibernate.data.AbstractDataObject;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.FetchProfile;
+import org.hibernate.annotations.FetchProfile.FetchOverride;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.FilterDefs;
+
+import com.adi3000.common.database.hibernate.data.AbstractTreeNodeDataObject;
 import com.adi3000.common.util.CommonUtils;
-import com.adi3000.common.util.tree.TreeNode;
 
 
 @Entity
 @Table(name = "keywords")
 @SequenceGenerator(name = "keywords_keyword_id_seq", sequenceName = "keywords_keyword_id_seq", allocationSize=1)
-public class MainKeyword extends AbstractDataObject implements Keyword, TreeNode<MainKeyword>{
+@FilterDefs({
+	@FilterDef(name=KeywordsService.MENU_KEYWORD_ONLY_FILTER),
+	@FilterDef(name=KeywordsService.MENU_KEYWORD_CHILDREN_ONLY_FILTER)
+})
+@Filter(name=KeywordsService.MENU_KEYWORD_ONLY_FILTER, condition="keyword_in_menu = 'Y'")
+@FetchProfile(name=KeywordsService.FETCH_CHILDREN_PROFILE, fetchOverrides={
+		@FetchOverride(entity=MainKeyword.class, association="children", mode=FetchMode.JOIN)
+})
+@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
+public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> implements Keyword{
 	public static final Integer MAIN_ANCESTOR_RELATIONSHIP = 1;
 	public static final Integer CHILDREN_RELATIONSHIP = 2;
 	public static final Integer EXTERNAL_KEYWORD_RELATIONSHIP = 3;
@@ -40,6 +57,7 @@ public class MainKeyword extends AbstractDataObject implements Keyword, TreeNode
 	private MainKeyword ancestor;
 	private Character isSynonym;
 	private Character inMenu;
+	private List<ExternalKeyword> externalKeywords;
 	@Id
 	@Column(name = "keyword_id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "keywords_keyword_id_seq")
@@ -69,8 +87,9 @@ public class MainKeyword extends AbstractDataObject implements Keyword, TreeNode
 	/**
 	 * @return the mainAncestor
 	 */
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="keyword_parent_id")
+	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
 	public MainKeyword getAncestor(){
 		return ancestor;
 	}
@@ -81,14 +100,17 @@ public class MainKeyword extends AbstractDataObject implements Keyword, TreeNode
 	public void setAncestor(MainKeyword ancestor){
 		this.ancestor = ancestor;
 	}
-	
+	 
 	/**
 	 * @return the children
 	 */
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(fetch=FetchType.LAZY)
 	@JoinTable(name="keywords_relationship", 
-	joinColumns={@JoinColumn(name="keyword_from_id")}, 
-    inverseJoinColumns={@JoinColumn(name="keyword_to_id")})
+		joinColumns={@JoinColumn(name="keyword_from_id")}, 
+	    inverseJoinColumns={@JoinColumn(name="keyword_to_id")}
+	)
+	@Filter(name=KeywordsService.MENU_KEYWORD_ONLY_FILTER, condition="keyword_in_menu = 'Y'")
+	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
 	public List<MainKeyword> getChildren() {
 		return children;
 	}
@@ -124,7 +146,23 @@ public class MainKeyword extends AbstractDataObject implements Keyword, TreeNode
 	public void setInMenu(Character inMenu) {
 		this.inMenu = inMenu;
 	}
-	
+	/**
+	 * Get the {@link ExternalKeyword} linked to this keyword
+	 * @return
+	 */
+	@OneToMany(fetch=FetchType.LAZY)
+	@JoinTable(name="external_keywords_relationship", 
+	joinColumns={@JoinColumn(name="keyword_id")}, 
+    inverseJoinColumns={@JoinColumn(name="ext_keyword_id")})
+	public List<ExternalKeyword> getExternalKeywords() {
+		return externalKeywords;
+	}
+	/**
+	 * @param externalKeywords the externalKeywords to set
+	 */
+	public void setExternalKeywords(List<ExternalKeyword> externalKeywords) {
+		this.externalKeywords = externalKeywords;
+	}
 	@Transient
 	public boolean isSynonym(){
 		return CommonUtils.isTrue(isSynonym);
@@ -142,5 +180,8 @@ public class MainKeyword extends AbstractDataObject implements Keyword, TreeNode
 	public boolean isRoot(){
 		return ancestor == null;
 	}
-	
+	@Override
+	public void removeAncestor() {
+		setAncestor(null);
+	}
 }

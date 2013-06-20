@@ -2,6 +2,7 @@ package net.latroquette.common.database.data.keyword;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import net.latroquette.common.database.data.item.AmazonItem;
@@ -10,10 +11,11 @@ import net.latroquette.common.database.data.item.ItemsService;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Query;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
-import com.adi3000.common.database.hibernate.IDatabaseConstants;
-import com.adi3000.common.database.hibernate.data.AbstractDAO;
+import com.adi3000.common.database.hibernate.DatabaseOperation;
+import com.adi3000.common.database.hibernate.session.AbstractDAO;
 import com.adi3000.common.util.CommonUtils;
 import com.adi3000.common.util.optimizer.CommonValues;
 import com.amazon.ECS.client.jax.BrowseNode;
@@ -21,10 +23,29 @@ import com.amazon.ECS.client.jax.BrowseNode;
 public class KeywordsService extends AbstractDAO<Keyword> {
 
 	public static final String KEYWORD_ANCESTOR_SEPARATOR = " > ";
-	
+	public static final String MENU_KEYWORD_ONLY_FILTER = "keyword-menu-only";
+	public static final String MENU_KEYWORD_CHILDREN_ONLY_FILTER = "keyword-children-menu-only";
+	public static final String FETCH_CHILDREN_PROFILE = "fetch-children-profile";
 	public MainKeyword getKeywordById(Integer id){
-		return (MainKeyword)super.getDataObjectById(id, MainKeyword.class);
+		return getKeywordById(id, false);
 	}
+	public MainKeyword getKeywordById(Integer id, boolean deep){
+		MainKeyword keyword = null;
+		if(deep){
+			Criteria req = createCriteria(MainKeyword.class)
+					.add(Restrictions.eq("id",id))
+					.setFetchMode("children", FetchMode.SELECT)
+					.setCacheable(true)
+					.setCacheRegion("keywords");
+			keyword = (MainKeyword) req.uniqueResult();
+			keyword.initializeRecursively();
+		}else{
+			keyword = (MainKeyword) super.getDataObjectById(id, MainKeyword.class);
+		}		
+		return keyword; 
+	}
+	
+	
 	public MainKeyword getKeyword(MainKeyword keyword){
 		return (MainKeyword)super.getDataObject(keyword);
 	}
@@ -37,21 +58,66 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 		if(parent != null){
 			modify(parent);
 		}
-		if(commit()){
+		if(sendForCommit()){
 			return keyword;
 		}else{
 			return null;
 		}
 	}
 	public Collection<Keyword> modifyKeywords(Collection<Keyword> keyword){
-		return modifyDataObject(keyword, true);
+		return modifyDataObject(keyword);
 	}
 	
-	public boolean deleteKeyword(MainKeyword keyword){
-		return deleteDataObject(keyword);
+	/**
+	 * Delete a keyword removing all children and updating children for their relation chips
+	 * @param keyword
+	 * @return
+	 */
+	public boolean deleteKeyword(Keyword keyword){
+		HashSet<Keyword> modifiedKeywords = new HashSet<Keyword>();
+		if(keyword.getChildren() != null){
+			//Remove all relation with children
+			for(Keyword child : keyword.getChildren()){
+				child.removeAncestor();
+				child.setDatabaseOperation(DatabaseOperation.UPDATE);
+			}
+			modifiedKeywords.addAll(keyword.getChildren());
+		}
+		modifiedKeywords.add(keyword);
+		keyword.setDatabaseOperation(DatabaseOperation.DELETE);
+		
+		return modifyKeywords(modifiedKeywords) != null;
 	}
 	
-	public List<ExternalKeyword> getAmazonKeywordsForTitle(String title){
+	/**
+	 * Exclude a externalKeyword and all its children
+	 * @param title
+	 * @return
+	 */
+	public boolean excludeExternalKeyword(ExternalKeyword keyword){
+		Collection<Keyword> modifiedKeywords = new HashSet<Keyword>();
+		ExternalKeyword keywordToExclude = (ExternalKeyword) getDataObject(keyword);
+		excludeExternalKeyword(keywordToExclude, modifiedKeywords);		
+		return modifyKeywords(modifiedKeywords) != null;
+	}
+	private void excludeExternalKeyword(ExternalKeyword keyword, Collection<Keyword> modifiedKeyword){
+		keyword.setExcluded(CommonValues.TRUE);
+		keyword.setDatabaseOperation(DatabaseOperation.UPDATE);
+		modifiedKeyword.add(keyword);
+		if(keyword.getChildren() != null){
+			for(ExternalKeyword child : keyword.getChildren()){
+				excludeExternalKeyword(child, modifiedKeyword);
+			}
+		}
+		
+	}
+	
+	/**
+	 * Fill database with a title
+	 * @param title
+	 * @return
+	 */
+	public List<ExternalKeyword> getAmazonKeywordsFromItem(String title){
 		List<AmazonItem> amazonItems = ItemsService.searchAmazonItems(null, title);
 		List<ExternalKeyword> amazonKeywords = new ArrayList<ExternalKeyword>();
 		for(AmazonItem amazonItem : amazonItems){
@@ -69,15 +135,20 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 		}
 		
 		if(true){
-			commit();
+			sendForCommit();
 		}else{
 			//TODO remove commit : just for testing
 		}
 		return amazonKeywords;
 	}
 	
+	/**
+	 * Return an Amazon Keyword already copied in database
+	 * @param amazonBrowseNode
+	 * @return
+	 */
 	public ExternalKeyword getAmazonKeyword(BrowseNode amazonBrowseNode){
-		Criteria req = this.session.createCriteria(ExternalKeyword.class)
+		Criteria req = createCriteria(ExternalKeyword.class)
 				.add(Restrictions.eq("uid", amazonBrowseNode.getBrowseNodeId()))
 				.add(Restrictions.eq("source", ExternalKeyword.AMAZON_SOURCE))
 				.setFetchMode("", FetchMode.SELECT);
@@ -115,31 +186,24 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 			newAmazonKeyWord.setAncestor(null);
 			newAmazonKeyWord.setFullname(amazonBrowseNode.getName());
 		}
-		newAmazonKeyWord.setDatabaseOperation(IDatabaseConstants.INSERT);
+		newAmazonKeyWord.setDatabaseOperation(DatabaseOperation.INSERT);
 		persist(newAmazonKeyWord);
 		return newAmazonKeyWord;
 	}
 	
-	private List<? extends Keyword> getOrphanKeywords(Class<? extends Keyword> keywordClass){
-		
-		Criteria req = this.session.createCriteria(keywordClass)
-				.add(Restrictions.isNull("ancestor"))
-				.setFetchMode("", FetchMode.JOIN);
-		@SuppressWarnings("unchecked")
-		List<? extends Keyword> list = req.list();
-		return list;
-	}
 	
 	/**
 	 * Return {@link ExternalKeyword} without ancestor
 	 * @return
 	 */
 	public List<ExternalKeyword> getOrphanExternalKeywords(){
-		String sql = 
-					" SELECT {keyword.*} FROM external_keywords {keyword} ".concat(
-					" WHERE {keyword}.ext_keyword_excluded = '").concat(CommonValues.FALSE.toString()).concat("' and NOT EXISTS ").concat(
-							"(SELECT 1 FROM external_keywords_relationship krl where {keyword}.ext_keyword_id = krl.ext_keyword_id )");
-		Query req = this.session.createSQLQuery(sql).addEntity("keyword",ExternalKeyword.class);
+		String hql = 
+					" SELECT DISTINCT keyword FROM ExternalKeyword keyword ".concat(
+					" WHERE keyword.excluded = '").concat(CommonValues.FALSE.toString()).concat("' and NOT EXISTS ").concat(
+							"( FROM MainKeyword mainKeyword INNER JOIN  mainKeyword.externalKeywords linkedKeyword where linkedKeyword = keyword )");
+		Query req = createQuery(hql);
+		
+
 		@SuppressWarnings("unchecked")
 		List<ExternalKeyword> list = (List<ExternalKeyword>) req.list(); 
 		return list; 
@@ -150,8 +214,14 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 	 * @return
 	 */
 	public List<MainKeyword> getOrphanMainKeywords(){
+		String hql = 
+				" SELECT DISTINCT keyword FROM MainKeyword keyword ".concat(
+				" LEFT JOIN FETCH keyword.children ").concat(
+				" WHERE keyword.ancestor is null ");
+
+		Query req = createQuery(hql);
 		@SuppressWarnings("unchecked")
-		List<MainKeyword> list = (List<MainKeyword>) getOrphanKeywords(MainKeyword.class); 
+		List<MainKeyword> list = req.list();
 		return list;
 	}
 	
@@ -161,8 +231,8 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 	 * @return
 	 */
 	public List<MainKeyword> getMainKeywordByIds(List<Integer> ids){
-		String hsql = "SELECT keyword FROM MainKeyword keyword WHERE keyword.id IN :list";
-		Query req = this.session.createQuery(hsql).setParameterList("list", ids);
+		String hql = "SELECT keyword FROM MainKeyword keyword WHERE keyword.id IN :list";
+		Query req = createQuery(hql).setParameterList("list", ids);
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = (List<MainKeyword>)req.list();
 		return list;
@@ -174,8 +244,8 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 	 * @return
 	 */
 	public List<ExternalKeyword> getExternalKeywordByIds(List<Integer> ids){
-		String hsql = "SELECT keyword FROM ExternalKeyword keyword WHERE keyword.id IN :list";
-		Query req = this.session.createQuery(hsql).setParameterList("list", ids);
+		String hql = "SELECT keyword FROM ExternalKeyword keyword WHERE keyword.id IN :list";
+		Query req = createQuery(hql).setParameterList("list", ids);
 		@SuppressWarnings("unchecked")
 		List<ExternalKeyword> list = (List<ExternalKeyword>)req.list();
 		return list;
@@ -186,13 +256,15 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 	 * @return
 	 */
 	public List<MainKeyword> getMenuRootEntries(){
-		Criteria req = this.session.createCriteria(MainKeyword.class)
-				.add(Restrictions.eq("inMenu", CommonValues.TRUE))
+		this.session.enableFilter(MENU_KEYWORD_ONLY_FILTER);
+		Criteria req = createCriteria(MainKeyword.class)
 				.add(Restrictions.isNull("ancestor"))
+				.setFetchMode("children", FetchMode.SELECT)
 				.setCacheable(true)
 				.setCacheRegion("menu");
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = req.list();
+		this.session.disableFilter(MENU_KEYWORD_ONLY_FILTER);
 		return list;
 	}
 	
@@ -205,5 +277,19 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 		rootKeyword.setId(0);
 		return rootKeyword;
 	}
-
+	
+	/**
+	 * Search a Keyword in database (External or not)
+	 */
+	public Collection<MainKeyword> searchMainKeyword(String name){
+		String likeValue = name.replace(' ', '_').replace('-', '_');
+		Criteria req = createCriteria(MainKeyword.class)
+				.add(Restrictions.like("name", likeValue, MatchMode.ANYWHERE))
+				.add(Restrictions.isNotNull("ancestor"))
+				.setCacheable(true)
+				.setCacheRegion("keywords");
+		@SuppressWarnings("unchecked")
+		List<MainKeyword> list = req.list();
+		return list;
+	}
 }

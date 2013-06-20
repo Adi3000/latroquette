@@ -30,7 +30,7 @@ public class LocationSearch {
 	public GenericEntity<List<Location>> getLocations (@QueryParam("term") String pattern){
 		LocationsService locationsService = new LocationsService();
 		List<Location> locationsFound = locationsService.getLocationByString(pattern);
-		locationsService.closeSession();
+		locationsService.close();
 		return new GenericEntity<List<Location>>(locationsFound) {};
 	}
 }

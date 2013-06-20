@@ -3,5 +3,5 @@
     <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false" />        
 	<cache name="parameters" maxElementsInMemory="100" eternal="true" overflowToDisk="false" />
 	<cache name="menu" maxElementsInMemory="100" eternal="true"	overflowToDisk="false" />
-	<cache name="keywords" maxElementsInMemory="10000" eternal="false" overflowToDisk="true" />
+	<cache name="keywords" maxElementsInMemory="10000" eternal="true" overflowToDisk="false" />
 </ehcache>

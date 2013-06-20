@@ -118,7 +118,7 @@ public class ImageServlet extends HttpServlet {
     		resizedFile = FilesService.resizeImage(fis, imgMaxWidth, imgMaxHeight, suffix, resizedFile);
     		outputImage = resizedFile;
         }
-        filesService.closeSession();
+        filesService.close();
 
         // Init servlet response.
         response.reset();

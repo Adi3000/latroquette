@@ -26,7 +26,7 @@ public class ItemSearchBean implements Serializable {
 	public void initCount(){
 		ItemsService itemsService = new ItemsService();
 		this.count = itemsService.countItem(request, searchOnDescription);
-		itemsService.closeSession();
+		itemsService.close();
 	}
 	/**
 	 * @return the request

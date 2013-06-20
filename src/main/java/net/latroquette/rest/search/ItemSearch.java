@@ -31,7 +31,7 @@ public class ItemSearch {
 		ItemsService itemsService = new ItemsService();
 		Integer pageNum = StringUtils.isNotEmpty(page)  ? Integer.valueOf(page) : Integer.valueOf(1);
 		List<Item> itemsFound = itemsService.searchItem(pattern, !Boolean.valueOf(onlyTitle), pageNum);
-		itemsService.closeSession();
+		itemsService.close();
 		return new GenericEntity<List<Item>>(itemsFound) {};
 	}
 	
@@ -41,7 +41,7 @@ public class ItemSearch {
 			@QueryParam("ot") String onlyTitle){
 		ItemsService itemsService = new ItemsService();
 		Integer itemsFound = itemsService.countItem(pattern, !Boolean.valueOf(onlyTitle));
-		itemsService.closeSession();
+		itemsService.close();
 		return new GenericEntity<Integer>(itemsFound) {};
 	}
 }

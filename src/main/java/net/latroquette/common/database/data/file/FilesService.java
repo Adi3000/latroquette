@@ -26,8 +26,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 
-import com.adi3000.common.database.hibernate.IDatabaseConstants;
-import com.adi3000.common.database.hibernate.data.AbstractDAO;
+import com.adi3000.common.database.hibernate.DatabaseOperation;
+import com.adi3000.common.database.hibernate.session.AbstractDAO;
 import com.adi3000.common.database.hibernate.session.DatabaseSession;
 import com.adi3000.common.util.CommonUtils;
 import com.adi3000.common.util.security.Security;
@@ -129,16 +129,16 @@ public class FilesService extends AbstractDAO<File> {
 		}
 		
 		if(file.getFile().delete()){
-			file.setDatabaseOperation(IDatabaseConstants.DELETE);
+			file.setDatabaseOperation(DatabaseOperation.DELETE);
 			success = true;
 		}else{
 			LOGGER.log(Level.WARNING, "Asked for remove but can't delete "+file.getFile().getPath());
 			file.setGarbageStatus(GarbageFileStatus.ERROR_ON_DELETE);
-			file.setDatabaseOperation(IDatabaseConstants.UPDATE);
+			file.setDatabaseOperation(DatabaseOperation.UPDATE);
 			success = false;
 		}
 		persist(file);
-		if(!commit()){
+		if(!sendForCommit()){
 			return false;
 		}else{
 			return success;

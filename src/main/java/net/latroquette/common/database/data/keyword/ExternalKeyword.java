@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.adi3000.common.database.hibernate.data.AbstractDataObject;
 import com.adi3000.common.util.tree.TreeNode;
@@ -34,6 +35,7 @@ public class ExternalKeyword extends AbstractDataObject implements Keyword, Tree
 	private String source;
 	private String name;
 	private List<ExternalKeyword> children;
+	private List<MainKeyword> mainKeywords;
 	private String fullname;
 	private ExternalKeyword ancestor;
 	private Character excluded;
@@ -142,4 +144,23 @@ public class ExternalKeyword extends AbstractDataObject implements Keyword, Tree
 	public void setExcluded(Character excluded) {
 		this.excluded = excluded;
 	}
+	
+	@Override
+	public void removeAncestor() {
+		setAncestor(null);
+	}
+	/**
+	 * @return the mainKeyword
+	 */
+	@Transient
+	public List<MainKeyword> getMainKeywords() {
+		return mainKeywords;
+	}
+	/**
+	 * @param mainKeyword the mainKeyword to set
+	 */
+	public void setMainKeyword(List<MainKeyword> mainKeywords) {
+		this.mainKeywords = mainKeywords;
+	}
+	
 }

@@ -13,7 +13,7 @@ import org.hibernate.FetchMode;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 
-import com.adi3000.common.database.hibernate.data.AbstractDAO;
+import com.adi3000.common.database.hibernate.session.AbstractDAO;
 import com.adi3000.common.database.hibernate.session.DatabaseSession;
 import com.adi3000.common.util.CommonUtils;
 import com.adi3000.common.util.optimizer.CommonValues;
@@ -78,7 +78,7 @@ public class ItemsService extends AbstractDAO<Item>{
 	 * @return
 	 */
 	public Item getItemById(Integer itemId){
-		Criteria req = this.session.createCriteria(Item.class)
+		Criteria req = createCriteria(Item.class)
 				.add(Restrictions.eq("id", itemId))
 				.setFetchMode("imageList", FetchMode.JOIN);
 		return (Item)req.uniqueResult();
@@ -146,7 +146,7 @@ public class ItemsService extends AbstractDAO<Item>{
 				" SELECT ".concat(field).concat(" FROM Item item ").concat(
 				" WHERE fulltextsearch('french', ").concat(index).concat(", :search ) = true").concat(
 				countOnly ? "" : " order by item.creationDate");
-		Query req = this.session.createQuery(sql)
+		Query req = createQuery(sql)
 						.setString("search", searchPattern);
 		
 		if(!countOnly){

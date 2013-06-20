@@ -18,7 +18,7 @@ public class UserLoginValidator implements Validator {
 	public void validate(FacesContext arg0, UIComponent arg1, Object value)	throws ValidatorException {
 		UsersService userSearch = new UsersService();
 		User user = userSearch.getUserByLogin(value.toString());
-		userSearch.closeSession();
+		userSearch.close();
 		if(user != null){
  			FacesMessage msg = new FacesMessage("User already exists","This user already exist");
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);

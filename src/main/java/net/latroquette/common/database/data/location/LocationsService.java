@@ -7,12 +7,12 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 
-import com.adi3000.common.database.hibernate.data.AbstractDAO;
+import com.adi3000.common.database.hibernate.session.AbstractDAO;
 
 public class LocationsService extends AbstractDAO<Location> {
 	
 	public List<Location> getLocationByType(LocationType locationType){
-		Criteria req = this.session.createCriteria(Location.class)
+		Criteria req = createCriteria(Location.class)
 				.add(Restrictions.eq("locationTypeId", locationType.getValue())) ;
 		@SuppressWarnings("unchecked")
 		List<Location> locations = (List<Location>)req.list();

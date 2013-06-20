@@ -29,7 +29,7 @@ public class AmazonProducts {
 		ItemsService items = new ItemsService(false);
 		@SuppressWarnings("static-access")
 		List<AmazonItem> itemsFound = items.searchAmazonItems(category, pattern);
-		items.closeSession();
+		items.close();
 		return new GenericEntity<List<AmazonItem>>(itemsFound) {};
 	}
 

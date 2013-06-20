@@ -103,10 +103,24 @@
 						<ui:repeat var="keyword" value="#{keywordBean.orphanMainKeywords}">
 							<div class="ui-widget-content ui-corner-all orphanKeyword" data-id="#{keyword.id}">
 								<span class="keywordName">#{keyword.name}</span>
+								<h:commandLink action="#{keywordBean.deleteMainKeyword(keyword.id)}" styleClass="ui-icon ui-icon ui-icon-trash" />
 							</div>
 						</ui:repeat>
-						<h2>Mots clés déjà liés</h2>
-						<label for="keywordSearch">Recherche de mot-clés</label><input type="text" id="keywordSearch" value="[Ne marche pas encore]" />
+						<h2>Chercher d'autres mots clés</h2>
+						<div>
+							<h:outputLabel for="keywordSearchAndCreate" value="Chercher sur sur les sources externes" />
+							<h:selectBooleanCheckbox id="keywordSearchAndCreate" value="#{keywordBean.createOnSearch}"/>
+						</div>
+						<div>
+							<label for="keywordSearch" title="">Recherche de mot-clés</label>
+							<h:inputText id="keywordSearch" value="#{keywordBean.keywordToSearch}" />
+						</div>
+						<h:commandButton value="Rechercher" action="#{keywordBean.searchKeyword}" />
+						<ui:repeat var="keyword" value="#{keywordBean.additionnalMainKeywords}">
+							<div class="ui-widget-content ui-corner-all orphanKeyword" data-id="#{webConstantsBean.additionnalKeywordPrefix}#{keyword.id}">
+								<span class="keywordName">#{keyword.name}</span>
+							</div>
+						</ui:repeat>
 					</div>
 					
 				</h:form>
@@ -116,15 +130,16 @@
 					<h:inputText id="newKeyword" styleClass="field" value="#{keywordBean.newKeywordName}" />
 					<h:commandButton value="Cr&#233;er" action="#{keywordBean.create}"/>
 				</h:form>
-				<div id="orphanExternalKeyword">
+				<h:form id="orphanExternalKeyword">
 					<h2>Synonymes externes orphelins</h2>
 					<ui:repeat var="keyword" value="#{keywordBean.orphanExternalKeywords}">
-						<div class="ui-widget-content ui-corner-all orphanKeyword" data-id="#{webConstantsBean.externalPrefix}#{keyword.id}">
+						<div class="ui-widget-content ui-corner-all orphanKeyword" data-id="#{webConstantsBean.externalKeywordPrefix}#{keyword.id}">
 							<span class="keywordName">#{keyword.name}</span>
 							<span class="keywordFullname">#{keyword.fullname}</span>
+							<h:commandLink action="#{keywordBean.excludeExternalKeyword(keyword.id)}" styleClass="ui-icon ui-icon ui-icon-trash" />
 						</div>
 					</ui:repeat>
-				</div>
+				</h:form>
 			</div>	
 		</ui:define>
 	</ui:composition>

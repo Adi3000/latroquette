@@ -22,7 +22,7 @@ import net.latroquette.web.beans.profile.UserBean;
 import org.apache.commons.lang.StringUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 
-import com.adi3000.common.database.hibernate.IDatabaseConstants;
+import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.util.CommonUtils;
 import com.adi3000.common.web.faces.FacesUtils;
 
@@ -95,9 +95,9 @@ public class ItemBean implements Serializable {
 		}
 		item.setImageList(fileList);
 		item.setStatusId(ItemStatus.DRAFT);
-		item.setDatabaseOperation(IDatabaseConstants.INSERT);
+		item.setDatabaseOperation(DatabaseOperation.INSERT);
 		item = itemsService.modifyItem(item, userBean.getUser());
-		itemsService.closeSession();
+		itemsService.close();
 		return "viewItem?faces-redirect=true&item="+item.getId();
 	}
 	public String updateItem(){
@@ -107,9 +107,9 @@ public class ItemBean implements Serializable {
 		}
 		item.setImageList(fileList);
 		item.setStatusId(ItemStatus.DRAFT);
-		item.setDatabaseOperation(IDatabaseConstants.UPDATE);
+		item.setDatabaseOperation(DatabaseOperation.UPDATE);
 		item = itemsService.modifyItem(item, userBean.getUser());
-		itemsService.closeSession();
+		itemsService.close();
 		return "viewItem?faces-redirect=true&item="+item.getId();
 	}
 	
@@ -126,7 +126,7 @@ public class ItemBean implements Serializable {
 		}else{
 			getFileList().add(file);
 		}
-		files.closeSession();
+		files.close();
 		newFile = null;
 	}
 	
@@ -139,7 +139,7 @@ public class ItemBean implements Serializable {
 			filesService.removeFile(image);
 		}
 		fileList.remove(image);
-		filesService.closeSession();
+		filesService.close();
 	}
 	
 	public void setKeywordListString(String keywordsListString){
@@ -198,7 +198,7 @@ public class ItemBean implements Serializable {
 		if(StringUtils.isNotEmpty(itemId) ){
 			ItemsService itemSearch = new ItemsService();
 			item = itemSearch.getItemById(Integer.valueOf(itemId));
-			itemSearch.closeSession();
+			itemSearch.close();
 		}else if(item == null){
 			item = new Item();
 		}
