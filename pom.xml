@@ -21,7 +21,7 @@
 	<distributionManagement>
 		<!-- use the following if you're not using a snapshot version. -->
 		<repository>
-			<id>releases</id>
+			<id>release</id>
 			<name>Nexus Snapshot Repository</name>
 			<url>http://code.adi3000.com/nexus/content/repositories/releases</url>
 		</repository>
