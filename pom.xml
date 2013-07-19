@@ -54,7 +54,7 @@
                 <configuration>
                     <glassfishHome>/opt/glassfish3/glassfish</glassfishHome>
                     <domain>domain1</domain>
-                    <host>localhost</host>
+                    <host>adi-server</host>
                     <port>4848</port>
                     <user>admin</user>
                     <passwordfile>/opt/glassfish3/.glassfish_password</passwordfile>
