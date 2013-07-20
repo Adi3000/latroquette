@@ -52,12 +52,12 @@
                 <artifactId>asadmin-maven-plugin</artifactId>
                 <version>0.12</version>
                 <configuration>
-                    <glassfishHome>/opt/glassfish3/glassfish</glassfishHome>
-                    <domain>domain1</domain>
-                    <host>adi-server</host>
-                    <port>4848</port>
-                    <user>admin</user>
-                    <passwordfile>/opt/glassfish3/.glassfish_password</passwordfile>
+                    <glassfishHome>${glassfish}/glassfish</glassfishHome>
+                    <domain>${glassfish.domain}</domain>
+                    <host>${glassfish.host}</host>
+                    <port>${glassfish.port}</port>
+                    <user>${glassfish.user}</user>
+                    <passwordfile>${glassfish}/.glassfish_password</passwordfile>
                     <appArchive>${project.build.directory}/${project.build.finalName}.${project.artifact.artifactHandler.extension}</appArchive>
                     <virtualservers>latroquette</virtualservers>
                     <appName>latroquette</appName>
