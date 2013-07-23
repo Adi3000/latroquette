@@ -1,7 +1,10 @@
 package net.latroquette.web.beans.profile;
 
 import java.io.Serializable;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -20,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.adi3000.common.util.security.Security;
 import com.adi3000.common.web.faces.FacesUtils;
+import com.adi3000.common.web.jsf.UtilsBean;
 
 
 @ManagedBean(name = "userBean")
@@ -29,7 +33,10 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	public static final int ANONYMOUS = -1;
 	public static final int NOT_LOGGED_IN = 0;
 	public static final int NEW_USER = 1;
-	public static final int LOGGED_IN = 2;	
+	public static final int LOGGED_IN = 2;
+	public static final String LOGIN_VIEW_URI = "profile/login";
+	public static final String PARAMETER_REQUEST_URI = "u";
+	public static final String PARAMETER_QUERY_STRING = "qs";
 	/**
 	 * 
 	 */
@@ -38,6 +45,8 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	private transient String mailConfirm;
 	private User user;
 	private int loginState;
+	private String previousURI;
+	private String previousQueryString;
 	
 	public UserBean(){
 		user = new User();
@@ -185,6 +194,14 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	
 	public String loginUser()
 	{
+		initPreviousURL();
+		String forwardUrl = "index";
+		if(!StringUtils.isEmpty(previousURI) && !previousQueryString.contains(LOGIN_VIEW_URI)){
+			forwardUrl = previousURI;
+			if(!StringUtils.isEmpty(previousQueryString)){
+				forwardUrl = forwardUrl.concat("?faces-redirect=true&").concat(UtilsBean.urlDecode(previousQueryString));
+			}
+		}
 		loginState = NOT_LOGGED_IN;
 		UsersService userSearch = new UsersService();
 		User user = userSearch.getUserByLogin(this.getLogin());
@@ -196,10 +213,18 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		userSearch.close();
 		switch (loginState) {
 			case LOGGED_IN:
-				return "index";
+				break;
 			default:
-				return "login?logInFail="+loginState; 
+				forwardUrl = "login?logInFail="+loginState;
+				if(!StringUtils.isEmpty(previousURI) && !previousQueryString.contains(LOGIN_VIEW_URI)){
+					forwardUrl = forwardUrl.concat("&"+PARAMETER_REQUEST_URI+"=").concat(previousURI);
+					if(!StringUtils.isEmpty(previousQueryString)){
+						forwardUrl = forwardUrl.concat("&"+PARAMETER_QUERY_STRING+"=").concat(previousQueryString);;
+					}
+				}
+				break;
 		}
+		return forwardUrl;
 	}
 	
 	public String logoutUser()
@@ -213,6 +238,12 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		this.user = new User();
 		loginState = ANONYMOUS;
 		return "index";
+	}
+	
+	private void initPreviousURL(){
+		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		previousURI = params.get(PARAMETER_REQUEST_URI);
+		previousQueryString = params.get(PARAMETER_QUERY_STRING);
 	}
 	
 	private void setLogginUserInfo(User user){
@@ -300,6 +331,34 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	 */
 	public User getUser() {
 		return user;
+	}
+
+	/**
+	 * @return the previousQueryString
+	 */
+	public String getPreviousQueryString() {
+		return previousQueryString;
+	}
+
+	/**
+	 * @param previousQueryString the previousQueryString to set
+	 */
+	public void setPreviousQueryString(String previousQueryString) {
+		this.previousQueryString = previousQueryString;
+	}
+
+	/**
+	 * @return the previousURI
+	 */
+	public String getPreviousURI() {
+		return previousURI;
+	}
+
+	/**
+	 * @param previousURI the previousURI to set
+	 */
+	public void setPreviousURI(String previousURI) {
+		this.previousURI = previousURI;
 	}
 	
 	

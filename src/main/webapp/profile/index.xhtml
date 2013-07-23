@@ -6,8 +6,25 @@
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<ui:define name="mainDiv">
-			<h:outputText>#{userBean.login}</h:outputText>
-			<h:link outcome="/manager/index">Manage Dreamed Elements</h:link>
+			<div>
+				<div>Bonjour #{userBean.login}</div>
+				<div>
+					<h:link outcome="infos">Mon profil</h:link>
+				</div>
+				<div>
+					Vitrine
+				</div>
+			</div>
+			<div>
+				<div>
+					Troqueurs
+				</div>
+				<div>
+					Mes Troquettes
+				</div>
+			</div>
+			<h:panelGroup rendered="">
+			</h:panelGroup>
 		</ui:define>
 	</ui:composition>
 </body>

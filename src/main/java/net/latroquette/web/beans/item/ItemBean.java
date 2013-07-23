@@ -87,33 +87,28 @@ public class ItemBean implements Serializable {
 	public void setItem(Item item){
 		this.item = item;
 	}
-	//TODO Refactor code here (Dirty silly code) !!!!
+
 	public String createItem(){
-		ItemsService itemsService = new ItemsService();
-		for(File file : fileList){
-			file.setGarbageStatus(GarbageFileStatus.VALIDATE);
-		}
-		item.setImageList(fileList);
-		item.setStatusId(ItemStatus.DRAFT);
-		item.setDatabaseOperation(DatabaseOperation.INSERT);
-		item = itemsService.modifyItem(item, userBean.getUser());
-		itemsService.close();
-		return "viewItem?faces-redirect=true&item="+item.getId();
+		return registerItem(DatabaseOperation.INSERT);
 	}
 	public String updateItem(){
+		return registerItem(DatabaseOperation.UPDATE);
+	}
+	
+	private String registerItem(DatabaseOperation operation){
 		ItemsService itemsService = new ItemsService();
 		for(File file : fileList){
 			file.setGarbageStatus(GarbageFileStatus.VALIDATE);
 		}
 		item.setImageList(fileList);
 		item.setStatusId(ItemStatus.DRAFT);
-		item.setDatabaseOperation(DatabaseOperation.UPDATE);
+		item.setDatabaseOperation(operation);
 		item = itemsService.modifyItem(item, userBean.getUser());
 		itemsService.close();
 		return "viewItem?faces-redirect=true&item="+item.getId();
 	}
 	
-	public void uploadPic(){
+	public String uploadPic(){
 		FilesService files = new FilesService();
 		File file = files.uploadNewPicFile(newFile, userBean.getUser());
 		if(file == null){
@@ -128,9 +123,11 @@ public class ItemBean implements Serializable {
 		}
 		files.close();
 		newFile = null;
+		return null;
 	}
 	
-	public void removePic(File image){
+	public String removePic(String imageId){
+		File image = (File) CommonUtils.findById(item.getImageList(), imageId);
 		FilesService filesService = new FilesService();
 		if(item.getId() != null){
 			image.setGarbageStatus(GarbageFileStatus.NOT_LINKED);
@@ -140,6 +137,7 @@ public class ItemBean implements Serializable {
 		}
 		fileList.remove(image);
 		filesService.close();
+		return null;
 	}
 	
 	public void setKeywordListString(String keywordsListString){

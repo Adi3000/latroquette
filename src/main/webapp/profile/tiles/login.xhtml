@@ -5,6 +5,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition>
+		<f:metadata>
+		             
+	 	</f:metadata>
 		<h:outputStylesheet name="css/profile.css" target="head" />
 		<h:outputScript target="head" rendered="#{!userBean.loggedIn}">
 			var registerDisplayed = false;
@@ -88,10 +91,16 @@
 									<input type="button" id="displayRegister" value="S'inscrire"/>
 								</div>
 								<div id="loginButton">
-									<h:commandButton value="Login" action="#{userBean.loginUser}" />
+									<h:commandButton value="Login" action="#{userBean.loginUser}" >
+										<f:param name="u" value="#{param.u}"/>            
+		    							<f:param name="qs" value="#{param.qs}"/>   
+									</h:commandButton>
 								</div>
 								<div id="registerButton">
-									<h:commandButton value="S'enregistrer" action="#{userBean.registerUser}" />
+									<h:commandButton value="S'enregistrer" action="#{userBean.registerUser}">
+										<f:param name="u" value="#{param.u}"/>            
+		    							<f:param name="qs" value="#{param.qs}"/>   
+									</h:commandButton>
 								</div>
 							</div>
 						</div>

@@ -33,19 +33,6 @@
 		</snapshotRepository>
 	</distributionManagement>
 	<build>
-		<filters>
-			<filter>src/main/filters/environment/${environment}/filters.properties</filter>
-		</filters>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-		          <include>**/*.xml</include>
-		          <include>**/*.properties</include>
-		        </includes>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -84,22 +71,6 @@
 					<source>1.7</source>
 					<target>1.7</target>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.liquibase</groupId>
-				<artifactId>liquibase-maven-plugin</artifactId>
-				<version>3.0.2</version>
-				<executions>
-					<execution>
-						<phase>process-resources</phase>
-						<configuration>
-							<propertyFile>src/main/resources/liquibase.properties</propertyFile>
-						</configuration>
-						<goals>
-							<goal>update</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -175,33 +146,23 @@
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901-1.jdbc4</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.main.extras</groupId>
-			<artifactId>glassfish-embedded-all</artifactId>
-			<version>3.1.2.2</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<profiles>
 		<profile>
-			<id>development</id>
+			<id>jenkins</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
-			<properties>
-				<environment>development</environment>
-			</properties>
-		</profile>
-		<profile>
-			<id>production</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<properties>
-				<environment>production</environment>
-			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.glassfish.main.extras</groupId>
+					<artifactId>glassfish-embedded-all</artifactId>
+					<version>3.1.2.2</version>
+					<scope>provided</scope>
+				</dependency>
+			</dependencies>		
 		</profile>
 	</profiles>
 	<packaging>war</packaging>

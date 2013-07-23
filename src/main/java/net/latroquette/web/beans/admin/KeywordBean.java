@@ -60,7 +60,7 @@ public class KeywordBean implements Serializable{
 		synonymsIds = new HashMap<String,String>();
 		loadKeyword();
 	}
-	public void loadKeyword(){
+	public String loadKeyword(){
 		
 		KeywordsService keywordsService = new KeywordsService();
 		if(StringUtils.isNotBlank(keywordId)){
@@ -79,6 +79,7 @@ public class KeywordBean implements Serializable{
 			additionnalMainKeywords = new HashSet<MainKeyword>();
 		}
 		keywordsService.close();
+		return null;
 	}
 	
 	public String searchKeyword(){
@@ -116,7 +117,9 @@ public class KeywordBean implements Serializable{
 	 * @param parentId
 	 * @return
 	 */
-	public String remove(Integer childId, Integer parentId){
+	public String remove(String sChildId, String sParentId){
+		Integer childId = Integer.valueOf(sChildId);
+		Integer parentId = Integer.valueOf(sParentId);
 		if(!isRoot() && parentId.equals(parentKeyword.getId())){
 			//TODO manage deleting from here deleting the current categorie
 		}else{
@@ -140,7 +143,9 @@ public class KeywordBean implements Serializable{
 	 * @param parentId
 	 * @return
 	 */
-	public String removeExternal(Integer childId, Integer parentId){
+	public String removeExternal(String sChildId, String sParentId){
+		Integer childId = Integer.valueOf(sChildId);
+		Integer parentId = Integer.valueOf(sParentId);
 		if(!isRoot() && parentId.equals(parentKeyword.getId())){
 			//TODO manage deleting from here deleting the current categorie
 		}else{
@@ -161,7 +166,8 @@ public class KeywordBean implements Serializable{
 	 * @param keywordId
 	 * @return
 	 */
-	public String deleteMainKeyword(Integer keywordId){
+	public String deleteMainKeyword(String sKeywordId){
+		Integer keywordId = Integer.valueOf(sKeywordId);
 		MainKeyword keyword = (MainKeyword) CommonUtils.findById(orphanMainKeywords, keywordId);
 		KeywordsService keywordsService = new KeywordsService();
 		keywordsService.deleteKeyword(keyword);
@@ -175,7 +181,8 @@ public class KeywordBean implements Serializable{
 	 * @param keywordId
 	 * @return
 	 */
-	public String excludeExternalKeyword(Integer keywordId){
+	public String excludeExternalKeyword(String sKeywordId){
+		Integer keywordId = Integer.valueOf(sKeywordId);
 		ExternalKeyword keyword = (ExternalKeyword) CommonUtils.findById(orphanExternalKeywords, keywordId);
 		KeywordsService keywordsService = new KeywordsService();
 		keywordsService.excludeExternalKeyword(keyword);

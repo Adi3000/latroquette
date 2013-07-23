@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+ 	xmlns:util="http://code.adi3000.com/common/web/jsf/util" >
 <h:body>
 		<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 			xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -14,7 +15,7 @@
 			</div>
 			<div id="enTete">	
 				<h:panelGroup id="toolbarLogin">
-						<h:link outcome="/profile/login?register=true" value="#{text_home.CONNEXION}" rendered="#{!userBean.loggedIn}"/>
+						<h:link outcome="/profile/login?register=true&amp;u=#{request.requestURI}&amp;qs=#{util:urlEncode(request.queryString)}" value="#{text_home.CONNEXION}" rendered="#{!userBean.loggedIn}"/>
 						<h:form id="logoutForm" rendered="#{userBean.loggedIn}">
 							<h:outputFormat value="#{text_home.WELCOME_MESSAGE}">
 								<f:param value="#{userBean.login}" />
