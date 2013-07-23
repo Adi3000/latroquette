@@ -33,6 +33,19 @@
 		</snapshotRepository>
 	</distributionManagement>
 	<build>
+		<filters>
+			<filter>src/main/filters/environment/${environment}/filters.properties</filter>
+		</filters>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+		          <include>**/*.xml</include>
+		          <include>**/*.properties</include>
+		        </includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -52,12 +65,12 @@
                 <artifactId>asadmin-maven-plugin</artifactId>
                 <version>0.12</version>
                 <configuration>
-                    <glassfishHome>/opt/glassfish3/glassfish</glassfishHome>
-                    <domain>domain1</domain>
-                    <host>localhost</host>
-                    <port>4848</port>
-                    <user>admin</user>
-                    <passwordfile>/opt/glassfish3/.glassfish_password</passwordfile>
+                    <glassfishHome>${glassfish}/glassfish</glassfishHome>
+                    <domain>${glassfish.domain}</domain>
+                    <host>${glassfish.host}</host>
+                    <port>${glassfish.port}</port>
+                    <user>${glassfish.user}</user>
+                    <passwordfile>${glassfish}/.glassfish_password</passwordfile>
                     <appArchive>${project.build.directory}/${project.build.finalName}.${project.artifact.artifactHandler.extension}</appArchive>
                     <virtualservers>latroquette</virtualservers>
                     <appName>latroquette</appName>
@@ -71,6 +84,22 @@
 					<source>1.7</source>
 					<target>1.7</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<configuration>
+							<propertyFile>src/main/resources/liquibase.properties</propertyFile>
+						</configuration>
+						<goals>
+							<goal>update</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -146,23 +175,33 @@
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901-1.jdbc4</version>
-			<scope>test</scope>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.main.extras</groupId>
+			<artifactId>glassfish-embedded-all</artifactId>
+			<version>3.1.2.2</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<profiles>
 		<profile>
-			<id>jenkins</id>
+			<id>development</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>org.glassfish.main.extras</groupId>
-					<artifactId>glassfish-embedded-all</artifactId>
-					<version>3.1.2.2</version>
-					<scope>provided</scope>
-				</dependency>
-			</dependencies>		
+			<properties>
+				<environment>development</environment>
+			</properties>
+		</profile>
+		<profile>
+			<id>production</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<environment>production</environment>
+			</properties>
 		</profile>
 	</profiles>
 	<packaging>war</packaging>

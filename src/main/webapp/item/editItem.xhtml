@@ -10,7 +10,7 @@
 	<ui:composition template="/home/template/mainLayout.xhtml"> 
 		<f:metadata>
 		    <f:viewParam name="item" value="#{itemBean.itemId}"/>            
-	 		<f:event listener="#{itemBean.loadItem}" type="preRenderView" />
+	 		<f:event listener="#{itemBean.checkItemAndUser}" type="preRenderView" />
 	 	</f:metadata>
 		<ui:define name="mainDiv"> 
 		<h:outputStylesheet name="css/item.css" target="head" />
@@ -49,7 +49,7 @@
 								<a href="#" rel="lightbox[uploadPic]">
 									<h:graphicImage value="/image/#{image.id}" />
 								</a>
-								<div class="removePic"><h:commandLink action="#{itemBean.removePic(image)}" value="Supprimer" /></div>
+								<div class="removePic"><h:commandLink action="#{itemBean.removePic(image.id)}" value="Supprimer" /></div>
 							</div>
 						</ui:repeat>
 					</div>
@@ -59,13 +59,13 @@
 					</div>
 					<ul id="wishies">
 						<li>
-							<label>Cat#233;gorie : </label> <input type="text" id="wishiesCategory" value="" />
-							<label>D#233;tails : </label> <input type="text" id="wishiesField" value=""/>	<h:inputHidden id="wishiesList" value="#{itemBean.wishiesListString}"/>
+							<label>Cat&#233;gorie : </label> <input type="text" id="wishiesCategory" value="" />
+							<label>D&#233;tails : </label> <input type="text" id="wishiesField" value=""/>	<h:inputHidden id="wishiesList" value="#{itemBean.wishiesListString}"/>
 						</li>
 					</ul>
 					<div id="saveButton">
-						<h:commandButton value="Cr&#233;er" action="#{itemBean.createItem}" rendered="#{empty itemBean.item.id}"/>
-						<h:commandButton value="Modifier" action="#{itemBean.updateItem}" rendered="#{!empty itemBean.item.id}"/>
+						<h:commandButton value="Cr&#233;er" action="#{itemBean.createItem}" rendered="#{itemBean.item.idSet}"/>
+						<h:commandButton value="Modifier" action="#{itemBean.updateItem}" rendered="#{!itemBean.item.idSet}"/>
 					</div>
 				</h:form>
 			</div> 
