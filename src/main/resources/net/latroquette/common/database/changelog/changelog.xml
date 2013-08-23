@@ -1,0 +1,31 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="0.0.1-00.0-createTables" author="adi3000">
+    	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/modeling/00-create_main_tables.sql"/>
+    			
+    	<rollback>
+    		<sqlFile
+    				relativeToChangelogFile="true" 
+    				path="0.0.1/modeling/00-create_main_tables.rollback.sql"/>
+    	</rollback>
+    </changeSet>
+    <changeSet id="0.0.1-00.1-referentiel" author="adi3000">
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/referentiel/00-create_parameters.sql"/>
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/referentiel/00-create_referentiel.sql"/>
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/referentiel/00-create_places.sql"/>
+    			
+    	<!-- TODO rollback -->
+    </changeSet>
+</databaseChangeLog>

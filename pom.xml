@@ -33,7 +33,54 @@
 		</snapshotRepository>
 	</distributionManagement>
 	<build>
+		<filters>
+			<filter>src/main/filters/environment/${filter.environment}/filters.properties</filter>
+		</filters>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+				<targetPath>${project.build.directory}/test-classes</targetPath>
+			</resource>
+		</resources>
 		<plugins>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+					<execution>
+						<id>liquibase-update</id>
+						<phase>process-resources</phase>
+						<configuration>
+							<propertyFile>${project.build.directory}/classes/liquibase.properties</propertyFile>
+							<changeLogFile>${project.build.directory}/classes/net/latroquette/common/database/changelog/changelog.xml</changeLogFile>
+							<propertyFileWillOverride>true</propertyFileWillOverride>
+							<skip>${liquibase.update.skip}</skip>
+						</configuration>
+						<goals>
+							<goal>update</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>liquibase-test-update</id>
+						<phase>process-test-resources</phase>
+						<configuration>
+							<propertyFile>${project.build.directory}/test-classes/liquibase.properties</propertyFile>
+							<changeLogFile>${project.build.directory}/classes/net/latroquette/common/database/changelog/changelog.xml</changeLogFile>
+							<propertyFileWillOverride>true</propertyFileWillOverride>
+							<skip>${liquibase.update.skip}</skip>
+						</configuration>
+						<goals>
+							<goal>update</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -163,6 +210,33 @@
 					<scope>provided</scope>
 				</dependency>
 			</dependencies>		
+		</profile>
+		<profile>
+			<id>development</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<filter.environment>development</filter.environment>
+			</properties>
+		</profile>
+		<profile>
+			<id>updateDb</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<liquibase.update.skip>false</liquibase.update.skip>
+			</properties>
+		</profile>
+		<profile>
+			<id>skipUpdateDb</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<liquibase.update.skip>true</liquibase.update.skip>
+			</properties>
 		</profile>
 	</profiles>
 	<packaging>war</packaging>
