@@ -13,6 +13,7 @@ public class KeywordsTest {
 	public void testgetAmazonKeywordsForTitle() {
 		KeywordsService keywordService = new KeywordsService();
 		List<ExternalKeyword> keywords = keywordService.getAmazonKeywordsFromItem("Lego", true);
+		keywordService.close();
 		assertFalse(keywords.isEmpty());
 	}
 

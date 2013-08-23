@@ -57,8 +57,8 @@
 						<id>liquibase-update</id>
 						<phase>process-resources</phase>
 						<configuration>
-							<propertyFile>${project.build.directory}/classes/liquibase.properties</propertyFile>
-							<changeLogFile>${project.build.directory}/classes/net/latroquette/common/database/changelog/changelog.xml</changeLogFile>
+							<propertyFile>liquibase.properties</propertyFile>
+							<changeLogFile>net/latroquette/common/database/changelog/changelog.xml</changeLogFile>
 							<propertyFileWillOverride>true</propertyFileWillOverride>
 							<skip>${liquibase.update.skip}</skip>
 						</configuration>
@@ -66,19 +66,20 @@
 							<goal>update</goal>
 						</goals>
 					</execution>
-					<execution>
-						<id>liquibase-test-update</id>
-						<phase>process-test-resources</phase>
-						<configuration>
-							<propertyFile>${project.build.directory}/test-classes/liquibase.properties</propertyFile>
-							<changeLogFile>${project.build.directory}/classes/net/latroquette/common/database/changelog/changelog.xml</changeLogFile>
-							<propertyFileWillOverride>true</propertyFileWillOverride>
-							<skip>${liquibase.update.skip}</skip>
-						</configuration>
-						<goals>
-							<goal>update</goal>
-						</goals>
-					</execution>
+<!-- 	Use this if we want specific parameters for test -->					
+<!-- 					<execution> -->
+<!-- 						<id>liquibase-test-update</id> -->
+<!-- 						<phase>process-test-resources</phase> -->
+<!-- 						<configuration> -->
+<!-- 							<propertyFile>${project.build.directory}/classes/liquibase.properties</propertyFile> -->
+<!-- 							<changeLogFile>${project.build.directory}/classes/net/latroquette/common/database/changelog/changelog.xml</changeLogFile> -->
+<!-- 							<propertyFileWillOverride>true</propertyFileWillOverride> -->
+<!-- 							<skip>${liquibase.update.skip}</skip> -->
+<!-- 						</configuration> -->
+<!-- 						<goals> -->
+<!-- 							<goal>update</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
 				</executions>
 			</plugin>
 			<plugin>
@@ -218,6 +219,16 @@
 			</activation>
 			<properties>
 				<filter.environment>development</filter.environment>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<filter.environment>test</filter.environment>
+				<liquibase.update.skip>false</liquibase.update.skip>
 			</properties>
 		</profile>
 		<profile>
