@@ -136,7 +136,7 @@ public class ItemsService extends AbstractDAO<Item>{
 		String field = "count(item)";
 		if(!countOnly){
 			field = "item";
-			parametersService = new Parameters();
+			parametersService = new Parameters(this);
 			nbResultToLoad = parametersService.getIntValue(ParameterName.NB_RESULT_TO_LOAD);
 			cursor = nbResultToLoad * (page -1);
 		}

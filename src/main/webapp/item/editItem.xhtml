@@ -64,8 +64,8 @@
 						</li>
 					</ul>
 					<div id="saveButton">
-						<h:commandButton value="Cr&#233;er" action="#{itemBean.createItem}" rendered="#{itemBean.item.idSet}"/>
-						<h:commandButton value="Modifier" action="#{itemBean.updateItem}" rendered="#{!itemBean.item.idSet}"/>
+						<h:commandButton value="Cr&#233;er" action="#{itemBean.createItem}" rendered="#{!itemBean.item.idSet}"/>
+						<h:commandButton value="Modifier" action="#{itemBean.updateItem}" rendered="#{itemBean.item.idSet}"/>
 					</div>
 				</h:form>
 			</div> 

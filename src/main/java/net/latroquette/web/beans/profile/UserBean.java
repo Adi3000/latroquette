@@ -204,7 +204,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		}
 		loginState = NOT_LOGGED_IN;
 		UsersService userSearch = new UsersService();
-		User user = userSearch.getUserByLogin(this.getLogin());
+		user = userSearch.getUserByLogin(this.getLogin());
 		if(user != null && StringUtils.equals(user.getPassword(), this.getPassword())){
 			this.setLogginUserInfo(user);
 			this.loginState = LOGGED_IN;
