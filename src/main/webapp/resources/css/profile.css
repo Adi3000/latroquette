@@ -71,7 +71,7 @@ form#loginForm h2
 	background: url("/resources/img/arrow_homepage.png") no-repeat;
 	min-height: 215px;
 	height: auto;
-}
+}	
 #loginButtons div{
 	display: inline-block;
 }
@@ -84,4 +84,35 @@ form#loginForm h2
 	position: relative;
 	left: 624px;
 	top: 178px;
+}
+h2#profileTitle{
+	margin-left: 16px;
+}
+#centerTop{
+	height: 300px;
+	width: 650px;
+}
+#largeLeftDiv, #largeRightDiv{
+	height: 312px;
+	width: 280px;
+	border-width: 1px; 
+	border-style: solid;
+	border-color: black;
+	margin-left: 5px;
+	display: inline-block;
+	vertical-align: middle;
+	padding-left: 20px;
+	padding: 10px;
+}
+.rightSmallDiv, .leftSmallDiv{
+	border-width: 1px; 
+	border-style: solid;
+	border-color: black;
+	margin: 5px;
+	width: 250px;
+	margin-left: 15px;
+}
+.leftSmallDiv{
+	height: 126px;
+	padding-top: 20px;
 }
