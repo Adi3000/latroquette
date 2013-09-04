@@ -3,7 +3,6 @@ package net.latroquette.web.beans.item;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -21,6 +20,8 @@ import net.latroquette.web.beans.profile.UserBean;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.util.CommonUtils;
@@ -30,7 +31,7 @@ import com.adi3000.common.web.faces.FacesUtils;
 @ViewScoped
 public class ItemBean implements Serializable {
 	
-	public static Logger LOG = Logger.getLogger(ItemBean.class.toString());
+	private static Logger LOG = LoggerFactory.getLogger(ItemBean.class.toString());
 	/**
 	 * 
 	 */

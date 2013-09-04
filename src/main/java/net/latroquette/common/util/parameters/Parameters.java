@@ -1,18 +1,16 @@
 package net.latroquette.common.util.parameters;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.adi3000.common.database.hibernate.session.AbstractDAO;
 import com.adi3000.common.database.hibernate.session.DatabaseSession;
 import com.adi3000.common.util.optimizer.CommonValues;
 
 public class Parameters extends AbstractDAO<Parameter> {
-	private static final Logger LOGGER = Logger.getLogger(Parameters.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(Parameters.class.getName());
 
 	public Parameters(){
 		super();
@@ -41,7 +39,7 @@ public class Parameters extends AbstractDAO<Parameter> {
 			value = Integer.valueOf(getValue(name));
 		}catch(NumberFormatException e){
 			value = CommonValues.ERROR_OR_INFINITE;
-			LOGGER.log(Level.WARNING,"No suitable integer found for parameter "+ name+ ", value forced to : "+ value , e);
+			LOGGER.warn("No suitable integer found for parameter "+ name+ ", value forced to : "+ value , e);
 		}
 		return value;
 	}
@@ -56,7 +54,7 @@ public class Parameters extends AbstractDAO<Parameter> {
 			value = getValue(name).toString();
 		}catch(NullPointerException e){
 			value = null;
-			LOGGER.log(Level.WARNING,"No suitable string value found for parameter "+ name+ ", value forced to : "+ value , e);
+			LOGGER.warn("No suitable string value found for parameter "+ name+ ", value forced to : "+ value , e);
 		}
 		return value;
 	}

@@ -13,8 +13,6 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
@@ -25,6 +23,8 @@ import net.latroquette.common.util.parameters.Parameters;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.database.hibernate.session.AbstractDAO;
@@ -33,7 +33,7 @@ import com.adi3000.common.util.CommonUtils;
 import com.adi3000.common.util.security.Security;
 
 public class FilesService extends AbstractDAO<File> {
-	private static final Logger LOGGER = Logger.getLogger(FilesService.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(FilesService.class.getName());
 	private static final String MDSUM_ALGORITHM = "MD5";
 	
 	public FilesService(){
@@ -61,7 +61,7 @@ public class FilesService extends AbstractDAO<File> {
 		try {
 			messageDigest = MessageDigest.getInstance(MDSUM_ALGORITHM);
 		} catch (NoSuchAlgorithmException e1) {
-			LOGGER.log(Level.SEVERE, "Can't find "+MDSUM_ALGORITHM+" algorithm".concat(newFile.getName()), e1);
+			LOGGER.error("Can't find "+MDSUM_ALGORITHM+" algorithm".concat(newFile.getName()), e1);
 			return null;
 		}
 		
@@ -99,7 +99,7 @@ public class FilesService extends AbstractDAO<File> {
 	        file.setName(resizedFile.getName());
 	        file.setGarbageStatus(GarbageFileStatus.NOT_LINKED);
         } catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Error while processing file : ".concat(newFile.getName()), e);
+			LOGGER.error( "Error while processing file : ".concat(newFile.getName()), e);
 			file = null;
 			// Cleanup.
 			if (resizedFile != null){
@@ -132,7 +132,7 @@ public class FilesService extends AbstractDAO<File> {
 			file.setDatabaseOperation(DatabaseOperation.DELETE);
 			success = true;
 		}else{
-			LOGGER.log(Level.WARNING, "Asked for remove but can't delete "+file.getFile().getPath());
+			LOGGER.warn("Asked for remove but can't delete "+file.getFile().getPath());
 			file.setGarbageStatus(GarbageFileStatus.ERROR_ON_DELETE);
 			file.setDatabaseOperation(DatabaseOperation.UPDATE);
 			success = false;
@@ -206,7 +206,7 @@ public class FilesService extends AbstractDAO<File> {
     	try {
 			originalImage = ImageIO.read(fisOriginalImage);
 		} catch (IOException e) {
-			LOGGER.log(Level.SEVERE, "Can't read file for resize "+fileResized.getName(), e);
+			LOGGER.error("Can't read file for resize "+fileResized.getName(), e);
 			return null;
 		}
     	boolean imageModified = false;
@@ -247,7 +247,7 @@ public class FilesService extends AbstractDAO<File> {
 			ImageIO.write(resizedImage, format,  fileResized);
 			fisOriginalImage.close();
 	    } catch (IOException e) {
-	    	LOGGER.log(Level.SEVERE, "Can't write file for resize "+fileResized.getName(), e);
+	    	LOGGER.error("Can't write file for resize "+fileResized.getName(), e);
 	    	return null;
 	    }
 		return fileResized;

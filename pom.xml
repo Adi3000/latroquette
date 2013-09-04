@@ -15,7 +15,7 @@
 		<developerConnection>scm:git:git@github.com:Adi3000/latroquette.git</developerConnection>
 	</scm>
 	<ciManagement>
-		<url>code.a-dream-zone.com/nexus</url>
+		<url>code.adi3000.com/nexus</url>
 		<system>Nexus</system>
 	</ciManagement>
 	<distributionManagement>
@@ -68,7 +68,7 @@
 					</execution>
 <!-- 	Use this if we want specific parameters for test -->					
 <!-- 					<execution> -->
-<!-- 						<id>liquibase-test-update</id> -->
+<!-- 					<id>liquibase-test-update</id> -->
 <!-- 						<phase>process-test-resources</phase> -->
 <!-- 						<configuration> -->
 <!-- 							<propertyFile>${project.build.directory}/classes/liquibase.properties</propertyFile> -->
@@ -126,7 +126,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>1.6.6</version>
+			<version>1.7.5</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -192,11 +192,6 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-ehcache</artifactId>
-			<version>4.2.2.Final</version>
-		</dependency>
-		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901-1.jdbc4</version>
@@ -210,12 +205,6 @@
 		</dependency>
 	</dependencies>
 	<profiles>
-		<profile>
-			<id>jenkins</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
 		<profile>
 			<id>development</id>
 			<activation>
