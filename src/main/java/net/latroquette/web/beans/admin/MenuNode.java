@@ -16,7 +16,7 @@ public class MenuNode extends Node<MainKeyword> {
 
 	@Override
 	protected boolean filter(MainKeyword keyword){
-		return keyword.isMenu();
+		return keyword.getInMenu();
 	}
 	
 	@Override

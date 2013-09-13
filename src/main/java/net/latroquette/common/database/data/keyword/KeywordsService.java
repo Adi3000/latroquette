@@ -17,7 +17,6 @@ import org.hibernate.criterion.Restrictions;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.database.hibernate.session.AbstractDAO;
-import com.adi3000.common.util.CommonUtils;
 import com.adi3000.common.util.optimizer.CommonValues;
 import com.amazon.ECS.client.jax.BrowseNode;
 
@@ -107,7 +106,7 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 		return modifyKeywords(modifiedKeywords) != null;
 	}
 	private void excludeExternalKeyword(ExternalKeyword keyword, Collection<Keyword> modifiedKeyword){
-		keyword.setExcluded(CommonValues.TRUE);
+		keyword.setExcluded(Boolean.TRUE);
 		keyword.setDatabaseOperation(DatabaseOperation.UPDATE);
 		modifiedKeyword.add(keyword);
 		if(keyword.getChildren() != null){
@@ -140,7 +139,7 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 							newKeywordCreated = true;
 						}
 					}
-					if(amazonKeyword != null && !amazonKeyword.isExcluded() && !amazonKeywords.contains(amazonKeyword) ){
+					if(amazonKeyword != null && !amazonKeyword.getExcluded() && !amazonKeywords.contains(amazonKeyword) ){
 						amazonKeywords.add(amazonKeyword);
 					}
 				}
@@ -176,7 +175,7 @@ public class KeywordsService extends AbstractDAO<Keyword> {
 		newAmazonKeyWord.setUid(amazonBrowseNode.getBrowseNodeId());
 		newAmazonKeyWord.setName(amazonBrowseNode.getName());
 		newAmazonKeyWord.setSource(ExternalKeyword.AMAZON_SOURCE);
-		newAmazonKeyWord.setExcluded(CommonUtils.toChar(false));
+		newAmazonKeyWord.setExcluded(Boolean.FALSE);
 		//Search and build hierarchy
 		BrowseNode parentNode =  
 				(amazonBrowseNode.isIsCategoryRoot() == null || ! amazonBrowseNode.isIsCategoryRoot() ) &&
