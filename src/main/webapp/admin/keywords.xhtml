@@ -30,7 +30,7 @@
 						<h:outputText value="#{keywordBean.parentKeyword.name}" rendered="#{!keywordBean.root}"/>
 						<em>
 							<h:outputLabel for="check_menu" rendered="#{!keywordBean.root}">Affich&#233; dans le menu</h:outputLabel>
-							<h:selectBooleanCheckbox id="check_menu" value="#{keywordBean.parentKeyword.menu}" rendered="#{!keywordBean.root}" />
+							<h:selectBooleanCheckbox id="check_menu" value="#{keywordBean.parentKeyword.inMenu}" rendered="#{!keywordBean.root}" />
 						</em>
 						<h:outputText value="Cat&#233;gories racine" rendered="#{keywordBean.root}"/>
 					</h2>
@@ -66,7 +66,7 @@
 										</h:panelGroup>
 									</ui:repeat>
 								</em>
-								<span class="synonymIds"><h:inputHidden value="#{keywordBean.childrenIds[keyword.id]}" /></span>
+								<span class="synonymIds"><h:inputHidden value="#{keywordBean.childrenIds[child.id]}" /></span>
 							</div>
 						</h:panelGroup>
 						
@@ -75,7 +75,7 @@
 							<div>
 								<h3>
 									<a href="keywords.xhtml?keyword=#{keyword.id}">#{keyword.name}</a>
-									<em><h:outputLabel for="check_menu">Affich&#233; dans le menu</h:outputLabel><h:selectBooleanCheckbox id="check_menu" value="#{keyword.menu}" /></em>
+									<em><h:outputLabel for="check_menu">Affich&#233; dans le menu</h:outputLabel><h:selectBooleanCheckbox id="check_menu" value="#{keyword.inMenu}" /></em>
 								</h3>
 								<div class="childrenZone" data-id="#{keyword.id}">
 									<em class="dropTip">

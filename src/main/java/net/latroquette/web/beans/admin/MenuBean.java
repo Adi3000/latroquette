@@ -1,5 +1,6 @@
 package net.latroquette.web.beans.admin;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -14,8 +15,12 @@ import com.adi3000.common.web.faces.ui.tree.TreeNodeList;
 
 @ManagedBean(eager=true)
 @ApplicationScoped
-public class MenuBean {
+public class MenuBean implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2537528425083329571L;
 	private List<Node<MainKeyword>> orderedNodelist;
 	private TreeNodeList<MainKeyword> treeNodeList;
 

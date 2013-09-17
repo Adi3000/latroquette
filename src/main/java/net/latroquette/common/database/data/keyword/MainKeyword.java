@@ -20,13 +20,13 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.FetchProfile;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.FetchProfile.FetchOverride;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.FilterDefs;
 
 import com.adi3000.common.database.hibernate.data.AbstractTreeNodeDataObject;
-import com.adi3000.common.util.CommonUtils;
 
 
 @Entity
@@ -55,8 +55,8 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	private String name;
 	private List<MainKeyword> children;
 	private MainKeyword ancestor;
-	private Character isSynonym;
-	private Character inMenu;
+	private Boolean isSynonym;
+	private Boolean inMenu;
 	private List<ExternalKeyword> externalKeywords;
 	@Id
 	@Column(name = "keyword_id")
@@ -124,26 +124,28 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	 * @return the isSynonym
 	 */
 	@Column(name="keyword_is_synonym")
-	public Character getIsSynonym() {
+	@Type(type="yes_no")
+	public Boolean getSynonym() {
 		return isSynonym;
 	}
 	/**
 	 * @param isSynonym the isSynonym to set
 	 */
-	public void setIsSynonym(Character isSynonym) {
+	public void setSynonym(Boolean isSynonym) {
 		this.isSynonym = isSynonym;
 	}
 	/**
 	 * @return the inMenu
 	 */
 	@Column(name = "keyword_in_menu")
-	public Character getInMenu() {
+	@Type(type="yes_no")
+	public Boolean getInMenu() {
 		return inMenu;
 	}
 	/**
 	 * @param inMenu the inMenu to set
 	 */
-	public void setInMenu(Character inMenu) {
+	public void setInMenu(Boolean inMenu) {
 		this.inMenu = inMenu;
 	}
 	/**
@@ -162,18 +164,6 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	 */
 	public void setExternalKeywords(List<ExternalKeyword> externalKeywords) {
 		this.externalKeywords = externalKeywords;
-	}
-	@Transient
-	public boolean isSynonym(){
-		return CommonUtils.isTrue(isSynonym);
-	}
-	
-	@Transient
-	public boolean isMenu(){
-		return CommonUtils.isTrue(inMenu);
-	}
-	public void setMenu(boolean inMenu){
-		setInMenu(CommonUtils.toChar(inMenu));
 	}
 	
 	@Transient

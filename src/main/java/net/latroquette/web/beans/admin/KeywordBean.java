@@ -23,7 +23,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.util.CommonUtils;
-import com.adi3000.common.util.optimizer.CommonValues;
 import com.adi3000.common.util.tree.Breadcrumb;
 
 @ManagedBean
@@ -95,8 +94,8 @@ public class KeywordBean implements Serializable{
 	public String create(){
 		MainKeyword newKeyword = new MainKeyword();
 		newKeyword.setName(newKeywordName);
-		newKeyword.setIsSynonym(CommonValues.FALSE);
-		newKeyword.setInMenu(CommonValues.FALSE);
+		newKeyword.setSynonym(Boolean.FALSE);
+		newKeyword.setInMenu(Boolean.FALSE);
 		newKeyword.setName(newKeywordName);
 		if(!isRoot()){
 			newKeyword.setAncestor(parentKeyword);
@@ -127,8 +126,8 @@ public class KeywordBean implements Serializable{
 			MainKeyword child = (MainKeyword) CommonUtils.findById(parent.getChildren(), childId);
 			if(child != null){
 				parent.getChildren().remove(child);
-				child.setInMenu(CommonUtils.toChar(false));
-				child.setIsSynonym(CommonUtils.toChar(false));
+				child.setInMenu(false);
+				child.setSynonym(false);
 				child.setAncestor(null);
 				KeywordsService keywordsService =  new KeywordsService();
 				keywordsService.modifyKeyword(child, parent);
@@ -247,7 +246,7 @@ public class KeywordBean implements Serializable{
 			for(MainKeyword child : mainKeywords){
 				parent.getChildren().add(child);
 				child.setAncestor(parent);
-				child.setIsSynonym(CommonUtils.toChar(isSynonym));
+				child.setSynonym(isSynonym);
 				parent.setDatabaseOperation(DatabaseOperation.UPDATE);
 				child.setDatabaseOperation(DatabaseOperation.UPDATE);
 				modifiedKeywords.add(child);
