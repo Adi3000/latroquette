@@ -56,6 +56,7 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 					.setFetchMode("children", FetchMode.SELECT);
 			keyword = (MainKeyword) req.uniqueResult();
 			keyword.initializeRecursively();
+			keyword.initializeAncestors();
 			Hibernate.initialize(keyword.getExternalKeywords());
 			//For admin keywords : only one level is needed
 			for(MainKeyword child : keyword.getChildren()){
@@ -297,6 +298,9 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 				.setFetchMode("children", FetchMode.SELECT);
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = req.list();
+		for(MainKeyword keyword : list){
+			keyword.initializeRecursively();
+		}
 		getSession().disableFilter(MENU_KEYWORD_ONLY_FILTER);
 		return list;
 	}

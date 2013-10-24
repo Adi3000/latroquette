@@ -8,6 +8,8 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;

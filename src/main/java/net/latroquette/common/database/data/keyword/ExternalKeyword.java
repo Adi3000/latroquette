@@ -18,14 +18,14 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 
-import com.adi3000.common.database.hibernate.data.AbstractDataObject;
+import com.adi3000.common.database.hibernate.data.AbstractTreeNodeDataObject;
 import com.adi3000.common.util.tree.TreeNode;
 
 
 @Entity
 @Table(name = "external_keywords")
 @SequenceGenerator(name = "external_keywords_ext_keyword_id_seq", sequenceName = "external_keywords_ext_keyword_id_seq", allocationSize=1)
-public class ExternalKeyword extends AbstractDataObject implements Keyword, TreeNode<ExternalKeyword> {
+public class ExternalKeyword extends AbstractTreeNodeDataObject<ExternalKeyword> implements Keyword, TreeNode<ExternalKeyword> {
 
 	/**
 	 * Amazon id for source_id field 
