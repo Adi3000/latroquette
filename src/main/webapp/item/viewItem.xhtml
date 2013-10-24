@@ -72,7 +72,11 @@
 				</div>
 				<div id="itemImages">
 					<ui:repeat var="image" value="#{itemBean.fileList}">
-						<div><a href="/image/#{image.id}" rel="rondell" target="_blank"><h:graphicImage value="/image/#{image.id}"/></a></div>
+						<div>
+							<a href="/image/#{image.id}" rel="rondell" target="_blank">
+								<h:graphicImage value="/image/#{image.id}"/>
+							</a>
+						</div>
 					</ui:repeat>
 				</div>
 				<ul id="wishies">

@@ -5,9 +5,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.ItemsService;

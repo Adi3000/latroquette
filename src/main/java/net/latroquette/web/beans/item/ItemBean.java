@@ -21,6 +21,7 @@ import net.latroquette.web.beans.profile.UserBean;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
+import org.springframework.util.CollectionUtils;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.util.CommonUtils;
@@ -173,7 +174,7 @@ public class ItemBean implements Serializable {
 	}
 	
 	public List<File> getFileList(){
-		if(this.fileList == null && item != null){
+		if(CollectionUtils.isEmpty(fileList) && item != null){
 			this.fileList = item.getImageList();
 		}
 		if(this.fileList == null){

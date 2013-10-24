@@ -3,9 +3,6 @@ package net.latroquette.common.database.data.item;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.util.parameters.ParameterName;

@@ -217,6 +217,9 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 			this.setLogginUserInfo(user);
 			this.loginState = LOGGED_IN;
 			usersService.updateUser(user);
+		}else{
+			user = new User();
+			loginState = ANONYMOUS;
 		}
 		switch (loginState) {
 			case LOGGED_IN:
