@@ -6,6 +6,7 @@ import net.latroquette.common.database.data.Repositories;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,10 @@ import com.adi3000.common.util.optimizer.CommonValues;
 
 @Repository(value=Repositories.PARAMETERS_SERVICE)
 public class ParametersImpl extends AbstractDAO<Parameter> implements Parameters {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8858808633557573431L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(ParametersImpl.class.getName());
 
 	public ParametersImpl(){
@@ -22,8 +27,7 @@ public class ParametersImpl extends AbstractDAO<Parameter> implements Parameters
 	//TODO make this work and enable load in memory for this cache for fast access
 	@Transactional(readOnly=true)
 	private String getValue(ParameterName name){
-		Parameter parameter =  (Parameter)getSession().byNaturalId(Parameter.class)
-				.using("name", name.toString()).getReference();
+		Parameter parameter =  (Parameter)getSession().bySimpleNaturalId(Parameter.class).load(name.toString());
 		if(parameter == null){
 			return null;
 		}else{
@@ -36,6 +40,7 @@ public class ParametersImpl extends AbstractDAO<Parameter> implements Parameters
 	 * @param name
 	 * @return the value or {@link CommonValues.ERROR_OR_INFINITE} if not able to parse
 	 */
+	@Cacheable(value="parameters", key="#name")
 	public int getIntValue(ParameterName name){
 		int value = CommonValues.ERROR_OR_INFINITE;
 		try{
@@ -51,6 +56,7 @@ public class ParametersImpl extends AbstractDAO<Parameter> implements Parameters
 	 * @param name
 	 * @return the value or {@code null} if parameter {@code name} not found
 	 */
+	@Cacheable(value="parameters", key="#name")
 	public String getStringValue(ParameterName name){
 		String value = null;
 		try{

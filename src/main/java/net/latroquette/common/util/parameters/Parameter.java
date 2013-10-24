@@ -8,9 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalId;
 
 import com.adi3000.common.database.hibernate.data.AbstractDataObject;
@@ -18,7 +15,6 @@ import com.adi3000.common.util.optimizer.DataType;
 
 @Entity
 @Table(name="parameters")
-@Cache(region = "parameters", usage = CacheConcurrencyStrategy.READ_ONLY)
 public class Parameter extends AbstractDataObject{
 
 	private static final long serialVersionUID = -3918158862432820274L;

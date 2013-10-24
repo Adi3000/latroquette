@@ -5,7 +5,7 @@ import net.latroquette.common.database.data.Repositories;
 import com.adi3000.common.util.optimizer.CommonValues;
 
 public interface Parameters extends Repositories<Parameter>{
-
+	
 	/**
 	 * Return an integer representation of the parameter {@code name}
 	 * @param name

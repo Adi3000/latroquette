@@ -28,6 +28,10 @@ import com.amazon.ECS.client.jax.BrowseNode;
 public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements KeywordsService{
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8371410437425902378L;
 	@Autowired
 	private ItemsService itemsService;
 	
@@ -49,9 +53,7 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 		if(deep){
 			Criteria req = getSession().createCriteria(MainKeyword.class)
 					.add(Restrictions.eq("id",id))
-					.setFetchMode("children", FetchMode.SELECT)
-					.setCacheable(true)
-					.setCacheRegion("keywords");
+					.setFetchMode("children", FetchMode.SELECT);
 			keyword = (MainKeyword) req.uniqueResult();
 			keyword.initializeRecursively();
 			Hibernate.initialize(keyword.getExternalKeywords());
@@ -292,9 +294,7 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 		getSession().enableFilter(MENU_KEYWORD_ONLY_FILTER);
 		Criteria req = createCriteria(MainKeyword.class)
 				.add(Restrictions.isNull("ancestor"))
-				.setFetchMode("children", FetchMode.SELECT)
-				.setCacheable(true)
-				.setCacheRegion("menu");
+				.setFetchMode("children", FetchMode.SELECT);
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = req.list();
 		getSession().disableFilter(MENU_KEYWORD_ONLY_FILTER);
@@ -320,9 +320,7 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 		String likeValue = name.replace(' ', '_').replace('-', '_');
 		Criteria req = createCriteria(MainKeyword.class)
 				.add(Restrictions.like("name", likeValue, MatchMode.ANYWHERE))
-				.add(Restrictions.isNotNull("ancestor"))
-				.setCacheable(true)
-				.setCacheRegion("keywords");
+				.add(Restrictions.isNotNull("ancestor"));
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = req.list();
 		return list;

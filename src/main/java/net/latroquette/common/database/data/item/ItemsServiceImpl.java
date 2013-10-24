@@ -26,6 +26,10 @@ import com.amazon.ECS.client.jax.ItemSearchRequest;
 @Repository(value=Repositories.ITEMS_SERVICE)
 public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3714145373154744663L;
 	@Autowired
 	private Parameters parameters;
 	

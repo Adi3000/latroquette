@@ -16,6 +16,11 @@ import com.adi3000.common.database.hibernate.session.AbstractDAO;
 @Repository(value=Repositories.LOCATIONS_SERVICE)
 public class LocationsServiceImpl extends AbstractDAO<Location> implements LocationsService {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3824189355386871662L;
+
 	@Transactional(readOnly=true)
 	public List<Location> getLocationByType(LocationType locationType){
 		Criteria req = createCriteria(Location.class)

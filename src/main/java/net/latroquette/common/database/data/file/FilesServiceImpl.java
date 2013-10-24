@@ -37,6 +37,10 @@ import com.adi3000.common.util.security.Security;
 
 @Repository(value=Repositories.FILES_SERVICE)
 public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2957811903161494580L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(FilesServiceImpl.class.getName());
 	private static final String MDSUM_ALGORITHM = "MD5";
 	
