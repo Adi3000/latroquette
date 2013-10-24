@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.adi3000.common.web.ServletUtils;
 
@@ -42,8 +45,30 @@ public class ImageServlet extends HttpServlet {
 	private static final int DEFAULT_BUFFER_SIZE = 10240; // 10KB.
 
     // Actions ------------------------------------------------------------------------------------
+	@Autowired
+	private FilesService filesService; 
+	@Autowired
+	private Parameters parameters;
+		
+    /**
+	 * @param parameters the parameters to set
+	 */
+	public void setParameters(Parameters parameters) {
+		this.parameters = parameters;
+	}
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+
+
+	/**
+	 * @param filesService the filesService to set
+	 */
+	public void setFilesService(FilesService filesService) {
+		this.filesService = filesService;
+	}
+
+
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
         // Get requested image by path info.
@@ -59,7 +84,6 @@ public class ImageServlet extends HttpServlet {
             return;
         }
         String[] pathRequest = requestedImage.substring(1).split(ServletUtils.HTML_SEPARATOR);
-        FilesService filesService = new FilesService();
         //Analyse path to check parameters
         for(int i = 0; i < pathRequest.length ; i++){
     		if(GET_SMALL_SIZE.equals(pathRequest[i])){
@@ -105,7 +129,6 @@ public class ImageServlet extends HttpServlet {
         //Resize image to avoid huge download (maybe useless and more stressfull than deliver non cropped images)
         java.io.File resizedFile = null;
         if(smallSize){
-        	Parameters parameters = new Parameters(filesService);
         	//TODO check if a separate folder should be provided for resized image due to massive read and write
         	java.io.File dataDir = new java.io.File(parameters.getStringValue(ParameterName.DATA_DIR_PATH));
         	// Create file with unique name in upload folder and write to it.
@@ -116,10 +139,9 @@ public class ImageServlet extends HttpServlet {
         	InputStream fis = new FileInputStream(image);
     		int imgMaxHeight = parameters.getIntValue(ParameterName.IMG_SMALL_HEIGHT);
     		int imgMaxWidth = parameters.getIntValue(ParameterName.IMG_SMALL_WIDTH);
-    		resizedFile = FilesService.resizeImage(fis, imgMaxWidth, imgMaxHeight, suffix, resizedFile);
+    		resizedFile = filesService.resizeImage(fis, imgMaxWidth, imgMaxHeight, suffix, resizedFile);
     		outputImage = resizedFile;
         }
-        filesService.close();
 
         // Init servlet response.
         response.reset();
@@ -152,5 +174,12 @@ public class ImageServlet extends HttpServlet {
             IOUtils.closeQuietly(input);
         }
     }
+	
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+			super.init(config);
+			SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+				      config.getServletContext());
+	}
 
 }

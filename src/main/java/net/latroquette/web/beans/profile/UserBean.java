@@ -1,13 +1,12 @@
 package net.latroquette.web.beans.profile;
 
 import java.io.Serializable;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -16,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.UsersService;
 
@@ -48,6 +48,15 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	private String previousURI;
 	private String previousQueryString;
 	
+	@ManagedProperty(value=Repositories.USERS_SERVICE_JSF)
+	private UsersService usersService;
+	/**
+	 * @param usersService the usersService to set
+	 */
+	public void setUsersService(UsersService usersService) {
+		this.usersService = usersService;
+	}
+
 	public UserBean(){
 		user = new User();
 		loginState = ANONYMOUS;
@@ -153,7 +162,6 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	
 	public String registerUser()
 	{
-		UsersService usersService = new UsersService();
 		User newUser = new User();
 		loginState = NOT_LOGGED_IN;
 		
@@ -179,14 +187,15 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		newUser.setLogin(this.getLogin());
 		newUser.setPassword(this.getPassword());
 		this.setLogginUserInfo(newUser);
-		if(!usersService.registerNewUser(newUser)){
-			FacesMessage msg = new FacesMessage("Registring error[303]", 
+		//TODO catch the error when a user already exists
+		usersService.registerNewUser(newUser);
+		
+			/*FacesMessage msg = new FacesMessage("Registring error[303]", 
 					"User already usedRegistering failed, please try later or ask for support");
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			fc.addMessage(null, msg);
-			fc.validationFailed();
-		}
-		usersService.close();
+			fc.validationFailed();*/
+		//}
 		this.loginState = NEW_USER;
 		return "/index";
 
@@ -203,14 +212,12 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 			}
 		}
 		loginState = NOT_LOGGED_IN;
-		UsersService userSearch = new UsersService();
-		user = userSearch.getUserByLogin(this.getLogin());
+		user = usersService.getUserByLogin(this.getLogin());
 		if(user != null && StringUtils.equals(user.getPassword(), this.getPassword())){
 			this.setLogginUserInfo(user);
 			this.loginState = LOGGED_IN;
-			userSearch.updateUser(user);
+			usersService.updateUser(user);
 		}
-		userSearch.close();
 		switch (loginState) {
 			case LOGGED_IN:
 				break;
@@ -229,11 +236,9 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	
 	public String logoutUser()
 	{
-		UsersService userSearch = new UsersService();
-		User user = userSearch.getUserByLogin(this.getLogin());
+		User user = usersService.getUserByLogin(this.getLogin());
 		user.setToken(null);
-		userSearch.updateUser(user);
-		userSearch.close();
+		usersService.updateUser(user);
 		//Unset properties of this user
 		this.user = new User();
 		loginState = ANONYMOUS;

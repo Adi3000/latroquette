@@ -3,8 +3,10 @@ package net.latroquette.web.beans.item;
 import java.io.Serializable;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
+import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.item.ItemsService;
 @ManagedBean
 @RequestScoped
@@ -12,6 +14,14 @@ public class ItemSearchBean implements Serializable {
 
 	private static final long serialVersionUID = 6018699553817370156L;
 	
+	@ManagedProperty(Repositories.ITEMS_SERVICE_JSF)
+	private ItemsService itemsService;
+	/**
+	 * @param itemsService the itemsService to set
+	 */
+	public void setItemsService(ItemsService itemsService) {
+		this.itemsService = itemsService;
+	}
 	private String request;
 	private Integer page;
 	private Integer count;
@@ -24,9 +34,7 @@ public class ItemSearchBean implements Serializable {
 	}
 	
 	public void initCount(){
-		ItemsService itemsService = new ItemsService();
 		this.count = itemsService.countItem(request, searchOnDescription);
-		itemsService.close();
 	}
 	/**
 	 * @return the request

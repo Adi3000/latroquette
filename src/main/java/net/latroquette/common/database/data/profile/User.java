@@ -15,6 +15,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.hibernate.annotations.NaturalId;
+
 import com.adi3000.common.database.hibernate.data.AbstractDataObject;
 
 
@@ -62,6 +64,7 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	/**
 	 * @return the login
 	 */
+	@NaturalId
 	@Column(name="user_login")
 	public String getLogin() {
 		return login;

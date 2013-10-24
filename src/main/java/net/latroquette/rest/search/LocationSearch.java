@@ -13,6 +13,8 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import net.latroquette.common.database.data.location.Location;
 import net.latroquette.common.database.data.location.LocationsService;
 
@@ -25,12 +27,19 @@ import net.latroquette.common.database.data.location.LocationsService;
 @Produces(MediaType.APPLICATION_JSON)
 public class LocationSearch {
 	
+	@Autowired
+	private LocationsService locationsService;
 	
+	/**
+	 * @param locationsService the locationsService to set
+	 */
+	public void setLocationsService(LocationsService locationsService) {
+		this.locationsService = locationsService;
+	}
+
 	@GET
 	public GenericEntity<List<Location>> getLocations (@QueryParam("term") String pattern){
-		LocationsService locationsService = new LocationsService();
 		List<Location> locationsFound = locationsService.getLocationByString(pattern);
-		locationsService.close();
 		return new GenericEntity<List<Location>>(locationsFound) {};
 	}
 }

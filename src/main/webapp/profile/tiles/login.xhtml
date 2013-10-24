@@ -111,7 +111,7 @@
 								</div>
 								<div class="field">
 									<h:inputText id="mailField" value="#{userBean.mail}" class="loginBox">
-										<f:validator validatorId="net.latroquette.web.validators.profile.EmailValidator" />
+										<f:validator binding="#{userLoginValidator}" />
 									</h:inputText>
 									<span class="error"><h:message for="mailField"/></span>
 								</div>

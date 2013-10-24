@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.file.File;
 import net.latroquette.common.database.data.file.FilesService;
 import net.latroquette.common.database.data.file.GarbageFileStatus;
@@ -20,8 +21,6 @@ import net.latroquette.web.beans.profile.UserBean;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.util.CommonUtils;
@@ -31,7 +30,23 @@ import com.adi3000.common.web.faces.FacesUtils;
 @ViewScoped
 public class ItemBean implements Serializable {
 	
-	private static Logger LOG = LoggerFactory.getLogger(ItemBean.class.toString());
+	@ManagedProperty(value=Repositories.ITEMS_SERVICE_JSF)
+	private ItemsService itemsService;
+	@ManagedProperty(value=Repositories.FILES_SERVICE_JSF)
+	private FilesService filesService;
+	/**
+	 * @param filesService the filesService to set
+	 */
+	public void setFilesService(FilesService filesService) {
+		this.filesService = filesService;
+	}
+	/**
+	 * @param itemsService the itemsService to set
+	 */
+	public void setItemsService(ItemsService itemsService) {
+		this.itemsService = itemsService;
+	}
+
 	/**
 	 * 
 	 */
@@ -97,7 +112,6 @@ public class ItemBean implements Serializable {
 	}
 	
 	private String registerItem(DatabaseOperation operation){
-		ItemsService itemsService = new ItemsService();
 		for(File file : fileList){
 			file.setGarbageStatus(GarbageFileStatus.VALIDATE);
 		}
@@ -105,13 +119,11 @@ public class ItemBean implements Serializable {
 		item.setStatusId(ItemStatus.DRAFT);
 		item.setDatabaseOperation(operation);
 		item = itemsService.modifyItem(item, userBean.getUser());
-		itemsService.close();
 		return "viewItem?faces-redirect=true&item="+item.getId();
 	}
 	
 	public String uploadPic(){
-		FilesService files = new FilesService();
-		File file = files.uploadNewPicFile(newFile, userBean.getUser());
+		File file = filesService.uploadNewPicFile(newFile, userBean.getUser());
 		if(file == null){
 			FacesContext fc = FacesContext.getCurrentInstance();
 			FacesMessage msg = new FacesMessage("Uploading error", 
@@ -122,14 +134,12 @@ public class ItemBean implements Serializable {
 		}else{
 			getFileList().add(file);
 		}
-		files.close();
 		newFile = null;
 		return null;
 	}
 	
 	public String removePic(String imageId){
 		File image = (File) CommonUtils.findById(item.getImageList(), imageId);
-		FilesService filesService = new FilesService();
 		if(item.getId() != null){
 			image.setGarbageStatus(GarbageFileStatus.NOT_LINKED);
 			filesService.modifyFile(image, userBean.getUser());
@@ -137,7 +147,6 @@ public class ItemBean implements Serializable {
 			filesService.removeFile(image);
 		}
 		fileList.remove(image);
-		filesService.close();
 		return null;
 	}
 	
@@ -195,9 +204,7 @@ public class ItemBean implements Serializable {
 	
 	public void loadItem(){
 		if(StringUtils.isNotEmpty(itemId) ){
-			ItemsService itemSearch = new ItemsService();
-			item = itemSearch.getItemById(Integer.valueOf(itemId));
-			itemSearch.close();
+			item = itemsService.getItemById(Integer.valueOf(itemId));
 		}else if(item == null){
 			item = new Item();
 		}

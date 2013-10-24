@@ -11,6 +11,7 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NaturalId;
 
 import com.adi3000.common.database.hibernate.data.AbstractDataObject;
 import com.adi3000.common.util.optimizer.DataType;
@@ -22,7 +23,7 @@ public class Parameter extends AbstractDataObject{
 
 	private static final long serialVersionUID = -3918158862432820274L;
 	
-	private String id;
+	private Integer id;
 	private String name;
 	private String description;
 	private String value;
@@ -30,15 +31,16 @@ public class Parameter extends AbstractDataObject{
 	private List<String> valueList;
 	
 	@Id
-	@Column(name="param_name")
-	public String getId() {
+	@Column(name="param_id")
+	public Integer getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	
-	@Column(name="param_name", insertable=false, updatable=false)
+	@NaturalId
+	@Column(name="param_name")
 	public String getName() {
 		return name;
 	}

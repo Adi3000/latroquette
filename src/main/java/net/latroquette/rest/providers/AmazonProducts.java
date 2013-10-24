@@ -22,13 +22,18 @@ import net.latroquette.common.database.data.item.ItemsService;
 @Produces(MediaType.APPLICATION_JSON)
 public class AmazonProducts {
 	
-	
+	private ItemsService items;
+	/**
+	 * @param items the items to set
+	 */
+	public void setItems(ItemsService items) {
+		this.items = items;
+	}
+
 	@GET
 	public GenericEntity<List<AmazonItem>> getItems (@QueryParam("term") String pattern, 
 			@QueryParam("cat") String category ){
-		ItemsService items = new ItemsService();
 		List<AmazonItem> itemsFound = items.searchAmazonItems(category, pattern);
-		items.close();
 		return new GenericEntity<List<AmazonItem>>(itemsFound) {};
 	}
 

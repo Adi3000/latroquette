@@ -14,6 +14,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
+import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.keyword.ExternalKeyword;
 import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.keyword.KeywordsService;
@@ -29,6 +30,14 @@ import com.adi3000.common.util.tree.Breadcrumb;
 @ViewScoped
 public class KeywordBean implements Serializable{
 	
+	@ManagedProperty(value=Repositories.KEYWORDS_SERVICE_JSF)
+	private KeywordsService keywordsService;
+	/**
+	 * @param keywordsService the keywordsService to set
+	 */
+	public void setKeywordsService(KeywordsService keywordsService) {
+		this.keywordsService = keywordsService;
+	}
 	/**
 	 * 
 	 */
@@ -61,7 +70,6 @@ public class KeywordBean implements Serializable{
 	}
 	public String loadKeyword(){
 		
-		KeywordsService keywordsService = new KeywordsService();
 		if(StringUtils.isNotBlank(keywordId)){
 			parentKeyword = keywordsService.getKeywordById(Integer.valueOf(keywordId), true);
 			newParentKeywordName = new String(parentKeyword.getName());
@@ -77,15 +85,12 @@ public class KeywordBean implements Serializable{
 		if(additionnalMainKeywords == null){
 			additionnalMainKeywords = new HashSet<MainKeyword>();
 		}
-		keywordsService.close();
 		return null;
 	}
 	
 	public String searchKeyword(){
-		KeywordsService keywordsService = new KeywordsService();
 		additionnalMainKeywords.addAll(keywordsService.searchMainKeyword(keywordToSearch));
 		additionnalExternalKeywords.addAll(keywordsService.searchExternalKeyword(keywordToSearch,createOnSearch));
-		keywordsService.close();
 		return null;
 	}
 	/**
@@ -103,9 +108,7 @@ public class KeywordBean implements Serializable{
 			parentKeyword.setDatabaseOperation(DatabaseOperation.UPDATE);
 		}
 		newKeyword.setDatabaseOperation(DatabaseOperation.INSERT);
-		KeywordsService keywordsService = new KeywordsService();
 		keywordsService.modifyKeyword(newKeyword, parentKeyword);
-		keywordsService.close();
 		
 		return null;
 	}
@@ -129,9 +132,7 @@ public class KeywordBean implements Serializable{
 				child.setInMenu(false);
 				child.setSynonym(false);
 				child.setAncestor(null);
-				KeywordsService keywordsService =  new KeywordsService();
 				keywordsService.modifyKeyword(child, parent);
-				keywordsService.close();
 			}
 		}
 		return null;
@@ -152,9 +153,7 @@ public class KeywordBean implements Serializable{
 			ExternalKeyword child = (ExternalKeyword) CommonUtils.findById(parent.getExternalKeywords(), childId);
 			if(child != null){
 				parent.getExternalKeywords().remove(child);
-				KeywordsService keywordsService =  new KeywordsService();
 				keywordsService.modifyKeyword(parent);
-				keywordsService.close();
 			}
 		}
 		return null;
@@ -168,10 +167,8 @@ public class KeywordBean implements Serializable{
 	public String deleteMainKeyword(String sKeywordId){
 		Integer keywordId = Integer.valueOf(sKeywordId);
 		MainKeyword keyword = (MainKeyword) CommonUtils.findById(orphanMainKeywords, keywordId);
-		KeywordsService keywordsService = new KeywordsService();
 		keywordsService.deleteKeyword(keyword);
 		orphanMainKeywords = keywordsService.getOrphanMainKeywords();
-		keywordsService.close();
 		return null;
 	}
 	
@@ -183,10 +180,8 @@ public class KeywordBean implements Serializable{
 	public String excludeExternalKeyword(String sKeywordId){
 		Integer keywordId = Integer.valueOf(sKeywordId);
 		ExternalKeyword keyword = (ExternalKeyword) CommonUtils.findById(orphanExternalKeywords, keywordId);
-		KeywordsService keywordsService = new KeywordsService();
 		keywordsService.excludeExternalKeyword(keyword);
 		orphanExternalKeywords = keywordsService.getOrphanExternalKeywords();
-		keywordsService.close();
 		return null;
 	}
 	
@@ -196,7 +191,6 @@ public class KeywordBean implements Serializable{
 	 */
 	public String save(){
 		
-		KeywordsService keywords = new KeywordsService();
 		modifiedKeywords = new HashSet<Keyword>(getKeywordList());
 		modifyChildrenRelationship(false);
 		modifyChildrenRelationship(true);
@@ -206,8 +200,7 @@ public class KeywordBean implements Serializable{
 			modifyRelationship(parentKeyword,childrenToAdd,false);
 			modifyRelationship(parentKeyword,synonymToAdd,true);
 		}
-		keywords.modifyKeywords(modifiedKeywords);
-		keywords.close();
+		keywordsService.modifyKeywords(modifiedKeywords);
 		//Rebuild menu if something has changed
 		menuBean.reloadMenuEntries();
 		return null;

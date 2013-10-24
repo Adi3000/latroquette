@@ -1,32 +1,13 @@
 package net.latroquette.common.database.data.profile;
 
+import net.latroquette.common.database.data.Repositories;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+public interface UsersService extends Repositories<User>{
 
-import com.adi3000.common.database.hibernate.DatabaseOperation;
-import com.adi3000.common.database.hibernate.session.AbstractDAO;
-
-
-public class UsersService extends AbstractDAO<User>{
 	
-	public User getUserByLogin(String login){
-		Criteria req = createCriteria(User.class)
-				.setMaxResults(1)
-				.add(Restrictions.eq("login", login)) ;
-		return (User)req.uniqueResult();
-	}
+	public User getUserByLogin(String login);
 
-	public boolean registerNewUser(User newUser){
-		newUser.setDatabaseOperation(DatabaseOperation.INSERT);
-		persist(newUser);
-		return sendForCommit();
-	}
+	public void registerNewUser(User newUser);
 	
-	public boolean updateUser(User user){
-		user.setDatabaseOperation(DatabaseOperation.UPDATE);
-		persist(user);
-		return sendForCommit();
-	}
-	
+	public void updateUser(User user);
 }
