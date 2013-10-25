@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<body>
+	<ui:composition>
+		<div id="breadcrumb">
+			<ui:repeat var="ancestor" value="#{navigationBean.breadcrumb}" varStatus="index">
+				<h:link outcome="#{ancestor.path}" >
+					#{text_navigation[ancestor.label]}
+				</h:link>
+				<h:outputText rendered="#{!index.last}" value=" &gt; " />
+			</ui:repeat>
+		</div>
+	</ui:composition>
+</body>
+</html>

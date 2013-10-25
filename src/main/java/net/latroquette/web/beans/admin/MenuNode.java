@@ -1,10 +1,17 @@
 package net.latroquette.web.beans.admin;
 
+import java.io.Serializable;
+
 import net.latroquette.common.database.data.keyword.MainKeyword;
 
 import com.adi3000.common.web.faces.ui.tree.Node;
 
-public class MenuNode extends Node<MainKeyword> {
+public class MenuNode extends Node<MainKeyword> implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1053429173078919787L;
 
 	public MenuNode(Node<MainKeyword> parent, MainKeyword value) {
 		super(parent, value);

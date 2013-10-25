@@ -9,9 +9,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.UsersService;
+import net.latroquette.common.util.Services;
 
 
 
@@ -19,8 +19,8 @@ import net.latroquette.common.database.data.profile.UsersService;
 @RequestScoped
 public class UserLoginValidator implements Validator {
 	
-	@ManagedProperty(value=Repositories.USERS_SERVICE_JSF)
-	private UsersService usersService;
+	@ManagedProperty(value=Services.USERS_SERVICE_JSF)
+	private transient UsersService usersService;
 	
 	/**
 	 * @param usersService the usersService to set

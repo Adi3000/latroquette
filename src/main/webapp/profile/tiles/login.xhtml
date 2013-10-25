@@ -11,7 +11,7 @@
 		<h:outputStylesheet name="css/profile.css" target="head" />
 		<h:outputScript target="head" rendered="#{!userBean.loggedIn}">
 			var registerDisplayed = false;
-			var forceLogin = "${param.register}";
+			var forceLogin = "${userBean.displayLoginBox}";
 			$(function() {
 				$("#loginDiv").hide(0);
 				$("#switchToLogin").click(function(){
@@ -57,7 +57,7 @@
 				}
 			});
 		</h:outputScript>
-	 	<div id="topHomepage">
+		<div id="topHomepage">
 			<h:panelGroup rendered="#{!userBean.loggedIn}">
 				<div id="arrowDiv">
 					<div id="switchToLogin">Connexion</div>
@@ -92,19 +92,28 @@
 								</div>
 								<div id="loginButton">
 									<h:commandButton value="Login" action="#{userBean.loginUser}" >
-										<f:param name="u" value="#{param.u}"/>            
-		    							<f:param name="qs" value="#{param.qs}"/>   
+										<f:param name="u" value="#{navigationBean.navigationPath}"/>            
+		    							<f:param name="qs" value="#{navigationBean.queryString}"/>    
 									</h:commandButton>
 								</div>
 								<div id="registerButton">
 									<h:commandButton value="S'enregistrer" action="#{userBean.registerUser}">
-										<f:param name="u" value="#{param.u}"/>            
-		    							<f:param name="qs" value="#{param.qs}"/>   
+										<f:param name="u" value="#{navigationBean.navigationPath}"/>            
+		    							<f:param name="qs" value="#{navigationBean.queryString}"/>   
 									</h:commandButton>
 								</div>
 							</div>
 						</div>
 						<div id="registerBorder">
+							<div class="loginField">
+								<div class="label">
+									<h:outputLabel for="passwordConfirmField">#{text_profile.PASSWORD_LABEL_CONFIRM}</h:outputLabel>
+								</div>
+								<div class="field">
+									<h:inputSecret id="passwordConfirmField" value="#{userBean.passwordConfirm}" class="loginBox"/>
+									<span class="error"><h:message for="passwordConfirmField" /></span>
+								</div>
+							</div>						
 							<div class="loginField">
 								<div class="label">
 									<h:outputLabel for="mailField">#{text_profile.MAILBOX_LABEL}</h:outputLabel>
@@ -123,15 +132,6 @@
 								<div class="field">
 									<h:inputText id="mailConfirmField" value="#{userBean.mailConfirm}" class="loginBox"/>
 									<span class="error"><h:message for="mailConfirmField"/></span>
-								</div>
-							</div>						
-							<div class="loginField">
-								<div class="label">
-									<h:outputLabel for="passwordConfirmField">#{text_profile.PASSWORD_LABEL_CONFIRM}</h:outputLabel>
-								</div>
-								<div class="field">
-									<h:inputSecret id="passwordConfirmField" value="#{userBean.passwordConfirm}" class="loginBox"/>
-									<span class="error"><h:message for="passwordConfirmField" /></span>
 								</div>
 							</div>						
 						</div>

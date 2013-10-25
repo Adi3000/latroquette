@@ -14,11 +14,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
-import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.keyword.ExternalKeyword;
 import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
+import net.latroquette.common.util.Services;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -30,8 +30,8 @@ import com.adi3000.common.util.tree.Breadcrumb;
 @ViewScoped
 public class KeywordBean implements Serializable{
 	
-	@ManagedProperty(value=Repositories.KEYWORDS_SERVICE_JSF)
-	private KeywordsService keywordsService;
+	@ManagedProperty(value=Services.KEYWORDS_SERVICE_JSF)
+	private transient KeywordsService keywordsService;
 	/**
 	 * @param keywordsService the keywordsService to set
 	 */

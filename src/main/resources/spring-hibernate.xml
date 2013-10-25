@@ -41,6 +41,7 @@
 				<value>net.latroquette.common.database.data.keyword.ExternalKeyword</value>
 				<value>net.latroquette.common.database.data.keyword.MainKeyword</value>
 				<value>net.latroquette.common.util.parameters.Parameter</value>
+				<value>net.latroquette.common.util.web.Navigation</value>
 			</list>
 		</property>
 	</bean>

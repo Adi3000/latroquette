@@ -15,14 +15,14 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.servlet.http.HttpServletRequest;
 
-import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.UsersService;
+import net.latroquette.common.util.Services;
+import net.latroquette.web.security.SecurityUtil;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.adi3000.common.util.security.Security;
-import com.adi3000.common.web.faces.FacesUtils;
 import com.adi3000.common.web.jsf.UtilsBean;
 
 
@@ -47,9 +47,11 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	private int loginState;
 	private String previousURI;
 	private String previousQueryString;
+	private String displayLoginBox;
 	
-	@ManagedProperty(value=Repositories.USERS_SERVICE_JSF)
-	private UsersService usersService;
+
+	@ManagedProperty(value=Services.USERS_SERVICE_JSF)
+	private transient UsersService usersService;
 	/**
 	 * @param usersService the usersService to set
 	 */
@@ -245,7 +247,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		//Unset properties of this user
 		this.user = new User();
 		loginState = ANONYMOUS;
-		return "index";
+		return "/index";
 	}
 	
 	private void initPreviousURL(){
@@ -271,17 +273,10 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		return (loginState == LOGGED_IN || loginState == NEW_USER) ;
 	}
 	
-	public boolean checkUserLogged(){
-		return checkUserLogged(this);
+	public void checkUserLogged(){
+		SecurityUtil.checkUserLogged(this);
 	}
 	
-	public static boolean checkUserLogged(UserBean user){
-		if (!Security.isUserLogged(user) || !user.getLoggedIn()){
-			FacesUtils.navigationRedirect("/profile/login");
-			return false;
-		}
-		return true;
-	}
 
 	@Override
 	public Integer getId() {
@@ -369,6 +364,22 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		this.previousURI = previousURI;
 	}
 	
-	
+	/**
+	 * @return the displayLoginBox
+	 */
+	public String getDisplayLoginBox() {
+		return displayLoginBox;
+	}
+
+	/**
+	 * @param displayLoginBox the displayLoginBox to set
+	 */
+	public void setDisplayLoginBox(boolean displayLoginBox) {
+		if(displayLoginBox){
+			this.displayLoginBox = "true";
+		}else{
+			this.displayLoginBox = "";
+		}
+	}
 	
 }

@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class UsersTest extends ListDbUnitTestCase implements LatroquetteTest {
 
 	@Autowired
-	private UsersService usersService;
+	private transient UsersService usersService;
 	/**
 	 * @param usersService the usersService to set
 	 */

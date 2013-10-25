@@ -3,7 +3,7 @@ package net.latroquette.common.database.data.location;
 import java.util.List;
 
 
-import net.latroquette.common.database.data.Repositories;
+import net.latroquette.common.util.Services;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -13,14 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.adi3000.common.database.hibernate.session.AbstractDAO;
 
-@Repository(value=Repositories.LOCATIONS_SERVICE)
+@Repository(value=Services.LOCATIONS_SERVICE)
 public class LocationsServiceImpl extends AbstractDAO<Location> implements LocationsService {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3824189355386871662L;
-
 	@Transactional(readOnly=true)
 	public List<Location> getLocationByType(LocationType locationType){
 		Criteria req = createCriteria(Location.class)

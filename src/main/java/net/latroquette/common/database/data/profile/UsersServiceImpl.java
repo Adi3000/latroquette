@@ -1,7 +1,7 @@
 package net.latroquette.common.database.data.profile;
 
 
-import net.latroquette.common.database.data.Repositories;
+import net.latroquette.common.util.Services;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
@@ -11,14 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.database.hibernate.session.AbstractDAO;
 
-@Repository(value=Repositories.USERS_SERVICE)
+@Repository(value=Services.USERS_SERVICE)
 public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 386359774148493761L;
-
 	@Transactional(readOnly=true)
 	public User getUserByLogin(String login){
 		Criteria req = createCriteria(User.class)

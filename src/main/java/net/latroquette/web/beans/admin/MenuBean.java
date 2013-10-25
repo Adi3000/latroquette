@@ -8,11 +8,9 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
-import org.springframework.transaction.annotation.Transactional;
-
-import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
+import net.latroquette.common.util.Services;
 
 import com.adi3000.common.web.faces.ui.tree.Node;
 import com.adi3000.common.web.faces.ui.tree.TreeNodeList;
@@ -22,8 +20,8 @@ import com.adi3000.common.web.faces.ui.tree.TreeNodeList;
 @ApplicationScoped
 public class MenuBean implements Serializable{
 
-	@ManagedProperty(value=Repositories.KEYWORDS_SERVICE_JSF)
-	private KeywordsService keywordsService;
+	@ManagedProperty(value=Services.KEYWORDS_SERVICE_JSF)
+	private transient KeywordsService keywordsService;
 	
 	/**
 	 * @param keywordsService the keywordsService to set

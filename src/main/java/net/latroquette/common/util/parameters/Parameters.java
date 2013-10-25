@@ -1,10 +1,9 @@
 package net.latroquette.common.util.parameters;
 
-import net.latroquette.common.database.data.Repositories;
-
+import com.adi3000.common.database.hibernate.session.DAO;
 import com.adi3000.common.util.optimizer.CommonValues;
 
-public interface Parameters extends Repositories<Parameter>{
+public interface Parameters extends DAO<Parameter>{
 	
 	/**
 	 * Return an integer representation of the parameter {@code name}

@@ -6,16 +6,16 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
-import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.item.ItemsService;
+import net.latroquette.common.util.Services;
 @ManagedBean
 @RequestScoped
 public class ItemSearchBean implements Serializable {
 
 	private static final long serialVersionUID = 6018699553817370156L;
 	
-	@ManagedProperty(Repositories.ITEMS_SERVICE_JSF)
-	private ItemsService itemsService;
+	@ManagedProperty(Services.ITEMS_SERVICE_JSF)
+	private transient ItemsService itemsService;
 	/**
 	 * @param itemsService the itemsService to set
 	 */

@@ -15,9 +15,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.Part;
 
-import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.profile.User;
+import net.latroquette.common.util.Services;
 import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.common.util.parameters.Parameters;
 
@@ -35,17 +36,14 @@ import com.adi3000.common.database.hibernate.session.AbstractDAO;
 import com.adi3000.common.util.CommonUtils;
 import com.adi3000.common.util.security.Security;
 
-@Repository(value=Repositories.FILES_SERVICE)
+@Repository(value=Services.FILES_SERVICE)
 public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2957811903161494580L;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(FilesServiceImpl.class.getName());
 	private static final String MDSUM_ALGORITHM = "MD5";
 	
 	@Autowired
-	private Parameters parameters;
+	private transient Parameters parameters;
 	
 	/**
 	 * @param parameters the parameters to set
@@ -58,6 +56,32 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 		super();
 	}
 	
+	
+	public File uploadNewPicFile(UploadedFile newFile, User user){
+		InputStream newFileInputStream = null;
+		File file = null;
+		try {
+			newFileInputStream = newFile.getInputStream();
+			file = uploadNewPicFile(newFile.getName(), newFileInputStream, user);
+		} catch (IOException e) {
+			LOGGER.error( "Error while processing file : ".concat(newFile.getName()), e);
+			file = null;
+		}
+		return file;
+	}
+	
+	public File uploadNewPicFile(Part newFile, User user){
+		InputStream newFileInputStream = null;
+		File file = null;
+		try {
+			newFileInputStream = newFile.getInputStream();
+			file = uploadNewPicFile(newFile.getName(), newFileInputStream, user);
+		} catch (IOException e) {
+			LOGGER.error( "Error while processing file : ".concat(newFile.getName()), e);
+			file = null;
+		}
+		return file;
+	}
 	/**
 	 * Upload and resize a new picture with the {@link ParameterName}.IMG_MAX_HEIGHT
 	 * and {@ParameterName.IMG_MAX_WIDTH} max size
@@ -66,22 +90,19 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 	 * @return
 	 */
 	@Transactional(readOnly=false)
-	public File uploadNewPicFile(UploadedFile newFile, User user){
-		if(newFile == null){
-			throw new IllegalArgumentException("No file specified");
-		}
+	public File uploadNewPicFile(String fileName, InputStream newFileInputStream, User user){
 		Security.checkUserLogged(user);
 		//Initialize Message digest
 		MessageDigest messageDigest = null;
 		try {
 			messageDigest = MessageDigest.getInstance(MDSUM_ALGORITHM);
 		} catch (NoSuchAlgorithmException e1) {
-			LOGGER.error("Can't find "+MDSUM_ALGORITHM+" algorithm".concat(newFile.getName()), e1);
+			LOGGER.error("Can't find "+MDSUM_ALGORITHM+" algorithm".concat(fileName), e1);
 			return null;
 		}
 		
-        String prefix = String.valueOf(new Date().getTime()).concat(FilenameUtils.getBaseName(newFile.getName()));
-        String suffix = FilenameUtils.getExtension(newFile.getName());
+        String prefix = String.valueOf(new Date().getTime()).concat(FilenameUtils.getBaseName(fileName));
+        String suffix = FilenameUtils.getExtension(fileName);
         java.io.File resizedFile = null;
         OutputStream output = null;
         InputStream md5Is = null;
@@ -95,7 +116,7 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
             //Create a resized image
     		int imgMaxHeight = parameters.getIntValue(ParameterName.IMG_MAX_HEIGHT);
     		int imgMaxWidth = parameters.getIntValue(ParameterName.IMG_MAX_WIDTH);
-    		resizedFile = resizeImage(newFile.getInputStream(), imgMaxWidth, imgMaxHeight, suffix, resizedFile);
+    		resizedFile = resizeImage(newFileInputStream, imgMaxWidth, imgMaxHeight, suffix, resizedFile);
     		
     		//Watch for checksum
     		fis = new FileInputStream(resizedFile);
@@ -113,7 +134,7 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 	        file.setName(resizedFile.getName());
 	        file.setGarbageStatus(GarbageFileStatus.NOT_LINKED);
         } catch (IOException e) {
-			LOGGER.error( "Error while processing file : ".concat(newFile.getName()), e);
+			LOGGER.error( "Error while processing file : ".concat(fileName), e);
 			file = null;
 			// Cleanup.
 			if (resizedFile != null){

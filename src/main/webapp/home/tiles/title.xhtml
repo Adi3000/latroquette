@@ -17,9 +17,11 @@
 				<h:panelGroup id="toolbarLogin">
 						<h:link outcome="/profile/login?register=true&amp;u=#{request.requestURI}&amp;qs=#{util:urlEncode(request.queryString)}" value="#{text_home.CONNEXION}" rendered="#{!userBean.loggedIn}"/>
 						<h:form id="logoutForm" rendered="#{userBean.loggedIn}">
-							<h:outputFormat value="#{text_home.WELCOME_MESSAGE}">
-								<f:param value="#{userBean.login}" />
-							</h:outputFormat>
+							<h:link outcome="/profile/index">
+								<h:outputFormat value="#{text_home.WELCOME_MESSAGE}">
+									<f:param value="#{userBean.login}" />
+								</h:outputFormat>
+							</h:link>
 							<h:commandButton value="Logout" action="#{userBean.logoutUser}" />
 						</h:form>
 				</h:panelGroup>

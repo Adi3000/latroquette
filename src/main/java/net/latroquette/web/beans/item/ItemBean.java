@@ -10,14 +10,15 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.file.File;
 import net.latroquette.common.database.data.file.FilesService;
 import net.latroquette.common.database.data.file.GarbageFileStatus;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemStatus;
 import net.latroquette.common.database.data.item.ItemsService;
+import net.latroquette.common.util.Services;
 import net.latroquette.web.beans.profile.UserBean;
+import net.latroquette.web.security.SecurityUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
@@ -25,16 +26,16 @@ import org.springframework.util.CollectionUtils;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.util.CommonUtils;
-import com.adi3000.common.web.faces.FacesUtils;
+import com.adi3000.common.web.faces.FacesUtil;
 
 @ManagedBean
 @ViewScoped
 public class ItemBean implements Serializable {
 	
-	@ManagedProperty(value=Repositories.ITEMS_SERVICE_JSF)
-	private ItemsService itemsService;
-	@ManagedProperty(value=Repositories.FILES_SERVICE_JSF)
-	private FilesService filesService;
+	@ManagedProperty(value=Services.ITEMS_SERVICE_JSF)
+	private transient ItemsService itemsService;
+	@ManagedProperty(value=Services.FILES_SERVICE_JSF)
+	private transient FilesService filesService;
 	/**
 	 * @param filesService the filesService to set
 	 */
@@ -213,13 +214,13 @@ public class ItemBean implements Serializable {
 
 	public void checkItemAndUser(){
 		//First check if user is logged
-		boolean userCheck = UserBean.checkUserLogged(userBean);
+		boolean userCheck = SecurityUtil.checkUserLogged(userBean);
 
 		//Next get item and check if user is available to modify this item
 		loadItem();
 		//Pass to viewItem only if user is logged for this check
 		if (item.getId() != null && userCheck && !userBean.getId().equals(item.getUser().getId())){
-			FacesUtils.navigationRedirect("viewItem");
+			FacesUtil.navigationRedirect("viewItem");
 		}
 	}
 	

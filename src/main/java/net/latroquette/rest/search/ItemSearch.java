@@ -30,7 +30,7 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 public class ItemSearch extends SpringBeanAutowiringSupport {
 	
 	@Autowired
-	private ItemsService itemsService;
+	private transient ItemsService itemsService;
 	/**
 	 * @param itemsService the itemsService to set
 	 */

@@ -2,7 +2,7 @@ package net.latroquette.common.util.parameters;
 
 
 
-import net.latroquette.common.database.data.Repositories;
+import net.latroquette.common.util.Services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adi3000.common.database.hibernate.session.AbstractDAO;
 import com.adi3000.common.util.optimizer.CommonValues;
 
-@Repository(value=Repositories.PARAMETERS_SERVICE)
+@Repository(value=Services.PARAMETERS_SERVICE)
 public class ParametersImpl extends AbstractDAO<Parameter> implements Parameters {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8858808633557573431L;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(ParametersImpl.class.getName());
 
 	public ParametersImpl(){

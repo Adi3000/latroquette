@@ -3,8 +3,8 @@ package net.latroquette.common.database.data.item;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.profile.User;
+import net.latroquette.common.util.Services;
 import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.common.util.parameters.Parameters;
 import net.latroquette.service.amazon.AmazonWServiceClient;
@@ -23,15 +23,11 @@ import com.adi3000.common.util.optimizer.CommonValues;
 import com.amazon.ECS.client.jax.AWSECommerceServicePortType;
 import com.amazon.ECS.client.jax.ItemSearchRequest;
 
-@Repository(value=Repositories.ITEMS_SERVICE)
+@Repository(value=Services.ITEMS_SERVICE)
 public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3714145373154744663L;
 	@Autowired
-	private Parameters parameters;
+	private transient Parameters parameters;
 	
 	/**
 	 * @param parameters the parameters to set

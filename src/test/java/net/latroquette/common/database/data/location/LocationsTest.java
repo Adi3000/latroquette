@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = {TestUtils.SPRING_CONFIG})
 public class LocationsTest {
 	@Autowired
-	private LocationsService locationsService;
+	private transient LocationsService locationsService;
 	/**
 	 * @param locationsService the locationsService to set
 	 */

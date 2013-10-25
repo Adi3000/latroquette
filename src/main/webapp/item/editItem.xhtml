@@ -13,62 +13,60 @@
 	 		<f:event listener="#{itemBean.checkItemAndUser}" type="preRenderView" />
 	 	</f:metadata>
 		<ui:define name="mainDiv"> 
-		<h:outputStylesheet name="css/item.css" target="head" />
-		<h:outputStylesheet name="js/rondell/jquery.rondell.css" target="head" />
-		<h:outputScript name="js/modernizr-2.0.6.min.js" target="head" />
-		<h:outputScript name="js/jquery.mousewheel-3.0.6.min.js" target="head" />
-		<h:outputScript name="js/rondell/jquery.rondell.js" target="head" />
-		<h:outputScript name="js/_initEditItem.js" target="head" />
-		<div id="mainDiv">
-				<h:form id="editItemForm" method="post" enctype="multipart/form-data">
-					<h:messages></h:messages>
-					<div id="itemDescription">
-						<div id="itemTitle">
-							<div>
-								<div class="field">
-									<div class="labelTop">
-										<h:outputLabel for="title">Titre</h:outputLabel>
-									</div>
-									<h:inputText id="title" size="58" value="#{itemBean.title}" />
-								</div>
-							</div>
-						</div>
-						<div id="clueForIdentifiecation">
-							<h:inputHidden id="keywordList" value="#{itemBean.keywordListString}"/>
-						</div>
+			<h:outputStylesheet name="css/item.css" target="head" />
+			<h:outputStylesheet name="js/rondell/jquery.rondell.css" target="head" />
+			<h:outputScript name="js/modernizr-2.0.6.min.js" target="head" />
+			<h:outputScript name="js/jquery.mousewheel-3.0.6.min.js" target="head" />
+			<h:outputScript name="js/rondell/jquery.rondell.js" target="head" />
+			<h:outputScript name="js/_initEditItem.js" target="head" />
+			<h:form id="editItemForm" method="post" enctype="multipart/form-data">
+				<h:messages></h:messages>
+				<div id="itemDescription">
+					<div id="itemTitle">
 						<div>
 							<div class="field">
-								<div class="labelTop"><h:outputLabel for="description">Description</h:outputLabel></div>
-								<h:inputTextarea id="description" label="desc" cols="45" rows="18" value="#{itemBean.description}"/>
+								<div class="labelTop">
+									<h:outputLabel for="title">Titre</h:outputLabel>
+								</div>
+								<h:inputText id="title" size="58" value="#{itemBean.title}" />
 							</div>
 						</div>
 					</div>
-					<div id="itemImages">
-						<ui:repeat var="image" value="#{itemBean.fileList}">
-							<div class="uploadedImage">
-								<a href="#" rel="lightbox[uploadPic]">
-									<h:graphicImage value="/image/#{image.id}" />
-								</a>
-								<div class="removePic"><h:commandLink action="#{itemBean.removePic(image.id)}" value="Supprimer" /></div>
-							</div>
-						</ui:repeat>
+					<div id="clueForIdentifiecation">
+						<h:inputHidden id="keywordList" value="#{itemBean.keywordListString}"/>
 					</div>
 					<div>
-						<t:inputFileUpload id="choosePicButton" accept="image/png,image/jpeg" value="#{itemBean.newFile}" />
-						<div id="uploadPicButton"><h:commandButton value="Ajouter l'image" id="addPicButton" action="#{itemBean.uploadPic}"/></div>
+						<div class="field">
+							<div class="labelTop"><h:outputLabel for="description">Description</h:outputLabel></div>
+							<h:inputTextarea id="description" label="desc" cols="45" rows="18" value="#{itemBean.description}"/>
+						</div>
 					</div>
-					<ul id="wishies">
-						<li>
-							<label>Cat&#233;gorie : </label> <input type="text" id="wishiesCategory" value="" />
-							<label>D&#233;tails : </label> <input type="text" id="wishiesField" value=""/>	<h:inputHidden id="wishiesList" value="#{itemBean.wishiesListString}"/>
-						</li>
-					</ul>
-					<div id="saveButton">
-						<h:commandButton value="Cr&#233;er" action="#{itemBean.createItem}" rendered="#{!itemBean.item.idSet}"/>
-						<h:commandButton value="Modifier" action="#{itemBean.updateItem}" rendered="#{itemBean.item.idSet}"/>
-					</div>
-				</h:form>
-			</div> 
+				</div>
+				<div id="itemImages">
+					<ui:repeat var="image" value="#{itemBean.fileList}">
+						<div class="uploadedImage">
+							<a href="#" rel="lightbox[uploadPic]">
+								<h:graphicImage value="/image/#{image.id}" />
+							</a>
+							<div class="removePic"><h:commandLink action="#{itemBean.removePic(image.id)}" value="Supprimer" /></div>
+						</div>
+					</ui:repeat>
+				</div>
+				<div>
+					<t:inputFileUpload id="choosePicButton" accept="image/png,image/jpeg" value="#{itemBean.newFile}" />
+					<div id="uploadPicButton"><h:commandButton value="Ajouter l'image" id="addPicButton" action="#{itemBean.uploadPic}"/></div>
+				</div>
+				<ul id="wishies">
+					<li>
+						<label>Cat&#233;gorie : </label> <input type="text" id="wishiesCategory" value="" />
+						<label>D&#233;tails : </label> <input type="text" id="wishiesField" value=""/>	<h:inputHidden id="wishiesList" value="#{itemBean.wishiesListString}"/>
+					</li>
+				</ul>
+				<div id="saveButton">
+					<h:commandButton value="Cr&#233;er" action="#{itemBean.createItem}" rendered="#{!itemBean.item.idSet}"/>
+					<h:commandButton value="Modifier" action="#{itemBean.updateItem}" rendered="#{itemBean.item.idSet}"/>
+				</div>
+			</h:form>
 	  	</ui:define>
 	</ui:composition>
 </body>

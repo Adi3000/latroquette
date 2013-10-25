@@ -7,157 +7,155 @@
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<f:metadata>
 			<f:viewParam name="keyword" value="#{keywordBean.keywordId}"/>
-			<f:event listener="#{keywordBean.init}" type="preRenderView" />
+			<f:event listener="#{keywordBean.init}" type="preRenderComponent" />
 		</f:metadata>
 		<ui:define name="mainDiv">
 			<h:outputStylesheet name="css/admin.css" target="head" />
 			<h:outputScript name="js/admin/_initKeywords.js" target="head" />
-			<div id="mainDiv">
+			<h:panelGroup rendered="#{!keywordBean.root}">
+				<a href="keywords.xhtml">Racine</a>
+				<h:outputText rendered="#{!empty keywordBean.breadcrumb}" value=" &gt; " />
+				<ui:repeat var="ancestor" value="#{keywordBean.breadcrumb}" varStatus="index">
+					<a href="keywords.xhtml?keyword=#{ancestor.id}">#{ancestor.name}</a>
+					<h:outputText rendered="#{!index.last}" value=" &gt; " />
+				</ui:repeat>
+			</h:panelGroup>
+			<h:form id="modifyKeyword">
 				<h:panelGroup rendered="#{!keywordBean.root}">
-					<a href="keywords.xhtml">Racine</a>
-					<h:outputText rendered="#{!empty keywordBean.breadcrumb}" value=" &gt; " />
-					<ui:repeat var="ancestor" value="#{keywordBean.breadcrumb}" varStatus="index">
-						<a href="keywords.xhtml?keyword=#{ancestor.id}">#{ancestor.name}</a>
-						<h:outputText rendered="#{!index.last}" value=" &gt; " />
-					</ui:repeat>
+					<h:outputLabel>Modifier "#{keywordBean.parentKeyword.name}" en </h:outputLabel><h:inputText value="#{keywordBean.newParentKeywordName}" />
 				</h:panelGroup>
-				<h:form id="modifyKeyword">
+				<h:commandButton value="Sauvegarder" action="#{keywordBean.save}" />
+				<h2>
+					<h:outputText value="#{keywordBean.parentKeyword.name}" rendered="#{!keywordBean.root}"/>
+					<em>
+						<h:outputLabel for="check_menu" rendered="#{!keywordBean.root}">Affich&#233; dans le menu</h:outputLabel>
+						<h:selectBooleanCheckbox id="check_menu" value="#{keywordBean.parentKeyword.inMenu}" rendered="#{!keywordBean.root}" />
+					</em>
+					<h:outputText value="Cat&#233;gories racine" rendered="#{keywordBean.root}"/>
+				</h2>
+				
+				<div id="childrenKeyword">
+					<!-- Modify actual parentKeyword relationships -->
 					<h:panelGroup rendered="#{!keywordBean.root}">
-						<h:outputLabel>Modifier "#{keywordBean.parentKeyword.name}" en </h:outputLabel><h:inputText value="#{keywordBean.newParentKeywordName}" />
+						<div class="childrenZone" data-id="#{keywordBean.parentKeyword.id}">
+							<em class="dropTip">
+								&lt;glissez les nouvelles sous-cat&#233;gories de #{keywordBean.parentKeyword.name} ici&gt;<br />
+								<ui:repeat var="child" value="#{keywordBean.parentKeyword.children}">
+									<h:panelGroup styleClass="existingChild ui-corner-all" rendered="#{!child.synonym}">
+										<h:link value="#{child.name}" outcome="keywords?keyword=#{child.id}" />
+										<h:commandLink action="#{keywordBean.remove(child.id,keywordBean.parentKeyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
+									</h:panelGroup>
+								</ui:repeat>
+							</em>
+							<span class="childrenIds"><h:inputHidden value="#{keywordBean.childrenToAdd}" /></span>
+						</div>
+						<div class="synonymZone" data-id="#{keywordBean.parentKeyword.id}">
+							<em class="dropTip">
+								&lt;glissez les synonymes de #{keywordBean.parentKeyword.name} ici&gt;<br />
+								<ui:repeat var="child" value="#{keywordBean.parentKeyword.children}">
+									<h:panelGroup styleClass="existingChild ui-corner-all" rendered="#{child.synonym}">
+										<h:outputText value="#{child.name}" />
+										<h:commandLink action="#{keywordBean.remove(child.id,keywordBean.parentKeyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
+									</h:panelGroup>
+								</ui:repeat>
+								<ui:repeat var="child" value="#{keywordBean.parentKeyword.externalKeywords}">
+									<h:panelGroup styleClass="existingChild ui-corner-all">
+										<h:outputText value="#{child.name}" />
+										<h:commandLink action="#{keywordBean.remove(child.id,keywordBean.parentKeyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
+									</h:panelGroup>
+								</ui:repeat>
+							</em>
+							<span class="synonymIds"><h:inputHidden value="#{keywordBean.synonymToAdd}" /></span>
+						</div>
 					</h:panelGroup>
-					<h:commandButton value="Sauvegarder" action="#{keywordBean.save}" />
-					<h2>
-						<h:outputText value="#{keywordBean.parentKeyword.name}" rendered="#{!keywordBean.root}"/>
-						<em>
-							<h:outputLabel for="check_menu" rendered="#{!keywordBean.root}">Affich&#233; dans le menu</h:outputLabel>
-							<h:selectBooleanCheckbox id="check_menu" value="#{keywordBean.parentKeyword.inMenu}" rendered="#{!keywordBean.root}" />
-						</em>
-						<h:outputText value="Cat&#233;gories racine" rendered="#{keywordBean.root}"/>
-					</h2>
 					
-					<div id="childrenKeyword">
-						<!-- Modify actual parentKeyword relationships -->
-						<h:panelGroup rendered="#{!keywordBean.root}">
-							<div class="childrenZone" data-id="#{keywordBean.parentKeyword.id}">
+					<!-- Display for sub categories -->
+					<ui:repeat var="keyword" value="#{keywordBean.keywordList}">
+						<div>
+							<h3>
+								<a href="keywords.xhtml?keyword=#{keyword.id}">#{keyword.name}</a>
+								<em><h:outputLabel for="check_menu">Affich&#233; dans le menu</h:outputLabel><h:selectBooleanCheckbox id="check_menu" value="#{keyword.inMenu}" /></em>
+							</h3>
+							<div class="childrenZone" data-id="#{keyword.id}">
 								<em class="dropTip">
-									&lt;glissez les nouvelles sous-cat&#233;gories de #{keywordBean.parentKeyword.name} ici&gt;<br />
-									<ui:repeat var="child" value="#{keywordBean.parentKeyword.children}">
+									&lt;glissez les sous-cat&#233;gories de #{keyword.name} ici&gt;<br />
+									<ui:repeat var="child" value="#{keyword.children}">
 										<h:panelGroup styleClass="existingChild ui-corner-all" rendered="#{!child.synonym}">
 											<h:link value="#{child.name}" outcome="keywords?keyword=#{child.id}" />
-											<h:commandLink action="#{keywordBean.remove(child.id,keywordBean.parentKeyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
+											<h:commandLink action="#{keywordBean.remove(child.id,keyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
 										</h:panelGroup>
 									</ui:repeat>
 								</em>
-								<span class="childrenIds"><h:inputHidden value="#{keywordBean.childrenToAdd}" /></span>
+								<span class="childrenIds"><h:inputHidden value="#{keywordBean.childrenIds[keyword.id]}" /></span>
 							</div>
-							<div class="synonymZone" data-id="#{keywordBean.parentKeyword.id}">
-								<em class="dropTip">
-									&lt;glissez les synonymes de #{keywordBean.parentKeyword.name} ici&gt;<br />
-									<ui:repeat var="child" value="#{keywordBean.parentKeyword.children}">
+							<div class="synonymZone" data-id="#{keyword.id}">
+								<em class="dropTip">&lt;glissez les synonymes de #{keyword.name} ici&gt; <br />
+									<ui:repeat var="child" value="#{keyword.children}">
 										<h:panelGroup styleClass="existingChild ui-corner-all" rendered="#{child.synonym}">
 											<h:outputText value="#{child.name}" />
-											<h:commandLink action="#{keywordBean.remove(child.id,keywordBean.parentKeyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
+											<h:commandLink action="#{keywordBean.remove(child.id,keyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
 										</h:panelGroup>
 									</ui:repeat>
-									<ui:repeat var="child" value="#{keywordBean.parentKeyword.externalKeywords}">
+									<ui:repeat var="child" value="#{keyword.externalKeywords}">
 										<h:panelGroup styleClass="existingChild ui-corner-all">
 											<h:outputText value="#{child.name}" />
-											<h:commandLink action="#{keywordBean.remove(child.id,keywordBean.parentKeyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
+											<h:commandLink action="#{keywordBean.removeExternal(child.id,keyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
 										</h:panelGroup>
 									</ui:repeat>
 								</em>
-								<span class="synonymIds"><h:inputHidden value="#{keywordBean.synonymToAdd}" /></span>
+								<span class="synonymIds"><h:inputHidden value="#{keywordBean.synonymsIds[keyword.id]}" /></span>
 							</div>
-						</h:panelGroup>
-						
-						<!-- Display for sub categories -->
-						<ui:repeat var="keyword" value="#{keywordBean.keywordList}">
-							<div>
-								<h3>
-									<a href="keywords.xhtml?keyword=#{keyword.id}">#{keyword.name}</a>
-									<em><h:outputLabel for="check_menu">Affich&#233; dans le menu</h:outputLabel><h:selectBooleanCheckbox id="check_menu" value="#{keyword.inMenu}" /></em>
-								</h3>
-								<div class="childrenZone" data-id="#{keyword.id}">
-									<em class="dropTip">
-										&lt;glissez les sous-cat&#233;gories de #{keyword.name} ici&gt;<br />
-										<ui:repeat var="child" value="#{keyword.children}">
-											<h:panelGroup styleClass="existingChild ui-corner-all" rendered="#{!child.synonym}">
-												<h:link value="#{child.name}" outcome="keywords?keyword=#{child.id}" />
-												<h:commandLink action="#{keywordBean.remove(child.id,keyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
-											</h:panelGroup>
-										</ui:repeat>
-									</em>
-									<span class="childrenIds"><h:inputHidden value="#{keywordBean.childrenIds[keyword.id]}" /></span>
-								</div>
-								<div class="synonymZone" data-id="#{keyword.id}">
-									<em class="dropTip">&lt;glissez les synonymes de #{keyword.name} ici&gt; <br />
-										<ui:repeat var="child" value="#{keyword.children}">
-											<h:panelGroup styleClass="existingChild ui-corner-all" rendered="#{child.synonym}">
-												<h:outputText value="#{child.name}" />
-												<h:commandLink action="#{keywordBean.remove(child.id,keyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
-											</h:panelGroup>
-										</ui:repeat>
-										<ui:repeat var="child" value="#{keyword.externalKeywords}">
-											<h:panelGroup styleClass="existingChild ui-corner-all">
-												<h:outputText value="#{child.name}" />
-												<h:commandLink action="#{keywordBean.removeExternal(child.id,keyword.id)}" styleClass="ui-icon ui-icon-arrowreturnthick-1-e" />
-											</h:panelGroup>
-										</ui:repeat>
-									</em>
-									<span class="synonymIds"><h:inputHidden value="#{keywordBean.synonymsIds[keyword.id]}" /></span>
-								</div>
-							</div>
-						</ui:repeat>
-					</div>
-					
-					<div id="orphanMainKeywords">
-						<h2>Mots-clés orphelins</h2>
-						<ui:repeat var="keyword" value="#{keywordBean.orphanMainKeywords}">
-							<div class="ui-widget-content ui-corner-all orphanKeyword" data-id="#{keyword.id}">
-								<span class="keywordName">#{keyword.name}</span>
-								<h:commandLink action="#{keywordBean.deleteMainKeyword(keyword.id)}" styleClass="ui-icon ui-icon ui-icon-trash" />
-							</div>
-						</ui:repeat>
-						<h2>Chercher d'autres mots clés</h2>
-						<div>
-							<h:outputLabel for="keywordSearchAndCreate" value="Chercher sur sur les sources externes" />
-							<h:selectBooleanCheckbox id="keywordSearchAndCreate" value="#{keywordBean.createOnSearch}"/>
-						</div>
-						<div>
-							<label for="keywordSearch" title="">Recherche de mot-clés</label>
-							<h:inputText id="keywordSearch" value="#{keywordBean.keywordToSearch}" />
-						</div>
-						<h:commandButton value="Rechercher" action="#{keywordBean.searchKeyword}" />
-						<ui:repeat var="keyword" value="#{keywordBean.additionnalMainKeywords}">
-							<div class="ui-widget-content ui-corner-all orphanKeyword" data-id="#{webConstantsBean.additionnalKeywordPrefix}#{keyword.id}">
-								<span class="keywordName">#{keyword.name}</span>
-							</div>
-						</ui:repeat>
-						<ui:repeat var="keyword" value="#{keywordBean.additionnalExternalKeywords}">
-							<div class="ui-widget-content ui-corner-all orphanKeyword orphanExternalKeyword" data-id="#{webConstantsBean.additionnalExternalKeywordPrefix}#{keyword.id}">
-								<span class="keywordName">#{keyword.name}</span>
-							</div>
-						</ui:repeat>
-					</div>
-					
-				</h:form>
-				<h:form id="createKeyword">
-					<h:outputLabel for="newKeyword" rendered="#{keywordBean.parentKeyword != null}">Nouvelle sous-cat&#233;gorie de #{keywordBean.parentKeyword.name}</h:outputLabel>
-					<h:outputLabel for="newKeyword" rendered="#{keywordBean.parentKeyword == null}">Nouvelle cat&#233;gorie racine</h:outputLabel>
-					<h:inputText id="newKeyword" styleClass="field" value="#{keywordBean.newKeywordName}" />
-					<h:commandButton value="Cr&#233;er" action="#{keywordBean.create}"/>
-				</h:form>
-				<h:form id="orphanExternalKeywords">
-					<h2>Synonymes externes orphelins</h2>
-					<ui:repeat var="keyword" value="#{keywordBean.orphanExternalKeywords}">
-						<div class="ui-widget-content ui-corner-all orphanKeyword orphanExternalKeyword" data-id="#{webConstantsBean.externalKeywordPrefix}#{keyword.id}">
-							<span class="keywordName">#{keyword.name}</span>
-							<span class="keywordFullname">#{keyword.fullname}</span>
-							<h:commandLink action="#{keywordBean.excludeExternalKeyword(keyword.id)}" styleClass="ui-icon ui-icon ui-icon-trash" />
 						</div>
 					</ui:repeat>
-				</h:form>
-			</div>	
+				</div>
+				
+				<div id="orphanMainKeywords">
+					<h2>Mots-clés orphelins</h2>
+					<ui:repeat var="keyword" value="#{keywordBean.orphanMainKeywords}">
+						<div class="ui-widget-content ui-corner-all orphanKeyword" data-id="#{keyword.id}">
+							<span class="keywordName">#{keyword.name}</span>
+							<h:commandLink action="#{keywordBean.deleteMainKeyword(keyword.id)}" styleClass="ui-icon ui-icon ui-icon-trash" />
+						</div>
+					</ui:repeat>
+					<h2>Chercher d'autres mots clés</h2>
+					<div>
+						<h:outputLabel for="keywordSearchAndCreate" value="Chercher sur sur les sources externes" />
+						<h:selectBooleanCheckbox id="keywordSearchAndCreate" value="#{keywordBean.createOnSearch}"/>
+					</div>
+					<div>
+						<label for="keywordSearch" title="">Recherche de mot-clés</label>
+						<h:inputText id="keywordSearch" value="#{keywordBean.keywordToSearch}" />
+					</div>
+					<h:commandButton value="Rechercher" action="#{keywordBean.searchKeyword}" />
+					<ui:repeat var="keyword" value="#{keywordBean.additionnalMainKeywords}">
+						<div class="ui-widget-content ui-corner-all orphanKeyword" data-id="#{webConstantsBean.additionnalKeywordPrefix}#{keyword.id}">
+							<span class="keywordName">#{keyword.name}</span>
+						</div>
+					</ui:repeat>
+					<ui:repeat var="keyword" value="#{keywordBean.additionnalExternalKeywords}">
+						<div class="ui-widget-content ui-corner-all orphanKeyword orphanExternalKeyword" data-id="#{webConstantsBean.additionnalExternalKeywordPrefix}#{keyword.id}">
+							<span class="keywordName">#{keyword.name}</span>
+						</div>
+					</ui:repeat>
+				</div>
+				
+			</h:form>
+			<h:form id="createKeyword">
+				<h:outputLabel for="newKeyword" rendered="#{keywordBean.parentKeyword != null}">Nouvelle sous-cat&#233;gorie de #{keywordBean.parentKeyword.name}</h:outputLabel>
+				<h:outputLabel for="newKeyword" rendered="#{keywordBean.parentKeyword == null}">Nouvelle cat&#233;gorie racine</h:outputLabel>
+				<h:inputText id="newKeyword" styleClass="field" value="#{keywordBean.newKeywordName}" />
+				<h:commandButton value="Cr&#233;er" action="#{keywordBean.create}"/>
+			</h:form>
+			<h:form id="orphanExternalKeywords">
+				<h2>Synonymes externes orphelins</h2>
+				<ui:repeat var="keyword" value="#{keywordBean.orphanExternalKeywords}">
+					<div class="ui-widget-content ui-corner-all orphanKeyword orphanExternalKeyword" data-id="#{webConstantsBean.externalKeywordPrefix}#{keyword.id}">
+						<span class="keywordName">#{keyword.name}</span>
+						<span class="keywordFullname">#{keyword.fullname}</span>
+						<h:commandLink action="#{keywordBean.excludeExternalKeyword(keyword.id)}" styleClass="ui-icon ui-icon ui-icon-trash" />
+					</div>
+				</ui:repeat>
+			</h:form>
 		</ui:define>
 	</ui:composition>
 </body>

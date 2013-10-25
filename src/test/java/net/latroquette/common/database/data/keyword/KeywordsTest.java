@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class KeywordsTest {
 
 	@Autowired
-	private KeywordsService keywordsService;
+	private transient KeywordsService keywordsService;
 	/**
 	 * @param keywordsService the keywordsService to set
 	 */

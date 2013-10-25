@@ -2,11 +2,12 @@ package net.latroquette.common.database.data.item;
 
 import java.util.List;
 
-import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.util.parameters.ParameterName;
 
-public interface ItemsService extends Repositories<Item> {
+import com.adi3000.common.database.hibernate.session.DAO;
+
+public interface ItemsService extends DAO<Item> {
 
 	
 	/**

@@ -1,8 +1,8 @@
 package net.latroquette.common.database.data.profile;
 
-import net.latroquette.common.database.data.Repositories;
+import com.adi3000.common.database.hibernate.session.DAO;
 
-public interface UsersService extends Repositories<User>{
+public interface UsersService extends DAO<User>{
 
 	
 	public User getUserByLogin(String login);

@@ -22,14 +22,17 @@
 		</ui:insert>
 		<div id="bodyPart">
 			<ui:include src="/home/tiles/toolbar.xhtml" />
-			<ui:include src="/home/tiles/menu.xhtml" /><!-- 
-		 --><div id="content">
-				<ui:insert name="mainDiv">
-					<ui:include src="/home/tiles/main.xhtml" /><!-- 
-				 --></ui:insert><!-- 
-				 --><ui:insert name="newsWatcher"><!-- 
-					 --><ui:include src="/home/tiles/newsWatcher.xhtml" /><!-- 
-				 --></ui:insert>
+			<ui:include src="/home/tiles/menu.xhtml" />
+			<div id="content">
+				<ui:include src="/home/tiles/breadcrumb.xhtml" />
+		 		<div id="mainDiv">
+		 			<ui:insert name="mainDiv">
+		 				<ui:include src="/home/tiles/main.xhtml" />
+	 				</ui:insert>
+ 				</div>
+ 				<ui:insert name="newsWatcher">
+ 					<ui:include src="/home/tiles/newsWatcher.xhtml" />
+				</ui:insert>
 			</div>
 		</div>
 	</div>

@@ -46,9 +46,9 @@ public class ImageServlet extends HttpServlet {
 
     // Actions ------------------------------------------------------------------------------------
 	@Autowired
-	private FilesService filesService; 
+	private transient FilesService filesService; 
 	@Autowired
-	private Parameters parameters;
+	private transient Parameters parameters;
 		
     /**
 	 * @param parameters the parameters to set

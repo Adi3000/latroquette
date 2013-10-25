@@ -41,50 +41,48 @@
 				} 
 		    });
 		  });
-		 </h:outputScript>
-		<div id="mainDiv">
-				<h:messages></h:messages>
-				<div id="itemDescription">
-					<div id="itemTitle">
-						<div>
-							<div class="field">
-								<h2>#{itemBean.title}</h2>
-							</div>
-						</div>
-						<!--<div id="suggestedItem" class="field">
-							<ul>
-								<li class="selected">Choix1</li>
-								<li>Choix1</li>
-								<li>Choix1</li>
-								<li>Choix1</li>
-								<li>Choix1</li>
-							</ul>
-						</div>-->
-					</div>
-					<div id="clueForIdentifiecation">
-						<div>[Keywords]</div>
-					</div>
-					<div>
-						<div class="field">
-							<p>#{itemBean.description}</p>
-						</div>
+		</h:outputScript>
+		<h:messages></h:messages>
+		<div id="itemDescription">
+			<div id="itemTitle">
+				<div>
+					<div class="field">
+						<h2>#{itemBean.title}</h2>
 					</div>
 				</div>
-				<div id="itemImages">
-					<ui:repeat var="image" value="#{itemBean.fileList}">
-						<div>
-							<a href="/image/#{image.id}" rel="rondell" target="_blank">
-								<h:graphicImage value="/image/#{image.id}"/>
-							</a>
-						</div>
-					</ui:repeat>
+				<!--<div id="suggestedItem" class="field">
+					<ul>
+						<li class="selected">Choix1</li>
+						<li>Choix1</li>
+						<li>Choix1</li>
+						<li>Choix1</li>
+						<li>Choix1</li>
+					</ul>
+				</div>-->
+			</div>
+			<div id="clueForIdentifiecation">
+				<div>[Keywords]</div>
+			</div>
+			<div>
+				<div class="field">
+					<p>#{itemBean.description}</p>
 				</div>
-				<ul id="wishies">
-					<li>
-						<span>Categorie : </span><span>Objet : </span>
-					</li>
-				</ul>
-			</div> 
+			</div>
+		</div>
+		<div id="itemImages">
+			<ui:repeat var="image" value="#{itemBean.fileList}">
+				<div>
+					<a href="/image/#{image.id}" rel="rondell" target="_blank">
+						<h:graphicImage value="/image/#{image.id}"/>
+					</a>
+				</div>
+			</ui:repeat>
+		</div>
+		<ul id="wishies">
+			<li>
+				<span>Categorie : </span><span>Objet : </span>
+			</li>
+		</ul>
   	</ui:define>
 	</ui:composition>
 </body>

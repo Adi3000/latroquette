@@ -5,60 +5,60 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
+		<f:metadata>
+		    <f:viewParam name="register" value="true"/>            
+	 		<f:event listener="#{userBean.checkUserLogged}" type="preRenderView" />
+	 	</f:metadata>
 		<ui:define name="mainDiv">
 			<h:outputStylesheet name="css/profile.css" target="head" />
-			<div id="mainDiv">
-				<div>
-					<h2 id="profileTitle">Bonjour #{userBean.login}</h2>
-					<div id="centerTop">
-						<div id="largeLeftDiv">
-							<div class="rightSmallDiv">
-								<ul>
-									<li>Messagerie</li>
-									<li>Déconnexion</li>
-								</ul>						
-							</div>
-							<div class="rightSmallDiv">
-								<ul>
-									<li>Avatar</li>
-									<li>Mes informations personnelles</li>
-									<li>Disponibilités/Vacances</li>
-									<li>Mes avis</li>
-								</ul>
-							</div>
-							<div class="rightSmallDiv">
-								<ul>
-									<li>Déposer un article</li>
-									<li>Retirer un article</li>
-									<li>Modifier un article</li>
-								</ul>
-							</div>
+			<div>
+				<h2 id="profileTitle">Bonjour #{userBean.login}</h2>
+				<div id="centerTop">
+					<div id="largeLeftDiv">
+						<div class="rightSmallDiv">
+							<ul>
+								<li>Messagerie</li>
+								<li>Déconnexion</li>
+							</ul>						
 						</div>
-						<div id="largeRightDiv">
-							<div class="leftSmallDiv">
-								<ul>
-									<li>TroQueurs Favoris</li>
-									<li>Discussions instantannée</li>
-									<li>Le Journal</li>
-									<li>Livre d'or</li>
-								</ul>
-							</div>
-							<div class="leftSmallDiv">
-								<ul>
-									<li>Echanges effectués</li>
-									<li>Echanges en cours</li>
-									<li>Recherche à suivre</li>
-									<li>Donner un avis</li>
-								</ul>
-							</div>
+						<div class="rightSmallDiv">
+							<ul>
+								<li>Avatar</li>
+								<li>Mes informations personnelles</li>
+								<li>Disponibilités/Vacances</li>
+								<li>Mes avis</li>
+							</ul>
+						</div>
+						<div class="rightSmallDiv">
+							<ul>
+								<li>Déposer un article</li>
+								<li>Retirer un article</li>
+								<li>Modifier un article</li>
+							</ul>
 						</div>
 					</div>
+					<div id="largeRightDiv">
+						<div class="leftSmallDiv">
+							<ul>
+								<li>TroQueurs Favoris</li>
+								<li>Discussions instantannée</li>
+								<li>Le Journal</li>
+								<li>Livre d'or</li>
+							</ul>
+						</div>
+						<div class="leftSmallDiv">
+							<ul>
+								<li>Echanges effectués</li>
+								<li>Echanges en cours</li>
+								<li>Recherche à suivre</li>
+								<li>Donner un avis</li>
+							</ul>
+						</div>
+					</div>
+				</div>
 <!-- 					<div> -->
 <!-- 						<h:link outcome="infos">Mon profil</h:link> -->
 <!-- 					</div> -->
-				</div>
-				<h:panelGroup rendered="">
-				</h:panelGroup>
 			</div>
 		</ui:define>
 	</ui:composition>

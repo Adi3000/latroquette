@@ -23,26 +23,24 @@
 					});		
 				});
 	 		</h:outputScript> 
-		 	<div id="mainDiv">
-				<div>
-					<h1>
-						Résultat de la recherche "#{itemSearchBean.request}" : #{itemSearchBean.count} résultats
-					</h1>
-				</div>
-				<div id="itemList">
-					<div id="addItems" style="display:none;">
-						<div class="item">
-							<div class="itemImages" />
-							<div class="itemInfos" />
-							<div class="itemDetails">
-								<h2 class="itemTitle" />
-								<p class="itemDescription" />
-								<ul class="itemWishies" />
-							</div>
+			<div>
+				<h1>
+					Résultat de la recherche "#{itemSearchBean.request}" : #{itemSearchBean.count} résultats
+				</h1>
+			</div>
+			<div id="itemList">
+				<div id="addItems" style="display:none;">
+					<div class="item">
+						<div class="itemImages" />
+						<div class="itemInfos" />
+						<div class="itemDetails">
+							<h2 class="itemTitle" />
+							<p class="itemDescription" />
+							<ul class="itemWishies" />
 						</div>
 					</div>
 				</div>
-			</div> 
+			</div>
 		</ui:define>
 	</ui:composition>
 </body>

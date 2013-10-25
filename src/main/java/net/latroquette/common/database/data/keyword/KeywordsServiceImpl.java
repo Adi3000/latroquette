@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import net.latroquette.common.database.data.Repositories;
 import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.ItemsService;
+import net.latroquette.common.util.Services;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -24,16 +24,11 @@ import com.adi3000.common.database.hibernate.session.AbstractDAO;
 import com.adi3000.common.util.optimizer.CommonValues;
 import com.amazon.ECS.client.jax.BrowseNode;
 
-@Repository(value=Repositories.KEYWORDS_SERVICE)
+@Repository(value=Services.KEYWORDS_SERVICE)
 public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements KeywordsService{
 
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8371410437425902378L;
 	@Autowired
-	private ItemsService itemsService;
+	private transient ItemsService itemsService;
 	
 	/**
 	 * @param itemsService the itemsService to set

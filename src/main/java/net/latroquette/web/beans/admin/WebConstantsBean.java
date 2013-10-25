@@ -1,7 +1,15 @@
 package net.latroquette.web.beans.admin;
 
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+
+import net.latroquette.common.util.LaTroquetteService;
+import net.latroquette.common.util.Services;
+import net.latroquette.common.util.web.Navigation;
 
 import com.adi3000.common.util.optimizer.CommonValues;
 
@@ -16,6 +24,19 @@ public class WebConstantsBean {
 	private final String externalKeywordPrefix = EXTERNAL_KEYWORD_PREFIX;
 	private final String additionnalKeywordPrefix = ADDITIONNAL_KEYWORD_PREFIX;
 	private final String additionnalExternalKeywordPrefix = ADDITIONNAL_EXTERNAL_KEYWORD_PREFIX;
+	
+	private Map<String, Navigation> navigationMap;
+	
+	@ManagedProperty(value=Services.LA_TROQUETTE_SERVICE_JSF)
+	private transient LaTroquetteService laTroquetteService;
+	
+	/**
+	 * @param laTroquetteService the laTroquetteService to set
+	 */
+	public void setLaTroquetteService(LaTroquetteService laTroquetteService) {
+		this.laTroquetteService = laTroquetteService;
+	}
+
 	public String getSeparator(){
 		return separator;
 	}
@@ -37,4 +58,24 @@ public class WebConstantsBean {
 	public String getAdditionnalExternalKeywordPrefix() {
 		return additionnalExternalKeywordPrefix;
 	}
+	
+	/**
+	 * @return the navigationMap
+	 */
+	public Map<String, Navigation> getNavigationMap() {
+		return navigationMap;
+	}
+	
+	/**
+	 * @param navigationMap the navigationMap to set
+	 */
+	public void setNavigationMap(Map<String, Navigation> navigationMap) {
+		this.navigationMap = navigationMap;
+	}
+	
+	@PostConstruct
+	public void initWebConstants(){
+		navigationMap = laTroquetteService.getNavigationMap();
+	}
+	
 }

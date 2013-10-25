@@ -3,11 +3,10 @@ package net.latroquette.common.database.data.keyword;
 import java.util.Collection;
 import java.util.List;
 
-import net.latroquette.common.database.data.Repositories;
-
+import com.adi3000.common.database.hibernate.session.DAO;
 import com.amazon.ECS.client.jax.BrowseNode;
 
-public interface KeywordsService extends Repositories<Keyword>{
+public interface KeywordsService extends DAO<Keyword>{
 	
 	public static final String KEYWORD_ANCESTOR_SEPARATOR = " > ";
 	public static final String MENU_KEYWORD_ONLY_FILTER = "keyword-menu-only";

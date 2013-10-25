@@ -28,7 +28,7 @@ import net.latroquette.common.database.data.location.LocationsService;
 public class LocationSearch {
 	
 	@Autowired
-	private LocationsService locationsService;
+	private transient LocationsService locationsService;
 	
 	/**
 	 * @param locationsService the locationsService to set
