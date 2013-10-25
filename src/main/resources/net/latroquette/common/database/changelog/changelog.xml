@@ -31,4 +31,12 @@
     			relativeToChangelogFile="true" 
     			path="0.0.1/referentiel/01-create_parameters.sql"/>
     </changeSet>
+    <changeSet id="0.0.1-00.3-parameter" author="adi3000">
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/modeling/03-create_navigation_table.sql"/>
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/referentiel/03-init_navigation_map.sql"/>
+    </changeSet>
 </databaseChangeLog>
