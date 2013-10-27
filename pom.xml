@@ -107,13 +107,37 @@
 							host="adi3000.com" trust="yes" 
 							username="tomcat-deploy"
 							keyfile="${tomcat.deploy.keyfile}"
- 							command="sh ${tomcat.deploy.script} ${project.groupId}:${.project.artifactId}:${project.version}" />
+ 							command="sh ${tomcat.deploy.script} ${project.groupId}:${project.artifactId}:${project.version}" />
 						<!-- SSH -->
 						<taskdef name="sshexec"
 							classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec"
 							classpathref="maven.plugin.classpath" />
 					</target>
 				</configuration>
+				<executions>
+					<execution>
+						<id>ant-liquibase-update</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<!-- calls deploy script -->
+								<sshexec 
+									host="adi3000.com" trust="yes" 
+									username="tomcat-deploy"
+									keyfile="${tomcat.deploy.keyfile}"
+		 							command="sh ${tomcat.updateDb.script} ${project.scm.url} ${filter.environment}" />
+								<!-- SSH -->
+								<taskdef name="sshexec"
+									classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec"
+									classpathref="maven.plugin.classpath" />
+							</target>
+							<skip>${liquibase.ant.update.skip}</skip>
+						</configuration>
+					</execution>
+				</executions>
 				<dependencies>
 				    <dependency>
 						<groupId>org.apache.ant</groupId>
@@ -265,6 +289,7 @@
 			<properties>
 				<filter.environment>test</filter.environment>
 				<liquibase.update.skip>false</liquibase.update.skip>
+				<liquibase.ant.update.skip>true</liquibase.ant.update.skip>
 			</properties>
 		</profile>
 		<profile>
@@ -274,6 +299,17 @@
 			</activation>
 			<properties>
 				<liquibase.update.skip>false</liquibase.update.skip>
+				<liquibase.ant.update.skip>true</liquibase.ant.update.skip>
+			</properties>
+		</profile>
+		<profile>
+			<id>updateDbAnt</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<liquibase.update.skip>true</liquibase.update.skip>
+				<liquibase.ant.update.skip>false</liquibase.ant.update.skip>
 			</properties>
 		</profile>
 		<profile>
@@ -283,6 +319,7 @@
 			</activation>
 			<properties>
 				<liquibase.update.skip>true</liquibase.update.skip>
+				<liquibase.ant.update.skip>true</liquibase.ant.update.skip>
 			</properties>
 		</profile>
 	</profiles>
