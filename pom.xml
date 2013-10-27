@@ -128,7 +128,7 @@
 									host="adi3000.com" trust="yes" 
 									username="tomcat-deploy"
 									keyfile="${tomcat.deploy.keyfile}"
-		 							command="sh ${tomcat.updateDb.script} ${project.scm.url} ${filter.environment}" />
+		 							command="sh ${tomcat.updatedb.script} ${project.scm.url} ${filter.environment}" />
 								<!-- SSH -->
 								<taskdef name="sshexec"
 									classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec"
