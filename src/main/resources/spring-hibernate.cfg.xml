@@ -4,6 +4,5 @@
 <hibernate-configuration>
 	<session-factory>
 		<property name="hibernate.connection.datasource">${database.datasource}</property>
-		<property name="hibernate.show_sql">true</property>
 	</session-factory>
 </hibernate-configuration>

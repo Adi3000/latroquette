@@ -7,6 +7,5 @@
 		<property name="hibernate.connection.username">${database.user}</property>
 		<property name="hibernate.connection.password">${database.password}</property>
 		<property name="hibernate.connection.driver_class">${database.jdbc.driver}</property>
-		<property name="hibernate.show_sql">false</property>
 	</session-factory>
 </hibernate-configuration>
