@@ -9,6 +9,7 @@ import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.ItemsService;
 import net.latroquette.common.util.Services;
 
+import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
@@ -173,7 +174,10 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 		Criteria req = createCriteria(ExternalKeyword.class)
 				.add(Restrictions.eq("uid", amazonBrowseNode.getBrowseNodeId()))
 				.add(Restrictions.eq("source", ExternalKeyword.AMAZON_SOURCE))
-				.setFetchMode("", FetchMode.SELECT);
+				.setFetchMode("", FetchMode.SELECT)
+				.setCacheable(true)
+				.setCacheMode(CacheMode.NORMAL)
+				.setCacheRegion("keywords");
 		return (ExternalKeyword)req.uniqueResult();
 	}
 	
@@ -225,7 +229,10 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 					" SELECT DISTINCT keyword FROM ExternalKeyword keyword ".concat(
 					" WHERE keyword.excluded = '").concat(CommonValues.FALSE.toString()).concat("' and NOT EXISTS ").concat(
 							"( FROM MainKeyword mainKeyword INNER JOIN  mainKeyword.externalKeywords linkedKeyword where linkedKeyword = keyword )");
-		Query req = createQuery(hql);
+		Query req = createQuery(hql)
+				.setCacheable(true)
+				.setCacheMode(CacheMode.NORMAL)
+				.setCacheRegion("keywords");
 		
 
 		@SuppressWarnings("unchecked")
@@ -244,7 +251,10 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 				" LEFT JOIN FETCH keyword.children ").concat(
 				" WHERE keyword.ancestor is null ");
 
-		Query req = createQuery(hql);
+		Query req = createQuery(hql)
+				.setCacheable(true)
+				.setCacheMode(CacheMode.NORMAL)
+				.setCacheRegion("keywords");
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = req.list();
 		for(MainKeyword keyword : list){
@@ -261,7 +271,10 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 	@Transactional(readOnly=true)
 	public List<MainKeyword> getMainKeywordByIds(List<Integer> ids){
 		String hql = "SELECT keyword FROM MainKeyword keyword WHERE keyword.id IN :list";
-		Query req = createQuery(hql).setParameterList("list", ids);
+		Query req = createQuery(hql).setParameterList("list", ids)
+				.setCacheable(true)
+				.setCacheMode(CacheMode.NORMAL)
+				.setCacheRegion("keywords");
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = (List<MainKeyword>)req.list();
 		return list;
@@ -290,7 +303,10 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 		getSession().enableFilter(MENU_KEYWORD_ONLY_FILTER);
 		Criteria req = createCriteria(MainKeyword.class)
 				.add(Restrictions.isNull("ancestor"))
-				.setFetchMode("children", FetchMode.SELECT);
+				.setFetchMode("children", FetchMode.SELECT)
+				.setCacheable(true)
+				.setCacheMode(CacheMode.NORMAL)
+				.setCacheRegion("keywords");
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = req.list();
 		for(MainKeyword keyword : list){
@@ -319,7 +335,10 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 		String likeValue = name.replace(' ', '_').replace('-', '_');
 		Criteria req = createCriteria(MainKeyword.class)
 				.add(Restrictions.like("name", likeValue, MatchMode.ANYWHERE))
-				.add(Restrictions.isNotNull("ancestor"));
+				.add(Restrictions.isNotNull("ancestor"))
+				.setCacheable(true)
+				.setCacheMode(CacheMode.NORMAL)
+				.setCacheRegion("keywords");
 		@SuppressWarnings("unchecked")
 		List<MainKeyword> list = req.list();
 		return list;

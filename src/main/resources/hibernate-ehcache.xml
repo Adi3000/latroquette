@@ -1,7 +1,6 @@
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd">
-    <diskStore path="java.io.tmpdir"/>
+    <diskStore path="/tmp/latroquette/hibernate"/>
     <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false" />        
-	<cache name="parameters" maxElementsInMemory="100" eternal="true" overflowToDisk="false" />
 	<cache name="menu" maxElementsInMemory="100" eternal="true"	overflowToDisk="false" />
 	<cache name="keywords" maxElementsInMemory="10000" eternal="true" overflowToDisk="false" />
 </ehcache>

@@ -23,6 +23,7 @@ import net.latroquette.web.security.SecurityUtil;
 import org.apache.commons.lang.StringUtils;
 
 import com.adi3000.common.util.security.Security;
+import com.adi3000.common.web.faces.FacesUtil;
 import com.adi3000.common.web.jsf.UtilsBean;
 
 
@@ -44,6 +45,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	private transient String passwordConfirm;
 	private transient String mailConfirm;
 	private User user;
+	private String password;
 	private int loginState;
 	private String previousURI;
 	private String previousQueryString;
@@ -184,6 +186,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 			fc.validationFailed();
 		}
 		if(fc.isValidationFailed()){
+			setDisplayLoginBox(true);
 			return null;
 		}
 		newUser.setLogin(this.getLogin());
@@ -206,13 +209,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	public String loginUser()
 	{
 		initPreviousURL();
-		String forwardUrl = "index";
-		if(!StringUtils.isEmpty(previousURI) && !previousQueryString.contains(LOGIN_VIEW_URI)){
-			forwardUrl = previousURI;
-			if(!StringUtils.isEmpty(previousQueryString)){
-				forwardUrl = forwardUrl.concat("?faces-redirect=true&").concat(UtilsBean.urlDecode(previousQueryString));
-			}
-		}
+		String forwardUrl = null;
 		loginState = NOT_LOGGED_IN;
 		user = usersService.getUserByLogin(this.getLogin());
 		if(user != null && StringUtils.equals(user.getPassword(), this.getPassword())){
@@ -222,18 +219,25 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		}else{
 			user = new User();
 			loginState = ANONYMOUS;
+			FacesContext fc = FacesContext.getCurrentInstance();
+			FacesMessage msg = new FacesMessage("Utilisateur ou mot de passe incorrect");
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			fc.addMessage(null, msg);
+			fc.validationFailed();
 		}
 		switch (loginState) {
 			case LOGGED_IN:
-				break;
-			default:
-				forwardUrl = "login?logInFail="+loginState;
-				if(!StringUtils.isEmpty(previousURI) && !previousQueryString.contains(LOGIN_VIEW_URI)){
-					forwardUrl = forwardUrl.concat("&"+PARAMETER_REQUEST_URI+"=").concat(previousURI);
+				if(!StringUtils.isEmpty(previousURI)){
+					forwardUrl = previousURI;
 					if(!StringUtils.isEmpty(previousQueryString)){
-						forwardUrl = forwardUrl.concat("&"+PARAMETER_QUERY_STRING+"=").concat(previousQueryString);;
+						forwardUrl = forwardUrl.concat("?").concat(UtilsBean.urlDecode(previousQueryString));
 					}
 				}
+				forwardUrl = FacesUtil.prepareRedirect(forwardUrl);
+				setDisplayLoginBox(true);
+				break;
+			default:
+				forwardUrl = null;
 				break;
 		}
 		return forwardUrl;
@@ -241,7 +245,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	
 	public String logoutUser()
 	{
-		User user = usersService.getUserByLogin(this.getLogin());
+		User user = usersService.getUserByLogin(getLogin());
 		user.setToken(null);
 		usersService.updateUser(user);
 		//Unset properties of this user
@@ -252,8 +256,11 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	
 	private void initPreviousURL(){
 		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		previousURI = params.get(PARAMETER_REQUEST_URI);
-		previousQueryString = params.get(PARAMETER_QUERY_STRING);
+		String previousURI = params.get(PARAMETER_REQUEST_URI);
+		if(!StringUtils.isEmpty(previousURI) && !previousURI.contains(LOGIN_VIEW_URI)){
+			this.previousURI = params.get(PARAMETER_REQUEST_URI);
+			this.previousQueryString = params.get(PARAMETER_QUERY_STRING);
+		}
 	}
 	
 	private void setLogginUserInfo(User user){
@@ -299,11 +306,11 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 
 	@Override
 	public String getPassword() {
-		return user.getPassword();
+		return password;
 	}
 
 	public void setPassword(String password) {
-		user.setPassword(password);
+		this.password = password;
 	}
 
 	@Override

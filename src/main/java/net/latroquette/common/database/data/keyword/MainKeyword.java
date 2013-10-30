@@ -2,9 +2,9 @@ package net.latroquette.common.database.data.keyword;
 
 import java.util.List;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,12 +16,16 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.FetchProfile;
 import org.hibernate.annotations.FetchProfile.FetchOverride;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.FilterDefs;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Type;
 
 import com.adi3000.common.database.hibernate.data.AbstractTreeNodeDataObject;
@@ -38,6 +42,8 @@ import com.adi3000.common.database.hibernate.data.AbstractTreeNodeDataObject;
 @FetchProfile(name=KeywordsService.FETCH_CHILDREN_PROFILE, fetchOverrides={
 		@FetchOverride(entity=MainKeyword.class, association="children", mode=FetchMode.JOIN)
 })
+@Cacheable
+@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
 public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> implements Keyword{
 	public static final Integer MAIN_ANCESTOR_RELATIONSHIP = 1;
 	public static final Integer CHILDREN_RELATIONSHIP = 2;
@@ -84,8 +90,10 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	/**
 	 * @return the mainAncestor
 	 */
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name="keyword_parent_id")
+	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
 	public MainKeyword getAncestor(){
 		return ancestor;
 	}
@@ -100,12 +108,14 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	/**
 	 * @return the children
 	 */
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name="keywords_relationship", 
 		joinColumns={@JoinColumn(name="keyword_from_id")}, 
 	    inverseJoinColumns={@JoinColumn(name="keyword_to_id")}
 	)
 	@Filter(name=KeywordsService.MENU_KEYWORD_ONLY_FILTER, condition="keyword_in_menu = 'Y'")
+	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
 	public List<MainKeyword> getChildren() {
 		return children;
 	}
@@ -147,10 +157,12 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	 * Get the {@link ExternalKeyword} linked to this keyword
 	 * @return
 	 */
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name="external_keywords_relationship", 
 	joinColumns={@JoinColumn(name="keyword_id")}, 
     inverseJoinColumns={@JoinColumn(name="ext_keyword_id")})
+	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
 	public List<ExternalKeyword> getExternalKeywords() {
 		return externalKeywords;
 	}

@@ -5,13 +5,10 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition>
-		<f:metadata>
-		             
-	 	</f:metadata>
 		<h:outputStylesheet name="css/profile.css" target="head" />
 		<h:outputScript target="head" rendered="#{!userBean.loggedIn}">
 			var registerDisplayed = false;
-			var forceLogin = "${userBean.displayLoginBox}";
+			var forceLogin = "#{userBean.displayLoginBox}";
 			$(function() {
 				$("#loginDiv").hide(0);
 				$("#switchToLogin").click(function(){

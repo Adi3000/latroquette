@@ -9,7 +9,7 @@ public class SecurityUtil {
 	private static final String LOGIN_VIEW_PATH = "/profile/login";
 	public static boolean checkUserLogged(UserBean user){
 		if (!Security.isUserLogged(user) || !user.getLoggedIn()){
-			FacesUtil.navigationRedirect(LOGIN_VIEW_PATH);
+			FacesUtil.navigationForward(LOGIN_VIEW_PATH);
 			return false;
 		}
 		return true;

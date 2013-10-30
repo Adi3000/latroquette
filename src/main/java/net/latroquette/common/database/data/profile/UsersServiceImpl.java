@@ -18,7 +18,7 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	public User getUserByLogin(String login){
 		Criteria req = createCriteria(User.class)
 				.setMaxResults(1)
-				.add(Restrictions.eq("login", login)) ;
+				.add(Restrictions.eq("login", login).ignoreCase()) ;
 		return (User)req.uniqueResult();
 	}
 
