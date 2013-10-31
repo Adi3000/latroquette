@@ -49,7 +49,7 @@ import com.adi3000.common.database.hibernate.data.AbstractTreeNodeDataObject;
 		@FetchOverride(entity=MainKeyword.class, association="children", mode=FetchMode.JOIN)
 })
 @Cacheable
-@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
+@Cache(region = "keywords", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> implements Keyword{
 	public static final Integer MAIN_ANCESTOR_RELATIONSHIP = 1;
 	public static final Integer CHILDREN_RELATIONSHIP = 2;
@@ -99,7 +99,7 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	@ManyToOne
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name="keyword_parent_id")
-	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
+	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@XmlTransient
 	public MainKeyword getAncestor(){
 		return ancestor;
@@ -125,7 +125,7 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 			@Filter(name=KeywordsService.MENU_KEYWORD_ONLY_FILTER, condition="keyword_in_menu = 'Y'"),
 			@Filter(name=KeywordsService.MENU_KEYWORD_EXCLUDE_SYNONYME_FILTER, condition="keyword_is_synonym = 'N'")
 	})
-	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
+	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@XmlTransient
 	public List<MainKeyword> getChildren() {
 		return children;
@@ -173,7 +173,7 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	@JoinTable(name="external_keywords_relationship", 
 	joinColumns={@JoinColumn(name="keyword_id")}, 
     inverseJoinColumns={@JoinColumn(name="ext_keyword_id")})
-	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
+	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	@XmlTransient
 	public List<ExternalKeyword> getExternalKeywords() {
 		return externalKeywords;
