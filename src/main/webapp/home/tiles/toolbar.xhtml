@@ -10,7 +10,7 @@
 		<h:outputStylesheet name="js/loopj-jquery-tokeninput/styles/token-input-mac.css" target="head" />
 		<h:outputStylesheet name="js/loopj-jquery-tokeninput/styles/token-input-facebook.css" target="head" />
 		<h:outputScript target="head">
-		    $(document).ready(function() {
+		   $(function(){
 		    	$("#searchForm\\:searchObjet")
 		    		/*.autocomplete({
 				    	source: "#{facesContext.externalContext.requestContextPath}/rest/search/item/",
@@ -47,9 +47,8 @@
 					 {
 					 	theme: "facebook",
 		    			hintText: "Code postal ou Ville",
-					 	tokenValue: "amazonId",	
 					 	queryParam: "term"
-					 }       
+					 }
 				);
 		    	$("#token-input-searchForm\\:searchCity")
 		    		.val("Lieu(x)").toggleClass("backgroundText", true)

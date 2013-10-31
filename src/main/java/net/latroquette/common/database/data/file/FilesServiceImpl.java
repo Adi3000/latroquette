@@ -101,7 +101,7 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 			return null;
 		}
 		
-        String prefix = String.valueOf(new Date().getTime()).concat(FilenameUtils.getBaseName(fileName));
+        String prefix = String.valueOf(new Date().getTime()).concat("_").concat(FilenameUtils.getBaseName(fileName));
         String suffix = FilenameUtils.getExtension(fileName);
         java.io.File resizedFile = null;
         OutputStream output = null;
@@ -111,7 +111,7 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
         File file = null;
         try {
         	// Create file with unique name in upload folder and write to it.
-        	resizedFile = java.io.File.createTempFile(prefix + "_", "." + suffix, dataDir);
+        	resizedFile = java.io.File.createTempFile(prefix.concat("_"), ".".concat(suffix), dataDir);
             
             //Create a resized image
     		int imgMaxHeight = parameters.getIntValue(ParameterName.IMG_MAX_HEIGHT);

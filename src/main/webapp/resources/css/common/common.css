@@ -1,7 +1,5 @@
 @CHARSET "UTF-8";
 
-
-
 body{
 	font-family:Arial,Comic Sans MS, Serif;
 	margin-left: auto;
@@ -9,7 +7,9 @@ body{
 	width: 1000px;
 	margin : 0px auto 0px auto;
 }
-
+.ui-widget {
+	font-size : 1em; 
+}
 #loadingDiv{
 	position: fixed;
 	width: 100%;
@@ -207,4 +207,8 @@ ul.ui-autocomplete{
 .backgroundText{
 	color: #888888;
 	font-style: italic;
+}
+
+#itemCategory{
+	width : 150px;
 }

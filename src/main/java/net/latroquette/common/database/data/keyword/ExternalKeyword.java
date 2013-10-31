@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.Type;
 
@@ -84,6 +85,7 @@ public class ExternalKeyword extends AbstractTreeNodeDataObject<ExternalKeyword>
 	 */
 	@ManyToOne
 	@JoinColumn(name="ext_keyword_parent_id")
+	@XmlTransient
 	public ExternalKeyword getAncestor() {
 		return ancestor;
 	}
@@ -127,6 +129,7 @@ public class ExternalKeyword extends AbstractTreeNodeDataObject<ExternalKeyword>
 		this.source = source;
 	}
 	@OneToMany(mappedBy="ancestor",fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@XmlTransient
 	public List<ExternalKeyword> getChildren() {
 		return children;
 	}
@@ -156,6 +159,7 @@ public class ExternalKeyword extends AbstractTreeNodeDataObject<ExternalKeyword>
 	 * @return the mainKeyword
 	 */
 	@Transient
+	@XmlTransient
 	public List<MainKeyword> getMainKeywords() {
 		return mainKeywords;
 	}
@@ -165,5 +169,12 @@ public class ExternalKeyword extends AbstractTreeNodeDataObject<ExternalKeyword>
 	public void setMainKeyword(List<MainKeyword> mainKeywords) {
 		this.mainKeywords = mainKeywords;
 	}
-	
+	@Transient	
+	public KeywordType getKeywordType(){
+		return KeywordType.EXTERNAL_KEYWORD;
+	}
+	@Transient
+	public int getKeywordTypeId(){
+		return getKeywordType().getId();
+	}
 }

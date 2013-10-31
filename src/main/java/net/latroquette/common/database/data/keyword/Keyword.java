@@ -30,4 +30,8 @@ public interface Keyword extends DataObject{
 	 * Remove the ancestor
 	 */
 	public void removeAncestor();
+	
+	public KeywordType getKeywordType();
+
+	public int getKeywordTypeId();
 }

@@ -23,24 +23,26 @@
 		</div>
 		<div id="menu">
 			<ul id="mega-1" class="menu">
-		      <c:forEach items="${menuBean.menuEntries}" var="node">
-		      	<c:if test="${node.hasParent}">
-		      		<c:if test="${node.differenceLevel > 0}">
-	   					<c:forEach begin="1" end="${node.differenceLevel}" var="i">
-	   						<!-- closing tag ul/li if last child -->
-		        			<h:outputText value="&lt;/li&gt;&lt;/ul&gt;" escape="false" />
-	        			</c:forEach>
-        			</c:if>
-		   			<!-- open tag li -->
-	        		<h:outputText value="&lt;li&gt;" escape="false" />
-	          		<a href="#">#{node.value.name}</a>
-	   				<!-- open tag ul on the first child  -->
-	        		<h:outputText rendered="#{node.hasChild}" value="&lt;ul&gt;" escape="false" />
-	   				<!-- do not close li directly if there is child -->
-	        		<h:outputText rendered="#{!node.lastChild and !node.hasChild}" value="&lt;/li&gt;" escape="false" />
-               </c:if>
-		      </c:forEach>
-		    </ul>
+				<c:forEach items="${menuBean.menuEntries}" var="node">
+					<c:if test="${node.hasParent}">
+						<c:if test="${node.differenceLevel > 0}">
+							<c:forEach begin="1" end="${node.differenceLevel}" var="i">
+								<!-- closing tag ul/li if last child -->
+								<h:outputText value="&lt;/li&gt;&lt;/ul&gt;" escape="false" />
+							</c:forEach>
+						</c:if>
+						<!-- open tag li -->
+						<h:outputText value="&lt;li&gt;" escape="false" />
+						<a href="#">#{node.value.name}</a>
+						<!-- open tag ul on the first child  -->
+						<h:outputText rendered="#{node.hasChild}" 
+							value="&lt;ul&gt;"	escape="false" />
+						<!-- do not close li directly if there is child -->
+						<h:outputText rendered="#{!node.lastChild and !node.hasChild}"
+							value="&lt;/li&gt;" escape="false" />
+					</c:if>
+				</c:forEach>
+			</ul>
 		</div>
 	</ui:composition>
 </body>

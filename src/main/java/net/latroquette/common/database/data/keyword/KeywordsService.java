@@ -10,6 +10,7 @@ public interface KeywordsService extends DAO<Keyword>{
 	
 	public static final String KEYWORD_ANCESTOR_SEPARATOR = " > ";
 	public static final String MENU_KEYWORD_ONLY_FILTER = "keyword-menu-only";
+	public static final String MENU_KEYWORD_EXCLUDE_SYNONYME_FILTER = "keyword-menu-exclude-synonym";
 	public static final String MENU_KEYWORD_CHILDREN_ONLY_FILTER = "keyword-children-menu-only";
 	public static final String FETCH_CHILDREN_PROFILE = "fetch-children-profile";
 	
@@ -87,7 +88,12 @@ public interface KeywordsService extends DAO<Keyword>{
 	 * @return
 	 */
 	public List<ExternalKeyword> getExternalKeywordByIds(List<Integer> ids);
-	
+	/**
+	 * Return {@link ExternalKeyword} list filtered by an Id
+	 * @param ids
+	 * @return
+	 */
+	public ExternalKeyword getExternalKeywordById(Integer id);
 	/**
 	 * Return all root menu entry (with no ancestor and marked as displayed in menu)
 	 * @return
@@ -106,4 +112,13 @@ public interface KeywordsService extends DAO<Keyword>{
 	public Collection<MainKeyword> searchMainKeyword(String name);
 	
 	public Collection<ExternalKeyword> searchExternalKeyword(String name, boolean createIfNotFound);
+	
+	public List<Keyword> getAllChildrenOf(Integer id, KeywordType isExternal);
+	
+	/**
+	 * Return all root categories entry (with no ancestor and marked as displayed in menu)
+	 * @return
+	 */
+	public List<MainKeyword> getRootCategoriesEntries();
+
 }

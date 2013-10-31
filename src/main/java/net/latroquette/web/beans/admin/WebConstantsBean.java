@@ -24,6 +24,8 @@ public class WebConstantsBean {
 	private final String externalKeywordPrefix = EXTERNAL_KEYWORD_PREFIX;
 	private final String additionnalKeywordPrefix = ADDITIONNAL_KEYWORD_PREFIX;
 	private final String additionnalExternalKeywordPrefix = ADDITIONNAL_EXTERNAL_KEYWORD_PREFIX;
+	private final String booleanTrue = Boolean.TRUE.toString();
+	private final String booleanFalse = Boolean.FALSE.toString();
 	
 	private Map<String, Navigation> navigationMap;
 	
@@ -73,9 +75,23 @@ public class WebConstantsBean {
 		this.navigationMap = navigationMap;
 	}
 	
+	/**
+	 * @return the booleanTrue
+	 */
+	public String getBooleanTrue() {
+		return booleanTrue;
+	}
+	/**
+	 * @return the booleanFalse
+	 */
+	public String getBooleanFalse() {
+		return booleanFalse;
+	}
+
 	@PostConstruct
 	public void initWebConstants(){
 		navigationMap = laTroquetteService.getNavigationMap();
 	}
+
 	
 }

@@ -14,13 +14,13 @@
 		 	<h:outputScript name="js/item.js" target="head" /> 
 		 	<h:outputScript target="head" >
 				$(function() {
-					var result = $.getJSON("/rest/search/item", {
+					var result = $.getJSON("#{facesContext.externalContext.requestContextPath}/rest/search/item", {
 						r : "#{itemSearchBean.request}", 
 						p : "#{itemSearchBean.page}"
-					}, 
-					function(data){
-						$("#itemList").addItems(data);
-					});		
+						}, 
+						function(data){
+							$("#itemList").addItems(data);
+						});		
 				});
 	 		</h:outputScript> 
 			<div>

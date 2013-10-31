@@ -281,6 +281,17 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 	}
 	
 	/**
+	 * Return {@link ExternalKeyword} list filtered by an Id
+	 * @param ids
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public ExternalKeyword getExternalKeywordById(Integer id){
+		ExternalKeyword keyword = (ExternalKeyword) getSession().get(ExternalKeyword.class,id);
+		return keyword;
+	}
+
+	/**
 	 * Return {@link ExternalKeyword} list filtered by an Ids list
 	 * @param ids
 	 * @return
@@ -313,6 +324,27 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 			keyword.initializeRecursively();
 		}
 		getSession().disableFilter(MENU_KEYWORD_ONLY_FILTER);
+		return list;
+	}
+	/**
+	 * Return all root categories entry (with no ancestor and marked as displayed in menu)
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public List<MainKeyword> getRootCategoriesEntries(){
+		getSession().enableFilter(MENU_KEYWORD_EXCLUDE_SYNONYME_FILTER);
+		Criteria req = createCriteria(MainKeyword.class)
+				.add(Restrictions.isNull("ancestor"))
+				.setFetchMode("children", FetchMode.SELECT)
+				.setCacheable(true)
+				.setCacheMode(CacheMode.NORMAL)
+				.setCacheRegion("keywords");
+		@SuppressWarnings("unchecked")
+		List<MainKeyword> list = req.list();
+		for(MainKeyword keyword : list){
+			keyword.initializeRecursively();
+		}
+		getSession().disableFilter(MENU_KEYWORD_EXCLUDE_SYNONYME_FILTER);
 		return list;
 	}
 	
@@ -349,5 +381,26 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 		List<ExternalKeyword> list = getAmazonKeywordsFromItem(name, createIfNotFound);
 		
 		return list;
+	}
+	
+	@Transactional(readOnly=true)
+	public List<Keyword> getAllChildrenOf(Integer id, KeywordType keywordType){
+		Keyword parentKeyword = null;
+		List<Keyword> children = new ArrayList<>();
+		switch (keywordType) {
+			case EXTERNAL_KEYWORD:
+					parentKeyword = (Keyword) getSession().get(ExternalKeyword.class, id);
+				break;
+			case MAIN_KEYWORD:
+					getSession().enableFilter(MENU_KEYWORD_EXCLUDE_SYNONYME_FILTER);
+					parentKeyword = (Keyword) getSession().get(MainKeyword.class, id);
+					getSession().enableFilter(MENU_KEYWORD_EXCLUDE_SYNONYME_FILTER);
+					children.addAll(((MainKeyword)parentKeyword).getExternalKeywords());
+				break;
+			default:
+				return children;
+		}
+		children.addAll(0, parentKeyword.getChildren());
+		return children;
 	}
 }

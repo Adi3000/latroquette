@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -24,6 +25,7 @@ import org.hibernate.annotations.FetchProfile.FetchOverride;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.FilterDefs;
+import org.hibernate.annotations.Filters;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Type;
@@ -36,9 +38,13 @@ import com.adi3000.common.database.hibernate.data.AbstractTreeNodeDataObject;
 @SequenceGenerator(name = "keywords_keyword_id_seq", sequenceName = "keywords_keyword_id_seq", allocationSize=1)
 @FilterDefs({
 	@FilterDef(name=KeywordsService.MENU_KEYWORD_ONLY_FILTER),
-	@FilterDef(name=KeywordsService.MENU_KEYWORD_CHILDREN_ONLY_FILTER)
+	@FilterDef(name=KeywordsService.MENU_KEYWORD_CHILDREN_ONLY_FILTER),
+	@FilterDef(name=KeywordsService.MENU_KEYWORD_EXCLUDE_SYNONYME_FILTER)
 })
-@Filter(name=KeywordsService.MENU_KEYWORD_ONLY_FILTER, condition="keyword_in_menu = 'Y'")
+@Filters({
+	@Filter(name=KeywordsService.MENU_KEYWORD_ONLY_FILTER, condition="keyword_in_menu = 'Y'"),
+	@Filter(name=KeywordsService.MENU_KEYWORD_EXCLUDE_SYNONYME_FILTER, condition="keyword_is_synonym = 'N'")
+})
 @FetchProfile(name=KeywordsService.FETCH_CHILDREN_PROFILE, fetchOverrides={
 		@FetchOverride(entity=MainKeyword.class, association="children", mode=FetchMode.JOIN)
 })
@@ -94,6 +100,7 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name="keyword_parent_id")
 	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
+	@XmlTransient
 	public MainKeyword getAncestor(){
 		return ancestor;
 	}
@@ -114,8 +121,12 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 		joinColumns={@JoinColumn(name="keyword_from_id")}, 
 	    inverseJoinColumns={@JoinColumn(name="keyword_to_id")}
 	)
-	@Filter(name=KeywordsService.MENU_KEYWORD_ONLY_FILTER, condition="keyword_in_menu = 'Y'")
+	@Filters({
+			@Filter(name=KeywordsService.MENU_KEYWORD_ONLY_FILTER, condition="keyword_in_menu = 'Y'"),
+			@Filter(name=KeywordsService.MENU_KEYWORD_EXCLUDE_SYNONYME_FILTER, condition="keyword_is_synonym = 'N'")
+	})
 	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
+	@XmlTransient
 	public List<MainKeyword> getChildren() {
 		return children;
 	}
@@ -163,6 +174,7 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	joinColumns={@JoinColumn(name="keyword_id")}, 
     inverseJoinColumns={@JoinColumn(name="ext_keyword_id")})
 	@Cache(region = "keywords", usage = CacheConcurrencyStrategy.READ_ONLY)
+	@XmlTransient
 	public List<ExternalKeyword> getExternalKeywords() {
 		return externalKeywords;
 	}
@@ -180,5 +192,14 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	@Override
 	public void removeAncestor() {
 		setAncestor(null);
+	}
+	
+	@Transient
+	public KeywordType getKeywordType(){
+		return KeywordType.MAIN_KEYWORD;
+	}
+	@Transient
+	public int getKeywordTypeId(){
+		return getKeywordType().getId();
 	}
 }

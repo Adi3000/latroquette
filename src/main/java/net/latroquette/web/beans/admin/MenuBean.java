@@ -35,11 +35,15 @@ public class MenuBean implements Serializable{
 	private static final long serialVersionUID = 2537528425083329571L;
 	private List<Node<MainKeyword>> orderedNodelist;
 	private TreeNodeList<MainKeyword> treeNodeList;
+	private List<MainKeyword> menuRootEntries;
+	private List<MainKeyword> rootCategoriesEntries;
 
 	@PostConstruct
 	public void reloadMenuEntries(){
 		MenuNode rootNode = new MenuNode(keywordsService.getRootForMenu());
 		treeNodeList = new TreeNodeList<MainKeyword>(rootNode);
+		menuRootEntries = keywordsService.getMenuRootEntries();
+		rootCategoriesEntries = keywordsService.getRootCategoriesEntries();
 		treeNodeList.getRootNode().addChildren(keywordsService.getMenuRootEntries());
 		orderedNodelist = treeNodeList.getTreeNodeList();
 	}
@@ -50,6 +54,20 @@ public class MenuBean implements Serializable{
 		orderedNodelist = treeNodeList.getTreeNodeList();
 		return orderedNodelist;
 	}
+	
+	/**
+	 * @return the menuRootEntries
+	 */
+	public List<MainKeyword> getMenuRootEntries() {
+		return menuRootEntries;
+	}
+	/**
+	 * @return the rootCategoriesEntries
+	 */
+	public List<MainKeyword> getRootCategoriesEntries() {
+		return rootCategoriesEntries;
+	}
+	
 	
 
 }

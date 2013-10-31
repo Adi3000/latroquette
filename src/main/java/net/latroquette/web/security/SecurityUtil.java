@@ -9,6 +9,7 @@ public class SecurityUtil {
 	private static final String LOGIN_VIEW_PATH = "/profile/login";
 	public static boolean checkUserLogged(UserBean user){
 		if (!Security.isUserLogged(user) || !user.getLoggedIn()){
+			user.setDisplayLoginBox(true);
 			FacesUtil.navigationForward(LOGIN_VIEW_PATH);
 			return false;
 		}
