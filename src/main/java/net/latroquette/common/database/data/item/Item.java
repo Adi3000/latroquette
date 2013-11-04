@@ -18,12 +18,14 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import com.adi3000.common.database.hibernate.data.AbstractDataObject;
+import javax.xml.bind.annotation.XmlTransient;
 
 import net.latroquette.common.database.data.file.File;
+import net.latroquette.common.database.data.keyword.ExternalKeyword;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.database.data.profile.User;
+
+import com.adi3000.common.database.hibernate.data.AbstractDataObject;
 
 @Entity
 @Table(name = "items")
@@ -43,7 +45,9 @@ public class Item extends AbstractDataObject {
 	private String title;
 	private String description;
 	private List<File> imageList;
-	private transient List<MainKeyword> keywordList;
+	private List<MainKeyword> keywordList;
+	private List<ExternalKeyword> externalKeywordList;
+	
 	@Override
 	@Id
 	@Column(name="item_id")    
@@ -140,6 +144,11 @@ public class Item extends AbstractDataObject {
 	 * @return the keywordList
 	 */
 	@Transient
+	@ManyToMany(cascade = {CascadeType.ALL},fetch=FetchType.EAGER)
+	@JoinTable(name="items_keywords", 
+	joinColumns={@JoinColumn(name="item_id")}, 
+	inverseJoinColumns={@JoinColumn(name="keyword_id")})
+	@XmlTransient
 	public List<MainKeyword> getKeywordList() {
 		return keywordList;
 	}
@@ -155,7 +164,7 @@ public class Item extends AbstractDataObject {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	@ManyToMany(cascade = {CascadeType.ALL},fetch=FetchType.EAGER)
+	@ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name="items_files", 
                 joinColumns={@JoinColumn(name="item_id")}, 
                 inverseJoinColumns={@JoinColumn(name="file_id")})
@@ -164,6 +173,24 @@ public class Item extends AbstractDataObject {
 	}
 	public void setImageList(List<File> imageList) {
 		this.imageList = imageList;
+	}
+	/**
+	 * @return the externalKeywordList
+	 */
+	
+	@ManyToMany(cascade = {CascadeType.ALL})
+	@JoinTable(name="items_external_keywords", 
+	joinColumns={@JoinColumn(name="item_id")}, 
+	inverseJoinColumns={@JoinColumn(name="ext_keyword_id")})
+	@XmlTransient
+	public List<ExternalKeyword> getExternalKeywordList() {
+		return externalKeywordList;
+	}
+	/**
+	 * @param externalKeywordList the externalKeywordList to set
+	 */
+	public void setExternalKeywordList(List<ExternalKeyword> externalKeywordList) {
+		this.externalKeywordList = externalKeywordList;
 	}
 
 }

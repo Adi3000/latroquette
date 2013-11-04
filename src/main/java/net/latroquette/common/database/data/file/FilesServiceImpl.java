@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.database.hibernate.session.AbstractDAO;
-import com.adi3000.common.util.CommonUtils;
+import com.adi3000.common.util.CommonUtil;
 import com.adi3000.common.util.security.Security;
 
 @Repository(value=Services.FILES_SERVICE)
@@ -220,7 +220,7 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 	public File modifyFile(File file, User user){
 		file.setOwner(user);
 		if(file.getId() == null){
-			file.setUploadDate(CommonUtils.getTimestamp());
+			file.setUploadDate(CommonUtil.getTimestamp());
 		}
 		return super.modifyDataObject(file);
 	}

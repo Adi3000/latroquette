@@ -41,3 +41,8 @@
 #itemTitle, #clueForIdentifiecation{
 	display: inline-block;
 }
+
+#mainDiv .ui-icon {
+	position: inherit;
+	vertical-align: middle;
+}

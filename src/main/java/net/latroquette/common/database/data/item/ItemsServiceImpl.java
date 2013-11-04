@@ -9,16 +9,14 @@ import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.common.util.parameters.Parameters;
 import net.latroquette.service.amazon.AmazonWServiceClient;
 
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.Query;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.adi3000.common.database.hibernate.session.AbstractDAO;
-import com.adi3000.common.util.CommonUtils;
+import com.adi3000.common.util.CommonUtil;
+import com.adi3000.common.util.data.HibernateUtil;
 import com.adi3000.common.util.optimizer.CommonValues;
 import com.amazon.ECS.client.jax.AWSECommerceServicePortType;
 import com.amazon.ECS.client.jax.ItemSearchRequest;
@@ -87,10 +85,11 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	 */
 	@Transactional(readOnly=true)
 	public Item getItemById(Integer itemId){
-		Criteria req = createCriteria(Item.class)
-				.add(Restrictions.eq("id", itemId))
-				.setFetchMode("imageList", FetchMode.JOIN);
-		return (Item)req.uniqueResult();
+		Item item = (Item)getSession().get(Item.class,	itemId);
+		HibernateUtil.initialize(item.getImageList());
+		HibernateUtil.initialize(item.getKeywordList());
+		HibernateUtil.initialize(item.getExternalKeywordList());
+		return item;
 	}
 	
 	/**
@@ -102,9 +101,9 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	@Transactional
 	public Item modifyItem(Item item, User user){
 		item.setUser(user);
-		item.setUpdateDate(CommonUtils.getTimestamp());
+		item.setUpdateDate(CommonUtil.getTimestamp());
 		if(item.getId() == null){
-			item.setCreationDate(CommonUtils.getTimestamp());
+			item.setCreationDate(CommonUtil.getTimestamp());
 		}
 		return super.modifyDataObject(item);
 	}
@@ -118,10 +117,13 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	public List<Item> searchItem(String searchString, boolean searchOnDescription, int page){
-		Query req = searchItemQuery(searchString, searchOnDescription, page, false);
+	public List<Item> searchItem(String searchString, boolean searchOnDescription, int page, boolean forAutocomplete){
+		Query req = searchItemQuery(searchString, searchOnDescription, page, false,forAutocomplete);
 		@SuppressWarnings("unchecked")
 		List<Item> items = (List<Item>)req.list();
+		for(Item item : items){
+			HibernateUtil.initialize(item.getImageList());
+		}
 		return items;
 	}
 	
@@ -135,12 +137,13 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	 */
 	@Transactional(readOnly=true)
 	public Integer countItem(String searchString, boolean searchOnDescription){
-		Query req = searchItemQuery(searchString, searchOnDescription, CommonValues.ERROR_OR_INFINITE, true);
+		Query req = searchItemQuery(searchString, searchOnDescription, CommonValues.ERROR_OR_INFINITE, true, false);
 		Integer nbItems = ((Long)req.iterate().next()).intValue();
 		return nbItems;
 	}
 	
-	private Query searchItemQuery(String searchString, boolean searchOnDescription, int page, boolean countOnly){
+	@Transactional(readOnly=true)
+	private Query searchItemQuery(String searchString, boolean searchOnDescription, int page, boolean countOnly, boolean forAutocomplete){
 		//Optimize when just checking for nbResult
 		int nbResultToLoad = CommonValues.ERROR_OR_INFINITE ; 
 		int cursor = CommonValues.ERROR_OR_INFINITE;
@@ -150,7 +153,10 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 			nbResultToLoad = parameters.getIntValue(ParameterName.NB_RESULT_TO_LOAD);
 			cursor = nbResultToLoad * (page -1);
 		}
-		String searchPattern = searchString.replaceAll("\\W", " & ");
+		String searchPattern = searchString.replaceAll("\\W+", " & ").replaceAll(" & $","");
+		if(forAutocomplete){
+			searchPattern = searchPattern.concat(":*");
+		}
 		String index = searchOnDescription ? "item.title || ' ' || item.description " : "item.title " ;
 		String sql = 
 				" SELECT ".concat(field).concat(" FROM Item item ").concat(

@@ -19,110 +19,33 @@
 			<h:outputScript name="js/jquery.mousewheel-3.0.6.min.js" target="head" />
 			<h:outputScript name="js/rondell/jquery.rondell.js" target="head" />
 			<h:outputScript name="js/_initEditItem.js" target="head" />
-			<h:outputScript target="head">
-				$(function(){
-					$("#editItemForm\\:title").tokenInput(
-						"#{facesContext.externalContext.requestContextPath}/rest/search/item/?ot=true",
-						 {
-						 	theme: "facebook",
-			    			hintText: "Ahahaha",
-						 	minLength: 2,
-						 	queryParam: "r"
-						 }
-					);
-					$("#editItemForm #itemCategory > ul").menu({
-						focus: 
-							function(e, ui){
-								var keyword = ui.item;
-								if(!keyword.is("[data-filled='true']") &amp;&amp; keyword.is("[data-keyword-id]")){
-									$.getJSON(
-										"#{facesContext.externalContext.requestContextPath}/rest/search/item/children", 
-										{
-											i : keyword.attr("data-keyword-id"), 
-											t : keyword.attr("data-keyword-type")
-										},
-										function(data){
-											console.log(data.length);
-											if(data.length > 0){
-												var subKeywordList = keyword.children("ul");
-												$.each(data, function(i, subKeyword){
-													if(!$("[data-keyword-id='"+subKeyword.id+"'][data-keyword-type='"+subKeyword.keywordTypeId+"']",subKeywordList).is("*")){
-														subKeywordList.append(
-															$("<li />")
-																.attr("data-keyword-id",subKeyword.id)
-																.attr("data-keyword-type",subKeyword.keywordTypeId)
-																.append(
-																	$("<a />")
-																	.attr("href", "#")
-																	.text(subKeyword.name)
-																)
-														);
-													}
-												});
-											}
-											$("#itemMenuCategory").menu("refresh");
-										}
-									);
-									keyword.attr("data-filled","true")
-								}
-							},
-						select:
-							function(event,ui){
-								var keyword = ui.item;
-								$.getJSON(
-									"#{facesContext.externalContext.requestContextPath}/rest/search/item/breadcrumb", 
-									{
-										i : keyword.attr("data-keyword-id"), 
-										t : keyword.attr("data-keyword-type")
-									},
-									function(data){
-										var category = $("<li />")
-														.attr("data-keyword-id", keyword.attr("data-keyword-id"))
-														.attr("data-keyword-type", keyword.attr("data-keyword-type"));
-										$.each(data, function(i, parentKeyword){
-												category.append(
-														$("<span />")
-															.attr("data-keyword-id", parentKeyword.id)
-															.text(parentKeyword.name)
-												);
-												if(i &lt; data.length - 1){
-													category.append($("<span />").text(" &gt; "));
-												}
-										});
-										category.append($("<span />").addClass("delete").text("x"));
-										$("#selectedCategory").append(category);
-									}
-								);
-							}
-					});
-				});
-			</h:outputScript>
 			<h:form id="editItemForm" method="post" enctype="multipart/form-data">
 				<h:messages></h:messages>
 				<div id="itemDescription">
 					<div id="itemCategory">
+						<h:inputHidden id="itemCategoryIds" value="#{itemBean.keywordListString}" />
 						<ul id="selectedCategory"/>
 						<ul id="itemMenuCategory">
 							<li>
 								<a href="#">Categories</a>
 								<ul>
-								<ui:repeat var="entry" value="#{menuBean.rootCategoriesEntries}">
-									<li data-keyword-id="#{entry.id}" data-keyword-type="#{entry.keywordType.id}">
-										<a href="#" >#{entry.name}</a>
-										<h:panelGroup rendered="#{!empty entry.children}">
-											<ul>
-												<ui:repeat var="subEntry" value="#{entry.children}">
-													<li data-keyword-id="#{subEntry.id}" data-keyword-type="#{subEntry.keywordType.id}">
-														<a href="#" >#{subEntry.name}</a>
-														<h:panelGroup rendered="#{!empty subEntry.children}">
-															<ul />
-														</h:panelGroup>
-													</li>
-												</ui:repeat>
-											</ul>
-										</h:panelGroup>
-									</li>
-								</ui:repeat>
+									<ui:repeat var="entry" value="#{menuBean.rootCategoriesEntries}">
+										<li data-keyword-id="#{entry.id}" data-keyword-type="#{entry.keywordType.id}">
+											<a href="#" >#{entry.name}</a>
+											<h:panelGroup rendered="#{!empty entry.children}">
+												<ul>
+													<ui:repeat var="subEntry" value="#{entry.children}">
+														<li data-keyword-id="#{subEntry.id}" data-keyword-type="#{subEntry.keywordType.id}">
+															<a href="#" >#{subEntry.name}</a>
+															<h:panelGroup rendered="#{!empty subEntry.children}">
+																<ul />
+															</h:panelGroup>
+														</li>
+													</ui:repeat>
+												</ul>
+											</h:panelGroup>
+										</li>
+									</ui:repeat>
 								</ul>
 							</li>
 						</ul>

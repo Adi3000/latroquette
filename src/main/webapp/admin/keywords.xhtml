@@ -114,7 +114,7 @@
 					<ui:repeat var="keyword" value="#{keywordBean.orphanMainKeywords}">
 						<div class="ui-widget-content ui-corner-all orphanKeyword" data-id="#{keyword.id}">
 							<span class="keywordName">#{keyword.name}</span>
-							<h:commandLink action="#{keywordBean.deleteMainKeyword(keyword.id)}" styleClass="ui-icon ui-icon ui-icon-trash" />
+							<h:commandLink action="#{keywordBean.deleteMainKeyword(keyword.id)}" styleClass="ui-icon ui-icon-trash" />
 						</div>
 					</ui:repeat>
 					<h2>Chercher d'autres mots clés</h2>
@@ -152,7 +152,7 @@
 					<div class="ui-widget-content ui-corner-all orphanKeyword orphanExternalKeyword" data-id="#{webConstantsBean.externalKeywordPrefix}#{keyword.id}">
 						<span class="keywordName">#{keyword.name}</span>
 						<span class="keywordFullname">#{keyword.fullname}</span>
-						<h:commandLink action="#{keywordBean.excludeExternalKeyword(keyword.id)}" styleClass="ui-icon ui-icon ui-icon-trash" />
+						<h:commandLink action="#{keywordBean.excludeExternalKeyword(keyword.id)}" styleClass="ui-icon ui-icon-trash" />
 					</div>
 				</ui:repeat>
 			</h:form>

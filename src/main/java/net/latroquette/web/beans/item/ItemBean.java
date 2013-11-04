@@ -16,6 +16,11 @@ import net.latroquette.common.database.data.file.GarbageFileStatus;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemStatus;
 import net.latroquette.common.database.data.item.ItemsService;
+import net.latroquette.common.database.data.keyword.ExternalKeyword;
+import net.latroquette.common.database.data.keyword.Keyword;
+import net.latroquette.common.database.data.keyword.KeywordType;
+import net.latroquette.common.database.data.keyword.KeywordsService;
+import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.util.Services;
 import net.latroquette.web.beans.profile.UserBean;
 import net.latroquette.web.security.SecurityUtil;
@@ -25,7 +30,8 @@ import org.apache.myfaces.custom.fileupload.UploadedFile;
 import org.springframework.util.CollectionUtils;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
-import com.adi3000.common.util.CommonUtils;
+import com.adi3000.common.util.CommonUtil;
+import com.adi3000.common.util.optimizer.CommonValues;
 import com.adi3000.common.web.faces.FacesUtil;
 
 @ManagedBean
@@ -36,6 +42,14 @@ public class ItemBean implements Serializable {
 	private transient ItemsService itemsService;
 	@ManagedProperty(value=Services.FILES_SERVICE_JSF)
 	private transient FilesService filesService;
+	@ManagedProperty(value=Services.KEYWORDS_SERVICE_JSF)
+	private transient KeywordsService keywordsService;
+	/**
+	 * @param keywordsService the keywordsService to set
+	 */
+	public void setKeywordsService(KeywordsService keywordsService) {
+		this.keywordsService = keywordsService;
+	}
 	/**
 	 * @param filesService the filesService to set
 	 */
@@ -114,14 +128,33 @@ public class ItemBean implements Serializable {
 	}
 	
 	private String registerItem(DatabaseOperation operation){
+		
 		for(File file : fileList){
 			file.setGarbageStatus(GarbageFileStatus.VALIDATE);
+		}
+		String[] keywordInfo = null;
+		List<MainKeyword> mainKeywordList = new ArrayList<>();
+		List<ExternalKeyword> externalKeywordList = new ArrayList<>();
+		for(String keywordTypeAndId : keywords){
+			keywordInfo = keywordTypeAndId.split(CommonValues.INNER_SEPARATOR);
+			switch (KeywordType.get(Integer.valueOf(keywordInfo[0]))) {
+			case MAIN_KEYWORD:
+				mainKeywordList.add(keywordsService.getKeywordById(Integer.valueOf(keywordInfo[1])));
+				break;
+			case EXTERNAL_KEYWORD:
+				externalKeywordList.add(keywordsService.getExternalKeywordById(Integer.valueOf(keywordInfo[1])));
+				break;
+			default:
+				break;
+			}
 		}
 		item.setImageList(fileList);
 		item.setStatusId(ItemStatus.DRAFT);
 		item.setDatabaseOperation(operation);
+		item.setKeywordList(mainKeywordList);
+		item.setExternalKeywordList(externalKeywordList);
 		item = itemsService.modifyItem(item, userBean.getUser());
-		return "viewItem?faces-redirect=true&item="+item.getId();
+		return FacesUtil.prepareRedirect("/item/viewItem?item="+item.getId());
 	}
 	
 	public String uploadPic(){
@@ -141,7 +174,7 @@ public class ItemBean implements Serializable {
 	}
 	
 	public String removePic(String imageId){
-		File image = (File) CommonUtils.findById(item.getImageList(), imageId);
+		File image = (File) CommonUtil.findById(item.getImageList(), imageId);
 		if(item.getId() != null){
 			image.setGarbageStatus(GarbageFileStatus.NOT_LINKED);
 			filesService.modifyFile(image, userBean.getUser());
@@ -153,19 +186,19 @@ public class ItemBean implements Serializable {
 	}
 	
 	public void setKeywordListString(String keywordsListString){
-		keywords = CommonUtils.parseStringToList(keywordsListString);
+		keywords = CommonUtil.parseStringToList(keywordsListString);
 	}
 	
 	public String getKeywordListString(){
-		return CommonUtils.formatListToString(keywords);
+		return CommonUtil.formatListToString(keywords);
 	}
 	
 	public void setWishiesListString(String wishiesListString){
-		wishies = CommonUtils.parseStringToList(wishiesListString);
+		wishies = CommonUtil.parseStringToList(wishiesListString);
 	}
 	
 	public String getWishiesListString(){
-		return CommonUtils.formatListToString(wishies);
+		return CommonUtil.formatListToString(wishies);
 	}
 	public UserBean getUserBean() {
 		return userBean;
@@ -207,6 +240,19 @@ public class ItemBean implements Serializable {
 	public void loadItem(){
 		if(StringUtils.isNotEmpty(itemId) ){
 			item = itemsService.getItemById(Integer.valueOf(itemId));
+			List<String> keywords = new ArrayList<>();
+			//Loading keywords
+			if(item.getKeywordList() != null){
+				for(Keyword keyword : item.getKeywordList()){
+					keywords.add(keyword.getKeywordTypeId() + CommonValues.INNER_SEPARATOR + keyword.getId());
+				}
+			}
+			if(item.getExternalKeywordList() != null){
+				for(Keyword keyword : item.getExternalKeywordList()){
+					keywords.add(keyword.getKeywordTypeId() + CommonValues.INNER_SEPARATOR + keyword.getId());
+				}
+			}
+			this.keywords = keywords;
 		}else if(item == null){
 			item = new Item();
 		}

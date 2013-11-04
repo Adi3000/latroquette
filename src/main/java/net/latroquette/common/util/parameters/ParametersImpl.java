@@ -38,6 +38,7 @@ public class ParametersImpl extends AbstractDAO<Parameter> implements Parameters
 	 * @return the value or {@link CommonValues.ERROR_OR_INFINITE} if not able to parse
 	 */
 	@Cacheable(value="parameters", key="#name")
+	@Transactional(readOnly=true)
 	public int getIntValue(ParameterName name){
 		int value = CommonValues.ERROR_OR_INFINITE;
 		try{
@@ -54,6 +55,7 @@ public class ParametersImpl extends AbstractDAO<Parameter> implements Parameters
 	 * @return the value or {@code null} if parameter {@code name} not found
 	 */
 	@Cacheable(value="parameters", key="#name")
+	@Transactional(readOnly=true)
 	public String getStringValue(ParameterName name){
 		String value = null;
 		try{

@@ -23,7 +23,7 @@ import net.latroquette.common.util.Services;
 import org.apache.commons.lang.StringUtils;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
-import com.adi3000.common.util.CommonUtils;
+import com.adi3000.common.util.CommonUtil;
 import com.adi3000.common.util.tree.Breadcrumb;
 
 @ManagedBean
@@ -125,8 +125,8 @@ public class KeywordBean implements Serializable{
 		if(!isRoot() && parentId.equals(parentKeyword.getId())){
 			//TODO manage deleting from here deleting the current categorie
 		}else{
-			MainKeyword parent = (MainKeyword) CommonUtils.findById(getKeywordList(), parentId);
-			MainKeyword child = (MainKeyword) CommonUtils.findById(parent.getChildren(), childId);
+			MainKeyword parent = (MainKeyword) CommonUtil.findById(getKeywordList(), parentId);
+			MainKeyword child = (MainKeyword) CommonUtil.findById(parent.getChildren(), childId);
 			if(child != null){
 				parent.getChildren().remove(child);
 				child.setInMenu(false);
@@ -149,8 +149,8 @@ public class KeywordBean implements Serializable{
 		if(!isRoot() && parentId.equals(parentKeyword.getId())){
 			//TODO manage deleting from here deleting the current categorie
 		}else{
-			MainKeyword parent = (MainKeyword) CommonUtils.findById(getKeywordList(), parentId);
-			ExternalKeyword child = (ExternalKeyword) CommonUtils.findById(parent.getExternalKeywords(), childId);
+			MainKeyword parent = (MainKeyword) CommonUtil.findById(getKeywordList(), parentId);
+			ExternalKeyword child = (ExternalKeyword) CommonUtil.findById(parent.getExternalKeywords(), childId);
 			if(child != null){
 				parent.getExternalKeywords().remove(child);
 				keywordsService.modifyKeyword(parent);
@@ -166,7 +166,7 @@ public class KeywordBean implements Serializable{
 	 */
 	public String deleteMainKeyword(String sKeywordId){
 		Integer keywordId = Integer.valueOf(sKeywordId);
-		MainKeyword keyword = (MainKeyword) CommonUtils.findById(orphanMainKeywords, keywordId);
+		MainKeyword keyword = (MainKeyword) CommonUtil.findById(orphanMainKeywords, keywordId);
 		keywordsService.deleteKeyword(keyword);
 		orphanMainKeywords = keywordsService.getOrphanMainKeywords();
 		return null;
@@ -179,7 +179,7 @@ public class KeywordBean implements Serializable{
 	 */
 	public String excludeExternalKeyword(String sKeywordId){
 		Integer keywordId = Integer.valueOf(sKeywordId);
-		ExternalKeyword keyword = (ExternalKeyword) CommonUtils.findById(orphanExternalKeywords, keywordId);
+		ExternalKeyword keyword = (ExternalKeyword) CommonUtil.findById(orphanExternalKeywords, keywordId);
 		keywordsService.excludeExternalKeyword(keyword);
 		orphanExternalKeywords = keywordsService.getOrphanExternalKeywords();
 		return null;
@@ -221,22 +221,22 @@ public class KeywordBean implements Serializable{
 	private boolean modifyRelationship(MainKeyword parent, String ids, boolean isSynonym){
 		boolean modified = false;
 		if(StringUtils.isNotEmpty(ids)){
-			List<String> parsedKeywordIds = CommonUtils.parseStringToList(ids);
+			List<String> parsedKeywordIds = CommonUtil.parseStringToList(ids);
 			List<ExternalKeyword> externalKeywords = new ArrayList<ExternalKeyword>();
 			List<MainKeyword> mainKeywords = new ArrayList<MainKeyword>();
 			for(String keywordId : parsedKeywordIds){
 				//Id is an additionnal+external keyword
 				if(keywordId.startsWith(WebConstantsBean.ADDITIONNAL_EXTERNAL_KEYWORD_PREFIX)){
-					externalKeywords.add((ExternalKeyword) CommonUtils.findById(additionnalExternalKeywords, keywordId.substring(WebConstantsBean.ADDITIONNAL_EXTERNAL_KEYWORD_PREFIX.length())));
+					externalKeywords.add((ExternalKeyword) CommonUtil.findById(additionnalExternalKeywords, keywordId.substring(WebConstantsBean.ADDITIONNAL_EXTERNAL_KEYWORD_PREFIX.length())));
 				//Id is an additionnal+main keyword
 				}else if(keywordId.startsWith(WebConstantsBean.ADDITIONNAL_KEYWORD_PREFIX)){
-					mainKeywords.add((MainKeyword) CommonUtils.findById(additionnalMainKeywords, keywordId.substring(WebConstantsBean.ADDITIONNAL_KEYWORD_PREFIX.length())));
+					mainKeywords.add((MainKeyword) CommonUtil.findById(additionnalMainKeywords, keywordId.substring(WebConstantsBean.ADDITIONNAL_KEYWORD_PREFIX.length())));
 				//Id is an external orphan keyword
 				}else if(keywordId.startsWith(WebConstantsBean.EXTERNAL_KEYWORD_PREFIX)){
-					externalKeywords.add((ExternalKeyword) CommonUtils.findById(orphanExternalKeywords, keywordId.substring(WebConstantsBean.EXTERNAL_KEYWORD_PREFIX.length())));
+					externalKeywords.add((ExternalKeyword) CommonUtil.findById(orphanExternalKeywords, keywordId.substring(WebConstantsBean.EXTERNAL_KEYWORD_PREFIX.length())));
 				//Id is a main orphan keyword
 				}else{
-					mainKeywords.add((MainKeyword) CommonUtils.findById(orphanMainKeywords, keywordId));
+					mainKeywords.add((MainKeyword) CommonUtil.findById(orphanMainKeywords, keywordId));
 				}
 			}
 			for(MainKeyword child : mainKeywords){
@@ -266,7 +266,7 @@ public class KeywordBean implements Serializable{
 		MainKeyword parent = null; 
 		String childrenList = null;
 		for(Entry<String, String> entry : childrenMap.entrySet()){
-			parent = (MainKeyword) CommonUtils.findById(parentList, entry.getKey());
+			parent = (MainKeyword) CommonUtil.findById(parentList, entry.getKey());
 			childrenList = entry.getValue();
 			modified |= modifyRelationship(parent,childrenList,isSynonym);
 		}

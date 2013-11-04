@@ -11,6 +11,9 @@ function isEmpty(o){
 	}
 }
 
+function containsInStringList(list, e){
+	return !isEmpty(list) && list.indexOf(e) !== -1;
+}
 function removeFromStringList(list, e){
 	if(!isEmpty(list)){
 		list = list.replace(new RegExp(_separator_+e+"$|^"+e+"("+_separator_+")?"),"");

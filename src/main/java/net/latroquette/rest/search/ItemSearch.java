@@ -1,5 +1,6 @@
 package net.latroquette.rest.search;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jws.WebMethod;
@@ -25,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.adi3000.common.util.tree.Breadcrumb;
-import com.adi3000.common.util.tree.TreeNode;
 
 /**
  * @author adi
@@ -58,9 +58,11 @@ public class ItemSearch extends SpringBeanAutowiringSupport {
 	@GET
 	@WebMethod
 	public GenericEntity<List<Item>> getItems (@QueryParam("r") String pattern, 
-			@QueryParam("ot") String onlyTitle, @QueryParam("p") String page  ){
+			@QueryParam("ot") String onlyTitle, @QueryParam("p") String page, 
+			@QueryParam("a") String autocomplete ){
+		Boolean forAutocomplete = StringUtils.isNotEmpty(autocomplete) && Boolean.valueOf(autocomplete);
 		Integer pageNum = StringUtils.isNotEmpty(page)  ? Integer.valueOf(page) : Integer.valueOf(1);
-		List<Item> itemsFound = itemsService.searchItem(pattern, !Boolean.valueOf(onlyTitle), pageNum);
+		List<Item> itemsFound = itemsService.searchItem(pattern, !Boolean.valueOf(onlyTitle), pageNum, forAutocomplete);
 		return new GenericEntity<List<Item>>(itemsFound) {};
 	}
 	
@@ -89,7 +91,7 @@ public class ItemSearch extends SpringBeanAutowiringSupport {
 	@GET
 	@Path("/breadcrumb")
 	@WebMethod
-	public GenericEntity<List<? extends TreeNode<?>>> getBreadCrumb (@QueryParam("i") String idString, 
+	public GenericEntity<List<Keyword>> getBreadCrumb (@QueryParam("i") String idString, 
 			@QueryParam("t") String keywordType){
 		if(!StringUtils.isNumeric(idString) || StringUtils.isEmpty(idString)  ||
 				StringUtils.isEmpty(keywordType)   || !StringUtils.isNumeric(keywordType)){
@@ -97,23 +99,23 @@ public class ItemSearch extends SpringBeanAutowiringSupport {
 		}
 		Integer id = StringUtils.isNotEmpty(idString)  ? Integer.valueOf(idString) : Integer.valueOf(0);
 		Keyword keywordFound = null;
-		Breadcrumb<? extends TreeNode<?>> breadcrumb = null;
+		List<Keyword> result = new ArrayList<>();
 		switch (KeywordType.get(Integer.valueOf(keywordType))) {
 			case MAIN_KEYWORD:
+				Breadcrumb<MainKeyword> breadcrumbMain = null;
 				keywordFound = keywordsService.getKeywordById(Integer.valueOf(idString));
-				breadcrumb = new Breadcrumb<MainKeyword>((MainKeyword)keywordFound); 
+				breadcrumbMain = new Breadcrumb<MainKeyword>((MainKeyword)keywordFound); 
+				result.addAll(breadcrumbMain.getBreadcrumb());
 				break;
 			case EXTERNAL_KEYWORD:
+				Breadcrumb<ExternalKeyword> breadcrumbExternal = null;
 				keywordFound = keywordsService.getExternalKeywordById(id);
-				breadcrumb = new Breadcrumb<ExternalKeyword>((ExternalKeyword)keywordFound); 
+				breadcrumbExternal = new Breadcrumb<ExternalKeyword>((ExternalKeyword)keywordFound);
+				result.addAll(breadcrumbExternal.getBreadcrumb());
 				break;
 			default:
 				break;
 			}
-		List<? extends TreeNode<?>> breadCrumbList = breadcrumb.getBreadcrumb();
-		for(TreeNode<?> node : breadCrumbList){
-			((Keyword)node).getChildren().clear();
-		}
-		return new GenericEntity<List<? extends TreeNode<?>>>(breadCrumbList) {};
+		return new GenericEntity<List<Keyword>>(result) {};
 	}
 }

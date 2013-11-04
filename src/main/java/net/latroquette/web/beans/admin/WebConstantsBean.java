@@ -7,6 +7,7 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
+import net.latroquette.common.database.data.keyword.KeywordType;
 import net.latroquette.common.util.LaTroquetteService;
 import net.latroquette.common.util.Services;
 import net.latroquette.common.util.web.Navigation;
@@ -21,6 +22,7 @@ public class WebConstantsBean {
 	public static String ADDITIONNAL_KEYWORD_PREFIX = "add_";
 	public static String ADDITIONNAL_EXTERNAL_KEYWORD_PREFIX = ADDITIONNAL_KEYWORD_PREFIX.concat(EXTERNAL_KEYWORD_PREFIX);
 	private final String separator = CommonValues.SEPARATOR;
+	private final String innerSeparator = CommonValues.INNER_SEPARATOR;
 	private final String externalKeywordPrefix = EXTERNAL_KEYWORD_PREFIX;
 	private final String additionnalKeywordPrefix = ADDITIONNAL_KEYWORD_PREFIX;
 	private final String additionnalExternalKeywordPrefix = ADDITIONNAL_EXTERNAL_KEYWORD_PREFIX;
@@ -41,6 +43,9 @@ public class WebConstantsBean {
 
 	public String getSeparator(){
 		return separator;
+	}
+	public String getInnerSeparator(){
+		return innerSeparator;
 	}
 	/**
 	 * @return the externalPrefix
@@ -87,11 +92,30 @@ public class WebConstantsBean {
 	public String getBooleanFalse() {
 		return booleanFalse;
 	}
+	/**
+	 * @return {@link KeywordType}.getId() of {@code EXTERNAL_KEYWORD}
+	 */
+	public String getExternalKeywordTypeId(){
+		return String.valueOf(KeywordType.EXTERNAL_KEYWORD.getId());
+	}
+	/**
+	 * @return {@link KeywordType}.getId() of {@code MAIN_KEYWORD}
+	 */
+	public String getMainKeywordTypeId(){
+		return String.valueOf(KeywordType.MAIN_KEYWORD.getId());
+	}
+	/**
+	 * @return {@link KeywordType}.getId() of {@code SYNONYM_KEYWORD}
+	 */
+	public String getSynonymKeywordTypeId(){
+		return String.valueOf(KeywordType.SYNONYME_KEYWORD.getId());
+	}
 
 	@PostConstruct
 	public void initWebConstants(){
 		navigationMap = laTroquetteService.getNavigationMap();
 	}
+	
 
 	
 }
