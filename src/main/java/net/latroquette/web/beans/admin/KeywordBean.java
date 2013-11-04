@@ -208,8 +208,11 @@ public class KeywordBean implements Serializable{
 	
 	private boolean modifyParentKeywordName(){
 		boolean modified = false;
-		if(!isRoot() && StringUtils.isNotBlank(newKeywordName) && ! parentKeyword.getName().equals(newKeywordName)){
-			parentKeyword.setName(newKeywordName);
+		if(!isRoot() && 
+			StringUtils.isNotBlank(newParentKeywordName) && 
+			!parentKeyword.getName().equals(newParentKeywordName)
+		){
+			parentKeyword.setName(newParentKeywordName);
 			modified = true;
 		}
 		return modified;
