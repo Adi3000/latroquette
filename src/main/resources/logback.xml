@@ -8,39 +8,21 @@
 <!-- -->
 <configuration>
 	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>${logger.file}</File>
+		<File>${logger.output.file}</File>
 		<encoder>
 			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger[%L] - %m%n
 			</pattern>
 		</encoder>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 			<maxIndex>3</maxIndex>
-			<FileNamePattern>${logger.file}.%i</FileNamePattern>
+			<FileNamePattern>${logger.output.file}.%i</FileNamePattern>
 		</rollingPolicy>
 		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
 			<MaxFileSize>1MB</MaxFileSize>
 		</triggeringPolicy>
 	</appender>
-	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
-		<Target>${logger.console}</Target>
-		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-			<level>${logger.console.level}</level>
-		</filter>
-		<encoder>
-			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger[%L] - %m%n
-			</pattern>
-		</encoder>
-	</appender>
-	<logger name="org.dbunit.operation" level="DEBUG" />
-	<logger name="net.sf.ehcache" level="TRACE" />
-	<logger name="org.hibernate" level="INFO" />
-	<logger name="org.hibernate.SQL" level="DEBUG" >
-		<appender-ref ref="stdout" />
-	</logger>
-	<logger name="org.hibernate.type" level="TRACE" >
-		<appender-ref ref="stdout" />
-	</logger>
-	<root level="${logger.file.level}">
+	<root level="${logger.output.file.level}">
 		<appender-ref ref="file" />
 	</root>
+	<include optional="true" resource="${logger.config.additional}"/>
 </configuration>
