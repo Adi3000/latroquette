@@ -8,7 +8,8 @@
 		<div id="breadcrumb">
 			<ui:repeat var="ancestor" value="#{navigationBean.breadcrumb}" varStatus="index">
 				<h:link outcome="#{ancestor.path}" >
-					#{text_navigation[ancestor.label]}
+					<h:outputText rendered="#{ancestor.translated}" value="#{text_navigation[ancestor.label]}" />
+					<h:outputText rendered="#{!ancestor.translated}" value="#{ancestor.label}" />
 				</h:link>
 				<h:outputText rendered="#{!index.last}" value=" &gt; " />
 			</ui:repeat>

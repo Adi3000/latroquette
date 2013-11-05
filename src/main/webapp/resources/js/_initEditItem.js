@@ -1,3 +1,46 @@
+function addCategoryKeyword(keywordId, keywordTypeId,selectedCategoryArea){
+	var keywordIdForList = keywordTypeId+_innerSeparator_+keywordId;
+	$.getJSON(
+		_requestContextPath_+"/rest/search/item/breadcrumb", 
+		{
+			i : keywordId, 
+			t : keywordTypeId
+		},
+		function(data){
+			var category = $("<li />")
+							.attr("data-keyword-id", keywordId)
+							.attr("data-keyword-type", keywordTypeId);
+			$.each(data, function(i, parentKeyword){
+					category.append(
+							$("<span />")
+								.attr("data-keyword-id", parentKeyword.id)
+								.text(parentKeyword.name)
+					);
+					if(i < data.length - 1){
+						category.append($("<span />").text(" > "));
+					}
+			});
+			category.append(
+				$("<span />")
+					.addClass("ui-icon ui-icon-trash")
+					.text("x")
+					.click(function(e){
+						$("#editItemForm\\:itemCategoryIds").val(removeFromStringList($("#editItemForm\\:itemCategoryIds").val(),keywordIdForList));
+						var keywordToRemove =  $(this).parent("li");
+						keywordToRemove.remove();
+						if(selectedCategoryArea.is(":empty")){
+							selectedCategoryArea.hide();
+						}
+					})
+				);
+			selectedCategoryArea.append(category);
+			$("#editItemForm\\:itemCategoryIds").val(addToStringList($("#editItemForm\\:itemCategoryIds").val(),keywordIdForList));
+			if(!selectedCategoryArea.is(":visible")){
+				selectedCategoryArea.show(300);
+			}
+		}
+	);
+}
 $(function() {
 	var selectedCategoryArea = $("#selectedCategory");
 	selectedCategoryArea.hide();
@@ -94,47 +137,19 @@ $(function() {
 				var keyword = ui.item;
 				var keywordIdForList = keyword.attr("data-keyword-type")+_innerSeparator_+keyword.attr("data-keyword-id");
 				if(!containsInStringList($("#editItemForm\\:itemCategoryIds").val(), keywordIdForList)){
-					$.getJSON(
-						_requestContextPath_+"/rest/search/item/breadcrumb", 
-						{
-							i : keyword.attr("data-keyword-id"), 
-							t : keyword.attr("data-keyword-type")
-						},
-						function(data){
-							var category = $("<li />")
-											.attr("data-keyword-id", keyword.attr("data-keyword-id"))
-											.attr("data-keyword-type", keyword.attr("data-keyword-type"));
-							$.each(data, function(i, parentKeyword){
-									category.append(
-											$("<span />")
-												.attr("data-keyword-id", parentKeyword.id)
-												.text(parentKeyword.name)
-									);
-									if(i < data.length - 1){
-										category.append($("<span />").text(" > "));
-									}
-							});
-							category.append(
-								$("<span />")
-									.addClass("ui-icon ui-icon-trash")
-									.text("x")
-									.click(function(e){
-										$("#editItemForm\\:itemCategoryIds").val(removeFromStringList($("#editItemForm\\:itemCategoryIds").val(),keywordIdForList));
-										var keywordToRemove =  $(this).parent("li");
-										keywordToRemove.remove();
-										if(selectedCategoryArea.is(":empty")){
-											selectedCategoryArea.hide();
-										}
-									})
-								);
-							selectedCategoryArea.append(category);
-							$("#editItemForm\\:itemCategoryIds").val(addToStringList($("#editItemForm\\:itemCategoryIds").val(),keywordIdForList));
-							if(!selectedCategoryArea.is(":visible")){
-								selectedCategoryArea.show(300);
-							}
-						}
-					);
+					addCategoryKeyword(keyword.attr("data-keyword-id"),keyword.attr("data-keyword-type"),selectedCategoryArea);
 				}
 			}
 	});
+	
+	
+	
+	if(!isEmpty($("#editItemForm\\:itemCategoryIds").val())){
+		var keywordIdsList = $("#editItemForm\\:itemCategoryIds").val().split(_separator_);
+		var keywordInfo;
+		for(var i=0; i < keywordIdsList.length; i++){
+			keywordInfo = keywordIdsList[i].split(_innerSeparator_);
+			addCategoryKeyword(keywordInfo[1],keywordInfo[0],selectedCategoryArea);
+		}
+	}
 });

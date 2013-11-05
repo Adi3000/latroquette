@@ -23,7 +23,7 @@
 				<h:messages></h:messages>
 				<div id="itemDescription">
 					<div id="itemCategory">
-						<h:inputHidden id="itemCategoryIds" value="#{itemBean.keywordListString}" />
+						<h:inputHidden id="itemCategoryIds" value="#{itemBean.keywordIds}" />
 						<ul id="selectedCategory"/>
 						<ul id="itemMenuCategory">
 							<li>
@@ -59,9 +59,6 @@
 								<h:inputText id="title" size="58" value="#{itemBean.title}" />
 							</div>
 						</div>
-					</div>
-					<div id="clueForIdentifiecation">
-						<h:inputHidden id="keywordList" value="#{itemBean.keywordListString}"/>
 					</div>
 					<div>
 						<div class="field">

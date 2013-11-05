@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.adi3000.common.database.hibernate.data.AbstractTreeNodeDataObject;
 
@@ -27,7 +28,11 @@ public class Navigation extends AbstractTreeNodeDataObject<Navigation> {
 	private String label;
 	private Navigation ancestor;
 	private List<Navigation> children;
+	private boolean translated;
 	
+	public Navigation(){
+		this.translated = true;
+	}
 
 	@Override
 	@Id
@@ -93,5 +98,18 @@ public class Navigation extends AbstractTreeNodeDataObject<Navigation> {
 	}
 	public void setChildren(List<Navigation> children) {
 		this.children = children;
+	}
+	/**
+	 * @return the translated
+	 */
+	@Transient
+	public boolean isTranslated() {
+		return translated;
+	}
+	/**
+	 * @param translated the translated to set
+	 */
+	public void setTranslated(boolean translated) {
+		this.translated = translated;
 	}
 }

@@ -143,7 +143,6 @@ public class Item extends AbstractDataObject {
 	/**
 	 * @return the keywordList
 	 */
-	@Transient
 	@ManyToMany(cascade = {CascadeType.ALL},fetch=FetchType.EAGER)
 	@JoinTable(name="items_keywords", 
 	joinColumns={@JoinColumn(name="item_id")}, 

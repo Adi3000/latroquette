@@ -75,6 +75,7 @@ public class ItemBean implements Serializable {
 	private List<String> keywords;
 	private List<File> fileList;
 	private String itemId;
+	private String keywordIds;
 
 	/**
 	 * @return the title
@@ -132,6 +133,7 @@ public class ItemBean implements Serializable {
 		for(File file : fileList){
 			file.setGarbageStatus(GarbageFileStatus.VALIDATE);
 		}
+		keywords = CommonUtil.parseStringToList(keywordIds);
 		String[] keywordInfo = null;
 		List<MainKeyword> mainKeywordList = new ArrayList<>();
 		List<ExternalKeyword> externalKeywordList = new ArrayList<>();
@@ -185,14 +187,6 @@ public class ItemBean implements Serializable {
 		return null;
 	}
 	
-	public void setKeywordListString(String keywordsListString){
-		keywords = CommonUtil.parseStringToList(keywordsListString);
-	}
-	
-	public String getKeywordListString(){
-		return CommonUtil.formatListToString(keywords);
-	}
-	
 	public void setWishiesListString(String wishiesListString){
 		wishies = CommonUtil.parseStringToList(wishiesListString);
 	}
@@ -237,10 +231,22 @@ public class ItemBean implements Serializable {
 		this.itemId = itemId;
 	}
 	
+	/**
+	 * @return the keywordIds
+	 */
+	public String getKeywordIds() {
+		return keywordIds;
+	}
+	/**
+	 * @param keywordIds the keywordIds to set
+	 */
+	public void setKeywordIds(String keywordIds) {
+		this.keywordIds = keywordIds;
+	}
 	public void loadItem(){
 		if(StringUtils.isNotEmpty(itemId) ){
 			item = itemsService.getItemById(Integer.valueOf(itemId));
-			List<String> keywords = new ArrayList<>();
+			keywords = new ArrayList<>();
 			//Loading keywords
 			if(item.getKeywordList() != null){
 				for(Keyword keyword : item.getKeywordList()){
@@ -252,7 +258,7 @@ public class ItemBean implements Serializable {
 					keywords.add(keyword.getKeywordTypeId() + CommonValues.INNER_SEPARATOR + keyword.getId());
 				}
 			}
-			this.keywords = keywords;
+			keywordIds = CommonUtil.formatListToString(keywords);
 		}else if(item == null){
 			item = new Item();
 		}
