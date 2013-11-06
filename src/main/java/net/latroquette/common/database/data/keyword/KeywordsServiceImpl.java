@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.ItemsService;
@@ -384,7 +385,7 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 	}
 	
 	@Transactional(readOnly=true)
-	public List<Keyword> getAllChildrenOf(Integer id, KeywordType keywordType){
+	public List<Keyword> getDirectChildrenOf(Integer id, KeywordType keywordType){
 		Keyword parentKeyword = null;
 		List<Keyword> children = new ArrayList<>();
 		switch (keywordType) {
@@ -402,5 +403,16 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 		}
 		children.addAll(0, parentKeyword.getChildren());
 		return children;
+	}
+	
+	
+	public Set<Keyword> getAllChildrenOf(Keyword keyword, Set<Keyword> keywordSet){
+		keywordSet.add(keyword);
+		if( keyword.getChildren() != null){
+			for(Keyword children : keyword.getChildren()){
+				getAllChildrenOf(children, keywordSet);
+			}	
+		}
+		return keywordSet;
 	}
 }

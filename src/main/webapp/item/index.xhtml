@@ -14,12 +14,15 @@
 		 	<h:outputScript name="js/item.js" target="head" /> 
 		 	<h:outputScript target="head" >
 				$(function() {
+					showLoadingDiv("Recherche en cours... Veuillez patienter...");
 					var result = $.getJSON("#{facesContext.externalContext.requestContextPath}/rest/search/item", {
 						r : "#{itemSearchBean.request}", 
-						p : "#{itemSearchBean.page}"
+						p : "#{itemSearchBean.page}",
+						c : "#{itemSearchBean.actualKeywordId}"
 						}, 
 						function(data){
 							$("#itemList").addItems(data);
+							hideLoadingDiv();
 						});		
 				});
 	 		</h:outputScript> 

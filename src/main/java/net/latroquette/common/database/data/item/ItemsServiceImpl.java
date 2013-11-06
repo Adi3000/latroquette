@@ -1,14 +1,20 @@
 package net.latroquette.common.database.data.item;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import net.latroquette.common.database.data.keyword.Keyword;
+import net.latroquette.common.database.data.keyword.KeywordsService;
+import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.util.Services;
 import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.common.util.parameters.Parameters;
 import net.latroquette.service.amazon.AmazonWServiceClient;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -26,7 +32,16 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	
 	@Autowired
 	private transient Parameters parameters;
+	@Autowired
+	private transient KeywordsService keywordsService;
 	
+	/**
+	 * @param keywordsService the keywordsService to set
+	 */
+	public void setKeywordsService(KeywordsService keywordsService) {
+		this.keywordsService = keywordsService;
+	}
+
 	/**
 	 * @param parameters the parameters to set
 	 */
@@ -117,8 +132,8 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	public List<Item> searchItem(String searchString, boolean searchOnDescription, int page, boolean forAutocomplete){
-		Query req = searchItemQuery(searchString, searchOnDescription, page, false,forAutocomplete);
+	public List<Item> searchItem(String searchString, boolean searchOnDescription, int page, MainKeyword keyword, boolean forAutocomplete){
+		Query req = searchItemQuery(searchString, searchOnDescription, page, keyword,false,forAutocomplete);
 		@SuppressWarnings("unchecked")
 		List<Item> items = (List<Item>)req.list();
 		for(Item item : items){
@@ -136,34 +151,53 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	public Integer countItem(String searchString, boolean searchOnDescription){
-		Query req = searchItemQuery(searchString, searchOnDescription, CommonValues.ERROR_OR_INFINITE, true, false);
+	public Integer countItem(String searchString, boolean searchOnDescription, MainKeyword keyword){
+		Query req = searchItemQuery(searchString, searchOnDescription, CommonValues.ERROR_OR_INFINITE, keyword,true, false);
 		Integer nbItems = ((Long)req.iterate().next()).intValue();
 		return nbItems;
 	}
 	
 	@Transactional(readOnly=true)
-	private Query searchItemQuery(String searchString, boolean searchOnDescription, int page, boolean countOnly, boolean forAutocomplete){
+	private Query searchItemQuery(String searchString, boolean searchOnDescription, int page, MainKeyword keyword,boolean countOnly, boolean forAutocomplete){
 		//Optimize when just checking for nbResult
 		int nbResultToLoad = CommonValues.ERROR_OR_INFINITE ; 
 		int cursor = CommonValues.ERROR_OR_INFINITE;
+		Set<Keyword> relatedKeywords = null;
 		String field = "count(item)";
 		if(!countOnly){
 			field = "item";
 			nbResultToLoad = parameters.getIntValue(ParameterName.NB_RESULT_TO_LOAD);
 			cursor = nbResultToLoad * (page -1);
 		}
-		String searchPattern = searchString.replaceAll("\\W+", " & ").replaceAll(" & $","");
-		if(forAutocomplete){
-			searchPattern = searchPattern.concat(":*");
+		StringBuffer restriction = new StringBuffer("where 1=1 ");
+		//Setting the search filter for searchString
+		if(StringUtils.isNotEmpty(searchString)){
+			String index = searchOnDescription ? "item.title || ' ' || item.description " : "item.title " ;
+			restriction.append("and fulltextsearch('french', ").append(index).append(", :search ) = true ");
 		}
-		String index = searchOnDescription ? "item.title || ' ' || item.description " : "item.title " ;
+		if(keyword != null){
+			restriction.append("and keyword in (:relatedKeywords) ");
+		}
 		String sql = 
-				" SELECT ".concat(field).concat(" FROM Item item ").concat(
-				" WHERE fulltextsearch('french', ").concat(index).concat(", :search ) = true").concat(
-				countOnly ? "" : " order by item.creationDate");
-		Query req = createQuery(sql)
-						.setString("search", searchPattern);
+				" SELECT "
+					.concat(field)
+					.concat(" FROM Item item left join item.keywordList keyword ")
+					.concat(restriction.toString())
+					.concat(countOnly ? "" : " order by item.creationDate");
+		Query req = createQuery(sql);
+		//Compose the search pattern
+		if(StringUtils.isNotEmpty(searchString)){
+			String searchPattern = searchString.replaceAll("\\W+", " & ").replaceAll(" & $","");
+			if(forAutocomplete){
+				searchPattern = searchPattern.concat(":*");
+			}
+			req.setString("search", searchPattern);
+		}
+		if(keyword != null){
+			relatedKeywords = new HashSet<>();
+			relatedKeywords = keywordsService.getAllChildrenOf(keyword, relatedKeywords);
+			req.setParameterList("relatedKeywords", relatedKeywords);
+		}
 		
 		if(!countOnly){
 			req

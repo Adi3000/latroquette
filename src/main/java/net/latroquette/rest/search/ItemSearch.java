@@ -57,21 +57,28 @@ public class ItemSearch extends SpringBeanAutowiringSupport {
 
 	@GET
 	@WebMethod
-	public GenericEntity<List<Item>> getItems (@QueryParam("r") String pattern, 
-			@QueryParam("ot") String onlyTitle, @QueryParam("p") String page, 
+	public GenericEntity<List<Item>> getItems (
+			@QueryParam("r") String pattern, 
+			@QueryParam("ot") String onlyTitle,
+			@QueryParam("p") String page, 
+			@QueryParam("c") String category, 
 			@QueryParam("a") String autocomplete ){
 		Boolean forAutocomplete = StringUtils.isNotEmpty(autocomplete) && Boolean.valueOf(autocomplete);
 		Integer pageNum = StringUtils.isNotEmpty(page)  ? Integer.valueOf(page) : Integer.valueOf(1);
-		List<Item> itemsFound = itemsService.searchItem(pattern, !Boolean.valueOf(onlyTitle), pageNum, forAutocomplete);
+		MainKeyword keyword = StringUtils.isNotEmpty(category) ? keywordsService.getKeywordById(Integer.valueOf(category)) : null;
+		List<Item> itemsFound = itemsService.searchItem(pattern, !Boolean.valueOf(onlyTitle), pageNum, keyword,forAutocomplete);
 		return new GenericEntity<List<Item>>(itemsFound) {};
 	}
 	
 	@GET
 	@Path("/count")
 	@WebMethod
-	public GenericEntity<Integer> getItems (@QueryParam("r") String pattern, 
-			@QueryParam("ot") String onlyTitle){
-		Integer itemsFound = itemsService.countItem(pattern, !Boolean.valueOf(onlyTitle));
+	public GenericEntity<Integer> getItems (
+			@QueryParam("r") String pattern, 
+			@QueryParam("ot") String onlyTitle,
+			@QueryParam("c") String category){
+		MainKeyword keyword = StringUtils.isNotEmpty(category) ? keywordsService.getKeywordById(Integer.valueOf(category)) : null;
+		Integer itemsFound = itemsService.countItem(pattern, !Boolean.valueOf(onlyTitle), keyword);
 		return new GenericEntity<Integer>(itemsFound) {};
 	}
 	
@@ -85,7 +92,7 @@ public class ItemSearch extends SpringBeanAutowiringSupport {
 			return null;
 		}
 		Integer id = StringUtils.isNotEmpty(idString)  ? Integer.valueOf(idString) : Integer.valueOf(0);
-		List<Keyword> keywordsFound = keywordsService.getAllChildrenOf(id, KeywordType.get(Integer.valueOf(keywordType)));
+		List<Keyword> keywordsFound = keywordsService.getDirectChildrenOf(id, KeywordType.get(Integer.valueOf(keywordType)));
 		return new GenericEntity<List<Keyword>>(keywordsFound) {};
 	}
 	@GET

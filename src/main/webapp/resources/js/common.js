@@ -2,7 +2,9 @@ function showLoadingDiv(text){
 	$("#loadingText").text(text);
 	$("#loadingDiv").show();
 }
-
+function hideLoadingDiv(){
+	$("#loadingDiv").hide();
+}
 function isEmpty(o){
 	if( Object.prototype.toString.call( o ) === '[object Array]' && o.length == 1){
 		return $.isEmptyObject(o[0]);

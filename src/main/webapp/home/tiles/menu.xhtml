@@ -33,7 +33,7 @@
 						</c:if>
 						<!-- open tag li -->
 						<h:outputText value="&lt;li&gt;" escape="false" />
-						<a href="#">#{node.value.name}</a>
+						<h:link outcome="/item/index.jsf?c=#{node.value.id}" value="#{node.value.name}" />
 						<!-- open tag ul on the first child  -->
 						<h:outputText rendered="#{node.hasChild}" 
 							value="&lt;ul&gt;"	escape="false" />

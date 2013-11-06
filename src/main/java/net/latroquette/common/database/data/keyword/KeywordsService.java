@@ -2,6 +2,7 @@ package net.latroquette.common.database.data.keyword;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import com.adi3000.common.database.hibernate.session.DAO;
 import com.amazon.ECS.client.jax.BrowseNode;
@@ -113,12 +114,15 @@ public interface KeywordsService extends DAO<Keyword>{
 	
 	public Collection<ExternalKeyword> searchExternalKeyword(String name, boolean createIfNotFound);
 	
-	public List<Keyword> getAllChildrenOf(Integer id, KeywordType isExternal);
+	public List<Keyword> getDirectChildrenOf(Integer id, KeywordType isExternal);
 	
 	/**
 	 * Return all root categories entry (with no ancestor and marked as displayed in menu)
 	 * @return
 	 */
 	public List<MainKeyword> getRootCategoriesEntries();
+	
+	public Set<Keyword> getAllChildrenOf(Keyword keyword, Set<Keyword> keywordSet);
+
 
 }

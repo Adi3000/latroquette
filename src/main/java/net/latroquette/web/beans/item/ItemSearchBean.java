@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
 import net.latroquette.common.database.data.item.ItemsService;
+import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.util.Services;
 @ManagedBean
 @RequestScoped
@@ -26,6 +27,8 @@ public class ItemSearchBean implements Serializable {
 	private Integer page;
 	private Integer count;
 	private Boolean searchOnDescription = true;
+	@ManagedProperty(value="#{navigationBean.actualKeyword}")
+	private MainKeyword actualKeyword;
 	
 	//TODO accessibility feature : add a parameter to not load item via JS
 	public String search(){
@@ -34,7 +37,7 @@ public class ItemSearchBean implements Serializable {
 	}
 	
 	public void initCount(){
-		this.count = itemsService.countItem(request, searchOnDescription);
+		this.count = itemsService.countItem(request, searchOnDescription, actualKeyword);
 	}
 	/**
 	 * @return the request
@@ -84,4 +87,23 @@ public class ItemSearchBean implements Serializable {
 	public void setSearchOnDescription(Boolean searchOnDescription) {
 		this.searchOnDescription = searchOnDescription;
 	}
+
+	/**
+	 * @return the actualKeyword
+	 */
+	public MainKeyword getActualKeyword() {
+		return actualKeyword;
+	}
+
+	/**
+	 * @param actualKeyword the actualKeyword to set
+	 */
+	public void setActualKeyword(MainKeyword actualKeyword) {
+		this.actualKeyword = actualKeyword;
+	}
+	
+	public String getActualKeywordId(){
+		return actualKeyword != null ? actualKeyword.getId().toString() : null;
+	}
+
 }
