@@ -1,4 +1,4 @@
-package net.latroquette.common.database.data.location;
+package net.latroquette.common.database.data.place;
 
 import java.util.List;
 
@@ -13,26 +13,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.adi3000.common.database.hibernate.session.AbstractDAO;
 
-@Repository(value=Services.LOCATIONS_SERVICE)
-public class LocationsServiceImpl extends AbstractDAO<Location> implements LocationsService {
+@Repository(value=Services.PLACES_SERVICE)
+public class PlacesServiceImpl extends AbstractDAO<Place> implements PlacesService {
 	
 	@Transactional(readOnly=true)
-	public List<Location> getLocationByType(LocationType locationType){
-		Criteria req = createCriteria(Location.class)
-				.add(Restrictions.eq("locationTypeId", locationType.getValue())) ;
+	public List<Place> getPlacesByType(PlaceType placeType){
+		Criteria req = createCriteria(Place.class)
+				.add(Restrictions.eq("placeTypeId", placeType.getValue())) ;
 		@SuppressWarnings("unchecked")
-		List<Location> locations = (List<Location>)req.list();
+		List<Place> places = (List<Place>)req.list();
 		
-		return locations;
+		return places;
 	}
 	
 	/**
-	 * Return a {@link Location} by its name or code postal
+	 * Return a {@link Place} by its name or code postal
 	 * @param value
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	public List<Location> getLocationByString(String value){
+	public List<Place> getPlacesByString(String value){
 		
 		String likeValue1 = value.replace(' ', '_').replace('-', '_').concat("%");
 		String replacing = "(-| |')";
@@ -41,20 +41,26 @@ public class LocationsServiceImpl extends AbstractDAO<Location> implements Locat
 		String postalCode2 = "%,".concat(postalCode1);
 		
 		String sql = 
-				" SELECT {locations.*} FROM locations {locations} ".concat(
+				" SELECT {place.*} FROM locations {place} ".concat(
 				" WHERE location_name ILIKE :nameStart or location_name ~* :nameInner").concat(
-				" UNION SELECT {locations.*} FROM locations {locations} ").concat(
+				" UNION SELECT {place.*} FROM locations {place} ").concat(
 				" WHERE location_postal_codes LIKE :codeStart  or location_postal_codes LIKE :oneCodeStart ");
 		//Can't ordering this for now.
-		//.concat(	" ORDER BY {location.location_name}");
-		Query req = createSQLQuery(sql).addEntity("locations",Location.class);
+		//.concat(	" ORDER BY {place.location_name}");
+		Query req = createSQLQuery(sql).addEntity("place",Place.class);
 		req		.setString("nameStart", likeValue1)
 				.setString("nameInner", likeValue2)
 				.setString("codeStart", postalCode1)
 				.setString("oneCodeStart", postalCode2);
 		@SuppressWarnings("unchecked")
-		List<Location> locations = (List<Location>)req.list();
-		return locations;
+		List<Place> places = (List<Place>)req.list();
+		return places;
 	}
+	
+/*	select l2.* from locations l1 ,locations l2 
+	where l1.location_id = 63373
+	and abs(l2.location_longitude - l1.location_longitude ) < 0.5
+	and abs(l2.location_latitude - l1.location_latitude ) < 0.5
+*/
 
 }

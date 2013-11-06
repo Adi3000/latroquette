@@ -1,4 +1,4 @@
-package net.latroquette.common.database.data.location;
+package net.latroquette.common.database.data.place;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,17 +18,18 @@ import com.adi3000.common.database.hibernate.data.AbstractDataObject;
 @Entity
 @Table(name = "locations")
 @XmlRootElement
-public class Location extends AbstractDataObject {
+public class Place extends AbstractDataObject {
 
 	
 	private Integer id; 
 	private String name;
 	private String postalCodes;
 	private List<String> postalCodesList;
-	private LocationType locationType;
+	private PlaceType placeType;
+
 	private Double longitude;
 	private Double latitude;
-	private Integer locationTypeId;
+	private Integer placeTypeId;
 	
 	/**
 	 * 
@@ -131,24 +132,24 @@ public class Location extends AbstractDataObject {
 	 * @return the locationType
 	 */
 	@Transient
-	public LocationType getLocationType() {
-		return locationType;
+	public PlaceType getPlaceType() {
+		return placeType;
 	}
 	@Column(name = "location_type_id")
-	public Integer getLocationTypeId() {
-		return locationTypeId;
+	public Integer getPlaceTypeId() {
+		return placeTypeId;
 	}
 	
 
 	/**
-	 * @param locationType the locationType to set
+	 * @param placeType the locationType to set
 	 */
-	public void setLocationType(LocationType locationType) {
-		setLocationTypeId(locationType.getValue());
+	public void setPlaceType(PlaceType placeType) {
+		setPlaceTypeId(placeType.getValue());
 	}
-	public void setLocationTypeId(Integer locationTypeId) {
-		this.locationTypeId = locationTypeId;
-		this.locationType = LocationType.valueOf(locationTypeId);
+	public void setPlaceTypeId(Integer placeTypeId) {
+		this.placeTypeId = placeTypeId;
+		this.placeType = PlaceType.valueOf(placeTypeId);
 	}
 
 	

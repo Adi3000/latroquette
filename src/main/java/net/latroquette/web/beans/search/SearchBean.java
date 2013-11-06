@@ -4,21 +4,20 @@ import javax.faces.bean.ManagedBean;
 
 @ManagedBean
 public class SearchBean {
-	private String locationIds;
+	private String placesIds;
 
 	/**
-	 * @return the locationIds
+	 * @return the placesIds
 	 */
-	public String getLocationIds() {
-		return locationIds;
+	public String getPlacesIds() {
+		return placesIds;
 	}
 
 	/**
-	 * @param locationIds the locationIds to set
+	 * @param placesIds the placesIds to set
 	 */
-	public void setLocationIds(String locationIds) {
-		this.locationIds = locationIds;
+	public void setPlacesIds(String placesIds) {
+		this.placesIds = placesIds;
 	}
-	
 
 }
