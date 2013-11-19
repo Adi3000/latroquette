@@ -50,8 +50,8 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	private String previousURI;
 	private String previousQueryString;
 	private String displayLoginBox;
-	
 
+	
 	@ManagedProperty(value=Services.USERS_SERVICE_JSF)
 	private transient UsersService usersService;
 	/**
@@ -232,6 +232,8 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 					if(!StringUtils.isEmpty(previousQueryString)){
 						forwardUrl = forwardUrl.concat("?").concat(UtilsBean.urlDecode(previousQueryString));
 					}
+				}else{
+					forwardUrl = "/index";
 				}
 				forwardUrl = FacesUtil.prepareRedirect(forwardUrl);
 				setDisplayLoginBox(true);
@@ -387,6 +389,11 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		}else{
 			this.displayLoginBox = "";
 		}
+	}
+	
+	public void loadLogin(){
+		String register = FacesUtil.getStringParameter("register");
+		setDisplayLoginBox(Boolean.valueOf(register));
 	}
 	
 }

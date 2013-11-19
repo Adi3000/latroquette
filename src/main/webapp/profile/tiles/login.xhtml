@@ -5,6 +5,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition>
+	    <f:metadata>
+	       <f:event listener="#{userBean.loadLogin}" type="preRenderView" />
+	    </f:metadata>
 		<h:outputStylesheet name="css/profile.css" target="head" />
 		<h:outputScript target="head" rendered="#{!userBean.loggedIn}">
 			var registerDisplayed = false;
