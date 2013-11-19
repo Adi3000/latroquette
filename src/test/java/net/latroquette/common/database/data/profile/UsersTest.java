@@ -27,7 +27,7 @@ public class UsersTest extends ListDbUnitTestCase implements LatroquetteTest {
 	}
 
 	private static List<String> DBU_FILES = Arrays.asList(
-				 TEST_USER_DBU_RESOURCE
+				 USER_DBU_RESOURCE
 			);
 	
 	@Test

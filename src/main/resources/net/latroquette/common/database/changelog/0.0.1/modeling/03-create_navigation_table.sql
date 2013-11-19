@@ -14,5 +14,4 @@ CREATE TABLE navigation
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE navigation
-  OWNER TO latroquette;
+

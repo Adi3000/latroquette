@@ -4,6 +4,15 @@
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!-- 
+    	ChangeSet ID pattern :
+    		<A.A.A>-<BB>.<C>-<XXXX>
+    		A.A.A : Version in which appli the changeset
+    		BB : ChangeSet incremented number of this version : MUST match the sql file prefixes
+    		C : Step of changeSet (you may sometime need to separate some change)
+    		XXXX: short label of the changeset
+    	N.B : the 0.0.1-00.0 to 0.0.1-00.3 changeset doesn't apply these rules properly  
+     -->
     <changeSet id="0.0.1-00.0-createTables" author="adi3000">
     	<sqlFile
     			relativeToChangelogFile="true" 
@@ -15,7 +24,7 @@
     				path="0.0.1/modeling/00-create_main_tables.rollback.sql"/>
     	</rollback>
     </changeSet>
-    <changeSet id="0.0.1-00.1-referentiel" author="adi3000">
+    <changeSet id="0.0.1-00.1-referentiel" author="adi3000" context="production">
    	 	<sqlFile
     			relativeToChangelogFile="true" 
     			path="0.0.1/referentiel/00-create_parameters.sql"/>
@@ -25,6 +34,14 @@
    	 	<sqlFile
     			relativeToChangelogFile="true" 
     			path="0.0.1/referentiel/00-create_places.sql"/>
+    </changeSet>
+    <changeSet id="0.0.1-00.1-test-referentiel" author="adi3000" context="test">
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/referentiel/00-create_parameters.sql"/>
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/referentiel/00-create_referentiel.sql"/>
     </changeSet>
     <changeSet id="0.0.1-00.2-parameter" author="adi3000">
    	 	<sqlFile

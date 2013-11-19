@@ -62,25 +62,26 @@
 							<changeLogFile>net/latroquette/common/database/changelog/changelog.xml</changeLogFile>
 							<propertyFileWillOverride>true</propertyFileWillOverride>
 							<skip>${liquibase.update.skip}</skip>
+							<contexts>production</contexts>
 						</configuration>
 						<goals>
 							<goal>update</goal>
 						</goals>
 					</execution>
-<!-- 	Use this if we want specific parameters for test -->					
-<!-- 					<execution> -->
-<!-- 					<id>liquibase-test-update</id> -->
-<!-- 						<phase>process-test-resources</phase> -->
-<!-- 						<configuration> -->
-<!-- 							<propertyFile>${project.build.directory}/classes/liquibase.properties</propertyFile> -->
-<!-- 							<changeLogFile>${project.build.directory}/classes/net/latroquette/common/database/changelog/changelog.xml</changeLogFile> -->
-<!-- 							<propertyFileWillOverride>true</propertyFileWillOverride> -->
-<!-- 							<skip>${liquibase.update.skip}</skip> -->
-<!-- 						</configuration> -->
-<!-- 						<goals> -->
-<!-- 							<goal>update</goal> -->
-<!-- 						</goals> -->
-<!-- 					</execution> -->
+					<execution>
+						<id>liquibase-test-update</id>
+						<phase>process-test-resources</phase>
+						<configuration>
+							<propertyFile>liquibase.properties</propertyFile>
+							<changeLogFile>net/latroquette/common/database/changelog/changelog.xml</changeLogFile>
+							<propertyFileWillOverride>true</propertyFileWillOverride>
+							<skip>${liquibase.update.skip.test}</skip>
+							<contexts>test</contexts>
+						</configuration>
+						<goals>
+							<goal>update</goal>
+						</goals>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -175,11 +176,6 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.0.13</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.slf4j</groupId> -->
-<!-- 			<artifactId>slf4j-simple</artifactId> -->
-<!-- 			<version>1.7.5</version> -->
-<!-- 		</dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -293,7 +289,8 @@
 			</activation>
 			<properties>
 				<filter.environment>test</filter.environment>
-				<liquibase.update.skip>false</liquibase.update.skip>
+				<liquibase.update.skip>true</liquibase.update.skip>
+				<liquibase.update.skip.test>false</liquibase.update.skip.test>
 				<liquibase.ant.update.skip>true</liquibase.ant.update.skip>
 			</properties>
 		</profile>
@@ -324,6 +321,7 @@
 			</activation>
 			<properties>
 				<liquibase.update.skip>true</liquibase.update.skip>
+				<liquibase.update.skip.test>true</liquibase.update.skip.test>
 				<liquibase.ant.update.skip>true</liquibase.ant.update.skip>
 			</properties>
 		</profile>

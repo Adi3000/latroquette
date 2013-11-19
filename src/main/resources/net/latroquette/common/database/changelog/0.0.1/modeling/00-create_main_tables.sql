@@ -15,8 +15,6 @@ CREATE TABLE users (
     CONSTRAINT users_user_login_key UNIQUE (user_login)
 );
 
-ALTER TABLE users OWNER TO latroquette;
-
 
 --
 -- TOC entry 172 (class 1259 OID 16417)
@@ -34,7 +32,6 @@ CREATE TABLE files (
     CONSTRAINT files_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
-ALTER TABLE files OWNER TO latroquette;
 
 
 --
@@ -55,7 +52,6 @@ CREATE TABLE items (
     CONSTRAINT item_users_fkey FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
-ALTER TABLE items OWNER TO latroquette;
 
 --
 -- TOC entry 2356 (class 0 OID 0)
@@ -80,7 +76,6 @@ CREATE TABLE items_files (
 );
 
 
-ALTER TABLE items_files OWNER TO latroquette;
 
 
 --
@@ -97,7 +92,6 @@ CREATE TABLE keywords (
     CONSTRAINT pk_keywords PRIMARY KEY (keyword_id)
 );
 
-ALTER TABLE keywords OWNER TO latroquette;
 
 --
 -- TOC entry 181 (class 1259 OID 16449)
@@ -112,7 +106,6 @@ CREATE TABLE keywords_relationship (
 );
 
 
-ALTER TABLE keywords_relationship OWNER TO latroquette;
 
 --
 -- TOC entry 169 (class 1259 OID 16405)
@@ -132,9 +125,6 @@ CREATE TABLE external_keywords (
     CONSTRAINT external_keywords_ext_uid_source_id_key UNIQUE (ext_uid, source_id)
 );
 
-ALTER TABLE external_keywords OWNER TO latroquette;
-
-
 CREATE TABLE external_keywords_relationship (
     keyword_id integer NOT NULL,
     ext_keyword_id integer NOT NULL,
@@ -143,7 +133,6 @@ CREATE TABLE external_keywords_relationship (
     CONSTRAINT external_keywords_relationship_keyword_id_fkey FOREIGN KEY (keyword_id) REFERENCES keywords(keyword_id)
 );
 
-ALTER TABLE external_keywords_relationship OWNER TO latroquette;
 
 --
 -- TOC entry 174 (class 1259 OID 16422)
@@ -167,7 +156,6 @@ CREATE TABLE geoname_postalcode (
     CONSTRAINT geoname_postalcode_pkey PRIMARY KEY (geoname_postalcode_id)
 );
 
-ALTER TABLE geoname_postalcode OWNER TO latroquette;
 
 --
 -- TOC entry 184 (class 1259 OID 16460)
@@ -181,7 +169,6 @@ CREATE TABLE location_type (
     
 );
 
-ALTER TABLE location_type OWNER TO latroquette;
 
 --
 -- TOC entry 182 (class 1259 OID 16452)
@@ -207,7 +194,6 @@ CREATE TABLE locations (
     CONSTRAINT location_location_id_l4_fkey FOREIGN KEY (location_id_l4) REFERENCES locations(location_id) DEFERRABLE INITIALLY IMMEDIATE
 );
 
-ALTER TABLE locations OWNER TO latroquette;
 
 --
 -- TOC entry 2359 (class 0 OID 0)
@@ -232,7 +218,6 @@ CREATE TABLE parameters (
     CONSTRAINT param_name_unique UNIQUE (param_name)
 );
 
-ALTER TABLE parameters OWNER TO latroquette;
 
 
 
