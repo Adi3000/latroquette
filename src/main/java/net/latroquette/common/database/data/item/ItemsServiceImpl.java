@@ -132,7 +132,7 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	public List<Item> searchItem(String searchString, boolean searchOnDescription, int page, MainKeyword keyword, boolean forAutocomplete){
+	public List<Item> searchItem(String searchString, boolean searchOnDescription, Integer page, MainKeyword keyword, boolean forAutocomplete){
 		Query req = searchItemQuery(searchString, searchOnDescription, page, keyword,false,forAutocomplete);
 		@SuppressWarnings("unchecked")
 		List<Item> items = (List<Item>)req.list();
@@ -158,12 +158,15 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	}
 	
 	@Transactional(readOnly=true)
-	private Query searchItemQuery(String searchString, boolean searchOnDescription, int page, MainKeyword keyword,boolean countOnly, boolean forAutocomplete){
+	private Query searchItemQuery(String searchString, boolean searchOnDescription, Integer page, MainKeyword keyword,boolean countOnly, boolean forAutocomplete){
 		//Optimize when just checking for nbResult
 		int nbResultToLoad = CommonValues.ERROR_OR_INFINITE ; 
 		int cursor = CommonValues.ERROR_OR_INFINITE;
 		Set<Keyword> relatedKeywords = null;
 		String field = "count(item)";
+		if(page == null){
+			page = Integer.valueOf(1);
+		}
 		if(!countOnly){
 			field = "item";
 			nbResultToLoad = parameters.getIntValue(ParameterName.NB_RESULT_TO_LOAD);

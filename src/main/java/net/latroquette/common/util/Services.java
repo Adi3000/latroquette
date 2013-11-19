@@ -9,6 +9,7 @@ public interface Services{
 	String PLACES_SERVICE = "placesService";
 	String USERS_SERVICE = "usersService";
 	String PARAMETERS_SERVICE = "parametersService";
+	String ITEM_SEARCH_WEB_SERVICE = "itemSearch";
 	String FILES_SERVICE_JSF = "#{"+FILES_SERVICE+"}";
 	String ITEMS_SERVICE_JSF = "#{"+ITEMS_SERVICE+"}";
 	String KEYWORDS_SERVICE_JSF = "#{"+KEYWORDS_SERVICE+"}";
@@ -17,4 +18,5 @@ public interface Services{
 	String PARAMETERS_SERVICE_JSF = "#{"+PARAMETERS_SERVICE+"}";
 	String LA_TROQUETTE_SERVICE = "laTroquetteService";
 	String LA_TROQUETTE_SERVICE_JSF = "#{"+LA_TROQUETTE_SERVICE+"}";
+	String ITEM_SEARCH_WEB_SERVICE_JSF = "#{"+ITEM_SEARCH_WEB_SERVICE+"}";
 }

@@ -42,7 +42,7 @@ public interface ItemsService extends DAO<Item> {
 	 * @param countOnly
 	 * @return
 	 */
-	public List<Item> searchItem(String searchString, boolean searchOnDescription, int page, MainKeyword keyword,boolean forAutocomplete);
+	public List<Item> searchItem(String searchString, boolean searchOnDescription, Integer page, MainKeyword keyword,boolean forAutocomplete);
 	
 	/**
 	 * Return the number of item which match with the searchString request in database

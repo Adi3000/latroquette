@@ -1,14 +1,18 @@
 package net.latroquette.web.beans.item;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
+import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.util.Services;
+
+import com.adi3000.common.web.faces.FacesUtil;
 @ManagedBean
 @RequestScoped
 public class ItemSearchBean implements Serializable {
@@ -17,6 +21,7 @@ public class ItemSearchBean implements Serializable {
 	
 	@ManagedProperty(Services.ITEMS_SERVICE_JSF)
 	private transient ItemsService itemsService;
+	
 	/**
 	 * @param itemsService the itemsService to set
 	 */
@@ -26,18 +31,26 @@ public class ItemSearchBean implements Serializable {
 	private String request;
 	private Integer page;
 	private Integer count;
+	private List<Item> itemsFound; 
+	
 	private Boolean searchOnDescription = true;
 	@ManagedProperty(value="#{navigationBean.actualKeyword}")
 	private MainKeyword actualKeyword;
 	
 	//TODO accessibility feature : add a parameter to not load item via JS
 	public String search(){
-
-		return "/item/index.xhtml?faces-redirect=true&includeViewParams=true&r=".concat(request);
+		String path = "/item/index.xhtml?r=".concat(request);
+		return FacesUtil.prepareRedirect(path, true);
 	}
 	
 	public void initCount(){
 		this.count = itemsService.countItem(request, searchOnDescription, actualKeyword);
+	}
+	public void loadSearch(){
+		initCount();
+		if(count > 0){
+			this.itemsFound = itemsService.searchItem(request, searchOnDescription, page, actualKeyword, false);
+		}
 	}
 	/**
 	 * @return the request
@@ -105,5 +118,10 @@ public class ItemSearchBean implements Serializable {
 	public String getActualKeywordId(){
 		return actualKeyword != null ? actualKeyword.getId().toString() : null;
 	}
-
+	/**
+	 * @return the itemsFound
+	 */
+	public List<Item> getItemsFound() {
+		return itemsFound;
+	}
 }

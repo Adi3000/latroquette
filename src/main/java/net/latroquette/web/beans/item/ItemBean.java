@@ -1,5 +1,6 @@
 package net.latroquette.web.beans.item;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -272,7 +273,7 @@ public class ItemBean implements Serializable {
 		loadItem();
 		//Pass to viewItem only if user is logged for this check
 		if (item.getId() != null && userCheck && !userBean.getId().equals(item.getUser().getId())){
-			FacesUtil.navigationForward("viewItem");
+			FacesUtil.navigationRedirect("/item/viewItem.xhtml?item=".concat(item.getId().toString()));
 		}
 	}
 	

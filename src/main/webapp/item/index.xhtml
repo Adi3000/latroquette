@@ -8,11 +8,11 @@
 		<f:metadata>
 		    <f:viewParam name="r" value="#{itemSearchBean.request}"/>            
 		    <f:viewParam name="p" value="#{itemSearchBean.page}"/>            
-	 		<f:event listener="#{itemSearchBean.initCount}" type="preRenderView" />
+	 		<f:event listener="#{itemSearchBean.loadSearch}" type="preRenderView" />
 	 	</f:metadata>
 		<ui:define name="mainDiv"> 
 		 	<h:outputScript name="js/item.js" target="head" /> 
-		 	<h:outputScript target="head" >
+		 	<!-- <h:outputScript target="head" >
 				$(function() {
 					showLoadingDiv("Recherche en cours... Veuillez patienter...");
 					var result = $.getJSON("#{facesContext.externalContext.requestContextPath}/rest/search/item", {
@@ -25,13 +25,34 @@
 							hideLoadingDiv();
 						});		
 				});
-	 		</h:outputScript> 
+	 		</h:outputScript> -->
 			<div>
 				<h1>
 					Résultat de la recherche "#{itemSearchBean.request}" : #{itemSearchBean.count} résultats
 				</h1>
 			</div>
 			<div id="itemList">
+				<ui:repeat var="item" value="#{itemSearchBean.itemsFound}">
+					<div class="item">
+						<div class="itemImages" >
+							<ui:repeat var="image" value="#{item.imageList}">
+								<h:graphicImage value="/image/p/s/#{image.name}" />
+							</ui:repeat> 
+						</div>
+						<div class="itemInfos" >
+							<div class="login">#{item.user.login}</div>
+						</div>
+						<div class="itemDetails">
+							<h2 class="itemTitle" >
+								<h:link outcome="/item/viewItem" value="#{item.title}">
+									<f:param name="item" value="#{item.id}" />
+								</h:link>
+							</h2>
+							<p class="itemDescription" >#{item.description}</p>
+							<ul class="itemWishies" />
+						</div>
+					</div>
+				</ui:repeat>
 				<div id="addItems" style="display:none;">
 					<div class="item">
 						<div class="itemImages" />

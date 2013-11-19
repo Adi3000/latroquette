@@ -20,6 +20,7 @@ import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.keyword.KeywordType;
 import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
+import net.latroquette.common.util.Services;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ import com.adi3000.common.util.tree.Breadcrumb;
 @Path("/search/item")
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
-@WebService
+@WebService(name=Services.ITEM_SEARCH_WEB_SERVICE)
 public class ItemSearch extends SpringBeanAutowiringSupport {
 	
 	@Autowired
@@ -73,7 +74,7 @@ public class ItemSearch extends SpringBeanAutowiringSupport {
 	@GET
 	@Path("/count")
 	@WebMethod
-	public GenericEntity<Integer> getItems (
+	public GenericEntity<Integer> countItems (
 			@QueryParam("r") String pattern, 
 			@QueryParam("ot") String onlyTitle,
 			@QueryParam("c") String category){

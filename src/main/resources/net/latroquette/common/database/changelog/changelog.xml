@@ -14,6 +14,7 @@
     	N.B : the 0.0.1-00.0 to 0.0.1-00.3 changeset doesn't apply these rules properly  
      -->
     <changeSet id="0.0.1-00.0-createTables" author="adi3000">
+    	<validCheckSum>7:13bd1974f63086c52eaed109e5e0c6ab</validCheckSum>
     	<sqlFile
     			relativeToChangelogFile="true" 
     			path="0.0.1/modeling/00-create_main_tables.sql"/>
@@ -60,5 +61,10 @@
    	 	<sqlFile
     			relativeToChangelogFile="true" 
     			path="0.0.1/modeling/04-create_items_keywords_tables.sql"/>
+    </changeSet>
+    <changeSet id="0.0.1-05.0-items_keywords" author="adi3000">
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/referentiel/05-create_parameters.sql"/>
     </changeSet>
 </databaseChangeLog>

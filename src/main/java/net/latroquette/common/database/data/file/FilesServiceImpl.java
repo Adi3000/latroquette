@@ -56,7 +56,7 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 		super();
 	}
 	
-	
+	@Transactional(readOnly=false)
 	public File uploadNewPicFile(UploadedFile newFile, User user){
 		InputStream newFileInputStream = null;
 		File file = null;
@@ -70,6 +70,7 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 		return file;
 	}
 	
+	@Transactional(readOnly=false)
 	public File uploadNewPicFile(Part newFile, User user){
 		InputStream newFileInputStream = null;
 		File file = null;
@@ -97,10 +98,10 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 		try {
 			messageDigest = MessageDigest.getInstance(MDSUM_ALGORITHM);
 		} catch (NoSuchAlgorithmException e1) {
-			LOGGER.error("Can't find "+MDSUM_ALGORITHM+" algorithm".concat(fileName), e1);
+			LOGGER.error("Can't find "+MDSUM_ALGORITHM+" algorithm for ".concat(fileName), e1);
 			return null;
 		}
-		
+		fileName = fileName.replaceAll("[^\\p{ASCII}]", "");
         String prefix = String.valueOf(new Date().getTime()).concat("_").concat(FilenameUtils.getBaseName(fileName));
         String suffix = FilenameUtils.getExtension(fileName);
         java.io.File resizedFile = null;
@@ -222,7 +223,7 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 		if(file.getId() == null){
 			file.setUploadDate(CommonUtil.getTimestamp());
 		}
-		return super.modifyDataObject(file);
+		return modifyDataObject(file);
 	}
 	
 	/**
