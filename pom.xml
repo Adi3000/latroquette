@@ -272,7 +272,7 @@
 		<profile>
 			<id>development</id>
 			<activation>
-				<activeByDefault>false</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<filter.environment>development</filter.environment>
