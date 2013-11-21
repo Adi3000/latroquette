@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.UsersService;
 import net.latroquette.common.util.Services;
+import net.latroquette.web.security.AuthenticationMethod;
 import net.latroquette.web.security.SecurityUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -211,14 +212,15 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		initPreviousURL();
 		String forwardUrl = null;
 		loginState = NOT_LOGGED_IN;
-		user = usersService.getUserByLogin(this.getLogin());
-		if(user != null && StringUtils.equals(user.getPassword(), this.getPassword())){
+		user = usersService.authenticateUser(this.getLogin(), this.getPassword(), AuthenticationMethod.HTTP);
+		if(user != null){
 			this.setLogginUserInfo(user);
 			this.loginState = LOGGED_IN;
 			usersService.updateUser(user);
 		}else{
 			user = new User();
 			loginState = ANONYMOUS;
+			this.setDisplayLoginBox(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			FacesMessage msg = new FacesMessage("Utilisateur ou mot de passe incorrect");
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);

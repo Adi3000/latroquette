@@ -10,6 +10,7 @@ public interface Services{
 	String USERS_SERVICE = "usersService";
 	String PARAMETERS_SERVICE = "parametersService";
 	String ITEM_SEARCH_WEB_SERVICE = "itemSearch";
+	String AUTHENTICATION_WEB_SERVICE = "authenticationSearch";
 	String FILES_SERVICE_JSF = "#{"+FILES_SERVICE+"}";
 	String ITEMS_SERVICE_JSF = "#{"+ITEMS_SERVICE+"}";
 	String KEYWORDS_SERVICE_JSF = "#{"+KEYWORDS_SERVICE+"}";
