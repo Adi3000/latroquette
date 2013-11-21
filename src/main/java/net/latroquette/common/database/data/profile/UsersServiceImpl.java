@@ -37,6 +37,7 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public User authenticateUser(String login, String password,
 			AuthenticationMethod method) {
 		String encryptedPassword = Security.encryptedPassword(password);
