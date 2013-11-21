@@ -50,6 +50,7 @@
     			path="0.0.1/referentiel/01-create_parameters.sql"/>
     </changeSet>
     <changeSet id="0.0.1-00.3-parameter" author="adi3000">
+        <validCheckSum>7:236eb9d992d6c2e006cc304900ab613d</validCheckSum>
    	 	<sqlFile
     			relativeToChangelogFile="true" 
     			path="0.0.1/modeling/03-create_navigation_table.sql"/>
