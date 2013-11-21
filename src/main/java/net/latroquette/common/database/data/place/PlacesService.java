@@ -13,4 +13,21 @@ public interface PlacesService extends DAO<Place> {
 	 * @return
 	 */
 	public List<Place> getPlacesByString(String value);
+	
+	/**
+	 * Return a {@link List} of {@link Place} close by {@code radix} kilometers
+	 * from a {@link Place} retrived by its id {@code placeId} 
+	 * @param placeId
+	 * @param radix
+	 * @return
+	 */
+	public List<Place> getPlacesByPlace(String placeId, double radix);
+	/**
+	 * Return a {@link List} of {@link Place} close by {@code radix} kilometers
+	 * from {@code place} 
+	 * @param placeId
+	 * @param radix
+	 * @return
+	 */
+	public List<Place> getPlacesByPlace(Place place, double radix);
 }

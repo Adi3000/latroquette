@@ -16,6 +16,8 @@ import com.adi3000.common.database.hibernate.session.AbstractDAO;
 @Repository(value=Services.PLACES_SERVICE)
 public class PlacesServiceImpl extends AbstractDAO<Place> implements PlacesService {
 	
+	private static final double KILOMETER_CONVERSION = 1.609;
+	private static final double EARTH_RADIUS = 3958.75;
 	@Transactional(readOnly=true)
 	public List<Place> getPlacesByType(PlaceType placeType){
 		Criteria req = createCriteria(Place.class)
@@ -56,11 +58,47 @@ public class PlacesServiceImpl extends AbstractDAO<Place> implements PlacesServi
 		List<Place> places = (List<Place>)req.list();
 		return places;
 	}
+	@Transactional(readOnly=true)
+	public List<Place> getPlacesByPlace(String placeId, double radix){
+		Place place = (Place) getSession().get(Place.class, Integer.valueOf(placeId));
+		return getPlacesByPlace(place, radix);
+	}
 	
-/*	select l2.* from locations l1 ,locations l2 
-	where l1.location_id = 63373
-	and abs(l2.location_longitude - l1.location_longitude ) < 0.5
-	and abs(l2.location_latitude - l1.location_latitude ) < 0.5
-*/
+	@Transactional(readOnly=true)
+	public List<Place> getPlacesByPlace(Place place, double radix){
+		double longitudeToKilometers = distanceFrom(
+				place.getLatitude(), place.getLongitude(),
+				place.getLatitude(), place.getLongitude()+1);
+		double latitudeToKilometers = distanceFrom(
+				place.getLatitude(), place.getLongitude(),
+				place.getLatitude()+1, place.getLongitude());
+		double longitudeRadix = radix / longitudeToKilometers;
+		double latitudeRadix = radix / latitudeToKilometers;
+		
+		String hql = 
+			" from Place p1".concat(
+			" where exists (from Place p2 where p2.id = :placeId ").concat(
+			" and abs(p2.longitude - p1.longitude ) < :longitudeRadix").concat(
+			" and abs(p2.latitude - p1.latitude ) < :latitudeRadix )");
+		Query req = createQuery(hql)
+						.setDouble("longitudeRadix", longitudeRadix)
+						.setDouble("latitudeRadix", latitudeRadix)
+						.setInteger("placeId", place.getId());
+		@SuppressWarnings("unchecked")
+		List<Place> places = (List<Place>)req.list();
+		return places;
+	}
 
+	 public static double distanceFrom(Double latitude1, Double longitude1, Double latitude2, Double longitude2) {
+		 double degreeLatitude = Math.toRadians(latitude2-latitude1);
+		 double degreeLongitude = Math.toRadians(longitude2-longitude1);
+		 double degreeGap = Math.sin(degreeLatitude/2) * Math.sin(degreeLatitude/2) +
+				 Math.cos(Math.toRadians(latitude1)) * Math.cos(Math.toRadians(latitude2)) *
+				 Math.sin(degreeLongitude/2) * Math.sin(degreeLongitude/2);
+		 double degreeDistance = 2 * Math.atan2(Math.sqrt(degreeGap), Math.sqrt(1-degreeGap));
+		 double distance = EARTH_RADIUS * degreeDistance;
+
+
+		 return distance * KILOMETER_CONVERSION;
+	 }
 }
