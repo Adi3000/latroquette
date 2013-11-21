@@ -61,13 +61,11 @@ public class ItemSearch extends SpringBeanAutowiringSupport {
 	public GenericEntity<List<Item>> getItems (
 			@QueryParam("r") String pattern, 
 			@QueryParam("ot") String onlyTitle,
-			@QueryParam("p") String page, 
-			@QueryParam("c") String category, 
+			@QueryParam("p") Integer page, 
+			@QueryParam("c") Integer category, 
 			@QueryParam("a") String autocomplete ){
-		Boolean forAutocomplete = StringUtils.isNotEmpty(autocomplete) && Boolean.valueOf(autocomplete);
-		Integer pageNum = StringUtils.isNotEmpty(page)  ? Integer.valueOf(page) : Integer.valueOf(1);
-		MainKeyword keyword = StringUtils.isNotEmpty(category) ? keywordsService.getKeywordById(Integer.valueOf(category)) : null;
-		List<Item> itemsFound = itemsService.searchItem(pattern, !Boolean.valueOf(onlyTitle), pageNum, keyword,forAutocomplete);
+		MainKeyword keyword = category != null ? keywordsService.getKeywordById(category) : null;
+		List<Item> itemsFound = itemsService.searchItem(pattern, !Boolean.valueOf(onlyTitle), page, keyword,Boolean.valueOf(autocomplete));
 		return new GenericEntity<List<Item>>(itemsFound) {};
 	}
 	

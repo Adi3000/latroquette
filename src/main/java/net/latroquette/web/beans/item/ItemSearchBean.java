@@ -29,6 +29,16 @@ public class ItemSearchBean implements Serializable {
 		this.itemsService = itemsService;
 	}
 	private String request;
+	private Integer distance;
+	private String placeId;
+	
+
+	/**
+	 * @param placeId the placeId to set
+	 */
+	public void setPlaceId(String placeId) {
+		this.placeId = placeId;
+	}
 	private Integer page;
 	private Integer count;
 	private List<Item> itemsFound; 
@@ -123,5 +133,25 @@ public class ItemSearchBean implements Serializable {
 	 */
 	public List<Item> getItemsFound() {
 		return itemsFound;
+	}
+	/**
+	 * @return the distance
+	 */
+	public Integer getDistance() {
+		return distance;
+	}
+
+	/**
+	 * @param distance the distance to set
+	 */
+	public void setDistance(Integer distance) {
+		this.distance = distance;
+	}
+
+	/**
+	 * @return the placeId
+	 */
+	public String getPlaceId() {
+		return placeId;
 	}
 }

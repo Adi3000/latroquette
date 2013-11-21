@@ -47,4 +47,11 @@ public class PlacesSearch extends SpringBeanAutowiringSupport{
 		List<Place> placesFound = placesService.getPlacesByString(pattern);
 		return new GenericEntity<List<Place>>(placesFound) {};
 	}
+	@GET
+	@Path("/by")
+	@WebMethod
+	public GenericEntity<List<Place>> getPlacesByPlaces (@QueryParam("place") String placeId, @QueryParam("radix") String radix){
+		List<Place> placesFound = placesService.getPlacesByPlace(placeId, Double.valueOf(radix));
+		return new GenericEntity<List<Place>>(placesFound) {};
+	}
 }

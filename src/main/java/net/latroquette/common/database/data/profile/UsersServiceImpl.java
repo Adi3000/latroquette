@@ -2,6 +2,7 @@ package net.latroquette.common.database.data.profile;
 
 
 import net.latroquette.common.util.Services;
+import net.latroquette.web.security.AuthenticationMethod;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.database.hibernate.session.AbstractDAO;
+import com.adi3000.common.util.security.Security;
 
 @Repository(value=Services.USERS_SERVICE)
 public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
@@ -32,6 +34,17 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	public void updateUser(User user){
 		user.setDatabaseOperation(DatabaseOperation.UPDATE);
 		persist(user);
+	}
+
+	@Override
+	public User authenticateUser(String login, String password,
+			AuthenticationMethod method) {
+		String encryptedPassword = Security.encryptedPassword(password);
+		Criteria req = createCriteria(User.class)
+				.setMaxResults(1)
+				.add(Restrictions.eq("login", login).ignoreCase())
+				.add(Restrictions.eq("password", encryptedPassword));
+		return (User)req.uniqueResult();
 	}
 	
 }
