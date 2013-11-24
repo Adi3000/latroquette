@@ -1,6 +1,8 @@
 package net.latroquette.common.database.data.profile;
 
 
+import java.util.List;
+
 import net.latroquette.common.util.Services;
 import net.latroquette.web.security.AuthenticationMethod;
 
@@ -46,6 +48,16 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 				.add(Restrictions.eq("login", login).ignoreCase())
 				.add(Restrictions.eq("password", encryptedPassword));
 		return (User)req.uniqueResult();
+	}
+
+	@Override
+	@Transactional(readOnly=true)
+	public List<User> searchUsers(String pattern) {
+		Criteria req = createCriteria(User.class)
+				.add(Restrictions.like("login", "%"+pattern+"%").ignoreCase()) ;
+		@SuppressWarnings("unchecked")
+		List<User> result = req.list();
+		return result;
 	}
 	
 }

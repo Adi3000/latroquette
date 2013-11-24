@@ -123,6 +123,7 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	 * @return the lastDateLogin
 	 */
 	@Column(name="user_last_date_login")
+	@XmlTransient
 	public Timestamp getLastDateLogin() {
 		return lastDateLogin;
 	}
