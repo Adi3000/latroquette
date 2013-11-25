@@ -20,6 +20,7 @@
 	<logger name="org.dbunit.operation" level="DEBUG" />
 	<logger name="net.sf.ehcache" level="TRACE" />
 	<logger name="org.hibernate" level="INFO" />
+	<logger name="net.latroquette" level="DEBUG" />
 	<logger name="org.hibernate.SQL" level="DEBUG" >
 		<appender-ref ref="stdout" />
 	</logger>

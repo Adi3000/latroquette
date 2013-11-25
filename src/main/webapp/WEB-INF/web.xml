@@ -91,6 +91,10 @@
 		<extension>jpg</extension>
 		<mime-type>image/jpeg</mime-type>
 	</mime-mapping>
+	<mime-mapping>
+		<extension>map</extension>
+		<mime-type>application/json</mime-type>
+	</mime-mapping>
 	<filter>
 		<filter-name>MyFacesExtensionsFilter</filter-name>
 		<filter-class>org.apache.myfaces.webapp.filter.ExtensionsFilter</filter-class>

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.UsersService;
+import net.latroquette.common.database.data.profile.XMPPSession;
 import net.latroquette.common.util.Services;
 import net.latroquette.web.security.AuthenticationMethod;
 import net.latroquette.web.security.SecurityUtil;
@@ -51,7 +52,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	private String previousURI;
 	private String previousQueryString;
 	private String displayLoginBox;
-
+	private XMPPSession xmppSession;
 	
 	@ManagedProperty(value=Services.USERS_SERVICE_JSF)
 	private transient UsersService usersService;
@@ -216,6 +217,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		if(user != null){
 			this.setLogginUserInfo(user);
 			this.loginState = LOGGED_IN;
+			xmppSession = usersService.prebindXMPP(user, this.getPassword());
 			usersService.updateUser(user);
 		}else{
 			user = new User();
@@ -291,12 +293,12 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 
 	@Override
 	public Integer getId() {
-		return user.getId();
+		return  user != null ? user.getId() : null;
 	}
 
 	@Override
 	public String getLogin() {
-		return user.getLogin();
+		return user != null ?  user.getLogin() : null;
 	}
 	
 	public void setLogin(String login) {
@@ -359,6 +361,10 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	 */
 	public void setPreviousQueryString(String previousQueryString) {
 		this.previousQueryString = previousQueryString;
+	}
+
+	public XMPPSession getXmppSession() {
+		return xmppSession;
 	}
 
 	/**
