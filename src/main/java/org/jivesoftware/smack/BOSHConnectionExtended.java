@@ -186,7 +186,7 @@ public class BOSHConnectionExtended extends Connection {
         synchronized (this) {
             if (!connected) {
                 try {
-                    wait(30000);
+                    wait(SmackConfiguration.getPacketReplyTimeout()*6);
                 }
                 catch (InterruptedException e) {}
             }
@@ -206,7 +206,13 @@ public class BOSHConnectionExtended extends Connection {
     public long getClientRid(){
     	return this.client.getRid();
     }
+    public long getClientNextRid(){
+    	return this.client.getNextRid();
+    }
 
+    public String getSessionID(){
+    	return sessionID;
+    }
     public String getConnectionID() {
         if (!connected) {
             return null;
@@ -447,6 +453,87 @@ public class BOSHConnectionExtended extends Connection {
                 e.printStackTrace();
             }
         }
+    }
+    
+    public void detach(){
+    	setWasAuthenticated(authenticated);
+        done = true;
+        isFirstInitialization = false;
+        authID = null;
+        sessionID = null;
+        done = true;
+        authenticated = false;
+        connected = false;
+        isFirstInitialization = false;
+        client.close();
+        
+        if (!connected) {
+            return;
+        }
+
+        try {
+        	// Wait 150 ms for processes to clean-up, then shutdown.
+			Thread.sleep(150);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        // Close down the readers and writers.
+        if (readerPipe != null) {
+            try {
+                readerPipe.close();
+            }
+            catch (Throwable ignore) { /* ignore */ }
+            reader = null;
+        }
+        if (reader != null) {
+            try {
+                reader.close();
+            }
+            catch (Throwable ignore) { /* ignore */ }
+            reader = null;
+        }
+        if (writer != null) {
+            try {
+                writer.close();
+            }
+            catch (Throwable ignore) { /* ignore */ }
+            writer = null;
+        }
+
+        // Shut down the listener executor.
+        if (listenerExecutor != null) {
+            listenerExecutor.shutdown();
+        }
+        readerConsumer = null;
+
+        // Cleanup
+        if (roster != null) {
+            roster.cleanup();
+            roster = null;
+        }
+        sendListeners.clear();
+        recvListeners.clear();
+        collectors.clear();
+        interceptors.clear();
+
+        // Reset the connection flags
+        wasAuthenticated = false;
+        isFirstInitialization = true;
+
+        // Notify connection listeners of the connection closing if done hasn't already been set.
+        for (ConnectionListener listener : getConnectionListeners()) {
+            try {
+                listener.connectionClosed();
+            }
+            catch (Exception e) {
+                // Catch and print any exception so we can recover
+                // from a faulty listener and finish the shutdown process
+                e.printStackTrace();
+            }
+        }
+        
+    
     }
 
     /**

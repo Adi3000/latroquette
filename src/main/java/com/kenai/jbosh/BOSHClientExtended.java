@@ -680,6 +680,9 @@ public final class BOSHClientExtended {
 		return rid;
 	}
 
+    public long getNextRid(){
+    	return requestIDSeq.getNextRID();
+    }
 	/**
      * Destroy this session.
      *

@@ -256,6 +256,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		usersService.updateUser(user);
 		//Unset properties of this user
 		this.user = new User();
+		xmppSession = null;
 		loginState = ANONYMOUS;
 		return "/index";
 	}

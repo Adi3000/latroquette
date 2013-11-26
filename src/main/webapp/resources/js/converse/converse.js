@@ -195,8 +195,7 @@
             	localStorage.setItem("conversejs_jid",connection.jid);
             	localStorage.setItem("conversejs_sid",connection.sid);
             	localStorage.setItem("conversejs_rid",connection.rid);
-            	converse.log(connection);
-        	}	
+        	}
         };
 
         this.getVCard = function (jid, callback, errback) {

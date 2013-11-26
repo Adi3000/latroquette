@@ -34,6 +34,16 @@
         <h:outputScript  library="js" name="converse/locale/en/LC_MESSAGES/en.js" target="head" />
         <h:outputScript target="head" rendered="#{userBean.xmppSession != null and userBean.xmppSession.valid }">
             $(function(){
+                    var jid = "#{userBean.xmppSession.jid}",
+	                    sid = "#{userBean.xmppSession.sid}",
+	                    rid = "#{userBean.xmppSession.rid}",
+	                    stored_rid = null;
+	                if (Modernizr.localstorage) {
+	                   stored_rid = localStorage.getItem("conversejs_rid") ;
+	                   if(stored_rid != null){
+	                      rid = stored_rid;
+                      }
+	                }
 			        converse.initialize({
 			            allow_otr: false,
 			            auto_list_rooms: false,
@@ -43,9 +53,9 @@
 			            hide_muc_server: false,
 			            i18n: locales['en'],
 			            prebind: true,
-			            jid : "#{userBean.xmppSession.jid}",
-			            sid : "#{userBean.xmppSession.rid}",
-			            rid : "#{userBean.xmppSession.sid}",
+			            jid : jid,
+			            sid : sid,
+			            rid : rid,
 			            show_only_online_users: false,
 			            show_controlbox_by_default: true,
 			            auto_subscribe: false,
@@ -53,6 +63,13 @@
 			            xhr_user_search_url: "/rest/authentication/searchUser",
 			        });
 		    });
+        </h:outputScript>
+        <h:outputScript target="head" rendered="#{userBean.xmppSession == null or !userBean.xmppSession.valid }">
+                if (Modernizr.localstorage) {
+                    localStorage.removeItem("conversejs_sid") ;
+                    localStorage.removeItem("conversejs_rid") ;
+                    localStorage.removeItem("conversejs_jid") ;
+                }
         </h:outputScript>
         <div id="conversejs"></div>
     </ui:composition>
