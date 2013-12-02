@@ -3,6 +3,7 @@ package net.latroquette.rest.security;
 import java.util.List;
 
 import javax.jws.WebService;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -11,14 +12,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 
+import net.latroquette.common.database.data.profile.User;
+import net.latroquette.common.database.data.profile.UserInfo;
 import net.latroquette.common.database.data.profile.UsersService;
 import net.latroquette.common.util.Services;
 import net.latroquette.web.security.AuthenticationMethod;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-
-import net.latroquette.common.database.data.profile.User;
 
 @Path("/authentication")
 @WebService(name=Services.AUTHENTICATION_WEB_SERVICE)
@@ -42,6 +43,15 @@ public class Authentication extends SpringBeanAutowiringSupport{
 		return user  == null ? "0" : "1";
     }
 	
+	@POST
+	@Path("/smf")
+	@Produces(MediaType.APPLICATION_JSON)
+	public GenericEntity<UserInfo> authenticateForSMF(@FormParam("login") String login, 
+			@FormParam("password") String password, @FormParam("byToken") String byToken) {
+		User user = usersService.authenticateUser(login, password, Boolean.valueOf(byToken), AuthenticationMethod.SMF);
+		return new GenericEntity<UserInfo>(new UserInfo(user)) {};
+	}
+	
 	@GET
 	@Path("/searchUser")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -57,5 +67,12 @@ public class Authentication extends SpringBeanAutowiringSupport{
 		return user  == null ? "0" : "1";
 	}
 	
+	@POST
+	@Path("/activation")
+	@Produces(MediaType.APPLICATION_JSON)
+	public GenericEntity<UserInfo> authenticateForSMF(@FormParam("login") String login) {
+		User user = usersService.validateUser(login, AuthenticationMethod.SMF);
+		return new GenericEntity<UserInfo>(new UserInfo(user)) {};
+	}
 	
 }

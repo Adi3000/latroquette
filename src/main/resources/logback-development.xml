@@ -9,21 +9,18 @@
 <included>
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<Target>${logger.output.console}</Target>
-		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-			<level>${logger.output.console.level}</level>
-		</filter>
 		<encoder>
-			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger[%L] - %m%n
-			</pattern>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger[%L] - %m%n</pattern>
 		</encoder>
 	</appender>
+
+	<root level="${logger.output.console.level}">
+	    <appender-ref ref="stdout" />
+	</root>
 	<logger name="org.dbunit.operation" level="DEBUG" />
-	<logger name="net.sf.ehcache" level="TRACE" />
+	<logger name="com.adi3000.common" level="TRACE" />
+	<logger name="net.latroquette" level="DEBUG" />
 	<logger name="org.hibernate" level="INFO" />
-	<logger name="org.hibernate.SQL" level="DEBUG" >
-		<appender-ref ref="stdout" />
-	</logger>
-	<logger name="org.hibernate.type" level="TRACE" >
-		<appender-ref ref="stdout" />
-	</logger>
+	<logger name="org.hibernate.SQL" level="DEBUG" />
+	<logger name="org.hibernate.type" level="INFO" />
 </included>

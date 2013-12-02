@@ -6,6 +6,7 @@ import java.util.List;
 import net.latroquette.common.test.LatroquetteTest;
 import net.latroquette.common.test.dbunit.ListDbUnitTestCase;
 import net.latroquette.common.test.utils.TestUtils;
+import net.latroquette.common.util.ServiceException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +37,13 @@ public class UsersTest extends ListDbUnitTestCase implements LatroquetteTest {
 		User user = usersService.getUserByLogin(login);
 		assertNotNull(user);
 		assertEquals(login, user.getLogin());
+	}
+	
+	@Test
+	public void registerToSmf() throws ServiceException{
+		String login = TEST_USER_LOGIN;
+		User user = usersService.getUserByLogin(login);
+		usersService.smfRegisterNewUser(user, "123456");
 	}
 
 	@Override

@@ -13,11 +13,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.NaturalId;
 
 import com.adi3000.common.database.hibernate.data.AbstractDataObject;
+import com.adi3000.common.util.security.Security;
 
 
 
@@ -35,12 +37,14 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	
 	private Integer id;
 	private String login;
-	private Integer token;
 	private Timestamp lastDateLogin;
+	private transient String currentToken;
+	private Integer loginState;
 	private String password;
 	private String mail;
 	private String lastHostNameLogin;
 	private String lastIpLogin;
+	private Integer smfId;
 	
 	@Id
 	@Column(name="user_id")
@@ -68,20 +72,6 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	@Column(name="user_login")
 	public String getLogin() {
 		return login;
-	}
-	/**
-	 * @param token the token to set
-	 */
-	public void setToken(Integer token) {
-		this.token = token;
-	}
-	/**
-	 * @return the token
-	 */
-	@Column(name="user_token")
-	@XmlTransient
-	public Integer getToken() {
-		return token;
 	}
 	/**
 	 * @param password the password to set
@@ -157,4 +147,40 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	public String toString(){
 		return this.login + "@" + this.id;
 	}
+	@Override
+	public void setCurrentToken() {
+		this.currentToken = Security.generateTokenID(this);		
+	}
+	@Override
+	@Transient
+	public String getCurrentToken() {
+		return currentToken;
+	}
+	/**
+	 * @return the smfId
+	 */
+	@Column(name="smf_id_member")
+	public Integer getSmfId() {
+		return smfId;
+	}
+	/**
+	 * @param smfId the smfId to set
+	 */
+	public void setSmfId(Integer smfId) {
+		this.smfId = smfId;
+	}
+	/**
+	 * @return the loginState
+	 */
+	@Column(name="user_login_state")
+	public Integer getLoginState() {
+		return loginState;
+	}
+	/**
+	 * @param loginState the loginState to set
+	 */
+	public void setLoginState(Integer loginState) {
+		this.loginState = loginState;
+	}
+	
 }

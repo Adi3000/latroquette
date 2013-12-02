@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.UsersService;
+import net.latroquette.common.util.ServiceException;
 import net.latroquette.common.util.Services;
 import net.latroquette.web.security.AuthenticationMethod;
 import net.latroquette.web.security.SecurityUtil;
@@ -32,10 +33,6 @@ import com.adi3000.common.web.jsf.UtilsBean;
 @SessionScoped
 public class UserBean implements Serializable, com.adi3000.common.util.security.User{
 	
-	public static final int ANONYMOUS = -1;
-	public static final int NOT_LOGGED_IN = 0;
-	public static final int NEW_USER = 1;
-	public static final int LOGGED_IN = 2;
 	public static final String LOGIN_VIEW_URI = "profile/login";
 	public static final String PARAMETER_REQUEST_URI = "u";
 	public static final String PARAMETER_QUERY_STRING = "qs";
@@ -47,7 +44,6 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	private transient String mailConfirm;
 	private User user;
 	private String password;
-	private int loginState;
 	private String previousURI;
 	private String previousQueryString;
 	private String displayLoginBox;
@@ -64,7 +60,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 
 	public UserBean(){
 		user = new User();
-		loginState = ANONYMOUS;
+		user.setLoginState(User.ANONYMOUS);
 	}
 
 	/**
@@ -95,14 +91,8 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	/**
 	 * @return the newUser
 	 */
-	public int getLoginState() {
-		return loginState;
-	}
-	/**
-	 * @param newUser the newUser to set
-	 */
-	public void getLoginState(int loginState) {
-		this.loginState = loginState;
+	public Integer getLoginState() {
+		return user.getLoginState();
 	}
 	public void validateAddressMail(ComponentSystemEvent event){
 
@@ -168,8 +158,8 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	public String registerUser()
 	{
 		User newUser = new User();
-		loginState = NOT_LOGGED_IN;
-		
+		newUser.setLoginState(User.ANONYMOUS);
+		String forwardUrl = null;
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if(StringUtils.isEmpty(getMail())){
@@ -192,34 +182,46 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		}
 		newUser.setLogin(this.getLogin());
 		newUser.setPassword(this.getPassword());
+		newUser.setMail(getMail());
 		this.setLogginUserInfo(newUser);
 		//TODO catch the error when a user already exists
-		usersService.registerNewUser(newUser);
-		
-			/*FacesMessage msg = new FacesMessage("Registring error[303]", 
-					"User already usedRegistering failed, please try later or ask for support");
-			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-			fc.addMessage(null, msg);
-			fc.validationFailed();*/
-		//}
-		this.loginState = NEW_USER;
-		return "/index";
+		try {
+			usersService.registerNewUser(newUser);
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		forwardUrl = authenticateUser(newUser.getLogin(), newUser.getPassword());
+		return forwardUrl;
 
 	}
 	
 	public String loginUser()
 	{
+		return authenticateUser(this.getLogin(), this.getPassword());
+	}
+	
+	/**
+	 * Log an user
+	 * @param login
+	 * @param password
+	 * @return
+	 */
+	private String authenticateUser(String login, String password){
 		initPreviousURL();
 		String forwardUrl = null;
-		loginState = NOT_LOGGED_IN;
-		user = usersService.authenticateUser(this.getLogin(), this.getPassword(), AuthenticationMethod.HTTP);
+		if(user == null){
+			user = new User();
+			user.setLoginState(User.ANONYMOUS);
+		}
+		user = usersService.authenticateUser(login, password, AuthenticationMethod.HTTP);
 		if(user != null){
 			this.setLogginUserInfo(user);
-			this.loginState = LOGGED_IN;
 			usersService.updateUser(user);
+			SecurityUtil.setTokenCookie(user);
 		}else{
 			user = new User();
-			loginState = ANONYMOUS;
+			user.setLoginState(User.ANONYMOUS);
 			this.setDisplayLoginBox(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			FacesMessage msg = new FacesMessage("Utilisateur ou mot de passe incorrect");
@@ -227,8 +229,7 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 			fc.addMessage(null, msg);
 			fc.validationFailed();
 		}
-		switch (loginState) {
-			case LOGGED_IN:
+		if(Security.checkLoginState(user)) {
 				if(!StringUtils.isEmpty(previousURI)){
 					forwardUrl = previousURI;
 					if(!StringUtils.isEmpty(previousQueryString)){
@@ -239,10 +240,8 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 				}
 				forwardUrl = FacesUtil.prepareRedirect(forwardUrl);
 				setDisplayLoginBox(true);
-				break;
-			default:
+		}else{
 				forwardUrl = null;
-				break;
 		}
 		return forwardUrl;
 	}
@@ -250,11 +249,10 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	public String logoutUser()
 	{
 		User user = usersService.getUserByLogin(getLogin());
-		user.setToken(null);
 		usersService.updateUser(user);
 		//Unset properties of this user
 		this.user = new User();
-		loginState = ANONYMOUS;
+		user.setLoginState(User.ANONYMOUS);
 		return "/index";
 	}
 	
@@ -275,13 +273,13 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		user.setLastDateLogin(now);
 		user.setLastIpLogin(ip);
 		user.setLastHostNameLogin(host);
-		user.setToken(Security.generateSessionID(user.hashCode(), user) );
 	}
+	
 	
 	
 	public boolean getLoggedIn()
 	{
-		return (loginState == LOGGED_IN || loginState == NEW_USER) ;
+		return (user != null && user.getLoginState() != null && user.getLoginState() >= User.NOT_VALIDATED) ;
 	}
 	
 	public void checkUserLogged(){
@@ -301,11 +299,6 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	
 	public void setLogin(String login) {
 		user.setLogin(login);
-	}
-
-	@Override
-	public Integer getToken() {
-		return user.getToken();
 	}
 
 	@Override
@@ -397,5 +390,19 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		String register = FacesUtil.getStringParameter("register");
 		setDisplayLoginBox(Boolean.valueOf(register));
 	}
+
+	@Override
+	public void setCurrentToken() {
+		//never setted here : take the one from this.user
+	}
+
+	@Override
+	public String getCurrentToken() {
+		if(Security.isUserLogged(user)){
+			return user.getCurrentToken();
+		}
+		return null;
+	}
+
 	
 }
