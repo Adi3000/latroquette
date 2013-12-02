@@ -6,6 +6,8 @@
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link type="text/css" rel="stylesheet" href="/resources/css/custom-theme/jquery-ui-1.10.2.custom.min.css" />
+	<link type="text/css" rel="stylesheet" href="/resources/js/converse/converse.min.css" />
+	
 	<h:outputScript>
 		var _separator_ = "#{webConstantsBean.separator}";
 		var _innerSeparator_ = "#{webConstantsBean.innerSeparator}";
@@ -15,8 +17,12 @@
 		var _requestContextPath_ = "#{facesContext.externalContext.requestContextPath}";
 		
 	</h:outputScript>
-	<script type="text/javascript" src="/resources/js/jquery-1.9.1.min.js" />
+	<script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js" />
 	<script type="text/javascript" src="/resources/js/jquery-ui-1.10.2.custom.min.js" />
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js" />
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js" />
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js" />
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.1.0/backbone.localStorage-min.js" />
 	<script type="text/javascript" src="/resources/js/common.js"/>
 	<h:outputStylesheet name="css/common/common.css" />
 	<title>La TroQuette</title>
@@ -40,6 +46,7 @@
  					<ui:include src="/home/tiles/newsWatcher.xhtml" />
 				</ui:insert>
 			</div>
+			<ui:include src="/home/tiles/chat.xhtml" />
 		</div>
 	</div>
 </h:body>

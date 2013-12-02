@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+<body>
+    <ui:composition>
+        
+        <h:outputScript  library="js" name="converse/libs/strophe.min.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/sha1.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/strophejs-plugins/muc/strophe.muc.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/strophejs-plugins/vcard/strophe.vcard.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/strophejs-plugins/disco/strophe.disco.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/strophejs-plugins/roster/strophe.roster.js" target="head" />
+        <h:outputScript  library="js" name="converse/libs/otr/dep/bigint.js" target="head" />
+        <h:outputScript  library="js" name="converse/libs/otr/dep/crypto.js" target="head" />
+        <h:outputScript  library="js" name="converse/libs/otr/dep/salsa20.js" target="head" />
+        <h:outputScript  library="js" name="converse/libs/otr/vendor/cryptojs/core.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/otr/vendor/cryptojs/enc-base64.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/crypto-js/md5.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/crypto-js/evpkdf.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/otr/vendor/cryptojs/cipher-core.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/otr/vendor/cryptojs/aes.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/otr/vendor/cryptojs/sha1.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/otr/vendor/cryptojs/sha256.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/otr/vendor/cryptojs/hmac.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/otr/vendor/cryptojs/pad-nopadding.js" target="head" />
+	    <h:outputScript  library="js" name="converse/libs/otr/vendor/cryptojs/mode-ctr.js" target="head" />
+        <h:outputScript  library="js" name="converse/libs/otr/dep/eventemitter.js" target="head" />
+        <h:outputScript  library="js" name="converse/libs/otr/otr.min.js" target="head" />
+        <h:outputScript  library="js" name="converse/libs/jed.js" target="head" />
+        <h:outputScript  library="js" name="converse/libs/jquery.tinysort.min.js" target="head" />
+        <h:outputScript  library="js" name="converse/converse.js" target="head" />
+        <h:outputScript  library="js" name="converse/locale/en/LC_MESSAGES/en.js" target="head" />
+        <h:outputScript target="head" rendered="#{userBean.xmppSession != null and userBean.xmppSession.valid }">
+            $(function(){
+                    var jid = "#{userBean.xmppSession.jid}",
+	                    sid = "#{userBean.xmppSession.sid}",
+	                    rid = "#{userBean.xmppSession.rid}",
+	                    stored_rid = null;
+	                if (Modernizr.localstorage) {
+	                   stored_rid = localStorage.getItem("conversejs_rid") ;
+	                   if(stored_rid != null){
+	                      rid = stored_rid;
+                      }
+	                }
+			        converse.initialize({
+			            allow_otr: false,
+			            auto_list_rooms: false,
+			            auto_subscribe: false,
+			            bosh_service_url: '/http-bind',
+			            debug: true ,
+			            hide_muc_server: false,
+			            i18n: locales['en'],
+			            prebind: true,
+			            jid : jid,
+			            sid : sid,
+			            rid : rid,
+			            show_only_online_users: false,
+			            show_controlbox_by_default: true,
+			            auto_subscribe: false,
+			            xhr_user_search: true,
+			            xhr_user_search_url: "/rest/authentication/searchUser",
+			        });
+		    });
+        </h:outputScript>
+        <h:outputScript target="head" rendered="#{userBean.xmppSession == null or !userBean.xmppSession.valid }">
+                if (Modernizr.localstorage) {
+                    localStorage.removeItem("conversejs_sid") ;
+                    localStorage.removeItem("conversejs_rid") ;
+                    localStorage.removeItem("conversejs_jid") ;
+                }
+        </h:outputScript>
+        <div id="conversejs"></div>
+    </ui:composition>
+</body>
+</html>

@@ -17,6 +17,10 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.jivesoftware.smack.BOSHConfiguration;
+import org.jivesoftware.smack.BOSHConnectionExtended;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Presence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -29,6 +33,8 @@ import com.adi3000.common.util.security.Security;
 
 @Repository(value=Services.USERS_SERVICE)
 public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
+	private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class.getName());
+	
 	
 	private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class);
 
@@ -122,9 +128,34 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 		}
 	}
 
+	public XMPPSession prebindXMPP(User user, String password){
+		BOSHConfiguration boshConfiguration = new BOSHConfiguration(
+				false,  "jabber.latroquette.net", 5280, "/http-bind", "jabber.latroquette.net");
+		boshConfiguration.setReconnectionAllowed(false);
+		BOSHConnectionExtended boshConnection = new BOSHConnectionExtended(boshConfiguration);
+		boshConfiguration.setDebuggerEnabled(logger.isDebugEnabled());
+		try {
+			boshConnection.connect();
+			boshConnection.login(user.getLogin(), password, null);
+		} catch (XMPPException e) {
+			logger.error("Can't loggin to " +  "jabber.latroquette.net" + 5280 + " with login : " +user.getLogin() , e);
+			return null;
+		}
+		String jid = boshConnection.getUser();
+		String sid = boshConnection.getSessionID(); 
+		boshConnection.detach();
+		XMPPSession xmppSession = new XMPPSession(
+										jid,
+										sid,
+										boshConnection.getClientNextRid());
+		return xmppSession;
+		
+		
+	}
+
 	@Override
 	@Transactional(readOnly=true)
-	public List<User> searchUsers(String pattern) {
+	public List<User> searchUsers(String pattern) {		
 		Criteria req = createCriteria(User.class)
 				.add(Restrictions.like("login", "%"+pattern+"%").ignoreCase()) ;
 		@SuppressWarnings("unchecked")

@@ -22,6 +22,7 @@ public interface UsersService extends DAO<User>{
 	
 	public void updateUser(User user);
 	
+	public XMPPSession prebindXMPP(User user, String password);
 	public void smfRegisterNewUser(User user, String clearPassword) throws ServiceException;
 
 	public User validateUser(String login, AuthenticationMethod method);
