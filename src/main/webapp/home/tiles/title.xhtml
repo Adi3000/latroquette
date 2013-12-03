@@ -5,40 +5,34 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
  	xmlns:util="http://code.adi3000.com/common/web/jsf/util" >
 <h:body>
-		<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			xmlns:ui="http://java.sun.com/jsf/facelets"
-			xmlns:h="http://java.sun.com/jsf/html"
-			xmlns:f="http://java.sun.com/jsf/core">	
-			<div id="loadingDiv" style="display: none;">
-				<div id="loadingBackground" class="ui-widget-overlay" ></div>
-				<div id="loadingImage"><h:graphicImage value="/resources/img/loading.gif" width="50" height="50" /></div><div id="loadingText"></div>
+	<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core">	
+		<div id="enTete">	
+			<div id="toolbarLogin">
+					<h:link outcome="/profile/login?register=true&amp;u=#{request.requestURI}&amp;qs=#{util:urlEncode(request.queryString)}" value="#{text_home.CONNEXION}" rendered="#{!userBean.loggedIn}"/>
+					<h:form id="logoutForm" rendered="#{userBean.loggedIn}">
+						<h:link outcome="/profile/index">
+							<h:outputFormat value="#{text_home.WELCOME_MESSAGE}">
+								<f:param value="#{userBean.login}" />
+							</h:outputFormat>
+						</h:link>
+						<h:commandButton value="Logout" action="#{userBean.logoutUser}" />
+					</h:form>
 			</div>
-			<div id="enTete">	
-				<h:panelGroup id="toolbarLogin">
-						<h:link outcome="/profile/login?register=true&amp;u=#{request.requestURI}&amp;qs=#{util:urlEncode(request.queryString)}" value="#{text_home.CONNEXION}" rendered="#{!userBean.loggedIn}"/>
-						<h:form id="logoutForm" rendered="#{userBean.loggedIn}">
-							<h:link outcome="/profile/index">
-								<h:outputFormat value="#{text_home.WELCOME_MESSAGE}">
-									<f:param value="#{userBean.login}" />
-								</h:outputFormat>
-							</h:link>
-							<h:commandButton value="Logout" action="#{userBean.logoutUser}" />
-						</h:form>
-				</h:panelGroup>
-			
-				<div id="titleHomePage">
-					<h1>La TroQuette</h1>
-					<h2>Brand your own world !!</h2>
+		
+			<div id="titleHomePage">
+				<div id="logo">
+					<h:link outcome="/index" >
+						<h:graphicImage url="/resources/img/logo_latroquette_proto.png" />
+					</h:link>
 				</div>
-				<div>
-					<p>
-						Basé sur l'échange, 
-						nous privilégions le moyen d'échanger plutôt que d'acheter 
-						nos besoins qui change nos mentalités 
-						entre récup', écologie, solidarité.
-					</p>
-				</div>
+				<p>
+					Troquer... cette vieille expression à remettre au goût du jour
+				</p>
 			</div>
-		</ui:composition>
+		</div>
+	</ui:composition>
 </h:body>
 </html>

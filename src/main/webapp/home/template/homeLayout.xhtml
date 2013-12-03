@@ -29,6 +29,10 @@
 </h:head>
 <h:body>
 	<div id="wallpaper">
+		<div id="loadingDiv" style="display: none;">
+			<div id="loadingBackground" class="ui-widget-overlay" ></div>
+			<div id="loadingImage"><h:graphicImage value="/resources/img/loading.gif" width="50" height="50" /></div><div id="loadingText"></div>
+		</div>
 		<ui:insert name="title">
 			<ui:include src="/home/tiles/title.xhtml" />
 		</ui:insert>

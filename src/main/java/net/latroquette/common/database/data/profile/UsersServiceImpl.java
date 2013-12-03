@@ -20,7 +20,6 @@ import org.hibernate.criterion.Restrictions;
 import org.jivesoftware.smack.BOSHConfiguration;
 import org.jivesoftware.smack.BOSHConnectionExtended;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Presence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -127,6 +126,7 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	}
 
 	public XMPPSession prebindXMPP(User user, String password){
+		//TODO export values to parameters
 		BOSHConfiguration boshConfiguration = new BOSHConfiguration(
 				false,  "jabber.latroquette.net", 5280, "/http-bind", "jabber.latroquette.net");
 		boshConfiguration.setReconnectionAllowed(false);
