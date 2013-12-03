@@ -33,8 +33,6 @@ import com.adi3000.common.util.security.Security;
 
 @Repository(value=Services.USERS_SERVICE)
 public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
-	private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class.getName());
-	
 	
 	private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class);
 
