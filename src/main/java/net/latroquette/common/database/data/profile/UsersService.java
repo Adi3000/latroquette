@@ -9,21 +9,84 @@ import com.adi3000.common.database.hibernate.session.DAO;
 
 public interface UsersService extends DAO<User>{
 
-	
+	/**
+	 * Get an user by its login
+	 * @param login
+	 * @return
+	 */
 	public User getUserByLogin(String login);
-	
+	/**
+	 * Authenticate an user with login and clear text password
+	 * @param login
+	 * @param password
+	 * @param method
+	 * @return
+	 */
 	public User authenticateUser(String login, String password, AuthenticationMethod method);
 	
+	/**
+	 * Authenticate user with login and password or token (depending on {@code byToken})
+	 * @param login
+	 * @param passwordOrToken
+	 * @param byToken
+	 * @param method
+	 * @return
+	 */
 	public User authenticateUser(String login, String passwordOrToken, Boolean byToken, AuthenticationMethod method);
 	
+	/**
+	 * Search for user with a regexe {@code '*<pattern>*'}
+	 * @param pattern
+	 * @return
+	 */
 	public List<User> searchUsers(String pattern);
 
+	/**
+	 * Register a new user
+	 * @param newUser
+	 * @return
+	 * @throws ServiceException
+	 */
 	public User registerNewUser(User newUser)  throws ServiceException;
 	
+	/**
+	 * Modify user attribute and information
+	 * @param user
+	 */
 	public void updateUser(User user);
 	
+	/**
+	 * Prebind user to XMPP server to login with a {@link XMPPSession} session (with JID, RID and SID)
+	 * @param user
+	 * @param password
+	 * @return
+	 */
 	public XMPPSession prebindXMPP(User user, String password);
+	
+	/**
+	 * Register user into SimpleMachine Forum
+	 * @param user
+	 * @param clearPassword
+	 * @throws ServiceException
+	 */
 	public void smfRegisterNewUser(User user, String clearPassword) throws ServiceException;
 
+	/**
+	 * Force the validation of an user
+	 * @param login
+	 * @param method
+	 * @return
+	 */
 	public User validateUser(String login, AuthenticationMethod method);
+	
+	/**
+	 * Return all {@link Role} declared
+	 * @return
+	 */
+	public List<Role> getAllRoles();
+	/**
+	 * Modify or create a role
+	 * @return
+	 */
+	public void modifyRole(Role role);
 }

@@ -22,6 +22,7 @@ import org.jivesoftware.smack.BOSHConnectionExtended;
 import org.jivesoftware.smack.XMPPException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,15 @@ import com.adi3000.common.util.security.Security;
 public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	
 	private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class);
+	
+	@Autowired
+	private RolesDAO rolesDAO;
+	/**
+	 * @param rolesDAO the rolesDAO to set
+	 */
+	public void setRolesDAO(RolesDAO rolesDAO) {
+		this.rolesDAO = rolesDAO;
+	}
 
 	@Transactional(readOnly=true)
 	public User getUserByLogin(String login){
@@ -169,4 +179,13 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 		return user;
 	}
 	
+	@TransactionalUpdate
+	public void modifyRole(Role role){
+		rolesDAO.modify(role);
+	}
+	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
+	public List<Role> getAllRoles(){
+		return (List<Role>)rolesDAO.createCriteria(Role.class).list();
+	}
 }
