@@ -4,15 +4,14 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
-
-import com.adi3000.common.database.hibernate.DatabaseOperation;
-import com.adi3000.common.util.CommonUtil;
 
 import net.latroquette.common.database.data.profile.Role;
 import net.latroquette.common.database.data.profile.UsersService;
 import net.latroquette.common.util.Services;
+
+import com.adi3000.common.database.hibernate.DatabaseOperation;
+import com.adi3000.common.util.CommonUtil;
 
 @ManagedBean
 @ViewScoped

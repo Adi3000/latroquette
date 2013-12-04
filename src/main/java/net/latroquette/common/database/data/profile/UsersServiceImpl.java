@@ -6,11 +6,14 @@ import java.util.List;
 
 import net.latroquette.common.util.ServiceException;
 import net.latroquette.common.util.Services;
+import net.latroquette.common.util.parameters.ParameterName;
+import net.latroquette.common.util.parameters.Parameters;
 import net.latroquette.rest.forum.SMFMethods;
 import net.latroquette.rest.forum.SMFRestException;
 import net.latroquette.rest.forum.SMFWSClientUtil;
 import net.latroquette.web.security.AuthenticationMethod;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jettison.json.JSONException;
@@ -29,13 +32,21 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.database.hibernate.session.AbstractDAO;
 import com.adi3000.common.database.spring.TransactionalUpdate;
+import com.adi3000.common.util.optimizer.CommonValues;
 import com.adi3000.common.util.security.Security;
 
 @Repository(value=Services.USERS_SERVICE)
 public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	
 	private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class);
-	
+	@Autowired
+	private transient Parameters parameters;
+	/**
+	 * @param parameters the parameters to set
+	 */
+	public void setParameters(Parameters parameters) {
+		this.parameters = parameters;
+	}
 	@Autowired
 	private RolesDAO rolesDAO;
 	/**
@@ -187,5 +198,42 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	@Transactional(readOnly=true)
 	public List<Role> getAllRoles(){
 		return (List<Role>)rolesDAO.createCriteria(Role.class).list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<UserStatistics> getUserStatistics(UserStatistics filter, int page){
+		int nbResultToLoad = CommonValues.ERROR_OR_INFINITE ; 
+		int cursor = CommonValues.ERROR_OR_INFINITE;
+		nbResultToLoad = parameters.getIntValue(ParameterName.NB_RESULT_TO_LOAD);
+		cursor = nbResultToLoad * (page -1);
+		Criteria req = createCriteria(UserStatistics.class);
+		if(filter.isIdSet()){
+			req.add(Restrictions.idEq(filter.getId()));
+		}
+		if(StringUtils.isNotEmpty(filter.getMail())){
+			req.add(Restrictions.like("mail",filter.getMail()).ignoreCase());
+		}
+		if(StringUtils.isNotEmpty(filter.getLogin())){
+			req.add(Restrictions.like("login",filter.getLogin()).ignoreCase());
+		}
+		if(filter.getSmfId() != null){
+			req.add(Restrictions.eq("smfId",filter.getSmfId()));
+		}
+		if(filter.getNbDraft() != null){
+			if(filter.getNbDraft() > 0){
+				req.add(Restrictions.ge("nbDraft", filter.getNbDraft()));
+			}else if (filter.getNbDraft() < 0){
+				req.add(Restrictions.le("nbDraft", -filter.getNbDraft().intValue()));
+			}
+		}
+		if(filter.getNbItems() != null){
+			if(filter.getNbItems() > 0){
+				req.add(Restrictions.ge("nbItems", filter.getNbItems()));
+			}else if (filter.getNbDraft() < 0){
+				req.add(Restrictions.le("nbItems", -filter.getNbItems().intValue()));
+			}
+		}
+		req.setFirstResult(cursor).setMaxResults(nbResultToLoad);
+		return req.list();
 	}
 }

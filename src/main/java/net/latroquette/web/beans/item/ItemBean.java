@@ -1,6 +1,5 @@
 package net.latroquette.web.beans.item;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
