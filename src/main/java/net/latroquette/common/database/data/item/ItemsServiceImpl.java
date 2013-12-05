@@ -15,7 +15,9 @@ import net.latroquette.common.util.parameters.Parameters;
 import net.latroquette.service.amazon.AmazonWServiceClient;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -132,8 +134,8 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	public List<Item> searchItem(String searchString, boolean searchOnDescription, Integer page, MainKeyword keyword, boolean forAutocomplete){
-		Query req = searchItemQuery(searchString, searchOnDescription, page, keyword,false,forAutocomplete);
+	public List<Item> searchItem(ItemFilter itemFilter, Integer page, boolean forAutocomplete){
+		Query req = searchItemQuery(itemFilter, page, false,forAutocomplete);
 		@SuppressWarnings("unchecked")
 		List<Item> items = (List<Item>)req.list();
 		for(Item item : items){
@@ -151,31 +153,36 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	 * @return
 	 */
 	@Transactional(readOnly=true)
-	public Integer countItem(String searchString, boolean searchOnDescription, MainKeyword keyword){
-		Query req = searchItemQuery(searchString, searchOnDescription, CommonValues.ERROR_OR_INFINITE, keyword,true, false);
+	public Integer countItem(ItemFilter itemFilter){
+		Query req = searchItemQuery(itemFilter, CommonValues.ERROR_OR_INFINITE, true, false);
 		Integer nbItems = ((Long)req.iterate().next()).intValue();
 		return nbItems;
 	}
 	
 	@Transactional(readOnly=true)
-	private Query searchItemQuery(String searchString, boolean searchOnDescription, Integer page, MainKeyword keyword,boolean countOnly, boolean forAutocomplete){
+	private Query searchItemQuery(ItemFilter itemFilter, Integer page, boolean countOnly, boolean forAutocomplete){
 		//Optimize when just checking for nbResult
 		int nbResultToLoad = CommonValues.ERROR_OR_INFINITE ; 
-		int cursor = CommonValues.ERROR_OR_INFINITE;
+		String field = null;
 		Set<Keyword> relatedKeywords = null;
-		String field = "count(item)";
-		if(page == null){
-			page = Integer.valueOf(1);
-		}
+		//Get keyword if needed;
+		MainKeyword keyword = itemFilter.getKeywordId() != null ?  
+					keywordsService.getKeywordById(itemFilter.getKeywordId()) : null;
+		
+		//Are we counting ? If true, set select field to, or get item field 
 		if(!countOnly){
 			field = "item";
 			nbResultToLoad = parameters.getIntValue(ParameterName.NB_RESULT_TO_LOAD);
-			cursor = nbResultToLoad * (page -1);
+			if(page == null){
+				page = Integer.valueOf(1);
+			}
+		}else{
+			 field = "count(item)";
 		}
 		StringBuffer restriction = new StringBuffer("where 1=1 ");
 		//Setting the search filter for searchString
-		if(StringUtils.isNotEmpty(searchString)){
-			String index = searchOnDescription ? "item.title || ' ' || item.description " : "item.title " ;
+		if(StringUtils.isNotEmpty(itemFilter.getPattern())){
+			String index = itemFilter.isSearchOnDescription() ? "item.title || ' ' || item.description " : "item.title " ;
 			restriction.append("and fulltextsearch('french', ").append(index).append(", :search ) = true ");
 		}
 		if(keyword != null){
@@ -189,13 +196,14 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 					.concat(countOnly ? "" : " order by item.creationDate");
 		Query req = createQuery(sql);
 		//Compose the search pattern
-		if(StringUtils.isNotEmpty(searchString)){
-			String searchPattern = searchString.replaceAll("\\W+", " & ").replaceAll(" & $","");
+		if(StringUtils.isNotEmpty(itemFilter.getPattern())){
+			String searchPattern = itemFilter.getPattern().replaceAll("\\W+", " & ").replaceAll(" & $","");
 			if(forAutocomplete){
 				searchPattern = searchPattern.concat(":*");
 			}
 			req.setString("search", searchPattern);
 		}
+		//Make a keyword filter
 		if(keyword != null){
 			relatedKeywords = new HashSet<>();
 			relatedKeywords = keywordsService.getAllChildrenOf(keyword, relatedKeywords);
@@ -203,11 +211,21 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		}
 		
 		if(!countOnly){
-			req
-				.setFirstResult(cursor)
-				.setMaxResults(nbResultToLoad);
+			req = CommonUtil.setCriteriaPage(req, page, nbResultToLoad);
 		}
 		return req;
+	}
+	
+	@Transactional(readOnly=true)
+	public List<Item> searchItemByStatus(Integer page, ItemStatus itemStatus){
+		Criteria req = createCriteria(Item.class)
+				.add(Restrictions.eq("statusId", itemStatus.getValue()));
+		int nbResultToLoad = CommonValues.ERROR_OR_INFINITE ; 
+		nbResultToLoad = parameters.getIntValue(ParameterName.NB_RESULT_TO_LOAD);
+		req = CommonUtil.setCriteriaPage(req, page, nbResultToLoad);
+		@SuppressWarnings("unchecked")
+		List<Item> items = req.list();
+		return items;
 	}
 	
 }

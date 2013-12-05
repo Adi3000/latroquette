@@ -6,7 +6,7 @@
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<f:metadata>
-		    <f:viewParam name="r" value="#{itemSearchBean.request}"/>            
+		    <f:viewParam name="r" value="#{itemSearchBean.itemFilter.pattern}"/>            
 		    <f:viewParam name="p" value="#{itemSearchBean.page}"/>            
 	 		<f:event listener="#{itemSearchBean.loadSearch}" type="preRenderView" />
 	 	</f:metadata>
@@ -16,9 +16,9 @@
 				$(function() {
 					showLoadingDiv("Recherche en cours... Veuillez patienter...");
 					var result = $.getJSON("#{facesContext.externalContext.requestContextPath}/rest/search/item", {
-						r : "#{itemSearchBean.request}", 
+						r : "#{itemSearchBean.itemFilter.pattern}", 
 						p : "#{itemSearchBean.page}",
-						c : "#{itemSearchBean.actualKeywordId}"
+						c : "#{itemSearchBean.itemFilter.keywordId}"
 						}, 
 						function(data){
 							$("#itemList").addItems(data);
@@ -28,7 +28,7 @@
 	 		</h:outputScript> -->
 			<div>
 				<h1>
-					Résultat de la recherche "#{itemSearchBean.request}" : #{itemSearchBean.count} résultats
+					Résultat de la recherche "#{itemSearchBean.itemFilter.pattern}" : #{itemSearchBean.count} résultats
 				</h1>
 			</div>
 			<div id="itemList">

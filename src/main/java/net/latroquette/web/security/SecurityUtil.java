@@ -12,7 +12,8 @@ public class SecurityUtil {
 	private static final String TOKEN_COOKIE = "ltq_token";
 	private static final String USER_COOKIE = "ltq_user";
 	public static boolean checkUserLogged(UserBean user){
-		if (!Security.isUserLogged(user) || !user.getLoggedIn()){
+		if (!Security.isUserLogged(user) || !user.isLoggedIn()){
+			user.logoutUser();
 			user.setDisplayLoginBox(true);
 			FacesUtil.navigationForward(LOGIN_VIEW_PATH);
 			return false;

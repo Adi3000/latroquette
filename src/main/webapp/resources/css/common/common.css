@@ -59,7 +59,10 @@ body{
 	z-index: 0;
 }
 
-#toolbar{}
+#toolbarLogin{
+	position: relative;
+	z-index: 20;
+}
 
 #titleHomePage > p{
 	padding-top: 113px;

@@ -39,6 +39,7 @@
 		<property name="annotatedClasses">
 			<list>
 				<value>net.latroquette.common.database.data.profile.User</value>
+				<value>net.latroquette.common.database.data.profile.UserStatistics</value>
 				<value>net.latroquette.common.database.data.profile.Role</value>
 				<value>net.latroquette.common.database.data.place.Place</value>
 				<value>net.latroquette.common.database.data.item.Item</value>

@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import net.latroquette.common.database.data.profile.Role;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.UsersService;
 import net.latroquette.common.database.data.profile.XMPPSession;
@@ -218,9 +219,8 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		user = usersService.authenticateUser(login, password, AuthenticationMethod.HTTP);
 		if(user != null){
 			this.setLogginUserInfo(user);
-			xmppSession = usersService.prebindXMPP(user, this.getPassword());
-			usersService.updateUser(user);
 			SecurityUtil.setTokenCookie(user);
+			usersService.updateUser(user);
 		}else{
 			user = new User();
 			user.setLoginState(User.ANONYMOUS);
@@ -231,27 +231,27 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 			fc.addMessage(null, msg);
 			fc.validationFailed();
 		}
+		//Is user blocked or not ?
 		if(Security.checkLoginState(user)) {
-				if(!StringUtils.isEmpty(previousURI)){
-					forwardUrl = previousURI;
-					if(!StringUtils.isEmpty(previousQueryString)){
-						forwardUrl = forwardUrl.concat("?").concat(UtilsBean.urlDecode(previousQueryString));
-					}
-				}else{
-					forwardUrl = "/index";
+			xmppSession = usersService.prebindXMPP(user, this.getPassword());
+			if(!StringUtils.isEmpty(previousURI)){
+				forwardUrl = previousURI;
+				if(!StringUtils.isEmpty(previousQueryString)){
+					forwardUrl = forwardUrl.concat("?").concat(UtilsBean.urlDecode(previousQueryString));
 				}
-				forwardUrl = FacesUtil.prepareRedirect(forwardUrl);
-				setDisplayLoginBox(true);
+			}else{
+				forwardUrl = "/index";
+			}
+			forwardUrl = FacesUtil.prepareRedirect(forwardUrl);
+			setDisplayLoginBox(true);
 		}else{
-				forwardUrl = null;
+			forwardUrl = logoutUser();;
 		}
 		return forwardUrl;
 	}
 	
 	public String logoutUser()
 	{
-		User user = usersService.getUserByLogin(getLogin());
-		usersService.updateUser(user);
 		//Unset properties of this user
 		this.user = new User();
 		xmppSession = null;
@@ -280,15 +280,31 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	
 	
 	
-	public boolean getLoggedIn()
+	public boolean isLoggedIn()
 	{
-		return (user != null && user.getLoginState() != null && user.getLoginState() >= User.NOT_VALIDATED) ;
+		if(Security.isUserLogged(user)){
+			user = usersService.getUserById(user.getId());
+		}
+		return (Security.isUserLogged(user) && user.getLoginState() != null && user.getLoginState() >= User.NOT_VALIDATED) ;
 	}
 	
 	public void checkUserLogged(){
 		SecurityUtil.checkUserLogged(this);
 	}
 	
+	public Role getRole(){
+		return isLoggedIn() ? user.getRole() : null;
+	}
+	
+	public boolean isAdmin(){
+		return isLoggedIn() && user.getRole() != null ? user.getRole().getAdmin() : false;
+	}
+	public boolean isValidateItems(){
+		return isLoggedIn() && user.getRole() != null ? user.getRole().getValidateItems() : false;
+	}
+	public boolean isModifyKeywords(){
+		return isLoggedIn() && user.getRole() != null ? user.getRole().getModifyKeywords() : false;
+	}
 
 	@Override
 	public Integer getId() {

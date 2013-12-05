@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -27,7 +29,7 @@ import com.adi3000.common.util.security.Security;
 @Entity
 @Table(name = "users")
 @SequenceGenerator(name = "users_user_id_seq", sequenceName = "users_user_id_seq", allocationSize=1)
-public class User extends AbstractDataObject implements com.adi3000.common.util.security.User{
+public class User extends AbstractDataObject implements com.adi3000.common.util.security.User, UserBase{
 	
 	/**
 	 * 
@@ -45,6 +47,7 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	private String lastHostNameLogin;
 	private String lastIpLogin;
 	private Integer smfId;
+	private Role role;
 	
 	@Id
 	@Column(name="user_id")
@@ -181,6 +184,20 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	 */
 	public void setLoginState(Integer loginState) {
 		this.loginState = loginState;
+	}
+	/**
+	 * @return the role
+	 */
+	@ManyToOne(optional=true)
+	@JoinColumn(name="role_id")
+	public Role getRole() {
+		return role;
+	}
+	/**
+	 * @param role the role to set
+	 */
+	public void setRole(Role role) {
+		this.role = role;
 	}
 	
 }

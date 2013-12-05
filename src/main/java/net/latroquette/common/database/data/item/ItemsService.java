@@ -2,7 +2,6 @@ package net.latroquette.common.database.data.item;
 
 import java.util.List;
 
-import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.util.parameters.ParameterName;
 
@@ -42,7 +41,7 @@ public interface ItemsService extends DAO<Item> {
 	 * @param countOnly
 	 * @return
 	 */
-	public List<Item> searchItem(String searchString, boolean searchOnDescription, Integer page, MainKeyword keyword,boolean forAutocomplete);
+	public List<Item> searchItem(ItemFilter itemFilter, Integer page, boolean forAutocomplete);
 	
 	/**
 	 * Return the number of item which match with the searchString request in database
@@ -52,6 +51,13 @@ public interface ItemsService extends DAO<Item> {
 	 * @param countOnly
 	 * @return
 	 */
-	public Integer countItem(String searchString, boolean searchOnDescription, MainKeyword keyword);
+	public Integer countItem(ItemFilter itemFilter);
+	/**
+	 * Search item by their status
+	 * @param page
+	 * @param itemStatus
+	 * @return
+	 */
+	public List<Item> searchItemByStatus(Integer page, ItemStatus itemStatus);
 	
 }

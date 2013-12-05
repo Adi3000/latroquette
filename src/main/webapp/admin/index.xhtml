@@ -6,21 +6,14 @@
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<ui:define name="mainDiv">
-			<div>
-				<h1>
-					item list : en cours de construction aucun item.
-				</h1>
-			</div>
-			<table>
-			  <tr>
-				<td>Cellule 1</td>
-				<td>Cellule 2</td>
-			  </tr>
-			  <tr>
-				<td>Cellule 3</td>
-				<td>Cellule 4</td>
-			  </tr>
-			</table>
+			<ul>
+				<li>
+					<h:link outcome="/admin/users" rendered="#{userBean.admin}" />
+				</li>
+				<li>
+					<h:link outcome="/admin/keywords" rendered="#{userBean.modifyKeywords}" />
+				</li>
+			</ul>
 		</ui:define>
 	</ui:composition>
 </body>

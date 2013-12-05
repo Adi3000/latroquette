@@ -23,7 +23,6 @@ public class Role extends AbstractDataObject{
 	private static final long serialVersionUID = 7793418632652574160L;
 	private Integer id;
 	private String label;
-	private Boolean xmpp;
 	private Boolean modifyKeywords;
 	private Boolean admin;
 	private Boolean validateItems;
@@ -54,20 +53,6 @@ public class Role extends AbstractDataObject{
 	 */
 	public void setLabel(String label) {
 		this.label = label;
-	}
-	/**
-	 * @return the xmpp
-	 */
-	@Column(name="is_xmpp")
-	@Type(type="yes_no")
-	public Boolean getXmpp() {
-		return xmpp;
-	}
-	/**
-	 * @param xmpp the xmpp to set
-	 */
-	public void setXmpp(Boolean xmpp) {
-		this.xmpp = xmpp;
 	}
 	/**
 	 * @return the modifyKeywords

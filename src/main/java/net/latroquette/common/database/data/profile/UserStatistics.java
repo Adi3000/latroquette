@@ -4,6 +4,9 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Subselect;
 
@@ -11,24 +14,36 @@ import com.adi3000.common.database.hibernate.data.AbstractDataObject;
 
 @Entity
 @Subselect("select * from user_statistics")
-public class UserStatistics extends AbstractDataObject{
+public class UserStatistics extends AbstractDataObject implements UserBase{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1436576772177823092L;
 
-	private Integer id;
-	private String login;
-	private String mail;
 	private Integer nbItems;
-	private Integer nbDraft;
+	private Integer nbDrafts;
+	private Integer loginState;
 	private Date lastItemUpdate;
 	private Integer smfId;
 	private Boolean isSmfActivated;
-	@Override
-	public Integer getId() {
-		return id;
+	private Integer id;
+	private String mail;
+	private String login;
+	private Role role;
+	/**
+	 * @return the login
+	 */
+	@Column(name="user_login")
+	public String getLogin() {
+		return login;
+	}
+	/**
+	 * @return the mail
+	 */
+	@Column(name="user_mail")
+	public String getMail() {
+		return mail;
 	}
 	/**
 	 * @return the isSmfActivated
@@ -45,25 +60,11 @@ public class UserStatistics extends AbstractDataObject{
 		return lastItemUpdate;
 	}
 	/**
-	 * @return the login
-	 */
-	@Column(name="user_login")
-	public String getLogin() {
-		return login;
-	}
-	/**
-	 * @return the mail
-	 */
-	@Column(name="user_mail")
-	public String getMail() {
-		return mail;
-	}
-	/**
-	 * @return the nbDraft
+	 * @return the nbDrafts
 	 */
 	@Column(name="nb_drafts")
-	public Integer getNbDraft() {
-		return nbDraft;
+	public Integer getNbDrafts() {
+		return nbDrafts;
 	}
 	/**
 	 * @return the nbItems
@@ -80,13 +81,6 @@ public class UserStatistics extends AbstractDataObject{
 		return smfId;
 	}
 	/**
-	 * @param id the id to set
-	 */
-	@Column(name="user_id")
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	/**
 	 * @param isSmfActivated the isSmfActivated to set
 	 */
 	public void setIsSmfActivated(Boolean isSmfActivated) {
@@ -99,22 +93,10 @@ public class UserStatistics extends AbstractDataObject{
 		this.lastItemUpdate = lastItemUpdate;
 	}
 	/**
-	 * @param login the login to set
+	 * @param nbDrafts the nbDraft to set
 	 */
-	public void setLogin(String login) {
-		this.login = login;
-	}
-	/**
-	 * @param mail the mail to set
-	 */
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
-	/**
-	 * @param nbDraft the nbDraft to set
-	 */
-	public void setNbDraft(Integer nbDraft) {
-		this.nbDraft = nbDraft;
+	public void setNbDrafts(Integer nbDrafts) {
+		this.nbDrafts = nbDrafts;
 	}
 	/**
 	 * @param nbItems the nbItems to set
@@ -127,6 +109,55 @@ public class UserStatistics extends AbstractDataObject{
 	 */
 	public void setSmfId(Integer smfId) {
 		this.smfId = smfId;
+	}
+	@Override
+	@Id
+	@Column(name = "user_id")
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+		
+	}
+	/**
+	 * @param mail the mail to set
+	 */
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+	/**
+	 * @param login the login to set
+	 */
+	public void setLogin(String login) {
+		this.login = login;
+	}
+	/**
+	 * @return the loginState
+	 */
+	@Column(name="user_login_state")
+	public Integer getLoginState() {
+		return loginState;
+	}
+	/**
+	 * @param loginState the loginState to set
+	 */
+	public void setLoginState(Integer loginState) {
+		this.loginState = loginState;
+	}
+	/**
+	 * @return the role
+	 */
+	@ManyToOne(optional=true)
+	@JoinColumn(name="role_id")
+	public Role getRole() {
+		return role;
+	}
+	/**
+	 * @param role the role to set
+	 */
+	public void setRole(Role role) {
+		this.role = role;
 	}
 	
 	

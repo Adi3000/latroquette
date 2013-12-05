@@ -3,11 +3,13 @@ package net.latroquette.web.beans.item;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
 import net.latroquette.common.database.data.item.Item;
+import net.latroquette.common.database.data.item.ItemFilter;
 import net.latroquette.common.database.data.item.ItemsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.util.Services;
@@ -28,51 +30,39 @@ public class ItemSearchBean implements Serializable {
 	public void setItemsService(ItemsService itemsService) {
 		this.itemsService = itemsService;
 	}
-	private String request;
-	private Integer distance;
-	private String placeId;
-	
-
-	/**
-	 * @param placeId the placeId to set
-	 */
-	public void setPlaceId(String placeId) {
-		this.placeId = placeId;
-	}
+	private ItemFilter itemFilter;
 	private Integer page;
 	private Integer count;
 	private List<Item> itemsFound; 
 	
-	private Boolean searchOnDescription = true;
 	@ManagedProperty(value="#{navigationBean.actualKeyword}")
 	private MainKeyword actualKeyword;
 	
+	public ItemSearchBean(){
+		itemFilter = new ItemFilter();
+	}
+
+	@PostConstruct
+	public void initItemFilter(){
+		if(actualKeyword != null){
+			itemFilter.setKeywordId(actualKeyword.getId());
+		}
+	}
+
 	//TODO accessibility feature : add a parameter to not load item via JS
 	public String search(){
-		String path = "/item/index.xhtml?r=".concat(request);
+		String path = "/item/index.xhtml?r=".concat(itemFilter.getPattern());
 		return FacesUtil.prepareRedirect(path, true);
 	}
 	
 	public void initCount(){
-		this.count = itemsService.countItem(request, searchOnDescription, actualKeyword);
+		this.count = itemsService.countItem(itemFilter);
 	}
 	public void loadSearch(){
 		initCount();
 		if(count > 0){
-			this.itemsFound = itemsService.searchItem(request, searchOnDescription, page, actualKeyword, false);
+			this.itemsFound = itemsService.searchItem(itemFilter, page, false);
 		}
-	}
-	/**
-	 * @return the request
-	 */
-	public String getRequest() {
-		return request;
-	}
-	/**
-	 * @param request the request to set
-	 */
-	public void setRequest(String request) {
-		this.request = request;
 	}
 	/**
 	 * @return the page
@@ -98,19 +88,7 @@ public class ItemSearchBean implements Serializable {
 	public void setCount(Integer count) {
 		this.count = count;
 	}
-	/**
-	 * @return the searchOnDescription
-	 */
-	public Boolean getSearchOnDescription() {
-		return searchOnDescription;
-	}
-	/**
-	 * @param searchOnDescription the searchOnDescription to set
-	 */
-	public void setSearchOnDescription(Boolean searchOnDescription) {
-		this.searchOnDescription = searchOnDescription;
-	}
-
+	
 	/**
 	 * @return the actualKeyword
 	 */
@@ -125,33 +103,24 @@ public class ItemSearchBean implements Serializable {
 		this.actualKeyword = actualKeyword;
 	}
 	
-	public String getActualKeywordId(){
-		return actualKeyword != null ? actualKeyword.getId().toString() : null;
-	}
 	/**
 	 * @return the itemsFound
 	 */
 	public List<Item> getItemsFound() {
 		return itemsFound;
 	}
+	
 	/**
-	 * @return the distance
+	 * @return the itemFilter
 	 */
-	public Integer getDistance() {
-		return distance;
+	public ItemFilter getItemFilter() {
+		return itemFilter;
 	}
 
 	/**
-	 * @param distance the distance to set
+	 * @param itemFilter the itemFilter to set
 	 */
-	public void setDistance(Integer distance) {
-		this.distance = distance;
-	}
-
-	/**
-	 * @return the placeId
-	 */
-	public String getPlaceId() {
-		return placeId;
+	public void setItemFilter(ItemFilter itemFilter) {
+		this.itemFilter = itemFilter;
 	}
 }

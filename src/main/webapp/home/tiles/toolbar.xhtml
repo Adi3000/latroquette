@@ -17,13 +17,13 @@
 						<div id="distanceSlider" style="position: absolute;width : 250px; display:none;"></div>
 						<div id="distanceBox">
 							<h:outputLabel for="distance" >Sur&#160;</h:outputLabel>
-							<h:inputText id="distance" size="2" maxlength="3" style="border: 0; color: #f6931f; font-weight: bold;" value="#{itemSearchBean.distance}"/>
+							<h:inputText id="distance" size="2" maxlength="3" style="border: 0; color: #f6931f; font-weight: bold;" value="#{itemSearchBean.itemFilter.distance}"/>
 							<h:outputLabel for="distance" id="labelDistance" >km</h:outputLabel>
 						</div>
 					</div>
 					<div id="searchPart1">
 						<div id="searchObjetBox" class="searchBox">
-							<h:inputText id= "searchObjet" value="#{itemSearchBean.request}" />
+							<h:inputText id= "searchObjet" value="#{itemSearchBean.itemFilter.pattern}" />
 							<h:inputHidden id="searchObjetHidden"  />
 						</div>
 						<div id="searchMemberBox" class="searchBox">

@@ -3,6 +3,7 @@ package net.latroquette.common.database.data.profile;
 import java.util.List;
 
 import net.latroquette.common.util.ServiceException;
+import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.web.security.AuthenticationMethod;
 
 import com.adi3000.common.database.hibernate.session.DAO;
@@ -15,6 +16,12 @@ public interface UsersService extends DAO<User>{
 	 * @return
 	 */
 	public User getUserByLogin(String login);
+	/**
+	 * Get an user by its id
+	 * @param id
+	 * @return
+	 */
+	public User getUserById(Integer id);
 	/**
 	 * Authenticate an user with login and clear text password
 	 * @param login
@@ -89,4 +96,15 @@ public interface UsersService extends DAO<User>{
 	 * @return
 	 */
 	public void modifyRole(Role role);
+	
+	/**
+	 * Return statistic information of users matching filter<br />
+	 * if {@code filter.nbDraft/filter.nbItems > 0} filter will match user with more than {@code [filter.nbDraft/filter.nbItems]}<br />
+	 * if {@code filter.nbDraft/filter.nbItems < 0} filter will match user with less than {@code [filter.nbDraft/filter.nbItems]}<br />
+	 * Will retrive only the {@link ParameterName}{@code .NB_RESULT_TO_LOAD} element of the {@code page}
+	 * @param filter
+	 * @param page
+	 * @return
+	 */
+	public List<UserStatistics> getUserStatistics(UserStatistics filter, int page);
 }

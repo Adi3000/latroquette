@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
 import net.latroquette.common.database.data.item.Item;
+import net.latroquette.common.database.data.item.ItemFilter;
 import net.latroquette.common.database.data.item.ItemsService;
 import net.latroquette.common.database.data.keyword.ExternalKeyword;
 import net.latroquette.common.database.data.keyword.Keyword;
@@ -64,8 +65,11 @@ public class ItemSearch extends SpringBeanAutowiringSupport {
 			@QueryParam("p") Integer page, 
 			@QueryParam("c") Integer category, 
 			@QueryParam("a") String autocomplete ){
-		MainKeyword keyword = category != null ? keywordsService.getKeywordById(category) : null;
-		List<Item> itemsFound = itemsService.searchItem(pattern, !Boolean.valueOf(onlyTitle), page, keyword,Boolean.valueOf(autocomplete));
+		ItemFilter itemFilter = new ItemFilter();
+		itemFilter.setPattern(pattern);
+		itemFilter.setSearchOnDescription(!Boolean.valueOf(onlyTitle));
+		itemFilter.setKeywordId(category);
+		List<Item> itemsFound = itemsService.searchItem(itemFilter, page, Boolean.valueOf(autocomplete));
 		return new GenericEntity<List<Item>>(itemsFound) {};
 	}
 	
@@ -75,9 +79,12 @@ public class ItemSearch extends SpringBeanAutowiringSupport {
 	public GenericEntity<Integer> countItems (
 			@QueryParam("r") String pattern, 
 			@QueryParam("ot") String onlyTitle,
-			@QueryParam("c") String category){
-		MainKeyword keyword = StringUtils.isNotEmpty(category) ? keywordsService.getKeywordById(Integer.valueOf(category)) : null;
-		Integer itemsFound = itemsService.countItem(pattern, !Boolean.valueOf(onlyTitle), keyword);
+			@QueryParam("c") Integer category){
+		ItemFilter itemFilter = new ItemFilter();
+		itemFilter.setPattern(pattern);
+		itemFilter.setSearchOnDescription(!Boolean.valueOf(onlyTitle));
+		itemFilter.setKeywordId(category);
+		Integer itemsFound = itemsService.countItem(itemFilter);
 		return new GenericEntity<Integer>(itemsFound) {};
 	}
 	

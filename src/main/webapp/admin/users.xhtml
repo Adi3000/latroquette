@@ -2,77 +2,88 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<f:metadata>
-			<f:event listener="#{roleBean.loadRoles}" type="preRenderComponent" />
+			<f:event listener="#{usersStatsBean.loadUsersStats}" type="preRenderComponent" />
 		</f:metadata>
 		<ui:define name="mainDiv">
-			<table>
-				<thead>
-					<tr>
-						<th>Id</th>
-						<th>Login/Mail</th>
-						<th>Annonces (Brouillons)</th>
-						<th>Derniere connection</th>
-						<th>Validé/SMF/XMPP</th>
-						<th>Operation</th>
-					</tr>
-				</thead>
-				<h:form>
+			<h:form>
+				<table>
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Login/Mail</th>
+							<th>Annonces (Brouillons)</th>
+							<th>Profil</th>
+							<th>Validé</th>
+							<th>Operation</th>
+						</tr>
+						<tr>
+							<td>
+								<h:inputText value="#{usersStatsBean.filter.id}" size="5"/>
+							</td>
+							<td>
+								<h:inputText value="#{usersStatsBean.filter.login}" size="12" />
+								<h:inputText value="#{usersStatsBean.filter.mail}" size="12" />
+							</td>
+							<td>
+								<h:inputText value="#{usersStatsBean.filter.nbItems}" size="2"/>
+								<h:inputText value="#{usersStatsBean.filter.nbDrafts}" size="2"/>
+							</td>
+							<td>
+								<h:commandButton value="Changer les profils" action="#{usersStatsBean.applyProfile}"  immediate="true"/>
+							</td>
+							<td>
+								&#160;
+							</td>
+							<td>
+								<h:commandButton value="Filter" action="#{usersStatsBean.search}" />
+							</td>
+						</tr>
+					</thead>
 					<tbody>
-						<ui:repeat var="role" value="#{roleBean.roleList}">
+						<ui:repeat var="user" value="#{usersStatsBean.result}">
 							<tr>
 								<td>					
-									#{role.id}
+									#{user.id}
 								</td>
 								<td>					
-									<h:inputText value="#{role.label}"/>
+									#{user.login} <br />
+									<a href="mailto:#{user.mail}">#{user.mail}</a>
 								</td>
 								<td>					
-									<h:selectBooleanCheckbox value="#{role.xmpp}"/>
-								</td>
-								<td>					
-									<h:selectBooleanCheckbox value="#{role.validateItems}"/>
+									#{user.nbItems} (#{user.nbDrafts})
 								</td>
 								<td>
-									<h:selectBooleanCheckbox value="#{role.modifyKeywords}"/>
+									<h:selectOneMenu value="#{user.role}">
+										<f:selectItem itemLabel="Normal" noSelectionOption="true" />
+									   	<f:selectItems value="#{usersStatsBean.roles}" var="role" itemValue="#{role.id}" itemLabel="#{role.label}"/>
+									</h:selectOneMenu>
 								</td>
 								<td>
-									<h:selectBooleanCheckbox  value="#{role.admin}"/>
+									<h:commandLink value="Non" title="Reenvoyer un mail de validation" rendered="#{user.loginState == 0}" action="#{usersStatsBean.forceValidation(user.id)}" />
+									<h:outputText value="Oui" title="code [#{user.loginState}]" rendered="#{user.loginState gt 0}" />
+									<h:outputText value="Bloqué" title="code [#{user.loginState}]" rendered="#{user.loginState lt 0}" />
+									<br /><!-- SMF -->					
+									<h:outputText value="Forum_OK" title="SMF ID : #{user.smfId}" rendered="#{!empty user.smfId and user.isSmfActivated}"/>
+									<h:commandLink value="Forum_NOK" title="Re-enregistrer sur le forum" rendered="#{empty user.smfId}" action="#{usersStatsBean.forceSMFRegister(user.id)}" />
+									<h:commandLink value="Forum_OK (non validé)" title="SMF ID : #{user.smfId} Forcer validation au forum" rendered="#{!empty user.smfId and !user.isSmfActivated}" action="#{usersStatsBean.forceSMFValidation(user.id)}" />
+									<br /><!-- XMPP -->				
+									<h:commandLink value="Chat_OK" title="Bloquer le chat" action="#{usersStatsBean.blockXmpp(user.id)}" />
 								</td>
 								<td>
-									<h:commandButton value="Sauvegarder" action="#{roleBean.modify(role.id)}" />
+									<h:commandButton value="Bloquer" action="#{usersStatsBean.blockUser(user.id)}" />
 								</td>
 							</tr>
 						</ui:repeat>
-						<tr>
-							<td>
-								#
-							</td>
-							<td>
-								<h:inputText value="#{roleBean.newRole.label}"/>
-							</td>
-							<td>
-								<h:selectBooleanCheckbox value="#{roleBean.newRole.xmpp}"/>
-							</td>
-							<td>
-								<h:selectBooleanCheckbox value="#{roleBean.newRole.validateItems}"/>
-							</td>
-							<td>
-								<h:selectBooleanCheckbox value="#{roleBean.newRole.modifyKeywords}"/>
-							</td>
-							<td>
-								<h:selectBooleanCheckbox value="#{roleBean.newRole.admin}"/>
-							</td>
-							<td>
-								<h:commandButton value="Ajouter" action="#{roleBean.create}" />
-							</td>
-						</tr>
 					</tbody>
-				</h:form>
-			</table>
+				</table>
+				<h:commandLink value="Page precedente" action="#{usersStatsBean.previousPage}" rendered="#{usersStatsBean.page gt 1}"/>
+				<h:commandLink value="Page suivante" action="#{usersStatsBean.nextPage}" />
+			</h:form>
 		</ui:define>
 	</ui:composition>
 </body>

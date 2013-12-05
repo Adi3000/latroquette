@@ -3,78 +3,72 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
-<body>
-	<ui:composition template="/home/template/mainLayout.xhtml">
-		<f:metadata>
-			<f:event listener="#{roleBean.loadRoles}" type="preRenderComponent" />
-		</f:metadata>
-		<ui:define name="mainDiv">
-			<table>
-				<thead>
-					<tr>
-						<th>Id</th>
-						<th>Nom du profile</th>
-						<th>Connexion au Chat</th>
-						<th>Validation des annonces</th>
-						<th>Modification des Mots-clés</th>
-						<th>Administrateur</th>
-						<th>&#160;</th>
-					</tr>
-				</thead>
-				<h:form>
-					<tbody>
-						<ui:repeat var="role" value="#{roleBean.roleList}">
+	<body>
+		<ui:composition template="/home/template/mainLayout.xhtml">
+			<f:metadata>
+				<f:event listener="#{roleBean.loadRoles}" type="preRenderComponent" />
+			</f:metadata>
+			<ui:define name="mainDiv">
+				<table>
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Nom du profile</th>
+							<th>Connexion au Chat</th>
+							<th>Validation des annonces</th>
+							<th>Modification des Mots-clés</th>
+							<th>Administrateur</th>
+							<th>&#160;</th>
+						</tr>
+					</thead>
+					<h:form>
+						<tbody>
+							<ui:repeat var="role" value="#{roleBean.roleList}">
+								<tr>
+									<td>					
+										#{role.id}
+									</td>
+									<td>					
+										<h:inputText value="#{role.label}"/>
+									</td>
+									<td>					
+										<h:selectBooleanCheckbox value="#{role.validateItems}"/>
+									</td>
+									<td>
+										<h:selectBooleanCheckbox value="#{role.modifyKeywords}"/>
+									</td>
+									<td>
+										<h:selectBooleanCheckbox  value="#{role.admin}"/>
+									</td>
+									<td>
+										<h:commandButton value="Sauvegarder" action="#{roleBean.modify(role.id)}" />
+									</td>
+								</tr>
+							</ui:repeat>
 							<tr>
-								<td>					
-									#{role.id}
-								</td>
-								<td>					
-									<h:inputText value="#{role.label}"/>
-								</td>
-								<td>					
-									<h:selectBooleanCheckbox value="#{role.xmpp}"/>
-								</td>
-								<td>					
-									<h:selectBooleanCheckbox value="#{role.validateItems}"/>
+								<td>
+									#
 								</td>
 								<td>
-									<h:selectBooleanCheckbox value="#{role.modifyKeywords}"/>
+									<h:inputText value="#{roleBean.newRole.label}"/>
 								</td>
 								<td>
-									<h:selectBooleanCheckbox  value="#{role.admin}"/>
+									<h:selectBooleanCheckbox value="#{roleBean.newRole.validateItems}"/>
 								</td>
 								<td>
-									<h:commandButton value="Sauvegarder" action="#{roleBean.modify(role.id)}" />
+									<h:selectBooleanCheckbox value="#{roleBean.newRole.modifyKeywords}"/>
+								</td>
+								<td>
+									<h:selectBooleanCheckbox value="#{roleBean.newRole.admin}"/>
+								</td>
+								<td>
+									<h:commandButton value="Ajouter" action="#{roleBean.create}" />
 								</td>
 							</tr>
-						</ui:repeat>
-						<tr>
-							<td>
-								#
-							</td>
-							<td>
-								<h:inputText value="#{roleBean.newRole.label}"/>
-							</td>
-							<td>
-								<h:selectBooleanCheckbox value="#{roleBean.newRole.xmpp}"/>
-							</td>
-							<td>
-								<h:selectBooleanCheckbox value="#{roleBean.newRole.validateItems}"/>
-							</td>
-							<td>
-								<h:selectBooleanCheckbox value="#{roleBean.newRole.modifyKeywords}"/>
-							</td>
-							<td>
-								<h:selectBooleanCheckbox value="#{roleBean.newRole.admin}"/>
-							</td>
-							<td>
-								<h:commandButton value="Ajouter" action="#{roleBean.create}" />
-							</td>
-						</tr>
-					</tbody>
-				</h:form>
-			</table>
-		</ui:define>
-	</ui:composition>
-</body>
+						</tbody>
+					</h:form>
+				</table>
+			</ui:define>
+		</ui:composition>
+	</body>
 </html>

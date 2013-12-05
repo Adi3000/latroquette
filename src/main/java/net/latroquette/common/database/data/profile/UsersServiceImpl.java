@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.database.hibernate.session.AbstractDAO;
 import com.adi3000.common.database.spring.TransactionalUpdate;
+import com.adi3000.common.util.CommonUtil;
 import com.adi3000.common.util.optimizer.CommonValues;
 import com.adi3000.common.util.security.Security;
 
@@ -62,6 +63,10 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 				.setMaxResults(1)
 				.add(Restrictions.eq("login", login).ignoreCase()) ;
 		return (User)req.uniqueResult();
+	}
+	@Transactional(readOnly=true)
+	public User getUserById(Integer id){
+		return (User)getSession().get(User.class, id);
 	}
 
 	@TransactionalUpdate
@@ -152,7 +157,7 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 				false,  "jabber.latroquette.net", 5280, "/http-bind", "jabber.latroquette.net");
 		boshConfiguration.setReconnectionAllowed(false);
 		BOSHConnectionExtended boshConnection = new BOSHConnectionExtended(boshConfiguration);
-		boshConfiguration.setDebuggerEnabled(logger.isDebugEnabled());
+		boshConfiguration.setDebuggerEnabled(logger.isTraceEnabled());
 		try {
 			boshConnection.connect();
 			boshConnection.login(user.getLogin(), password, null);
@@ -187,6 +192,8 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	public User validateUser(String login, AuthenticationMethod method) {
 		User user = getUserByLogin(login);
 		user.setLoginState(User.NEW_USER_VALIDATED);
+		user.setDatabaseOperation(DatabaseOperation.UPDATE);
+		updateUser(user);
 		return user;
 	}
 	
@@ -200,40 +207,42 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 		return (List<Role>)rolesDAO.createCriteria(Role.class).list();
 	}
 	
-	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<UserStatistics> getUserStatistics(UserStatistics filter, int page){
-		int nbResultToLoad = CommonValues.ERROR_OR_INFINITE ; 
-		int cursor = CommonValues.ERROR_OR_INFINITE;
+		int nbResultToLoad = CommonValues.ERROR_OR_INFINITE ;
 		nbResultToLoad = parameters.getIntValue(ParameterName.NB_RESULT_TO_LOAD);
-		cursor = nbResultToLoad * (page -1);
+		
 		Criteria req = createCriteria(UserStatistics.class);
 		if(filter.isIdSet()){
 			req.add(Restrictions.idEq(filter.getId()));
 		}
 		if(StringUtils.isNotEmpty(filter.getMail())){
-			req.add(Restrictions.like("mail",filter.getMail()).ignoreCase());
+			req.add(Restrictions.like("mail","%"+filter.getMail()+"%").ignoreCase());
 		}
 		if(StringUtils.isNotEmpty(filter.getLogin())){
-			req.add(Restrictions.like("login",filter.getLogin()).ignoreCase());
+			req.add(Restrictions.like("login","%"+filter.getLogin()+"%").ignoreCase());
 		}
 		if(filter.getSmfId() != null){
 			req.add(Restrictions.eq("smfId",filter.getSmfId()));
 		}
-		if(filter.getNbDraft() != null){
-			if(filter.getNbDraft() > 0){
-				req.add(Restrictions.ge("nbDraft", filter.getNbDraft()));
-			}else if (filter.getNbDraft() < 0){
-				req.add(Restrictions.le("nbDraft", -filter.getNbDraft().intValue()));
+		if(filter.getNbDrafts() != null){
+			if(filter.getNbDrafts() > 0){
+				req.add(Restrictions.ge("nbDraft", filter.getNbDrafts()));
+			}else if (filter.getNbDrafts() < 0){
+				req.add(Restrictions.le("nbDraft", -filter.getNbDrafts().intValue()));
 			}
 		}
 		if(filter.getNbItems() != null){
 			if(filter.getNbItems() > 0){
 				req.add(Restrictions.ge("nbItems", filter.getNbItems()));
-			}else if (filter.getNbDraft() < 0){
+			}else if (filter.getNbItems() < 0){
 				req.add(Restrictions.le("nbItems", -filter.getNbItems().intValue()));
 			}
 		}
-		req.setFirstResult(cursor).setMaxResults(nbResultToLoad);
-		return req.list();
+		req = CommonUtil.setCriteriaPage(req, page, nbResultToLoad);
+		@SuppressWarnings("unchecked")
+		List<UserStatistics> list = (List<UserStatistics>) req.list();
+		return list;
 	}
+	
 }

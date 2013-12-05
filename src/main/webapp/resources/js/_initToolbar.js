@@ -1,6 +1,6 @@
 $(function(){
 	$("#searchForm\\:searchObjet")
-		.val("Recherche").toggleClass("backgroundText", true)
+		.val("").toggleClass("backgroundText", true)
 		.focus(function(){
 			if($(this).hasClass("backgroundText")){
 				$(this).val("").toggleClass("backgroundText", false);
@@ -8,7 +8,7 @@ $(function(){
 		})
 		.blur(function(){
 			if($(this).val() == ""){
-				$(this).val("Recherche").toggleClass("backgroundText", true);
+				$(this).val("").toggleClass("backgroundText", true);
 			}
 		});
 	

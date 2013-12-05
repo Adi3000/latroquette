@@ -25,9 +25,9 @@ import net.latroquette.common.util.Services;
 import net.latroquette.web.beans.profile.UserBean;
 import net.latroquette.web.security.SecurityUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
-import org.springframework.util.CollectionUtils;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.util.CommonUtil;

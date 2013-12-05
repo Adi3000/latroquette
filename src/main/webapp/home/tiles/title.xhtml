@@ -17,6 +17,7 @@
 							<h:outputFormat value="#{text_home.WELCOME_MESSAGE}">
 								<f:param value="#{userBean.login}" />
 							</h:outputFormat>
+							<h:link outcome="/admin" rendered="#{userBean.admin or userBean.modifyKeywords}"/>
 						</h:link>
 						<h:commandButton value="Logout" action="#{userBean.logoutUser}" />
 					</h:form>

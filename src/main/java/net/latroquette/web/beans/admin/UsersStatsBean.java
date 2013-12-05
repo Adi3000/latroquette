@@ -1,23 +1,67 @@
 package net.latroquette.web.beans.admin;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
+import net.latroquette.common.database.data.profile.Role;
+import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.UserStatistics;
 import net.latroquette.common.database.data.profile.UsersService;
 import net.latroquette.common.util.Services;
+import net.latroquette.web.security.AuthenticationMethod;
 
 @ManagedBean
 @ViewScoped
-public class UsersStatsBean {
+public class UsersStatsBean implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2127848308811905982L;
+
 	@ManagedProperty(value=Services.USERS_SERVICE_JSF)
 	private transient UsersService usersService;
 	
 	private UserStatistics filter;
 	private List<UserStatistics> result;
+	private int page;
+	private List<Role> roles;
+	
+	/**
+	 * @return the roles
+	 */
+	public List<Role> getRoles() {
+		return roles;
+	}
+	/**
+	 * @param roles the roles to set
+	 */
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+	
+	/**
+	 * @return the page
+	 */
+	public int getPage() {
+		return page;
+	}
+
+	/**
+	 * @param page the page to set
+	 */
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public UsersStatsBean(){
+		page = 1;
+		filter = new UserStatistics();
+	}
+	
 	/**
 	 * @return the filter
 	 */
@@ -49,11 +93,32 @@ public class UsersStatsBean {
 		this.usersService = usersService;
 	}
 	
+	public void loadUsersStats(){
+		search();
+	}
+	
+	public String search(){
+		result = usersService.getUserStatistics(filter, page);
+		roles = usersService.getAllRoles();
+		return null;
+	}
+	
 	public String blockUser(String id){
 		return null;
 	}
-	public String revalidateUser(String id){
+	public String forceValidation(String id){
+		User user = usersService.getUserById(Integer.valueOf(id));
+		usersService.validateUser(user.getLogin(), AuthenticationMethod.ADMIN);
 		return null;
+	}
+	public String applyProfile(){
+		User user =null;
+		for(UserStatistics userStat : result){
+			user = usersService.getUserById(userStat.getId());
+			user.setRole(userStat.getRole());
+			usersService.updateUser(user);
+		}
+		return "/admin/users";
 	}
 	public String blockXmpp(String id){
 		return null;
@@ -66,5 +131,13 @@ public class UsersStatsBean {
 	}
 	public String changeProfile(String userId,String profileId){
 		return null;
+	}
+	public String nextPage(){
+		page ++;
+		return search();
+	}
+	public String previousPage(){
+		page --;
+		return search();
 	}
 }
