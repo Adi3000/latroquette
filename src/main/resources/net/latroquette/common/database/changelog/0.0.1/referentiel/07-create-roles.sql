@@ -4,9 +4,9 @@
 -- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: latroquette
 --
 
-INSERT INTO roles VALUES (1, 'admin', 'Y', 'Y', 'Y', 'Y');
-INSERT INTO roles VALUES (2, 'user', 'Y', 'N', 'N', 'N');
-INSERT INTO roles VALUES (3, 'moderator', 'Y', 'Y', 'Y', 'N');
+INSERT INTO roles VALUES (1, 'admin', 'Y', 'Y', 'Y');
+INSERT INTO roles VALUES (2, 'user', 'Y', 'N', 'N');
+INSERT INTO roles VALUES (3, 'moderator', 'Y', 'Y', 'N');
 
 
 --
