@@ -107,4 +107,9 @@ public interface UsersService extends DAO<User>{
 	 * @return
 	 */
 	public List<UserStatistics> getUserStatistics(UserStatistics filter, int page);
+	/**
+	 * Update roles from a list of {@link UserBase}
+	 * @param list
+	 */
+	public void updateRoles(List<UserBase> list);
 }

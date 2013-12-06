@@ -1,5 +1,6 @@
 package net.latroquette.common.database.data.item;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Set;
 import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
+import net.latroquette.common.database.data.place.PlacesService;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.util.Services;
 import net.latroquette.common.util.parameters.ParameterName;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.adi3000.common.database.hibernate.session.AbstractDAO;
+import com.adi3000.common.database.spring.TransactionalUpdate;
 import com.adi3000.common.util.CommonUtil;
 import com.adi3000.common.util.data.HibernateUtil;
 import com.adi3000.common.util.optimizer.CommonValues;
@@ -36,7 +39,23 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	private transient Parameters parameters;
 	@Autowired
 	private transient KeywordsService keywordsService;
+	@Autowired
+	private transient PlacesService placesService;
 	
+	/**
+	 * @return the placesService
+	 */
+	public PlacesService getPlacesService() {
+		return placesService;
+	}
+
+	/**
+	 * @param placesService the placesService to set
+	 */
+	public void setPlacesService(PlacesService placesService) {
+		this.placesService = placesService;
+	}
+
 	/**
 	 * @param keywordsService the keywordsService to set
 	 */
@@ -168,7 +187,13 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		//Get keyword if needed;
 		MainKeyword keyword = itemFilter.getKeywordId() != null ?  
 					keywordsService.getKeywordById(itemFilter.getKeywordId()) : null;
-		
+		//If no status id set, default request should grab only activated annonces
+		Integer itemStatusId = itemFilter.getItemStatusId() != null 
+					? itemFilter.getItemStatusId() : ItemStatus.APPROUVED.getValue();
+		//Anyway hide blocked user
+		Integer minUserStatusLevel = itemFilter.getItemStatusId() != null ? 
+				User.NOT_VALIDATED : User.NEW_USER_VALIDATED ;
+					
 		//Are we counting ? If true, set select field to, or get item field 
 		if(!countOnly){
 			field = "item";
@@ -180,21 +205,58 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 			 field = "count(item)";
 		}
 		StringBuffer restriction = new StringBuffer("where 1=1 ");
-		//Setting the search filter for searchString
+		
+		//-------------------------------------------
+		// Setting the search filter for searchString
+		//-------------------------------------------
+		//Pattern
 		if(StringUtils.isNotEmpty(itemFilter.getPattern())){
 			String index = itemFilter.isSearchOnDescription() ? "item.title || ' ' || item.description " : "item.title " ;
 			restriction.append("and fulltextsearch('french', ").append(index).append(", :search ) = true ");
 		}
+
+		//Keyword
 		if(keyword != null){
 			restriction.append("and keyword in (:relatedKeywords) ");
 		}
+
+		//Place
+		if(itemFilter.getPlaceId() != null){
+			restriction.append("and ( place is null ");
+			if(itemFilter.getDistance() > 0){
+				restriction
+					.append("or exists (from Place place2 where place2.id = :placeId ")
+						.append(" and abs(place2.longitude - place.longitude ) < :longitudeRadix")
+						.append(" and abs(place2.latitude - place.latitude ) < :latitudeRadix )");
+			}else{
+				restriction.append("or placeId = :placeId ");
+			}
+			restriction.append(" ) ");
+		}
+		//Owner
+		if(itemFilter.getOwnerId() != null){
+			restriction.append("and user.id = :ownerId ");
+		}
+		//Status
+		restriction.append("and item.statusId = :itemStatusId ");
+		restriction.append("and item.user.loginState >= :minUserStatusLevel ");
+		//--------------------
+		// Building the query
+		//--------------------
 		String sql = 
 				" SELECT "
 					.concat(field)
 					.concat(" FROM Item item left join item.keywordList keyword ")
+					.concat(" INNER JOIN item.user user ")
+					.concat(" LEFT JOIN item.keywordList keyword ")
+					.concat(" LEFT JOIN item.user.place place ")
 					.concat(restriction.toString())
 					.concat(countOnly ? "" : " order by item.creationDate");
 		Query req = createQuery(sql);
+		
+		//-----------------------------
+		// Setting the query parameters
+		//------------------------------
 		//Compose the search pattern
 		if(StringUtils.isNotEmpty(itemFilter.getPattern())){
 			String searchPattern = itemFilter.getPattern().replaceAll("\\W+", " & ").replaceAll(" & $","");
@@ -209,7 +271,19 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 			relatedKeywords = keywordsService.getAllChildrenOf(keyword, relatedKeywords);
 			req.setParameterList("relatedKeywords", relatedKeywords);
 		}
-		
+		//Compute radix from kilometer radix
+		if(itemFilter.getPlaceId() != null){
+			req.setInteger("placeId", itemFilter.getPlaceId());
+			if(itemFilter.getDistance() > 0){
+				Point2D.Double place = placesService.getRadixByPlaceId( itemFilter.getPlaceId(), itemFilter.getDistance());
+				req.setDouble("longitudeRadix", place.getX());
+				req.setDouble("latitudeRadix", place.getY());
+			}
+		}
+		//filter by Item status
+		req.setInteger("itemStatusId", itemStatusId);
+		//filter by User status
+		req.setInteger("minUserStatusLevel", minUserStatusLevel);
 		if(!countOnly){
 			req = CommonUtil.setCriteriaPage(req, page, nbResultToLoad);
 		}
@@ -226,6 +300,11 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		@SuppressWarnings("unchecked")
 		List<Item> items = req.list();
 		return items;
+	}
+	
+	@TransactionalUpdate
+	public void updateItem(Item item){
+		modify(item);
 	}
 	
 }

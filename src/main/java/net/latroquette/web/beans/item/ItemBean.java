@@ -22,12 +22,15 @@ import net.latroquette.common.database.data.keyword.KeywordType;
 import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.util.Services;
+import net.latroquette.web.beans.commons.NavigationBean;
 import net.latroquette.web.beans.profile.UserBean;
 import net.latroquette.web.security.SecurityUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.util.CommonUtil;
@@ -37,6 +40,7 @@ import com.adi3000.common.web.faces.FacesUtil;
 @ManagedBean
 @ViewScoped
 public class ItemBean implements Serializable {
+	private static final Logger logger = LoggerFactory.getLogger(ItemBean.class);
 	
 	@ManagedProperty(value=Services.ITEMS_SERVICE_JSF)
 	private transient ItemsService itemsService;
@@ -44,25 +48,10 @@ public class ItemBean implements Serializable {
 	private transient FilesService filesService;
 	@ManagedProperty(value=Services.KEYWORDS_SERVICE_JSF)
 	private transient KeywordsService keywordsService;
-	/**
-	 * @param keywordsService the keywordsService to set
-	 */
-	public void setKeywordsService(KeywordsService keywordsService) {
-		this.keywordsService = keywordsService;
-	}
-	/**
-	 * @param filesService the filesService to set
-	 */
-	public void setFilesService(FilesService filesService) {
-		this.filesService = filesService;
-	}
-	/**
-	 * @param itemsService the itemsService to set
-	 */
-	public void setItemsService(ItemsService itemsService) {
-		this.itemsService = itemsService;
-	}
-
+	@ManagedProperty(value="#{request.requestURI}")
+	private String navigationPath;
+	
+	private static final String DRAFTS_VALIDATION_URL="/index/item?s="+ItemStatus.CREATED.getValue();
 	/**
 	 * 
 	 */
@@ -230,7 +219,37 @@ public class ItemBean implements Serializable {
 	public void setItemId(String itemId) {
 		this.itemId = itemId;
 	}
-	
+	/**
+	 * @return the navigationPath
+	 */
+	public String getNavigationPath() {
+		return navigationPath;
+	}
+	/**
+	 * @param navigationPath the navigationPath to set
+	 */
+	public void setNavigationPath(String navigationPath) {
+		this.navigationPath = navigationPath;
+	}
+	/**
+	 * @param keywordsService the keywordsService to set
+	 */
+	public void setKeywordsService(KeywordsService keywordsService) {
+		this.keywordsService = keywordsService;
+	}
+	/**
+	 * @param filesService the filesService to set
+	 */
+	public void setFilesService(FilesService filesService) {
+		this.filesService = filesService;
+	}
+	/**
+	 * @param itemsService the itemsService to set
+	 */
+	public void setItemsService(ItemsService itemsService) {
+		this.itemsService = itemsService;
+	}
+
 	/**
 	 * @return the keywordIds
 	 */
@@ -259,21 +278,103 @@ public class ItemBean implements Serializable {
 				}
 			}
 			keywordIds = CommonUtil.formatListToString(keywords);
-		}else if(item == null){
+		}else{
 			item = new Item();
 		}
 	}
 
 	public void checkItemAndUser(){
 		//First check if user is logged
-		boolean userCheck = SecurityUtil.checkUserLogged(userBean);
-
+		boolean userCheck = userBean.isLoggedIn();
+		if(isEditing()){
+			userCheck = SecurityUtil.checkUserLogged(userBean);
+		}
 		//Next get item and check if user is available to modify this item
 		loadItem();
-		//Pass to viewItem only if user is logged for this check
-		if (item.getId() != null && userCheck && !userBean.getId().equals(item.getUser().getId())){
-			FacesUtil.navigationRedirect("/item/viewItem.xhtml?item=".concat(item.getId().toString()));
+		if (item.isIdSet() &&
+				userCheck &&
+				!userBean.getId().equals(item.getUser().getId())){
+				if(isEditing()){
+					//Pass to viewItem only if user is logged for this check
+					if(ItemStatus.APPROUVED.getValue().equals(item.getStatusId()) ||
+							userBean.isValidateItems()){
+						FacesUtil.navigationRedirect("/item/viewItem.xhtml?item=".concat(item.getId().toString()));
+					}else{
+						FacesUtil.navigationForward("/error404");
+					}
+				}else if(isViewing()){
+					if(!ItemStatus.APPROUVED.getValue().equals(item.getStatusId()) &&
+							!userBean.isValidateItems()){
+						FacesUtil.navigationForward("/error404");
+					}
+				}
+		//Redirect request with no item to view
+		}else if(!item.isIdSet() && isViewing()){
+			FacesUtil.navigationForward("/error404");
 		}
+		//Otherwise accept owner of item to edit and view item
 	}
 	
+	public boolean isOwner(){
+		return userBean.isLoggedIn() &&
+				item.isIdSet() &&  userBean.getId().equals(item.getUser().getId());
+	}
+	
+	private String modifyStatus(ItemStatus status, boolean needPrivileges){
+		if(needPrivileges && !userBean.isValidateItems()){
+			logger.warn("User " + userBean.getId() + " try to set status "+status+ " to item " + itemId + " without sufficient privilieges");
+			return userBean.logoutUser();
+		}else{
+			item.setStatusId(status.getValue());
+			item.setDatabaseOperation(DatabaseOperation.UPDATE);
+			itemsService.modifyItem(item, item.getUser());
+			//We redirect to draft list if we are using our privilieges
+			if(needPrivileges){
+				return DRAFTS_VALIDATION_URL;
+			}else{
+				return null;
+			}
+		}
+	}
+	public String validate(){
+		if(isOwner()){
+			return modifyStatus(ItemStatus.CREATED, false);
+		}else{
+			logger.warn("User " + userBean.getId() + " try to set status "+ItemStatus.CREATED+ " to item " + itemId + " without beeing owner");
+			return null;
+		}
+	}
+	public String end(){
+		if(isOwner()){
+			return modifyStatus(ItemStatus.FINISHED, false);
+		}else{
+			logger.warn("User " + userBean.getId() + " try to set status "+ItemStatus.FINISHED+ " to item " + itemId + " without beeing owner");
+			return null;
+		}
+	}
+	public String approuve(){
+		return modifyStatus(ItemStatus.APPROUVED, true);
+	}
+	public String block(){
+		return modifyStatus(ItemStatus.BLOCKED, true);
+	}
+	public String disapprouve(){
+		return modifyStatus(ItemStatus.DESAPPROUVED, true);
+	}
+	public boolean isDraft(){
+		return 
+				ItemStatus.DRAFT.getValue().equals(item.getStatusId());
+	}
+	public boolean isValidated(){
+		return 
+				ItemStatus.DESAPPROUVED.getValue().equals(item.getStatusId()) ||
+				ItemStatus.BLOCKED.getValue().equals(item.getStatusId()) ||
+				ItemStatus.APPROUVED.getValue().equals(item.getStatusId());
+	}
+	public boolean isEditing(){
+		return navigationPath.startsWith(NavigationBean.EDIT_ITEM_VIEW);
+	}
+	public boolean isViewing(){
+		return navigationPath.startsWith(NavigationBean.VIEW_ITEM_VIEW);
+	}
 }

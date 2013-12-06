@@ -34,7 +34,7 @@
 								<h:inputText value="#{usersStatsBean.filter.nbDrafts}" size="2"/>
 							</td>
 							<td>
-								<h:commandButton value="Changer les profils" action="#{usersStatsBean.applyProfile}"  immediate="true"/>
+								<h:commandButton value="Changer les profils" action="#{usersStatsBean.applyProfile}" />
 							</td>
 							<td>
 								&#160;
@@ -58,8 +58,8 @@
 									#{user.nbItems} (#{user.nbDrafts})
 								</td>
 								<td>
-									<h:selectOneMenu value="#{user.role}">
-										<f:selectItem itemLabel="Normal" noSelectionOption="true" />
+									<h:selectOneMenu value="#{user.roleId}">
+										<f:selectItem itemLabel="Normal" itemValue="#{null}"/>
 									   	<f:selectItems value="#{usersStatsBean.roles}" var="role" itemValue="#{role.id}" itemLabel="#{role.label}"/>
 									</h:selectOneMenu>
 								</td>

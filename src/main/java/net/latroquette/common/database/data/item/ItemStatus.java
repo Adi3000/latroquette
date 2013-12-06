@@ -5,8 +5,8 @@ public enum ItemStatus {
 	DRAFT(0),
 	CREATED(1),
 	APPROUVED(2),
-	ACTIVATED(3),
-	DESACTIVATED(4),
+	DESAPPROUVED(3),
+	BLOCKED(4),
 	EXPIRED(5),
 	FINISHED(6);
 	

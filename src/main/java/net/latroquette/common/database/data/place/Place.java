@@ -16,7 +16,7 @@ import com.adi3000.common.database.hibernate.data.AbstractDataObject;
 
 
 @Entity
-@Table(name = "locations")
+@Table(name = "places")
 @XmlRootElement
 public class Place extends AbstractDataObject {
 
@@ -39,7 +39,7 @@ public class Place extends AbstractDataObject {
 	/**
 	 * @return the namelocationType
 	 */
-	@Column(name = "location_name")
+	@Column(name = "place_name")
 	public String getName() {
 		return name;
 	}
@@ -54,7 +54,7 @@ public class Place extends AbstractDataObject {
 	/**
 	 * @return the postalCodes
 	 */
-	@Column(name = "location_postal_codes")
+	@Column(name = "place_postal_codes")
 	public String getPostalCodes() {
 		return postalCodes;
 	}
@@ -87,7 +87,7 @@ public class Place extends AbstractDataObject {
 	/**
 	 * @return the longitude
 	 */
-	@Column(name = "location_longitude")
+	@Column(name = "place_longitude")
 	public Double getLongitude() {
 		return longitude;
 	}
@@ -102,7 +102,7 @@ public class Place extends AbstractDataObject {
 	/**
 	 * @return the latitude
 	 */
-	@Column(name = "location_latitude")
+	@Column(name = "place_latitude")
 	public Double getLatitude() {
 		return latitude;
 	}
@@ -123,7 +123,7 @@ public class Place extends AbstractDataObject {
 	@Override
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	@Column(name = "location_id")
+	@Column(name = "place_id")
 	public Integer getId() {
 		return id;
 	}
@@ -135,7 +135,7 @@ public class Place extends AbstractDataObject {
 	public PlaceType getPlaceType() {
 		return placeType;
 	}
-	@Column(name = "location_type_id")
+	@Column(name = "place_type_id")
 	public Integer getPlaceTypeId() {
 		return placeTypeId;
 	}

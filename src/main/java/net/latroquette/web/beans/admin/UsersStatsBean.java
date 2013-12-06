@@ -1,14 +1,18 @@
 package net.latroquette.web.beans.admin;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
+import com.adi3000.common.util.CommonUtil;
+
 import net.latroquette.common.database.data.profile.Role;
 import net.latroquette.common.database.data.profile.User;
+import net.latroquette.common.database.data.profile.UserBase;
 import net.latroquette.common.database.data.profile.UserStatistics;
 import net.latroquette.common.database.data.profile.UsersService;
 import net.latroquette.common.util.Services;
@@ -112,13 +116,11 @@ public class UsersStatsBean implements Serializable{
 		return null;
 	}
 	public String applyProfile(){
-		User user =null;
-		for(UserStatistics userStat : result){
-			user = usersService.getUserById(userStat.getId());
-			user.setRole(userStat.getRole());
-			usersService.updateUser(user);
+		for(UserStatistics user : result){
+			user.setRole((Role) CommonUtil.findById(roles, user.getRoleId()));
 		}
-		return "/admin/users";
+		usersService.updateRoles(new ArrayList<UserBase>(result));
+		return null;
 	}
 	public String blockXmpp(String id){
 		return null;

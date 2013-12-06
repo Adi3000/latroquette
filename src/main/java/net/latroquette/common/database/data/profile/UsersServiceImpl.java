@@ -245,4 +245,12 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 		return list;
 	}
 	
+	@TransactionalUpdate
+	public void updateRoles(List<UserBase> list){
+		for(UserBase userBase: list){
+			User user = getUserById(userBase.getId());
+			user.setRole(userBase.getRole());
+			updateUser(user);
+		}
+	}
 }

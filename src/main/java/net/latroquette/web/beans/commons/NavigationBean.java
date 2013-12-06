@@ -23,8 +23,8 @@ import com.adi3000.common.web.faces.FacesUtil;
 @ManagedBean
 @RequestScoped
 public class NavigationBean {
-	private static final String EDIT_ITEM_VIEW = "/item/editItem";
-	private static final String VIEW_ITEM_VIEW = "/item/viewItem";
+	public static final String EDIT_ITEM_VIEW = "/item/editItem";
+	public static final String VIEW_ITEM_VIEW = "/item/viewItem";
 	private static final String SEARCH_ITEM_VIEW = "/item/index";
 	@ManagedProperty(value="#{webConstantsBean.navigationMap}")
 	private Map<String, Navigation> navigationMap;

@@ -1,16 +1,4 @@
 $(function(){
-	$("#searchForm\\:searchObjet")
-		.val("").toggleClass("backgroundText", true)
-		.focus(function(){
-			if($(this).hasClass("backgroundText")){
-				$(this).val("").toggleClass("backgroundText", false);
-			}
-		})
-		.blur(function(){
-			if($(this).val() == ""){
-				$(this).val("").toggleClass("backgroundText", true);
-			}
-		});
 	
 	$("#searchForm\\:searchCity").autocomplete({
 		source: 
@@ -39,27 +27,33 @@ $(function(){
             };
         }
     });
-	$("#token-input-searchForm\\:searchCity")
-		.val("Lieu(x)").toggleClass("backgroundText", true)
-		.focus(function(){
-			$(this).val("").toggleClass("backgroundText", false);
-		})
-		.blur(function(){
-			$(this).val("Lieu(x)").toggleClass("backgroundText", true)
-		});
-	//TODO : make a function to render input with label
-	$("#searchForm\\:searchMember")
-		.val("TroQMember").toggleClass("backgroundText", true)
-		.focus(function(){
-			if($(this).hasClass("backgroundText")){
-    			$(this).val("").toggleClass("backgroundText", false);
-			}
-		})
-		.blur(function(){
-			if($(this).val() == ""){
-				$(this).val("TroQMember").toggleClass("backgroundText", true)
-			}
-		});
+	$("#searchForm\\:searchMember").autocomplete({
+		source: 
+			function( request, response ) {
+			$.getJSON(
+					_requestContextPath_+"/rest/authentication/searchUser",
+					{
+						q : request.term
+					},function( data ) {
+						response( data );
+					}
+			);
+		},
+		minLength: 2,
+		select:
+			function (event, ui){
+			$(this).val(ui.item.login);
+			return false;
+		},
+		create: function () {
+			$(this).data("ui-autocomplete")._renderItem = function (ul, user) {
+				return $("<li />")
+				.attr( "data-value", user.id )
+				.append($("<a />").text(user.login))
+				.appendTo(ul);
+			};
+		}
+	});
     		
     var timeoutSlider = null;
     var timeoutSlider0 = null;

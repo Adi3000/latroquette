@@ -73,4 +73,17 @@
     			relativeToChangelogFile="true" 
     			path="0.0.1/modeling/06-smf_authentication.sql"/>
     </changeSet>
+    <changeSet id="0.0.1-07.0-admin_console" author="adi3000">
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/modeling/07-admin_console.sql"/>
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/referentiel/07-create-roles.sql"/>
+    </changeSet>
+    <changeSet id="0.0.1-08.0-rename_location_to_place" author="adi3000">
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/modeling/08-rename_location_to_places.sql"/>
+    </changeSet>
 </databaseChangeLog>

@@ -280,11 +280,15 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	
 	
 	
-	public boolean isLoggedIn()
+	public boolean isActuallyLoggedIn()
 	{
 		if(Security.isUserLogged(user)){
 			user = usersService.getUserById(user.getId());
 		}
+		return isLoggedIn();
+	}
+	
+	public boolean isLoggedIn(){
 		return (Security.isUserLogged(user) && user.getLoginState() != null && user.getLoginState() >= User.NOT_VALIDATED) ;
 	}
 	
@@ -293,17 +297,17 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	}
 	
 	public Role getRole(){
-		return isLoggedIn() ? user.getRole() : null;
+		return user.getRole();
 	}
 	
 	public boolean isAdmin(){
-		return isLoggedIn() && user.getRole() != null ? user.getRole().getAdmin() : false;
+		return getRole() != null ? user.getRole().getAdmin() : false;
 	}
 	public boolean isValidateItems(){
-		return isLoggedIn() && user.getRole() != null ? user.getRole().getValidateItems() : false;
+		return getRole() != null ? user.getRole().getValidateItems() : false;
 	}
 	public boolean isModifyKeywords(){
-		return isLoggedIn() && user.getRole() != null ? user.getRole().getModifyKeywords() : false;
+		return getRole() != null ? user.getRole().getModifyKeywords() : false;
 	}
 
 	@Override

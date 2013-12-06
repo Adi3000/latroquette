@@ -8,7 +8,7 @@
 	<ui:composition template="/home/template/mainLayout.xhtml">
 	<f:metadata>
 		<f:viewParam name="item" value="#{itemBean.itemId}"/>
-		<f:event listener="#{itemBean.loadItem}" type="preRenderView" />
+ 		<f:event listener="#{itemBean.checkItemAndUser}" type="preRenderView" />
 	</f:metadata>	 
 	<ui:define name="mainDiv">
 		<h:outputStylesheet name="css/item.css" target="head" />
@@ -43,11 +43,28 @@
 		  });
 		</h:outputScript>
 		<h:messages></h:messages>
+		<h:form>
+			<h:panelGroup rendered="#{userBean.validateItems}">
+				<h:commandButton value="Approuver" action="#{itemBean.approuve}" rendered="#{!itemBean.validated}" />
+				<h:commandButton value="Desapprouver" action="#{itemBean.disapprouve}" rendered="#{!itemBean.validated}"/>
+				<h:commandButton value="Bloquer" action="#{itemBean.disapprouve}" rendered="#{itemBean.validated}"/>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{itemBean.owner}">
+				<h:commandLink value="Valider" action="#{itemBean.validate}"  rendered="#{itemBean.draft}"/>&#160;
+				<h:commandLink value="Supprimer" action="#{itemBean.end}" />&#160;
+				<h:link value="Modifier"  outcome="/item/editItem?item=#{itemBean.itemId}"/>
+			</h:panelGroup>
+		</h:form>
 		<div id="itemDescription">
 			<div id="itemTitle">
 				<div>
 					<div class="field">
 						<h2>#{itemBean.title}</h2>
+					</div>
+				</div>
+				<div>
+					<div class="field">
+						<em>#{itemBean.item.user.login}</em>
 					</div>
 				</div>
 				<!--<div id="suggestedItem" class="field">

@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
 
+import net.latroquette.common.database.data.place.Place;
+
 import org.hibernate.annotations.NaturalId;
 
 import com.adi3000.common.database.hibernate.data.AbstractDataObject;
@@ -43,6 +45,7 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	private transient String currentToken;
 	private Integer loginState;
 	private String password;
+	private Place place;
 	private String mail;
 	private String lastHostNameLogin;
 	private String lastIpLogin;
@@ -156,6 +159,7 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	}
 	@Override
 	@Transient
+	@XmlTransient
 	public String getCurrentToken() {
 		return currentToken;
 	}
@@ -190,6 +194,7 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	 */
 	@ManyToOne(optional=true)
 	@JoinColumn(name="role_id")
+	@XmlTransient
 	public Role getRole() {
 		return role;
 	}
@@ -198,6 +203,21 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	 */
 	public void setRole(Role role) {
 		this.role = role;
+	}
+	/**
+	 * @return the place
+	 */
+	@ManyToOne(optional=true)
+	@JoinColumn(name="place_id")
+	@XmlTransient
+	public Place getPlace() {
+		return place;
+	}
+	/**
+	 * @param place the place to set
+	 */
+	public void setPlace(Place place) {
+		this.place = place;
 	}
 	
 }

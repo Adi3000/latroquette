@@ -31,6 +31,20 @@ public class UserStatistics extends AbstractDataObject implements UserBase{
 	private String mail;
 	private String login;
 	private Role role;
+	private Integer roleId;
+	/**
+	 * @return the roleId
+	 */
+	@Column(name="role_id", insertable=false, updatable=false)
+	public Integer getRoleId() {
+		return roleId;
+	}
+	/**
+	 * @param roleId the roleId to set
+	 */
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
+	}
 	/**
 	 * @return the login
 	 */

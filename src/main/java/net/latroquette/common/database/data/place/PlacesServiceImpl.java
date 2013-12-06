@@ -1,5 +1,6 @@
 package net.latroquette.common.database.data.place;
 
+import java.awt.geom.Point2D;
 import java.util.List;
 
 
@@ -43,10 +44,10 @@ public class PlacesServiceImpl extends AbstractDAO<Place> implements PlacesServi
 		String postalCode2 = "%,".concat(postalCode1);
 		
 		String sql = 
-				" SELECT {place.*} FROM locations {place} ".concat(
-				" WHERE location_name ILIKE :nameStart or location_name ~* :nameInner").concat(
-				" UNION SELECT {place.*} FROM locations {place} ").concat(
-				" WHERE location_postal_codes LIKE :codeStart  or location_postal_codes LIKE :oneCodeStart ");
+				" SELECT {place.*} FROM places {place} ".concat(
+				" WHERE place_name ILIKE :nameStart or place_name ~* :nameInner").concat(
+				" UNION SELECT {place.*} FROM places {place} ").concat(
+				" WHERE place_postal_codes LIKE :codeStart  or place_postal_codes LIKE :oneCodeStart ");
 		//Can't ordering this for now.
 		//.concat(	" ORDER BY {place.location_name}");
 		Query req = createSQLQuery(sql).addEntity("place",Place.class);
@@ -58,36 +59,33 @@ public class PlacesServiceImpl extends AbstractDAO<Place> implements PlacesServi
 		List<Place> places = (List<Place>)req.list();
 		return places;
 	}
-	@Transactional(readOnly=true)
-	public List<Place> getPlacesByPlace(String placeId, double radix){
-		Place place = (Place) getSession().get(Place.class, Integer.valueOf(placeId));
-		return getPlacesByPlace(place, radix);
-	}
 	
 	@Transactional(readOnly=true)
-	public List<Place> getPlacesByPlace(Place place, double radix){
+	public Point2D.Double getRadixByPlaceId(Integer placeId, double radixInKilometer){
+		Place place = (Place) getSession().get(Place.class, placeId);
 		double longitudeToKilometers = distanceFrom(
 				place.getLatitude(), place.getLongitude(),
 				place.getLatitude(), place.getLongitude()+1);
 		double latitudeToKilometers = distanceFrom(
 				place.getLatitude(), place.getLongitude(),
 				place.getLatitude()+1, place.getLongitude());
-		double longitudeRadix = radix / longitudeToKilometers;
-		double latitudeRadix = radix / latitudeToKilometers;
-		
-		String hql = 
-			" from Place p1".concat(
-			" where exists (from Place p2 where p2.id = :placeId ").concat(
-			" and abs(p2.longitude - p1.longitude ) < :longitudeRadix").concat(
-			" and abs(p2.latitude - p1.latitude ) < :latitudeRadix )");
-		Query req = createQuery(hql)
-						.setDouble("longitudeRadix", longitudeRadix)
-						.setDouble("latitudeRadix", latitudeRadix)
-						.setInteger("placeId", place.getId());
-		@SuppressWarnings("unchecked")
-		List<Place> places = (List<Place>)req.list();
-		return places;
+		double longitudeRadix = radixInKilometer / longitudeToKilometers;
+		double latitudeRadix = radixInKilometer / latitudeToKilometers;
+		Point2D.Double point = new Point2D.Double(longitudeRadix,latitudeRadix);
+		return point;
 	}
+
+//	String hql = 
+//			" from Place p1".concat(
+//			" where exists (from Place p2 where p2.id = :placeId ").concat(
+//			" and abs(p2.longitude - p1.longitude ) < :longitudeRadix").concat(
+//			" and abs(p2.latitude - p1.latitude ) < :latitudeRadix )");
+//		Query req = createQuery(hql)
+//						.setDouble("longitudeRadix", longitudeRadix)
+//						.setDouble("latitudeRadix", latitudeRadix)
+//						.setInteger("placeId", place.getId());
+//		@SuppressWarnings("unchecked")
+//		List<Place> places = (List<Place>)req.list();
 
 	 public static double distanceFrom(Double latitude1, Double longitude1, Double latitude2, Double longitude2) {
 		 double degreeLatitude = Math.toRadians(latitude2-latitude1);

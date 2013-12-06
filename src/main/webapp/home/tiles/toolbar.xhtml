@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
 <body>
 	<ui:composition>
 		<h:outputScript  name="js/_initToolbar.js" target="head" />
@@ -11,7 +12,7 @@
 				<fieldset>
 					<div id="searchPart2">
 						<div id="cityBox">
-							<h:inputText id="searchCity" />
+							<h:inputText id="searchCity" p:placeholder="Ville" />
 							<h:inputHidden id="searchCityId" />
 						</div>
 						<div id="distanceSlider" style="position: absolute;width : 250px; display:none;"></div>
@@ -23,11 +24,11 @@
 					</div>
 					<div id="searchPart1">
 						<div id="searchObjetBox" class="searchBox">
-							<h:inputText id= "searchObjet" value="#{itemSearchBean.itemFilter.pattern}" />
+							<h:inputText id= "searchObjet" p:placeholder="Recherche" value="#{itemSearchBean.itemFilter.pattern}" />
 							<h:inputHidden id="searchObjetHidden"  />
 						</div>
 						<div id="searchMemberBox" class="searchBox">
-							<h:inputText id="searchMember" value="Recherche" />
+							<h:inputText id="searchMember"  p:placeholder="TroQMembre" value=""/>
 						</div>
 					</div>
 					<h:commandButton value="Rechercher" action="#{itemSearchBean.search}" />

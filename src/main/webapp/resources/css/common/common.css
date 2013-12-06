@@ -50,7 +50,7 @@ body{
 }
 
 #titleHomePage {
-	height: 163px;
+	height: 117px;
 }
 #logo{
 	position: absolute;
@@ -62,10 +62,11 @@ body{
 #toolbarLogin{
 	position: relative;
 	z-index: 20;
+	height: 65px;
 }
 
 #titleHomePage > p{
-	padding-top: 113px;
+	padding-top: 58px;
 	margin-right: 200px;
 	margin-left: 366px;
 }

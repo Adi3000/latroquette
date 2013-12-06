@@ -11,16 +11,25 @@
 		xmlns:f="http://java.sun.com/jsf/core">	
 		<div id="enTete">	
 			<div id="toolbarLogin">
-					<h:link outcome="/profile/login?register=true&amp;u=#{request.requestURI}&amp;qs=#{util:urlEncode(request.queryString)}" value="#{text_home.CONNEXION}" rendered="#{!userBean.loggedIn}"/>
-					<h:form id="logoutForm" rendered="#{userBean.loggedIn}">
-						<h:link outcome="/profile/index">
-							<h:outputFormat value="#{text_home.WELCOME_MESSAGE}">
-								<f:param value="#{userBean.login}" />
-							</h:outputFormat>
-							<h:link outcome="/admin" rendered="#{userBean.admin or userBean.modifyKeywords}"/>
-						</h:link>
-						<h:commandButton value="Logout" action="#{userBean.logoutUser}" />
-					</h:form>
+				<h:link 
+					outcome="/profile/login?register=true&amp;u=#{request.requestURI}&amp;qs=#{util:urlEncode(request.queryString)}" 
+					value="#{text_home.CONNEXION}" 
+					rendered="#{!userBean.loggedIn}"
+				/>
+				<h:form id="logoutForm" rendered="#{userBean.loggedIn}">
+					<h:link outcome="/profile/index">
+						<h:outputFormat value="#{text_home.WELCOME_MESSAGE}">
+							<f:param value="#{userBean.login}" />
+						</h:outputFormat>
+					</h:link>
+					<h:commandButton value="Logout" action="#{userBean.logoutUser}" />
+				</h:form>
+				<h:panelGroup rendered="#{userBean.admin or userBean.modifyKeywords}">
+					<div><h:link outcome="/admin/index" value="Console Admin" /></div>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{userBean.validateItems}">
+					<div><h:link outcome="/item/index?s=1" value="Valider des brouillons" /></div>
+				</h:panelGroup>
 			</div>
 		
 			<div id="titleHomePage">
