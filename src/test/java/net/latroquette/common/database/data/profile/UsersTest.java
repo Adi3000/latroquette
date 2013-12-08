@@ -38,13 +38,6 @@ public class UsersTest extends ListDbUnitTestCase implements LatroquetteTest {
 		assertNotNull(user);
 		assertEquals(login, user.getLogin());
 	}
-	
-	@Test
-	public void testRegisterToSmf() throws ServiceException{
-		String login = TEST_USER_LOGIN;
-		User user = usersService.getUserByLogin(login);
-		usersService.smfRegisterNewUser(user, "123456");
-	}
 	@Test
 	public void testSendVerificationMail() throws ServiceException{
 		String login = TEST_USER_LOGIN;

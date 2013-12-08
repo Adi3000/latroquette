@@ -58,7 +58,7 @@
     			relativeToChangelogFile="true" 
     			path="0.0.1/referentiel/03-init_navigation_map.sql"/>
     </changeSet>
-    <changeSet id="0.0.1-00.4-items_keywords" author="adi3000">
+    <changeSet id="0.0.1-00.4-items_keywords" author="adi3000" context="test">
    	 	<sqlFile
     			relativeToChangelogFile="true" 
     			path="0.0.1/modeling/04-create_items_keywords_tables.sql"/>
@@ -72,6 +72,11 @@
    	 	<sqlFile
     			relativeToChangelogFile="true" 
     			path="0.0.1/modeling/06-smf_authentication.sql"/>
+    </changeSet>
+    <changeSet id="0.0.1-06.9-forum_schema" author="adi3000">
+   	 	<sqlFile
+    			relativeToChangelogFile="true"
+    			path="0.0.1/modeling/07-0-add_forum_shema.sql"/>
     </changeSet>
     <changeSet id="0.0.1-07.0-admin_console" author="adi3000">
    	 	<sqlFile

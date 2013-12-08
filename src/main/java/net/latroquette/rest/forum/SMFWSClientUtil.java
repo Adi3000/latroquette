@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+import net.latroquette.common.util.Constants;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -23,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 public class SMFWSClientUtil {
 	//TODO : change to non static @Service to parameterize url and key
-	public static final String SMF_ENDPOINT = "http://localhost/forum/rest/smf";
+	public static final String SMF_ENDPOINT = Constants.SMF_REST_ENDPOINT;
 	private static final Logger logger = LoggerFactory.getLogger(SMFWSClientUtil.class);
 	private static final String secretKey = "1";
 	private static final String errorFlag = "error";
