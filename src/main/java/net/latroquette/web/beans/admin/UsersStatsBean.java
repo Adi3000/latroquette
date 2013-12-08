@@ -8,9 +8,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
-import com.adi3000.common.util.CommonUtil;
-import com.adi3000.common.web.faces.FacesUtil;
-
 import net.latroquette.common.database.data.profile.Role;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.UserBase;
@@ -21,6 +18,9 @@ import net.latroquette.common.util.Services;
 import net.latroquette.web.beans.profile.UserBean;
 import net.latroquette.web.security.AuthenticationMethod;
 import net.latroquette.web.security.SecurityUtil;
+
+import com.adi3000.common.util.CommonUtil;
+import com.adi3000.common.web.faces.FacesUtil;
 
 @ManagedBean
 @ViewScoped
@@ -145,12 +145,15 @@ public class UsersStatsBean implements Serializable{
 		return null;
 	}
 	public String forceSMFRegister(String id){
+		try {
+			usersService.smfRegisterNewUser(Integer.valueOf(id));
+		}catch(ServiceException e){e.printStackTrace();}
 		return null;
 	}
 	public String forceSMFValidation(String id){
 		try{
 			usersService.smfActivateUser(Integer.valueOf(id));
-		}catch(ServiceException e){}
+		}catch(ServiceException e){e.printStackTrace();}
 		return null;
 	}
 	public String nextPage(){

@@ -31,7 +31,7 @@
         <h:outputScript  library="js" name="converse/libs/jed.js" target="head" />
         <h:outputScript  library="js" name="converse/libs/jquery.tinysort.min.js" target="head" />
         <h:outputScript  library="js" name="converse/converse.js" target="head" />
-        <h:outputScript  library="js" name="converse/locale/en/LC_MESSAGES/en.js" target="head" />
+        <h:outputScript  library="js" name="converse/locale/fr/LC_MESSAGES/fr.js" target="head" />
         <h:outputScript target="head" rendered="#{userBean.xmppSession != null and userBean.xmppSession.valid }">
             $(function(){
                     var jid = "#{userBean.xmppSession.jid}",
@@ -46,22 +46,24 @@
 	                }
 			        converse.initialize({
 			            allow_otr: false,
+			            allow_muc: false,
 			            auto_list_rooms: false,
-			            auto_subscribe: false,
+			            auto_subscribe: true,
+			            fullname: "#{userBean.login}",
 			            bosh_service_url: '/http-bind',
-			            debug: true ,
-			            hide_muc_server: false,
-			            i18n: locales['en'],
+			            hide_muc_server: true,
+			            i18n: locales['fr'],
 			            prebind: true,
+			            debug: true,
 			            jid : jid,
 			            sid : sid,
 			            rid : rid,
 			            show_only_online_users: false,
 			            show_controlbox_by_default: true,
-			            auto_subscribe: false,
 			            xhr_user_search: true,
 			            xhr_user_search_url: "/rest/authentication/searchUser",
 			        });
+			        setTimeout(function(){converse.sendPresence();},10000);
 		    });
         </h:outputScript>
         <h:outputScript target="head" rendered="#{userBean.xmppSession == null or !userBean.xmppSession.valid }">

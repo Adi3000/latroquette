@@ -17,4 +17,10 @@ public interface Parameters extends DAO<Parameter>{
 	 * @return the value or {@code null} if parameter {@code name} not found
 	 */
 	public String getStringValue(ParameterName name);
+	/**
+	 * Return a boolean representation of the parameter {@code name}
+	 * @param name
+	 * @return the value or {@code null} if parameter {@code name} not found
+	 */
+	public boolean getBooleanValue(ParameterName name);
 }

@@ -445,4 +445,10 @@ public class UserBean implements Serializable{
 	public boolean isValidated(){
 		return isLoggedIn() && user.getLoginState() > User.NOT_VALIDATED;
 	}
+	
+	public void checkCookies(){
+		if(!SecurityUtil.checkCookies()){
+			logoutUser();
+		}
+	}
 }

@@ -47,9 +47,17 @@ public interface UsersService extends DAO<User>{
 	 * @return
 	 */
 	public List<User> searchUsers(String pattern);
-
+	
 	/**
 	 * Register a new user
+	 * @param newUser
+	 * @return
+	 * @throws ServiceException
+	 */
+	public User registerNewUser(User newUser, Integer loginState, AuthenticationMethod method)  throws ServiceException;
+
+	/**
+	 * Register a new user here and everywhere (especially on forum)
 	 * @param newUser
 	 * @return
 	 * @throws ServiceException
@@ -70,6 +78,13 @@ public interface UsersService extends DAO<User>{
 	 */
 	public XMPPSession prebindXMPP(User user, String password);
 	
+	/**
+	 * Register user into SimpleMachine Forum with a random password
+	 * @param userId
+	 * @param clearPassword
+	 * @throws ServiceException
+	 */
+	public void smfRegisterNewUser(Integer userId) throws ServiceException;
 	/**
 	 * Register user into SimpleMachine Forum
 	 * @param user

@@ -354,10 +354,11 @@
         this.initRoster = function () {
             // Set up the roster
             this.roster = new this.RosterItems();
-            console.log ("RosterItems initialized");
+            converse.log ("RosterItems initialized");
             this.roster.localStorage = new Backbone.LocalStorage(
                 hex_sha1('converse.rosteritems-'+converse.bare_jid));
-            console.log ("Stored bare_jid " + converse.bare_jid);
+            converse.log ("Stored bare_jid ");
+            converse.log (this.roster.localStorage);
             // Register callbacks that depend on the roster
             this.connection.roster.registerCallback(
                 $.proxy(this.roster.rosterHandler, this.roster),
@@ -994,7 +995,7 @@
                 } else {
                     // We only save unencrypted messages.
                     var fullname = converse.xmppstatus.get('fullname');
-                    fullname = _.isEmpty(fullname)? converse.bare_jid: fullname;
+                    fullname = _.isEmpty(fullname)? converse.bare_jid.split("@")[0]: fullname;
                     this.model.messages.create({
                         fullname: fullname,
                         sender: 'me',
@@ -1101,7 +1102,7 @@
                 if (scheme === 'fingerprint') {
                     result = confirm(__('Here are the fingerprints, please confirm them with %1$s, outside of this chat.\n\nFingerprint for you, %2$s: %3$s\n\nFingerprint for %1$s: %4$s\n\nIf you have confirmed that the fingerprints match, click OK, otherwise click Cancel.', [
                             this.model.get('fullname'),
-                            converse.xmppstatus.get('fullname')||converse.bare_jid,
+                            converse.xmppstatus.get('fullname')||converse.bare_jid.split("@")[0],
                             this.model.otr.priv.fingerprint(),
                             this.model.otr.their_priv_pk.fingerprint()
                         ]
@@ -1127,7 +1128,7 @@
                 if (_.has(item.changed, 'chat_status')) {
                     var chat_status = item.get('chat_status'),
                         fullname = item.get('fullname');
-                    fullname = _.isEmpty(fullname)? item.get('jid'): fullname;
+                    fullname = _.isEmpty(fullname)? item.get('jid').split("@")[0]: fullname;
                     if (this.$el.is(':visible')) {
                         if (chat_status === 'offline') {
                             this.showStatusNotification(fullname+' '+'has gone offline');
@@ -1172,7 +1173,7 @@
                         jid,
                         $.proxy(function (jid, fullname, image, image_type, url) {
                             this.model.save({
-                                'fullname' : fullname || jid,
+                                'fullname' : fullname || jid.split("@")[0],
                                 'url': url,
                                 'image_type': image_type,
                                 'image': image
@@ -1424,9 +1425,20 @@
             },
 
             addContact: function (jid, name) {
-                converse.connection.roster.add(jid, name, [], function (iq) {
-                    converse.connection.roster.subscribe(jid, null, converse.xmppstatus.get('fullname'));
-                });
+            	converse.log("adding : " +jid.split("@")[0] +" != "+ converse.connection.jid.split("@")[0] + " : " + (jid.split("@")[0] != converse.connection.jid.split("@")[0]) )
+            	if(jid.split("@")[0] != converse.connection.jid.split("@")[0]){
+            		this.unblockContact(jid);
+	                converse.connection.roster.add(jid, name, [], function (iq) {
+	                    converse.connection.roster.subscribe(jid, null, converse.xmppstatus.get('fullname'));
+	                });
+            	}
+            },
+            unblockContact: function (jid) {
+            	var timestamp = (new Date()).getTime();
+            	var unblock = $iq({from: converse.connection.jid, type:'set', id: "unblock"+timestamp})
+					            	.c('unblock', {xmlns:'urn:xmpp:blocking'})
+					            	.c('item', {jid: jid });
+            	converse.connection.send(unblock);
             }
         });
 
@@ -2369,7 +2381,7 @@
 
                 if (!chatbox) {
                     var fullname = roster_item.get('fullname');
-                    fullname = _.isEmpty(fullname)? buddy_jid: fullname;
+                    fullname = _.isEmpty(fullname)? buddy_jid.split("@")[0]: fullname;
 
                     chatbox = this.create({
                         'id': buddy_jid,
@@ -2435,7 +2447,7 @@
             initialize: function (attributes, options) {
                 var jid = attributes.jid;
                 if (!attributes.fullname) {
-                    attributes.fullname = jid;
+                    attributes.fullname = jid.split("@")[0];
                 }
                 var attrs = _.extend({
                     'id': jid,
@@ -2455,6 +2467,7 @@
             events: {
                 "click .accept-xmpp-request": "acceptRequest",
                 "click .decline-xmpp-request": "declineRequest",
+                "click .block-xmpp-contact": "blockContact",
                 "click .open-chat": "openChat",
                 "click .remove-xmpp-contact": "removeContact"
             },
@@ -2477,6 +2490,7 @@
                 var result = confirm("Are you sure you want to remove this contact?");
                 if (result === true) {
                     var bare_jid = this.model.get('jid');
+                    console.log(bare_jid);
                     converse.connection.roster.remove(bare_jid, function (iq) {
                         converse.connection.roster.unauthorize(bare_jid);
                         converse.rosterview.model.remove(bare_jid);
@@ -2498,11 +2512,30 @@
                 converse.connection.roster.unauthorize(this.model.get('jid'));
                 this.model.destroy();
             },
-
+            
+            blockContact: function (ev) {
+            	ev.preventDefault();
+                var result = confirm("Are you sure you want to block this contact?");
+                if (result === true) {
+	                var timestamp = (new Date()).getTime();
+	                var bare_jid = this.model.get('jid');
+	                converse.connection.roster.remove(bare_jid, function (iq) {
+                        converse.connection.roster.unauthorize(bare_jid);
+                        converse.rosterview.model.remove(bare_jid);
+                    });
+	                var block = $iq({from: converse.connection.jid, type:'set', id: "block"+timestamp})
+		                                .c('block', {xmlns:'urn:xmpp:blocking'})
+		                                .c('item', {jid: bare_jid });
+	                converse.connection.send(block);
+	                this.model.destroy();
+                }
+            },
+            
             template: _.template(
                 '<a class="open-chat" title="'+__('Click to chat with this contact')+'" href="#">'+
                     '<span class="icon-{{ chat_status }}" title="{{ status_desc }}"></span>{{ fullname }}'+
                 '</a>' +
+                '<a class="block-xmpp-contact icon-blocked" title="'+__('Click to block this contact')+'" href="#"></a>' +
                 '<a class="remove-xmpp-contact icon-remove" title="'+__('Click to remove this contact')+'" href="#"></a>'),
 
             pending_template: _.template(
@@ -2514,6 +2547,8 @@
                 'Accept</button>' +
                 '<button type="button" class="decline-xmpp-request">' +
                 'Decline</button>' +
+                '<button type="button" class="block-xmpp-contact">' +
+                'Block</button>' +
                 ''),
 
             render: function () {
@@ -2545,6 +2580,7 @@
                     converse.controlboxtoggle.showControlBox();
                 } else if (subscription === 'both' || subscription === 'to') {
                     this.$el.addClass('current-xmpp-contact');
+                    converse.log(item);
                     this.$el.html(this.template(
                         _.extend(item.toJSON(), {'status_desc': STATUSES[item.get('chat_status')||'offline']})
                     ));
@@ -2692,7 +2728,9 @@
             },
 
             rosterHandler: function (items) {
-                this.cleanCache(items);
+            	converse.log("rosterHandler called");
+            	converse.log(items);
+            	this.cleanCache(items);
                 _.each(items, function (item, index, items) {
                     if (this.isSelf(item.jid)) { return; }
                     var model = this.get(item.jid);
@@ -2708,7 +2746,7 @@
                             jid: item.jid,
                             subscription: item.subscription,
                             ask: item.ask,
-                            fullname: item.name || item.jid,
+                            fullname: item.name || item.jid.split("@")[0],
                             is_last: is_last
                         });
                     } else {
@@ -2723,7 +2761,6 @@
                         }
                     }
                 }, this);
-
                 if (!converse.initial_presence_sent) {
                     /* Once we've sent out our initial presence stanza, we'll
                      * start receiving presence stanzas from our contacts.
@@ -2746,7 +2783,9 @@
                     converse.connection.roster.unauthorize(bare_jid);
                     return true;
                 }
+                converse.log("Auto subscribe : " + converse.auto_subscribe);
                 if (converse.auto_subscribe) {
+                	converse.log("Auto subscribe");
                     if ((!item) || (item.get('subscription') != 'to')) {
                     	converse.log("auto subscribe, processing jid " + jid);
                         this.subscribeBack(jid);
@@ -2755,6 +2794,7 @@
                         converse.connection.roster.authorize(bare_jid);
                     }
                 } else {
+                	converse.log("Waiting for authorization");
                     if ((item) && (item.get('subscription') != 'none'))  {
                     	converse.log("no auto subscribe" + bare_jid);
                         converse.connection.roster.authorize(bare_jid);
@@ -2786,7 +2826,7 @@
                                         subscription: 'none',
                                         ask: null,
                                         requesting: true,
-                                        fullname: jid,
+                                        fullname: jid.split("@")[0],
                                         is_last: true
                                     });
                                 }, this)
@@ -3415,6 +3455,16 @@
             }
             this.connection = new Strophe.Connection(this.bosh_service_url);
             this.connection.attach(this.jid, this.sid, this.rid, this.onConnect);
+            if (!this.initial_presence_sent) {
+                /* Once we've sent out our initial presence stanza, we'll
+                 * start receiving presence stanzas from our contacts.
+                 * We therefore only want to do this after our roster has
+                 * been set up (otherwise we can't meaningfully process
+                 * incoming presence stanzas).
+                 */
+            	this.initial_presence_sent = 1;
+            	this.xmppstatus.sendPresence();
+            }
         } else if (this.connection) {
             this.onConnected();
         }
@@ -3423,6 +3473,13 @@
     return {
         'initialize': function (settings, callback) {
             converse.initialize(settings, callback);
+        },
+    	'sendPresence' : function () {
+    		converse.xmppstatus.sendPresence();
+        },
+        'addContact' : function(login){
+        	converse.controlboxtoggle.showControlBox();
+        	converse.chatboxesview.views.controlbox.contactspanel.addContact(login + "@" + converse.domain, login);
         }
     };
 }));

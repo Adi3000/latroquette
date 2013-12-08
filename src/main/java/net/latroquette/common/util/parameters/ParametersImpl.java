@@ -56,6 +56,23 @@ public class ParametersImpl extends AbstractDAO<Parameter> implements Parameters
 	 */
 	@Cacheable(value="parameters", key="#name")
 	@Transactional(readOnly=true)
+	public boolean getBooleanValue(ParameterName name){
+		String value = null;
+		try{
+			value = getValue(name).toString();
+		}catch(NullPointerException e){
+			value = null;
+			LOGGER.warn("No suitable string value found for parameter "+ name+ ", value forced to : "+ value , e);
+		}
+		return CommonValues.TRUE.toString().equals(value);
+	}
+	/**
+	 * Return a String representation of the parameter {@code name}
+	 * @param name
+	 * @return the value or {@code null} if parameter {@code name} not found
+	 */
+	@Cacheable(value="parameters", key="#name")
+	@Transactional(readOnly=true)
 	public String getStringValue(ParameterName name){
 		String value = null;
 		try{

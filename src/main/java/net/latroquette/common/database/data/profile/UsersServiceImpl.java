@@ -1,24 +1,16 @@
 package net.latroquette.common.database.data.profile;
 
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import net.latroquette.common.util.ServiceException;
 import net.latroquette.common.util.Services;
 import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.common.util.parameters.Parameters;
-import net.latroquette.mail.MailBody;
+import net.latroquette.mail.Mail;
+import net.latroquette.mail.MailException;
+import net.latroquette.mail.MailUtil;
 import net.latroquette.rest.forum.SMFMethods;
 import net.latroquette.rest.forum.SMFRestException;
 import net.latroquette.rest.forum.SMFWSClientUtil;
@@ -91,13 +83,19 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	@TransactionalUpdate
 	public User registerNewUser(User newUser)  throws ServiceException{
 		String clearPassword = newUser.getPassword();
+		User user = registerNewUser(newUser, User.NOT_VALIDATED, AuthenticationMethod.HTTP);
+		smfRegisterNewUser(newUser, clearPassword);
+		return user;
+
+	}
+	@TransactionalUpdate
+	public User registerNewUser(User newUser, Integer loginState, AuthenticationMethod method)  throws ServiceException{
 		//Encrypt Password
 		Security.encryptPassword(newUser);
-		newUser.setLoginState(User.NOT_VALIDATED);
+		newUser.setLoginState(loginState);
 		newUser.setXmppBlock(false);
 		newUser.setDatabaseOperation(DatabaseOperation.INSERT);
 		persist(newUser);
-		smfRegisterNewUser(newUser, clearPassword);
 		newUser.setDatabaseOperation(DatabaseOperation.UPDATE);
 		persist(newUser);
 		return newUser;
@@ -144,7 +142,13 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	public User authenticateUser(String login, String password, AuthenticationMethod method){
 		return authenticateUser(login, password, false, method);
 	}
+	@TransactionalUpdate
+	public void smfRegisterNewUser(Integer userId) throws ServiceException{
+		User user = getUserById(userId);
+		smfRegisterNewUser(user, Security.generateTokenID(user));
+	}
 	
+	@TransactionalUpdate
 	public void smfRegisterNewUser(User user, String clearPassword) throws ServiceException{
 		//Register to SMF only if user is allowed in Latroquette
 		if(!Security.checkLoginState(user)){
@@ -181,6 +185,7 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 			logger.error(jsonResult.toString() + "\n : Impossible to extract SMFId from Json result ", e);
 			throw new IllegalArgumentException(jsonResult.toString() + "\n : Impossible to extract SMFId from Json result ", e);
 		}
+		updateUser(user);
 	}
 	@Override
 	@Transactional(readOnly=true)
@@ -241,9 +246,12 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 		if(user.getLoginState() <= User.NOT_VALIDATED){
 			return null;
 		}
-		//TODO export values to parameters
 		BOSHConfiguration boshConfiguration = new BOSHConfiguration(
-				false,  "jabber.latroquette.net", 5280, "/http-bind", "jabber.latroquette.net");
+				parameters.getBooleanValue(ParameterName.XMPP_SECURE), 
+				parameters.getStringValue(ParameterName.XMPP_HOST), 
+				parameters.getIntValue(ParameterName.XMPP_PORT), 
+				parameters.getStringValue(ParameterName.XMPP_URI_PATH),
+				parameters.getStringValue(ParameterName.XMPP_NODE));
 		boshConfiguration.setReconnectionAllowed(false);
 		BOSHConnectionExtended boshConnection = new BOSHConnectionExtended(boshConfiguration);
 		boshConfiguration.setDebuggerEnabled(logger.isTraceEnabled());
@@ -251,7 +259,7 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 			boshConnection.connect();
 			boshConnection.login(user.getLogin(), password, null);
 		} catch (XMPPException e) {
-			logger.error("Can't loggin to " +  "jabber.latroquette.net" + 5280 + " with login : " +user.getLogin() , e);
+			logger.error("Can't loggin to " +  "latroquette.net" + 5280 + " with login : " +user.getLogin() , e);
 			return null;
 		}
 		String jid = boshConnection.getUser();
@@ -287,10 +295,13 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 			logger.warn("User "+user +" is blocked, should not have access to mail verification");
 			throw new IllegalAccessError("User "+user +" is blocked, should not have access to mail verification");
 		}
-		user.setLoginState(User.NEW_USER_VALIDATED);
-		user.setDatabaseOperation(DatabaseOperation.UPDATE);
-		updateUser(user);
-		setMailToken(null,user);
+		//Process only if user is not already validated
+		if(user.getLoginState() == User.NOT_VALIDATED){
+			user.setLoginState(User.NEW_USER_VALIDATED);
+			user.setDatabaseOperation(DatabaseOperation.UPDATE);
+			updateUser(user);
+			setMailToken(null,user);
+		}
 		try {
 			smfActivateUser(user);
 		} catch (ServiceException e) {
@@ -372,8 +383,8 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	}
 	
 	private User checkMailToken(String login, String token, AuthenticationMethod method) {
-		//TODO add this in parameters
-		String delay = "2 days";
+		
+		String delay = parameters.getStringValue(ParameterName.TOKEN_DELAY);
 		String sql = "SELECT {users.*} FROM users {users} "
 				+ "where user_verification_token = :token "
 				+ "and user_date_verification_token > current_timestamp - interval '"+ delay +"' "
@@ -394,29 +405,16 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 				.setInteger("userId", user.getId());
 		req.executeUpdate();
 	}
+	
 	@TransactionalUpdate
 	public void sendResetPasswordMail(String userMail){
 		User user = getUserByMail(userMail);
-		String mail = "noreply-latroquette@latroquette.net";
-		String name = "La Troquette.net";
-		String smtp = "smtp.free.fr";
-		String subject = "Reinitialisation du mot de passe de %s";
-		String body = MailBody.HTML_RESET_PASSWORD_MAIL;
-		Properties properties = System.getProperties();
-		properties.setProperty("mail.smtp.host", smtp);
-		Session session = Session.getDefaultInstance(properties);
 		String token = Security.generateTokenID(user);
-		try{
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(mail));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getMail(), name));
-			message.setSubject(String.format(subject,user.getLogin()));
-			message.setContent(String.format(body, user.getLogin(), UtilsBean.urlEncode(token)), "text/html; charset=utf-8");
-			message.setSentDate(new Date());
+		try {
+			MailUtil.sendMailToUser(user, Mail.RESET_PASSWORD, UtilsBean.urlEncode(token));
 			setMailToken(token, user);
-			Transport.send(message);
-		}catch(MessagingException | UnsupportedEncodingException me){
-			logger.error("Unable to send reset password mail to " + user.getMail() , me );
+		} catch (MailException e) {
+			logger.error("Unable to send verification mail to " + user.getMail() , e );
 		}
 	}
 	@TransactionalUpdate
@@ -425,29 +423,16 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 			logger.warn("User "+user +" is blocked, should not have access to mail verification");
 			throw new IllegalAccessError("User "+user +" is blocked, should not have access to mail verification");
 		}
-		//TODO externalize these values to parameters
-		String mail = "noreply-latroquette@latroquette.net";
-		String name = "La Troquette.net";
-		String smtp = "smtp.free.fr";
-		String subject = "Vérification de l'adresse email de %s";
-		String body = MailBody.HTML_VALIDATION_MAIL;
-		Properties properties = System.getProperties();
-		properties.setProperty("mail.smtp.host", smtp);
-		Session session = Session.getDefaultInstance(properties);
 		String token = Security.generateTokenID(user);
-		try{
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(mail));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getMail(), name));
-			message.setSubject(String.format(subject,user.getLogin()));
-			message.setContent(String.format(body, user.getLogin(), UtilsBean.urlEncode(token)), "text/html; charset=utf-8");
-			message.setSentDate(new Date());
+		try {
+			MailUtil.sendMailToUser(user, Mail.VALIDATION, UtilsBean.urlEncode(token));
 			setMailToken(token, user);
-			Transport.send(message);
-		}catch(MessagingException | UnsupportedEncodingException me){
-			logger.error("Unable to send verification mail to " + user.getMail() , me );
+		} catch (MailException e) {
+			logger.error("Unable to send verification mail to " + user.getMail() , e );
 		}
+
 	}
+	
 
 	@Override
 	@TransactionalUpdate
@@ -455,7 +440,6 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 		user.setPassword(password);
 		user.setSalt(null);
 		Security.encryptPassword(user);
-		//TODO SMF change password
 		updateUser(user);
 		try {
 			smfChangePasswordUser(user, password);

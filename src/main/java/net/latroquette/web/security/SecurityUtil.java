@@ -29,6 +29,9 @@ public class SecurityUtil {
 		FacesUtil.setCookie(TOKEN_COOKIE, "", 0, false);
 		FacesUtil.setCookie(USER_COOKIE, "", 0, false);
 	}
+	public static boolean checkCookies(){
+		return FacesUtil.getCookie(TOKEN_COOKIE) != null && FacesUtil.getCookie(USER_COOKIE) != null;
+	}
 	
 	public static void setTokenCookie(User user){
 		user.setToken(Security.generateTokenID(user));

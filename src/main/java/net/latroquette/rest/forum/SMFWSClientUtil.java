@@ -29,6 +29,19 @@ public class SMFWSClientUtil {
 	private static final String errorFlag = "error";
 	
 	private SMFWSClientUtil(){}
+	/**
+	 * Send a request to SMF Webservice using the predefined {@link SMFMethods},
+	 * with a {@link List} of  {@link NameValuePair} which be translated to 
+	 * JSON object.<br />
+	 * Return a json Object with the result depending on SMF Webservice implementation
+	 * A error message may be found at json index {@code "error"}, or false may be result from
+	 * {@code "data"} index.<br />
+	 * All successfull information are retrived in {@code "data"} index
+	 * @param method
+	 * @param postParams
+	 * @return
+	 * @throws SMFRestException
+	 */
 	public static JSONObject sendRequestPostQuery(SMFMethods method, List<NameValuePair> postParams) throws SMFRestException{
 		HttpPost endpoint = new HttpPost(SMF_ENDPOINT + method);
 		HttpClient client = new DefaultHttpClient();

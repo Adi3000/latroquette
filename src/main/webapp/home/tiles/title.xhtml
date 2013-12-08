@@ -10,6 +10,9 @@
 		xmlns:h="http://java.sun.com/jsf/html"
 		xmlns:f="http://java.sun.com/jsf/core">	
 		<div id="enTete">	
+			<f:metadata>
+				<f:event listener="#{userBean.checkCookies}" type="preRenderView" />
+			</f:metadata>
 			<div id="toolbarLogin">
 				<h:link 
 					outcome="/profile/login?register=true&amp;u=#{request.requestURI}&amp;qs=#{util:urlEncode(request.queryString)}" 

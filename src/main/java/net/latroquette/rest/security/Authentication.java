@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.UserInfo;
 import net.latroquette.common.database.data.profile.UsersService;
+import net.latroquette.common.util.ServiceException;
 import net.latroquette.common.util.Services;
 import net.latroquette.web.security.AuthenticationMethod;
 
@@ -46,7 +47,19 @@ public class Authentication extends SpringBeanAutowiringSupport{
     }
 	
 	@POST
-	@Path("/smf")
+	@Path("/smf/register")
+	@Produces(MediaType.APPLICATION_JSON)
+	public GenericEntity<UserInfo> registerForSMF(@FormParam("login") String login, @FormParam("mail") String mail,  
+			@FormParam("password") String password, @FormParam("loginState") Integer loginState) throws ServiceException {
+		User user = new User();
+		user.setLogin(login);
+		user.setMail(mail);
+		user.setPassword(password);
+		usersService.registerNewUser(user, loginState, AuthenticationMethod.SMF);
+		return new GenericEntity<UserInfo>(new UserInfo(user)) {};
+	}
+	@POST
+	@Path("/smf/auth")
 	@Produces(MediaType.APPLICATION_JSON)
 	public GenericEntity<UserInfo> authenticateForSMF(@FormParam("login") String login, 
 			@FormParam("password") String password, @FormParam("byToken") String byToken) {
