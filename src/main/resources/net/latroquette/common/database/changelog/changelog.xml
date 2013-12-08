@@ -91,4 +91,9 @@
     			relativeToChangelogFile="true" 
     			path="0.0.1/modeling/09-security_upgrade.sql"/>
     </changeSet>
+    <changeSet id="0.0.1-10.0-adding_parameters" author="adi3000">
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/referentiel/10-supply_more_parameters.sql"/>
+    </changeSet>
 </databaseChangeLog>
