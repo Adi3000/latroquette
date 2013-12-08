@@ -21,6 +21,8 @@ import net.latroquette.web.security.AuthenticationMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import com.adi3000.common.web.jsf.UtilsBean;
+
 @Path("/authentication")
 @WebService(name=Services.AUTHENTICATION_WEB_SERVICE)
 public class Authentication extends SpringBeanAutowiringSupport{
@@ -40,7 +42,7 @@ public class Authentication extends SpringBeanAutowiringSupport{
     @Produces(MediaType.TEXT_PLAIN)
     public String authenticateForEjabberd(@QueryParam("login") String login, @QueryParam("password") String password) {
 		User user = usersService.authenticateUser(login, password, AuthenticationMethod.EJABBER);
-		return user  == null ? "0" : "1";
+		return user  == null || user.getXmppBlock() ? "0" : "1";
     }
 	
 	@POST
@@ -48,7 +50,7 @@ public class Authentication extends SpringBeanAutowiringSupport{
 	@Produces(MediaType.APPLICATION_JSON)
 	public GenericEntity<UserInfo> authenticateForSMF(@FormParam("login") String login, 
 			@FormParam("password") String password, @FormParam("byToken") String byToken) {
-		User user = usersService.authenticateUser(login, password, Boolean.valueOf(byToken), AuthenticationMethod.SMF);
+		User user = usersService.authenticateUser(login, UtilsBean.urlDecode(password, true), Boolean.valueOf(byToken), AuthenticationMethod.SMF);
 		return new GenericEntity<UserInfo>(new UserInfo(user)) {};
 	}
 	
@@ -71,7 +73,7 @@ public class Authentication extends SpringBeanAutowiringSupport{
 	@Path("/activation")
 	@Produces(MediaType.APPLICATION_JSON)
 	public GenericEntity<UserInfo> authenticateForSMF(@FormParam("login") String login) {
-		User user = usersService.validateUser(login, AuthenticationMethod.SMF);
+		User user = usersService.forceValidateUser(login, AuthenticationMethod.SMF);
 		return new GenericEntity<UserInfo>(new UserInfo(user)) {};
 	}
 	

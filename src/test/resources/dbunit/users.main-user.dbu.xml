@@ -3,6 +3,7 @@
 	<users
 		user_id="999999999"			
 		user_login="TestUser1"			
-		user_password="Password1"
-		user_mail="test1@adi3000.com" />		
+		user_password="123456"
+		user_login_state="1"
+		user_mail="adi300000@gmail.com" />		
 </dataset>

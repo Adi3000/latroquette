@@ -19,12 +19,14 @@ import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.util.Services;
+import net.latroquette.web.beans.profile.UserBean;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.util.CommonUtil;
 import com.adi3000.common.util.tree.Breadcrumb;
+import com.adi3000.common.web.faces.FacesUtil;
 
 @ManagedBean
 @ViewScoped
@@ -38,6 +40,8 @@ public class KeywordBean implements Serializable{
 	public void setKeywordsService(KeywordsService keywordsService) {
 		this.keywordsService = keywordsService;
 	}
+	@ManagedProperty(value="#{userBean}")
+	private UserBean userBean;
 	/**
 	 * 
 	 */
@@ -64,9 +68,15 @@ public class KeywordBean implements Serializable{
 	
 	
 	public void init(){
-		childrenIds = new HashMap<String,String>();
-		synonymsIds = new HashMap<String,String>();
-		loadKeyword();
+		if(userBean.isLoggedIn() && userBean.isModifyKeywords()){
+			childrenIds = new HashMap<String,String>();
+			synonymsIds = new HashMap<String,String>();
+			loadKeyword();
+		}else if(userBean.isLoggedIn()){
+			FacesUtil.navigationForward("/error404");
+		}else{
+			FacesUtil.navigationRedirect("/profile/login");
+		}
 	}
 	public String loadKeyword(){
 		
@@ -473,5 +483,17 @@ public class KeywordBean implements Serializable{
 	 */
 	public void setKeywordToSearch(String keywordToSearch) {
 		this.keywordToSearch = keywordToSearch;
+	}
+	/**
+	 * @return the userBean
+	 */
+	public UserBean getUserBean() {
+		return userBean;
+	}
+	/**
+	 * @param userBean the userBean to set
+	 */
+	public void setUserBean(UserBean userBean) {
+		this.userBean = userBean;
 	}
 }

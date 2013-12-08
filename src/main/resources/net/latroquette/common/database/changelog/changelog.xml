@@ -86,4 +86,9 @@
     			relativeToChangelogFile="true" 
     			path="0.0.1/modeling/08-rename_location_to_places.sql"/>
     </changeSet>
+    <changeSet id="0.0.1-09.0-security_upgrade" author="adi3000">
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/modeling/09-security_upgrade.sql"/>
+    </changeSet>
 </databaseChangeLog>

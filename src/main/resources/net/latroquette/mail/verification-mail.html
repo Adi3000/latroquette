@@ -1,0 +1,28 @@
+<div>
+    <p>
+        Bonjour %1$s,
+    </p>
+    <p>
+        Vous venez de créer un compte sur <a href="${net.latroquette.url.scheme}://${net.latroquette.url.hostname}">${net.latroquette.url.hostname}</a>.
+    </p>
+    <p>
+        Pour pouvoir publier des annonces et discuter avec les personnes en lignes veuillez valider votre
+        adresse email <a href="${net.latroquette.url.scheme}://${net.latroquette.url.hostname}/profile/security.jsf?purpose=mail&amp;login=%1$s&amp;token=%2$s">en cliquant ici</a>
+        ou en copiant collant le lien ci dessous dans votre navigateur.
+    </p>   
+    <p>
+        ${net.latroquette.url.scheme}://${net.latroquette.url.hostname}/profile/security.jsf?purpose=mail&amp;login=%1$s&amp;token=%2$s
+    </p>
+    <p>
+        Ce lien expirera dans 48h, vous avez la possibilité de regénérer un nouveau mail de validation
+        pour votre compte en vous connectant sur <a href="${net.latroquette.url.scheme}://${net.latroquette.url.hostname}">${net.latroquette.url.hostname}</a>
+        et en cliquant sur "Renvoyer un mail de validation" en haut de l'écran 
+    </p>
+    <p>
+        Bon troc !
+    </p>
+    <p>
+        Si vous avez des difficultés à valider votre compte veuillez contacter le support sur le forum ou a l'adresse suivante
+        <a href="mailto:${net.latroquette.mail.address}">${net.latroquette.mail.address}</a>.
+    </p>
+</div>

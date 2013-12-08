@@ -25,6 +25,8 @@ import net.latroquette.web.security.AuthenticationMethod;
 import net.latroquette.web.security.SecurityUtil;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.adi3000.common.util.security.Security;
 import com.adi3000.common.web.faces.FacesUtil;
@@ -33,8 +35,9 @@ import com.adi3000.common.web.jsf.UtilsBean;
 
 @ManagedBean(name = "userBean")
 @SessionScoped
-public class UserBean implements Serializable, com.adi3000.common.util.security.User{
-	
+public class UserBean implements Serializable{
+	private static final Logger logger = LoggerFactory.getLogger(UserBean.class);
+
 	public static final String LOGIN_VIEW_URI = "profile/login";
 	public static final String PARAMETER_REQUEST_URI = "u";
 	public static final String PARAMETER_QUERY_STRING = "qs";
@@ -156,7 +159,18 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 			}
 		}
 	}
-	
+	public String changePassword(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if(StringUtils.isEmpty(passwordConfirm) || !passwordConfirm.equals(password)){
+			FacesMessage msg = new FacesMessage("Probleme de mot de passe [302]", 
+					"Le mot de passe est incorrect ");
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			fc.addMessage(null, msg);
+			fc.validationFailed();
+		}
+		usersService.changePassword(getPassword(), user);
+		return "/index";
+	}
 	public String registerUser()
 	{
 		User newUser = new User();
@@ -164,16 +178,16 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		String forwardUrl = null;
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		if(StringUtils.isEmpty(getMail())){
-			FacesMessage msg = new FacesMessage("Registring error[301]", 
-					"Email Empty : Registering failed, please try later or ask for support");
+		if(StringUtils.isEmpty(getMail()) || !getMail().equals(mailConfirm)){
+			FacesMessage msg = new FacesMessage("Probleme d'email [301]", 
+					"L'email est incorrect ou sa confirmation ne correspond pas");
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			fc.addMessage(null, msg);
 			fc.validationFailed();
 		}
-		if(StringUtils.isEmpty(passwordConfirm)){
-			FacesMessage msg = new FacesMessage("Registring error[302]", 
-					"Confirm password Empty : Registering failed, please try later or ask for support");
+		if(StringUtils.isEmpty(passwordConfirm) || !passwordConfirm.equals(password)){
+			FacesMessage msg = new FacesMessage("Probleme de mot de passe [302]", 
+					"Le mot de passe est incorrect ");
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			fc.addMessage(null, msg);
 			fc.validationFailed();
@@ -190,10 +204,11 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		try {
 			usersService.registerNewUser(newUser);
 		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Impossible to register " + newUser.getLogin() + " [ " + newUser.getMail() + " ]", e);
+			return "/error500";
 		}
-		forwardUrl = authenticateUser(newUser.getLogin(), newUser.getPassword());
+		usersService.sendVerificationMail(newUser);
+		forwardUrl = authenticateUser(newUser.getLogin(), this.getPassword());
 		return forwardUrl;
 
 	}
@@ -254,7 +269,11 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 	{
 		//Unset properties of this user
 		this.user = new User();
+		this.mailConfirm = null;
+		this.password = null;
+		this.passwordConfirm = null;
 		xmppSession = null;
+		SecurityUtil.removeTokenCookie();
 		user.setLoginState(User.ANONYMOUS);
 		return "/index";
 	}
@@ -272,10 +291,8 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		Timestamp now = new Timestamp(new java.util.Date().getTime());
 		ExternalContext externe = FacesContext.getCurrentInstance().getExternalContext();
 		String ip = ((HttpServletRequest)externe.getRequest()).getRemoteAddr();
-		String host = ((HttpServletRequest)externe.getRequest()).getRemoteHost();
 		user.setLastDateLogin(now);
 		user.setLastIpLogin(ip);
-		user.setLastHostNameLogin(host);
 	}
 	
 	
@@ -310,12 +327,10 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		return getRole() != null ? user.getRole().getModifyKeywords() : false;
 	}
 
-	@Override
 	public Integer getId() {
 		return  user != null ? user.getId() : null;
 	}
 
-	@Override
 	public String getLogin() {
 		return user != null ?  user.getLogin() : null;
 	}
@@ -324,7 +339,6 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		user.setLogin(login);
 	}
 
-	@Override
 	public String getPassword() {
 		return password;
 	}
@@ -333,12 +347,6 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		this.password = password;
 	}
 
-	@Override
-	public String getLastHostNameLogin() {
-		return user.getLastHostNameLogin();
-	}
-
-	@Override
 	public String getMail() {
 		return user.getMail();
 	}
@@ -346,12 +354,10 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		user.setMail(mail);
 	}
 
-	@Override
 	public Timestamp getLastDateLogin() {
 		return user.getLastDateLogin();
 	}
 
-	@Override
 	public String getLastIpLogin() {
 		return user.getLastIpLogin();
 	}
@@ -418,18 +424,25 @@ public class UserBean implements Serializable, com.adi3000.common.util.security.
 		setDisplayLoginBox(Boolean.valueOf(register));
 	}
 
-	@Override
-	public void setCurrentToken() {
-		//never setted here : take the one from this.user
-	}
-
-	@Override
-	public String getCurrentToken() {
+	public String getToken() {
 		if(Security.isUserLogged(user)){
-			return user.getCurrentToken();
+			return user.getToken();
 		}
 		return null;
 	}
-
 	
+	public String revalidate(){
+		usersService.sendVerificationMail(user);
+		//TODO display a confirm message
+		return "/index";
+	}
+	public String resetPassword(){
+		usersService.sendResetPasswordMail(mailConfirm);
+		//TODO display a confirm message
+		return "/index";
+	}
+
+	public boolean isValidated(){
+		return isLoggedIn() && user.getLoginState() > User.NOT_VALIDATED;
+	}
 }

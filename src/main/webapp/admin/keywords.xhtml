@@ -7,7 +7,7 @@
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<f:metadata>
 			<f:viewParam name="keyword" value="#{keywordBean.keywordId}"/>
-			<f:event listener="#{keywordBean.init}" type="preRenderComponent" />
+			<f:event listener="#{keywordBean.init}" type="preRenderView" />
 		</f:metadata>
 		<ui:define name="mainDiv">
 			<h:outputStylesheet name="css/admin.css" target="head" />

@@ -9,15 +9,19 @@ import javax.faces.bean.ViewScoped;
 import net.latroquette.common.database.data.profile.Role;
 import net.latroquette.common.database.data.profile.UsersService;
 import net.latroquette.common.util.Services;
+import net.latroquette.web.beans.profile.UserBean;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.util.CommonUtil;
+import com.adi3000.common.web.faces.FacesUtil;
 
 @ManagedBean
 @ViewScoped
 public class RoleBean {
 	@ManagedProperty(value=Services.USERS_SERVICE_JSF)
 	private transient UsersService usersService;
+	@ManagedProperty(value="#{userBean}")
+	private UserBean userBean;
 	/**
 	 * @param usersService the usersService to set
 	 */
@@ -50,7 +54,13 @@ public class RoleBean {
 		this.newRole = newRole;
 	}
 	public void loadRoles(){
-		roleList = usersService.getAllRoles();
+		if(userBean.isLoggedIn() && userBean.isAdmin()){
+			roleList = usersService.getAllRoles();
+		}else if(userBean.isLoggedIn()){
+			FacesUtil.navigationForward("/error404");
+		}else{
+			FacesUtil.navigationRedirect("/profile/login");
+		}
 	}
 	
 	public String create(){
@@ -71,5 +81,19 @@ public class RoleBean {
 	private String modify(Role role){
 		usersService.modifyRole(role);
 		return null;
+	}
+
+	/**
+	 * @return the userBean
+	 */
+	public UserBean getUserBean() {
+		return userBean;
+	}
+
+	/**
+	 * @param userBean the userBean to set
+	 */
+	public void setUserBean(UserBean userBean) {
+		this.userBean = userBean;
 	}
 }

@@ -6,7 +6,7 @@
 	<body>
 		<ui:composition template="/home/template/mainLayout.xhtml">
 			<f:metadata>
-				<f:event listener="#{roleBean.loadRoles}" type="preRenderComponent" />
+				<f:event listener="#{roleBean.loadRoles}" type="preRenderView" />
 			</f:metadata>
 			<ui:define name="mainDiv">
 				<table>

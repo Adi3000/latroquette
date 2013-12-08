@@ -9,15 +9,17 @@ legend
 }
 
 
-#loginBorder, #registerBorder
+#loginForm > div, #forgotPasswordForm > div, #changePasswordDiv form > div
 {
-	background: url("/resources/img/wood-billboard.png") no-repeat;
+	background: url("/resources/img/wood_texture.jpg") no-repeat;
 	padding-top: 15px;
 	display: inline-block;
 	vertical-align: middle;
-	padding-left: 30px;
+	padding-left: 20px;
 	min-height : 150px;
 	height : auto;
+	border: #A39979 solid 2px;
+    box-shadow: #000 2px 2px 10px;
 }
 #registerBorder{
 	padding-top : 30px;
@@ -33,22 +35,22 @@ legend
 	-webkit-border-radius : 5px 5px;
 }
 
-form#loginForm{
+#loginForm, #forgotPasswordForm, #changePasswordDiv form{
 	margin-left: auto;
 	margin-right: auto;
 
 }
 
-form#loginForm .loginField
+.loginField
 {
 	vertical-align: middle;
 }
-form#loginForm .loginField .label
+.loginField .label
 {
 	width: 130px;
 	text-shadow: 1px 1px 2px #FFF;
 }
-form#loginForm h2
+form h2
 {
 	font-size: 1.0em;
 	text-align: center;
@@ -59,13 +61,19 @@ form#loginForm h2
 #topHomepage{
 	height: 220px; 
 }
-#loginForm{
+#loginForm, #forgotPasswordForm, #changePasswordDiv form{
 	width:344px;
 }
-#loginDiv, #arrowDiv{
+#loginDiv, #arrowDiv, #forgotPassword, #changePasswordDiv{
 	width:700px;
 	position: absolute;
 	margin-top: 10px;
+}
+#loginDiv, #arrowDiv{
+	z-index: 10;
+}
+#forgotPassword{
+	z-index: 50;
 }
 #arrowDiv{
 	background: url("/resources/img/arrow_homepage.png") no-repeat;

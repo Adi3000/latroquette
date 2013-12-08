@@ -15,15 +15,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
 
 import net.latroquette.common.database.data.place.Place;
 
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Type;
 
 import com.adi3000.common.database.hibernate.data.AbstractDataObject;
-import com.adi3000.common.util.security.Security;
 
 
 
@@ -42,15 +41,18 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	private Integer id;
 	private String login;
 	private Timestamp lastDateLogin;
-	private transient String currentToken;
+	private String token;
 	private Integer loginState;
 	private String password;
+	private String salt;
 	private Place place;
 	private String mail;
-	private String lastHostNameLogin;
-	private String lastIpLogin;
-	private Integer smfId;
 	private Role role;
+	private String lastIpLogin;
+	private String lastIpXmpp;
+	private Boolean xmppBlock;
+	private Timestamp lastDateXmpp;
+	private Integer smfId;
 	
 	@Id
 	@Column(name="user_id")
@@ -92,20 +94,6 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	@XmlTransient
 	public String getPassword() {
 		return password;
-	}
-	/**
-	 * @return the lastHostNameLogin
-	 */
-	@Column(name="user_last_host_name_login")
-	@XmlTransient
-	public String getLastHostNameLogin() {
-		return lastHostNameLogin;
-	}
-	/**
-	 * @param lastHostNameLogin the lastHostNameLogin to set
-	 */
-	public void setLastHostNameLogin(String lastHostNameLogin) {
-		this.lastHostNameLogin = lastHostNameLogin;
 	}
 	/**
 	 * @return the mail
@@ -154,14 +142,14 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 		return this.login + "@" + this.id;
 	}
 	@Override
-	public void setCurrentToken() {
-		this.currentToken = Security.generateTokenID(this);		
+	public void setToken(String token) {
+		this.token = token;
 	}
 	@Override
-	@Transient
+	@Column(name="user_token")
 	@XmlTransient
-	public String getCurrentToken() {
-		return currentToken;
+	public String getToken() {
+		return token;
 	}
 	/**
 	 * @return the smfId
@@ -218,6 +206,63 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	 */
 	public void setPlace(Place place) {
 		this.place = place;
+	}
+	/**
+	 * @return the salt
+	 */
+	@Column(name="user_salt")
+	@XmlTransient
+	public String getSalt() {
+		return salt;
+	}
+	/**
+	 * @param salt the salt to set
+	 */
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+	/**
+	 * @return the lastIpXmpp
+	 */
+	@Column(name="user_last_ip_xmpp")
+	@XmlTransient
+	public String getLastIpXmpp() {
+		return lastIpXmpp;
+	}
+	/**
+	 * @param lastIpXmpp the lastIpXmpp to set
+	 */
+	public void setLastIpXmpp(String lastIpXmpp) {
+		this.lastIpXmpp = lastIpXmpp;
+	}
+	/**
+	 * @return the xmppBlock
+	 */
+	@Column(name="is_xmpp")
+	@XmlTransient
+	@Type(type="yes_no")
+	public Boolean getXmppBlock() {
+		return xmppBlock;
+	}
+	/**
+	 * @param xmppBlock the xmppBlock to set
+	 */
+	public void setXmppBlock(Boolean xmppBlock) {
+		this.xmppBlock = xmppBlock;
+	}
+	/**
+	 * @return the lastDateXmpp
+	 */
+	@Column(name="user_last_date_xmpp")
+	@XmlTransient
+	public Timestamp getLastDateXmpp() {
+		return lastDateXmpp;
+	}
+	/**
+	 * @param lastDateXmpp the lastDateXmpp to set
+	 */
+	public void setLastDateXmpp(Timestamp lastDateXmpp) {
+		this.lastDateXmpp = lastDateXmpp;
 	}
 	
 }

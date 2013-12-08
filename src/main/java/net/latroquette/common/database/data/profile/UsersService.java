@@ -84,7 +84,15 @@ public interface UsersService extends DAO<User>{
 	 * @param method
 	 * @return
 	 */
-	public User validateUser(String login, AuthenticationMethod method);
+	public User forceValidateUser(String login, AuthenticationMethod method);
+	
+	/**
+	 * Validate user by mail token
+	 * @param login
+	 * @param method
+	 * @return
+	 */
+	public User validateUser(String login, String token, AuthenticationMethod method);
 	
 	/**
 	 * Return all {@link Role} declared
@@ -112,4 +120,48 @@ public interface UsersService extends DAO<User>{
 	 * @param list
 	 */
 	public void updateRoles(List<UserBase> list);
+	
+	/**
+	 * Regenerate a mail and a token verification
+	 * @param user
+	 */
+	public void sendResetPasswordMail(String mail);
+	/**
+	 * Regenerate a mail and a token verification
+	 * @param user
+	 */
+	public void sendVerificationMail(User user);
+
+	/**
+	 * Validat mail token to allow password change
+	 * @param login
+	 * @param token
+	 * @param method
+	 * @return
+	 */
+	public User validateMailTokenForPassword(String login, String token, AuthenticationMethod method);
+	
+	public void changePassword(String password, User user);
+	/**
+	 * Unblock an user with specified id
+	 * @param id
+	 */
+	public void unblockUser(Integer id);
+	/**
+	 * Block an user with specified id
+	 * @param id
+	 */
+	public void blockUser(Integer id);
+	/**
+	 * Activate user on SMF
+	 * @param user
+	 * @throws ServiceException
+	 */
+	void smfActivateUser(User user) throws ServiceException;
+	/**
+	 * Activate user on SMF
+	 * @param userId
+	 * @throws ServiceException
+	 */
+	void smfActivateUser(Integer userId) throws ServiceException;
 }

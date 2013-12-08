@@ -9,14 +9,18 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import com.adi3000.common.util.CommonUtil;
+import com.adi3000.common.web.faces.FacesUtil;
 
 import net.latroquette.common.database.data.profile.Role;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.UserBase;
 import net.latroquette.common.database.data.profile.UserStatistics;
 import net.latroquette.common.database.data.profile.UsersService;
+import net.latroquette.common.util.ServiceException;
 import net.latroquette.common.util.Services;
+import net.latroquette.web.beans.profile.UserBean;
 import net.latroquette.web.security.AuthenticationMethod;
+import net.latroquette.web.security.SecurityUtil;
 
 @ManagedBean
 @ViewScoped
@@ -28,6 +32,9 @@ public class UsersStatsBean implements Serializable{
 
 	@ManagedProperty(value=Services.USERS_SERVICE_JSF)
 	private transient UsersService usersService;
+	
+	@ManagedProperty(value="#{userBean}")
+	private UserBean userBean;
 	
 	private UserStatistics filter;
 	private List<UserStatistics> result;
@@ -98,7 +105,14 @@ public class UsersStatsBean implements Serializable{
 	}
 	
 	public void loadUsersStats(){
-		search();
+		if(userBean.isLoggedIn() && userBean.isAdmin()){
+			search();
+		}else if(userBean.isLoggedIn()){
+			FacesUtil.navigationRedirect("/error404");
+		}else{
+			userBean.setDisplayLoginBox(true);
+			FacesUtil.navigationForward(SecurityUtil.LOGIN_VIEW_PATH);
+		}
 	}
 	
 	public String search(){
@@ -107,12 +121,17 @@ public class UsersStatsBean implements Serializable{
 		return null;
 	}
 	
+	public String unblockUser(String id){
+		usersService.unblockUser(Integer.valueOf(id));
+		return null;
+	}
 	public String blockUser(String id){
+		usersService.blockUser(Integer.valueOf(id));
 		return null;
 	}
 	public String forceValidation(String id){
 		User user = usersService.getUserById(Integer.valueOf(id));
-		usersService.validateUser(user.getLogin(), AuthenticationMethod.ADMIN);
+		usersService.forceValidateUser(user.getLogin(), AuthenticationMethod.ADMIN);
 		return null;
 	}
 	public String applyProfile(){
@@ -129,9 +148,9 @@ public class UsersStatsBean implements Serializable{
 		return null;
 	}
 	public String forceSMFValidation(String id){
-		return null;
-	}
-	public String changeProfile(String userId,String profileId){
+		try{
+			usersService.smfActivateUser(Integer.valueOf(id));
+		}catch(ServiceException e){}
 		return null;
 	}
 	public String nextPage(){
@@ -141,5 +160,17 @@ public class UsersStatsBean implements Serializable{
 	public String previousPage(){
 		page --;
 		return search();
+	}
+	/**
+	 * @return the userBean
+	 */
+	public UserBean getUserBean() {
+		return userBean;
+	}
+	/**
+	 * @param userBean the userBean to set
+	 */
+	public void setUserBean(UserBean userBean) {
+		this.userBean = userBean;
 	}
 }

@@ -7,12 +7,13 @@ import com.adi3000.common.util.security.Security;
 import com.adi3000.common.web.faces.FacesUtil;
 
 public class SecurityUtil {
-	private static final String LOGIN_VIEW_PATH = "/profile/login";
+	public static final String LOGIN_VIEW_PATH = "/profile/login";
 	//TODO set this one on parameter
 	private static final String TOKEN_COOKIE = "ltq_token";
 	private static final String USER_COOKIE = "ltq_user";
+	private static final String SMF_COOKIE = "SMFCookie455";
 	public static boolean checkUserLogged(UserBean user){
-		if (!Security.isUserLogged(user) || !user.isActuallyLoggedIn()){
+		if (user == null || !Security.isUserLogged(user.getUser()) || !user.isActuallyLoggedIn()){
 			user.logoutUser();
 			user.setDisplayLoginBox(true);
 			FacesUtil.navigationForward(LOGIN_VIEW_PATH);
@@ -21,9 +22,17 @@ public class SecurityUtil {
 		return true;
 	}
 	
+	public static void removeSMFCookie(){
+		FacesUtil.setCookie(SMF_COOKIE, "", 0, false);
+	}
+	public static void removeTokenCookie(){
+		FacesUtil.setCookie(TOKEN_COOKIE, "", 0, false);
+		FacesUtil.setCookie(USER_COOKIE, "", 0, false);
+	}
+	
 	public static void setTokenCookie(User user){
-		user.setCurrentToken();
-		FacesUtil.setCookie(TOKEN_COOKIE, user.getCurrentToken(), -1, false);
+		user.setToken(Security.generateTokenID(user));
+		FacesUtil.setCookie(TOKEN_COOKIE, user.getToken(), -1, false);
 		FacesUtil.setCookie(USER_COOKIE, user.getLogin(), -1, false);
 	}
 	

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+<body>
+    <ui:composition template="/home/template/homeLayout.xhtml">
+        <f:metadata>
+        	<f:viewParam name="purpose" value="#{userSecurityBean.purpose}" />
+        	<f:viewParam name="login" value="#{userSecurityBean.login}" />
+        	<f:viewParam name="token" value="#{userSecurityBean.mailToken}" />
+            <f:event listener="#{userSecurityBean.validate}" type="preRenderView" />
+        </f:metadata>
+        <ui:define name="mainDiv">
+            <h:outputStylesheet name="css/profile.css" target="head" />
+            <h:panelGroup rendered="#{userSecurityBean.validated}">
+                <h:panelGroup rendered="#{userSecurityBean.mailPurpose}">
+					<h:panelGroup rendered="#{userBean.loggedIn and userBean.user == userSecurityBean.user}">
+					   <p>
+					       Félicitation, vous possédez désormais un compte validé !
+					       Vous pouvez dès à présent déposer des annonces et valider vos brouillons
+					   </p>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{!userBean.loggedIn}">
+					   <p>
+					       Le compte #{userSecurityBean.user.login} est validé. 
+					       Pour déposer des annonces veuillez vous connecter d'abord
+					   </p>
+					   <ui:include src="/profile/tiles/login.xhtml" />
+					</h:panelGroup>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{userSecurityBean.passwordPurpose}">
+                	<div id="changePasswordDiv">
+	                   	<h:form>
+							<div class="ui-corner-all">
+								<div class="loginField">
+		                    		<div class="label">
+		                    			#{text_profile.LOGIN_LABEL}
+		                    		</div>
+		                            <div class="field">
+		                        		#{userSecurityBean.user.login}
+		                            </div>
+		                        </div>
+		                        <div class="loginField">
+		                            <div class="label">
+		                                <h:outputLabel for="passwordField">#{text_profile.PASSWORD_LABEL}</h:outputLabel>
+		                            </div>
+		                            <div class="field">
+		                                <h:inputSecret id="passwordField" value="#{userSecurityBean.password}" class="loginBox" required="true" />
+		                                <div class="error"><h:message for="passwordField" /></div>
+		                            </div>
+		                        </div>
+		                        <div class="loginField">
+		                            <div class="label">
+		                                <h:outputLabel for="passwordConfirmField">#{text_profile.PASSWORD_LABEL_CONFIRM}</h:outputLabel>
+		                            </div>
+		                            <div class="field">
+		                                <h:inputSecret id="passwordConfirmField" value="#{userSecurityBean.passwordConfirm}" class="loginBox" required="true"/>
+		                                <div class="error"><h:message for="passwordConfirmField" /></div>
+		                            </div>
+		                        </div>
+		                        <div id="loginButtons">
+		                        	<h:commandButton value="Changer le mot de passe" action="#{userSecurityBean.changePassword}"/>
+		                        </div>
+	                       	</div>
+	                    </h:form>
+                    </div>
+                </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{!userSecurityBean.validated}">
+                <p>
+	                 La verification de sécurité du compte #{userSecurityBean.login} a echoué. 
+	                 Verifiez que vous avez bien copié collé la bonne adresse, et qu'il s'agit bien du dernier
+	                 mail de verification que vous avez reçu.
+                </p>
+                <h:panelGroup rendered="#{userBean.loggedIn and userBean.login == userSecurityBean.login and userSecurityBean.mailPurpose}">
+                    <h:form>
+	                    <p>
+	                        Vous pouvez renvoyer un nouveau mail de validation en cliquant sur le bouton
+	                        ci dessous
+	                    </p>
+	                    <h:commandButton value="Renvoyer un mail de validation" action="#{userBean.revalidate}"/>
+                    </h:form>
+                </h:panelGroup>
+                <p>
+                    Si le problème persiste, vous pouvez déposer un message sur le forum ou contacter
+                    le support a l'adresse TODO
+                </p>
+            </h:panelGroup>
+        </ui:define>
+    </ui:composition>
+</body>
+</html>

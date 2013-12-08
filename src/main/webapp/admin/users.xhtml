@@ -7,7 +7,7 @@
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<f:metadata>
-			<f:event listener="#{usersStatsBean.loadUsersStats}" type="preRenderComponent" />
+			<f:event listener="#{usersStatsBean.loadUsersStats}" type="preRenderView" />
 		</f:metadata>
 		<ui:define name="mainDiv">
 			<h:form>
@@ -66,13 +66,14 @@
 								<td>
 									<h:commandLink value="Non" title="Reenvoyer un mail de validation" rendered="#{user.loginState == 0}" action="#{usersStatsBean.forceValidation(user.id)}" />
 									<h:outputText value="Oui" title="code [#{user.loginState}]" rendered="#{user.loginState gt 0}" />
-									<h:outputText value="Bloqué" title="code [#{user.loginState}]" rendered="#{user.loginState lt 0}" />
+									<h:commandLink value="Bloqué" action="#{usersStatsBean.unblockUser(user.id)}" title="code [#{user.loginState}]" rendered="#{user.loginState lt 0}" />
 									<br /><!-- SMF -->					
 									<h:outputText value="Forum_OK" title="SMF ID : #{user.smfId}" rendered="#{!empty user.smfId and user.isSmfActivated}"/>
-									<h:commandLink value="Forum_NOK" title="Re-enregistrer sur le forum" rendered="#{empty user.smfId}" action="#{usersStatsBean.forceSMFRegister(user.id)}" />
-									<h:commandLink value="Forum_OK (non validé)" title="SMF ID : #{user.smfId} Forcer validation au forum" rendered="#{!empty user.smfId and !user.isSmfActivated}" action="#{usersStatsBean.forceSMFValidation(user.id)}" />
+									<h:commandLink value="Forum_NOK" title="Re-enregistrer sur le forum" rendered="#{empty user.smfId and user.loginState gt 1}" action="#{usersStatsBean.forceSMFRegister(user.id)}" />
+									<h:outputText value="Forum_NOK" rendered="#{empty user.smfId and user.loginState == 1}" />
+									<h:commandLink value="Forum_OK (non validé)" title="SMF ID : #{user.smfId} : Cliquer pour valider l'utilisateur sur le forum" rendered="#{!empty user.smfId and !user.isSmfActivated}" action="#{usersStatsBean.forceSMFValidation(user.id)}" />
 									<br /><!-- XMPP -->				
-									<h:commandLink value="Chat_OK" title="Bloquer le chat" action="#{usersStatsBean.blockXmpp(user.id)}" />
+									<h:outputText value="Chat_OK" />
 								</td>
 								<td>
 									<h:commandButton value="Bloquer" action="#{usersStatsBean.blockUser(user.id)}" />

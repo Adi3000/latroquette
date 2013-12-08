@@ -1,13 +1,24 @@
 package net.latroquette.common.database.data.profile;
 
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import net.latroquette.common.util.ServiceException;
 import net.latroquette.common.util.Services;
 import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.common.util.parameters.Parameters;
+import net.latroquette.mail.MailBody;
 import net.latroquette.rest.forum.SMFMethods;
 import net.latroquette.rest.forum.SMFRestException;
 import net.latroquette.rest.forum.SMFWSClientUtil;
@@ -19,6 +30,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.jivesoftware.smack.BOSHConfiguration;
 import org.jivesoftware.smack.BOSHConnectionExtended;
@@ -35,6 +47,7 @@ import com.adi3000.common.database.spring.TransactionalUpdate;
 import com.adi3000.common.util.CommonUtil;
 import com.adi3000.common.util.optimizer.CommonValues;
 import com.adi3000.common.util.security.Security;
+import com.adi3000.common.web.jsf.UtilsBean;
 
 @Repository(value=Services.USERS_SERVICE)
 public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
@@ -57,6 +70,12 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 		this.rolesDAO = rolesDAO;
 	}
 
+	private User getUserByMail(String mail){
+		Criteria req = createCriteria(User.class)
+				.setMaxResults(1)
+				.add(Restrictions.eq("mail", mail).ignoreCase()) ;
+		return (User)req.uniqueResult();
+	}
 	@Transactional(readOnly=true)
 	public User getUserByLogin(String login){
 		Criteria req = createCriteria(User.class)
@@ -73,8 +92,9 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	public User registerNewUser(User newUser)  throws ServiceException{
 		String clearPassword = newUser.getPassword();
 		//Encrypt Password
-		newUser.setPassword(Security.encryptPassword(newUser.getPassword(), null));
+		Security.encryptPassword(newUser);
 		newUser.setLoginState(User.NOT_VALIDATED);
+		newUser.setXmppBlock(false);
 		newUser.setDatabaseOperation(DatabaseOperation.INSERT);
 		persist(newUser);
 		smfRegisterNewUser(newUser, clearPassword);
@@ -93,18 +113,30 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	@Transactional(readOnly=true)
 	public User authenticateUser(String login, String password, Boolean byToken,
 			AuthenticationMethod method) {
-		String authenticationRestriction = null; 
-		if(byToken){
-			authenticationRestriction = "token";
-		}else{
-			authenticationRestriction = "password";
-			password = Security.encryptPassword(password, null);
+		//TODO centralize blocked user with throwing specific error on unauthorized user
+		User user = getUserByLogin(login);
+		if(user != null){
+			if(byToken){
+				if(StringUtils.isNotEmpty(password) && StringUtils.equals(password, user.getToken())){
+					return user;
+				}
+			}else{
+				if(Security.validatePassword(password, user)){
+					//Create SMF account if not exist
+					//TODO : on SMF password change, change also here and vice-versa
+					//May be irrelevant in the future : all user must have an account after register
+					if(user.getSmfId() == null && Security.checkLoginState(user)){
+						try{
+							smfRegisterNewUser(user, password);
+						}catch(ServiceException e){
+							logger.error("Can't create account for " + user + " on SMF ");
+						}
+					}
+					return user;
+				}
+			}
 		}
-		Criteria req = createCriteria(User.class)
-				.setMaxResults(1)
-				.add(Restrictions.eq("login", login).ignoreCase())
-				.add(Restrictions.eq(authenticationRestriction, password));
-		return (User)req.uniqueResult();
+		return null; 
 	}
 	
 	@Override
@@ -150,8 +182,65 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 			throw new IllegalArgumentException(jsonResult.toString() + "\n : Impossible to extract SMFId from Json result ", e);
 		}
 	}
+	@Override
+	@Transactional(readOnly=true)
+	public void smfActivateUser(Integer userId) throws ServiceException{
+		User user = getUserById(userId);
+		smfActivateUser(user);
+	}
+	@Override
+	public void smfActivateUser(User user) throws ServiceException{
+		if(user.getSmfId() == null){
+			throw new IllegalStateException("Can't activate this user "+ user +", not registerd to SMF yet");
+		}
+		List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+		postParams.add(new BasicNameValuePair("member", user.getSmfId().toString()));
+		JSONObject jsonResult = null;
+		try {
+			jsonResult = SMFWSClientUtil.sendRequestPostQuery(SMFMethods.SMF_ACTIVATE_ENDPOINT, postParams);
+		} catch (SMFRestException e) {
+			logger.error("Error with SMF Rest Webservice", e);
+			throw new ServiceException("Error with SMF Rest Webservice", e);
+		}
+		try {
+			if(!jsonResult.getBoolean("data")){
+				logger.warn("Can't activate user "+user + "["+user.getSmfId()+"] successfully on SMF");
+				throw new ServiceException("Can't activate user "+user + "["+user.getSmfId()+"] successfully on SMF");
+			}
+		} catch (JSONException e) {
+			logger.error("Can't parse result from SMF Webservice"+jsonResult +" for user + " + user + " ["+user.getSmfId()+"] successfully", e);
+			throw new ServiceException("Can't parse result from SMF Webservice"+jsonResult +" for user + " + user + " ["+user.getSmfId()+"] successfully", e);
+		}
+	}
+	private void smfChangePasswordUser(User user, String clearPassword) throws ServiceException{
+		if(user.getSmfId() == null){
+			throw new IllegalStateException("Can't change password of user "+ user +", not registerd to SMF yet");
+		}
+		List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+		postParams.add(new BasicNameValuePair("member", user.getSmfId().toString()));
+		postParams.add(new BasicNameValuePair("password", clearPassword));
+		JSONObject jsonResult = null;
+		try {
+			jsonResult = SMFWSClientUtil.sendRequestPostQuery(SMFMethods.SMF_PASSWORD_ENDPOINT, postParams);
+		} catch (SMFRestException e) {
+			logger.error("Error with SMF Rest Webservice", e);
+			throw new ServiceException("Error with SMF Rest Webservice", e);
+		}
+		try {
+			if(!jsonResult.getBoolean("data")){
+				logger.warn("Can't change password of user "+user + "["+user.getSmfId()+"] successfully on SMF");
+				throw new ServiceException("Can't change password of user "+user + "["+user.getSmfId()+"] successfully on SMF");
+			}
+		} catch (JSONException e) {
+			logger.error("Can't parse result from SMF Webservice"+jsonResult +" for user + " + user + " ["+user.getSmfId()+"] successfully", e);
+			throw new ServiceException("Can't parse result from SMF Webservice"+jsonResult +" for user + " + user + " ["+user.getSmfId()+"] successfully", e);
+		}
+	}
 
 	public XMPPSession prebindXMPP(User user, String password){
+		if(user.getLoginState() <= User.NOT_VALIDATED){
+			return null;
+		}
 		//TODO export values to parameters
 		BOSHConfiguration boshConfiguration = new BOSHConfiguration(
 				false,  "jabber.latroquette.net", 5280, "/http-bind", "jabber.latroquette.net");
@@ -188,12 +277,25 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	}
 
 	@Override
-	@Transactional(readOnly=false)
-	public User validateUser(String login, AuthenticationMethod method) {
+	@TransactionalUpdate
+	public User forceValidateUser(String login, AuthenticationMethod method) {
 		User user = getUserByLogin(login);
+		return forceValidateUser(user, method);
+	}
+	private  User forceValidateUser(User user, AuthenticationMethod method) {
+		if(!Security.checkLoginState(user)){
+			logger.warn("User "+user +" is blocked, should not have access to mail verification");
+			throw new IllegalAccessError("User "+user +" is blocked, should not have access to mail verification");
+		}
 		user.setLoginState(User.NEW_USER_VALIDATED);
 		user.setDatabaseOperation(DatabaseOperation.UPDATE);
 		updateUser(user);
+		setMailToken(null,user);
+		try {
+			smfActivateUser(user);
+		} catch (ServiceException e) {
+			logger.warn("Can't activate user "+user + "["+user.getSmfId()+"] successfully",e);
+		}
 		return user;
 	}
 	
@@ -253,4 +355,130 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 			updateUser(user);
 		}
 	}
+
+	@Override
+	@TransactionalUpdate
+	public User validateMailTokenForPassword(String login, String token, AuthenticationMethod method) {
+		return checkMailToken(login, token, method);
+	}
+	@Override
+	@TransactionalUpdate
+	public User validateUser(String login, String token, AuthenticationMethod method) {
+		User user = checkMailToken(login, token, method);
+		if(user != null){
+			forceValidateUser(user, method);
+		}
+		return user;
+	}
+	
+	private User checkMailToken(String login, String token, AuthenticationMethod method) {
+		//TODO add this in parameters
+		String delay = "2 days";
+		String sql = "SELECT {users.*} FROM users {users} "
+				+ "where user_verification_token = :token "
+				+ "and user_date_verification_token > current_timestamp - interval '"+ delay +"' "
+				+ "limit 1";
+		Query req = createSQLQuery(sql)
+					.addEntity("users",User.class)
+					.setString("token", UtilsBean.urlDecode(token, true));
+		return (User)req.uniqueResult();
+		
+	}
+	private void setMailToken(String token,User user){
+		String sql = "UPDATE users "
+				+ "SET user_verification_token = :token, "
+				+ "user_date_verification_token = current_timestamp "
+				+ "where user_id = :userId ";
+		Query req = createSQLQuery(sql)
+				.setString("token",	token)
+				.setInteger("userId", user.getId());
+		req.executeUpdate();
+	}
+	@TransactionalUpdate
+	public void sendResetPasswordMail(String userMail){
+		User user = getUserByMail(userMail);
+		String mail = "noreply-latroquette@latroquette.net";
+		String name = "La Troquette.net";
+		String smtp = "smtp.free.fr";
+		String subject = "Reinitialisation du mot de passe de %s";
+		String body = MailBody.HTML_RESET_PASSWORD_MAIL;
+		Properties properties = System.getProperties();
+		properties.setProperty("mail.smtp.host", smtp);
+		Session session = Session.getDefaultInstance(properties);
+		String token = Security.generateTokenID(user);
+		try{
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(mail));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getMail(), name));
+			message.setSubject(String.format(subject,user.getLogin()));
+			message.setContent(String.format(body, user.getLogin(), UtilsBean.urlEncode(token)), "text/html; charset=utf-8");
+			message.setSentDate(new Date());
+			setMailToken(token, user);
+			Transport.send(message);
+		}catch(MessagingException | UnsupportedEncodingException me){
+			logger.error("Unable to send reset password mail to " + user.getMail() , me );
+		}
+	}
+	@TransactionalUpdate
+	public void sendVerificationMail(User user){
+		if(!Security.checkLoginState(user)){
+			logger.warn("User "+user +" is blocked, should not have access to mail verification");
+			throw new IllegalAccessError("User "+user +" is blocked, should not have access to mail verification");
+		}
+		//TODO externalize these values to parameters
+		String mail = "noreply-latroquette@latroquette.net";
+		String name = "La Troquette.net";
+		String smtp = "smtp.free.fr";
+		String subject = "Vérification de l'adresse email de %s";
+		String body = MailBody.HTML_VALIDATION_MAIL;
+		Properties properties = System.getProperties();
+		properties.setProperty("mail.smtp.host", smtp);
+		Session session = Session.getDefaultInstance(properties);
+		String token = Security.generateTokenID(user);
+		try{
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(mail));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getMail(), name));
+			message.setSubject(String.format(subject,user.getLogin()));
+			message.setContent(String.format(body, user.getLogin(), UtilsBean.urlEncode(token)), "text/html; charset=utf-8");
+			message.setSentDate(new Date());
+			setMailToken(token, user);
+			Transport.send(message);
+		}catch(MessagingException | UnsupportedEncodingException me){
+			logger.error("Unable to send verification mail to " + user.getMail() , me );
+		}
+	}
+
+	@Override
+	@TransactionalUpdate
+	public void changePassword(String password, User user) {
+		user.setPassword(password);
+		user.setSalt(null);
+		Security.encryptPassword(user);
+		//TODO SMF change password
+		updateUser(user);
+		try {
+			smfChangePasswordUser(user, password);
+		} catch (ServiceException e) {
+			logger.warn("Can't change password user "+user + "["+user.getSmfId()+"] successfully",e);
+		}
+		setMailToken(null, user);
+	}
+
+	@Override
+	@TransactionalUpdate
+	public void unblockUser(Integer id){
+		User user = getUserById(id);
+		user.setLoginState(User.NOT_VALIDATED);
+		updateUser(user);
+	}
+	
+	@Override
+	@TransactionalUpdate
+	public void blockUser(Integer id){
+		User user = getUserById(id);
+		user.setLoginState(User.BLOCKED);
+		updateUser(user);
+	}
+	
 }

@@ -23,6 +23,11 @@
 						</h:outputFormat>
 					</h:link>
 					<h:commandButton value="Logout" action="#{userBean.logoutUser}" />
+	                <h:panelGroup rendered="#{!userBean.validated}">
+	                   <div>
+	                       Compte non validé :<br /><h:commandLink value="Renvoyer un mail de validation" action="#{userBean.revalidate}" />
+                       </div>
+	                </h:panelGroup>
 				</h:form>
 				<h:panelGroup rendered="#{userBean.admin or userBean.modifyKeywords}">
 					<div><h:link outcome="/admin/index" value="Console Admin" /></div>
