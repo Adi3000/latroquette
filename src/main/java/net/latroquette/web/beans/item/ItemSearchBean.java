@@ -14,10 +14,13 @@ import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemFilter;
 import net.latroquette.common.database.data.item.ItemsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
+import net.latroquette.common.database.data.place.Place;
+import net.latroquette.common.database.data.place.PlacesService;
+import net.latroquette.common.database.data.profile.UsersService;
 import net.latroquette.common.util.Services;
 import net.latroquette.web.beans.profile.UserBean;
 
-
+import com.adi3000.common.util.security.User;
 import com.adi3000.common.web.faces.FacesUtil;
 @ManagedBean
 @RequestScoped
@@ -27,12 +30,11 @@ public class ItemSearchBean implements Serializable {
 	
 	@ManagedProperty(Services.ITEMS_SERVICE_JSF)
 	private transient ItemsService itemsService;
-	private static final String DISTANCE_PARAM="d"; 
-	private static final String PLACE_PARAM="pl"; 
-	private static final String OWNER_PARAM="o";
-	private static final String ONLY_TITLE_PARAM="ot";
-	private static final String STATUS_PARAM="s"; 
-	private static final String PATTERN_PARAM="r"; 
+	@ManagedProperty(Services.PLACES_SERVICE_JSF)
+	private transient PlacesService placesService;
+	@ManagedProperty(Services.USERS_SERVICE_JSF)
+	private transient UsersService usersService;
+
 	/**
 	 * @param itemsService the itemsService to set
 	 */
@@ -44,11 +46,14 @@ public class ItemSearchBean implements Serializable {
 	private Integer page;
 	private Integer count;
 	private List<Item> itemsFound; 
+	private String memberNameFilter; 
 	
 	@ManagedProperty(value="#{navigationBean.actualKeyword}")
 	private MainKeyword actualKeyword;
 	@ManagedProperty(value="#{userBean}")
 	private UserBean userBean;
+
+	private String placeNameFilter;
 	public ItemSearchBean(){
 		itemFilter = new ItemFilter();
 	}
@@ -64,7 +69,7 @@ public class ItemSearchBean implements Serializable {
 
 	//TODO accessibility feature : add a parameter to not load item via JS
 	public String search(){
-		String path = "/item/index.xhtml?r=".concat(itemFilter.getPattern());
+		String path = "/item/index.xhtml?".concat(itemFilter.getRequestURI());
 		return FacesUtil.prepareRedirect(path, true);
 	}
 	
@@ -150,29 +155,32 @@ public class ItemSearchBean implements Serializable {
 		this.itemFilter = itemFilter;
 	}
 	
+	/**
+	 * @return the memberNameFilter
+	 */
+	public String getMemberNameFilter() {
+		return memberNameFilter;
+	}
+
+	/**
+	 * @param memberNameFilter the memberNameFilter to set
+	 */
+	public void setMemberNameFilter(String memberNameFilter) {
+		this.memberNameFilter = memberNameFilter;
+	}
+
 	private void fillItemFilter(){
 		
 		Map<String, String> parameterMap = (Map<String, String>) FacesContext.getCurrentInstance() 
                 .getExternalContext().getRequestParameterMap();
-		
-		itemFilter.setPattern(parameterMap.get(PATTERN_PARAM));
-		itemFilter.setSearchOnDescription(!Boolean.valueOf(parameterMap.get(ONLY_TITLE_PARAM)));
-		
-		String value = parameterMap.get(DISTANCE_PARAM);
-		if(value != null){
-			itemFilter.setDistance(Double.valueOf(value));
+		itemFilter.setFilters(parameterMap, userBean.isValidateItems());
+		if(itemFilter.getOwnerId() != null){
+			User user = usersService.getUserById(itemFilter.getOwnerId());
+			memberNameFilter = user.getLogin();
 		}
-		value = parameterMap.get(STATUS_PARAM);
-		if(value != null && userBean.isValidateItems()){
-			itemFilter.setItemStatusId(Integer.valueOf(value));
-		}
-		value = parameterMap.get(OWNER_PARAM);
-		if(value != null){
-			itemFilter.setOwnerId(Integer.valueOf(value));
-		}
-		value = parameterMap.get(PLACE_PARAM);
-		if(value != null){
-			itemFilter.setPlaceId(Integer.valueOf(value));
+		if(itemFilter.getPlaceId() != null){
+			Place place = placesService.getPlaceById(itemFilter.getOwnerId());
+			placeNameFilter = place.getName().concat(" (").concat(place.getPostalCodes()).concat(")");
 		}
 	}
 

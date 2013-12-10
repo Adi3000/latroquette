@@ -29,6 +29,9 @@ public class PlacesServiceImpl extends AbstractDAO<Place> implements PlacesServi
 		return places;
 	}
 	
+	public Place getPlaceById(Integer placeId){
+		return getDataObjectById(placeId, Place.class);
+	}
 	/**
 	 * Return a {@link Place} by its name or code postal
 	 * @param value

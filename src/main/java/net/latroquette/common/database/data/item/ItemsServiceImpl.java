@@ -280,6 +280,10 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 				req.setDouble("latitudeRadix", place.getY());
 			}
 		}
+		//User Id filter
+		if(itemFilter.getOwnerId() != null){
+			req.setInteger("ownerId", itemFilter.getOwnerId());	
+		}
 		//filter by Item status
 		req.setInteger("itemStatusId", itemStatusId);
 		//filter by User status

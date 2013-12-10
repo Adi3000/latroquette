@@ -1,6 +1,6 @@
 $(function(){
 	
-	$("#searchForm\\:searchCity").autocomplete({
+	$("#searchCity").autocomplete({
 		source: 
 			function( request, response ) {
 				$.getJSON(
@@ -16,6 +16,7 @@ $(function(){
 		select:
 			function (event, ui){
 				$(this).val(ui.item.name);
+				$(this).siblings('input[type="hidden"]').val(ui.item.id);
 				return false;
 			},
 		create: function () {
@@ -42,9 +43,10 @@ $(function(){
 		minLength: 2,
 		select:
 			function (event, ui){
-			$(this).val(ui.item.login);
-			return false;
-		},
+				$(this).val(ui.item.login);
+				$(this).siblings('input[type="hidden"]').val(ui.item.id);
+				return false;
+			},
 		create: function () {
 			$(this).data("ui-autocomplete")._renderItem = function (ul, user) {
 				return $("<li />")

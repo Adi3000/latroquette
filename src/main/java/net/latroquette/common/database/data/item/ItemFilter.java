@@ -1,11 +1,23 @@
 package net.latroquette.common.database.data.item;
 
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.adi3000.common.util.optimizer.CommonValues;
+
 /**
  * Filter for itemSearch
  *
  */
 public class ItemFilter {
 
+	public static final String DISTANCE_PARAM="d"; 
+	public static final String PLACE_PARAM="pl"; 
+	public static final String OWNER_PARAM="o";
+	public static final String ONLY_TITLE_PARAM="ot";
+	public static final String STATUS_PARAM="s"; 
+	public static final String PATTERN_PARAM="r"; 
 	private String pattern;
 	private boolean searchOnDescription;
 	private Integer ownerId;
@@ -23,6 +35,40 @@ public class ItemFilter {
 		this.ownerId = ownerId;
 		this.placeId = placeId;
 		this.keywordId = keywordId;
+	}
+	/**
+	 * Set filter from a Request URI parameter map without authorization on Status filter
+	 * @param parameterMap
+	 */
+	public void setFilters(Map<String,String> parameterMap){
+		setFilters(parameterMap, false);
+	}
+	/**
+	 * Set filter from a Request URI parameter map
+	 * @param parameterMap
+	 * @param statusFilterPrivilege
+	 */
+	public void setFilters(Map<String,String> parameterMap, boolean statusFilterPrivilege){
+		
+		setPattern(parameterMap.get(PATTERN_PARAM));
+		setSearchOnDescription(!Boolean.valueOf(parameterMap.get(ONLY_TITLE_PARAM)));
+		String value = parameterMap.get(DISTANCE_PARAM);
+		if(value != null){
+			setDistance(Double.valueOf(value));
+		}
+		value = parameterMap.get(STATUS_PARAM);
+		if(value != null && statusFilterPrivilege){
+			setItemStatusId(Integer.valueOf(value));
+		}
+		value = parameterMap.get(OWNER_PARAM);
+		if(value != null){
+			setOwnerId(Integer.valueOf(value));
+		}
+		value = parameterMap.get(PLACE_PARAM);
+		if(value != null){
+			setPlaceId(Integer.valueOf(value));
+		}
+	
 	}
 	
 	/**
@@ -110,5 +156,38 @@ public class ItemFilter {
 		this.keywordId = keywordId;
 	}
 
+	/**
+	 * Return an URI Request parameter representation of the filter
+	 * @return
+	 */
+	public String getRequestURI(){
+		
+		StringBuilder sb = new StringBuilder(CommonValues.URI_PARAMETER_SEPARATOR);
+		
+		if(StringUtils.isNotBlank(getPattern())){
+			sb.append(PATTERN_PARAM).append(CommonValues.URI_VALUE_SEPARATOR).append(getPattern()).append(CommonValues.URI_PARAMETER_SEPARATOR);
+		}
+		if(!isSearchOnDescription()){
+			sb.append(ONLY_TITLE_PARAM).append(CommonValues.URI_VALUE_SEPARATOR).append(!isSearchOnDescription()).append(CommonValues.URI_PARAMETER_SEPARATOR);
+		}
+		if(getDistance() != null){
+			sb.append(DISTANCE_PARAM).append(CommonValues.URI_VALUE_SEPARATOR).append(getDistance()).append(CommonValues.URI_PARAMETER_SEPARATOR);
+		}
+		if(getItemStatusId() != null){
+			sb.append(STATUS_PARAM).append(CommonValues.URI_VALUE_SEPARATOR).append(getItemStatusId()).append(CommonValues.URI_PARAMETER_SEPARATOR);
+		}
+		if(getOwnerId() != null){
+			sb.append(OWNER_PARAM).append(CommonValues.URI_VALUE_SEPARATOR).append(getOwnerId()).append(CommonValues.URI_PARAMETER_SEPARATOR);
+		}
+		if(getPlaceId() != null){
+			sb.append(PLACE_PARAM).append(CommonValues.URI_VALUE_SEPARATOR).append(getPlaceId()).append(CommonValues.URI_PARAMETER_SEPARATOR);
+		}
+		
+		if(sb.length() <= CommonValues.URI_PARAMETER_SEPARATOR.length()){
+			return "";
+		}else{
+			return sb.substring(1);
+		}
+	}
 	
 }

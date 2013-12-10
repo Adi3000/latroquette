@@ -12,8 +12,8 @@
 				<fieldset>
 					<div id="searchPart2">
 						<div id="cityBox">
-							<h:inputText id="searchCity" p:placeholder="Ville" />
-							<h:inputHidden id="searchCityId" />
+							<input type="text" id="searchCity" placeholder="Ville/Code postal" />
+							<h:inputHidden value="#{itemSearchBean.itemFilter.placeId}" />
 						</div>
 						<div id="distanceSlider" style="position: absolute;width : 250px; display:none;"></div>
 						<div id="distanceBox">
@@ -28,7 +28,8 @@
 							<h:inputHidden id="searchObjetHidden"  />
 						</div>
 						<div id="searchMemberBox" class="searchBox">
-							<h:inputText id="searchMember"  p:placeholder="TroQMembre" value=""/>
+							<h:inputText id="searchMember" p:placeholder="TroQMembre" value="#{itemSearchBean.memberNameFilter}"/>
+							<h:inputHidden id="searchMemberId"  value="#{itemSearchBean.itemFilter.ownerId}"/>
 						</div>
 					</div>
 					<h:commandButton value="Rechercher" action="#{itemSearchBean.search}" />

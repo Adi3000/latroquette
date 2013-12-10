@@ -41,6 +41,8 @@ public class NavigationBean {
 	private String keywordId;
 	@ManagedProperty(value="#{request.requestURI}")
 	private String navigationPath;
+	@ManagedProperty(value="#{param.r}")
+	private String itemPattern;
 	@ManagedProperty(value="#{request.queryString}")
 	private String queryString;
 	/**
@@ -141,6 +143,18 @@ public class NavigationBean {
 	 */
 	public void setKeywordsService(KeywordsService keywordsService) {
 		this.keywordsService = keywordsService;
+	}
+	/**
+	 * @return the itemPattern
+	 */
+	public String getItemPattern() {
+		return itemPattern;
+	}
+	/**
+	 * @param itemPattern the itemPattern to set
+	 */
+	public void setItemPattern(String itemPattern) {
+		this.itemPattern = itemPattern;
 	}
 	@PostConstruct
 	public void refreshNavigation(){

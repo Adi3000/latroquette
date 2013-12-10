@@ -9,6 +9,13 @@ public interface PlacesService extends DAO<Place> {
 
 	public List<Place> getPlacesByType(PlaceType placeType);
 	/**
+	 * Return a {@link Place} by its id
+	 * @param value
+	 * @return
+	 */
+	public Place getPlaceById(Integer placeId);
+	
+	/**
 	 * Return a {@link Place} by its name or code postal
 	 * @param value
 	 * @return
