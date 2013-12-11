@@ -2,7 +2,9 @@ package net.latroquette.web.beans.item;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -126,8 +128,8 @@ public class ItemBean implements Serializable {
 		}
 		keywords = CommonUtil.parseStringToList(keywordIds);
 		String[] keywordInfo = null;
-		List<MainKeyword> mainKeywordList = new ArrayList<>();
-		List<ExternalKeyword> externalKeywordList = new ArrayList<>();
+		Set<MainKeyword> mainKeywordList = new HashSet<>();
+		Set<ExternalKeyword> externalKeywordList = new HashSet<>();
 		for(String keywordTypeAndId : keywords){
 			keywordInfo = keywordTypeAndId.split(CommonValues.INNER_SEPARATOR);
 			switch (KeywordType.get(Integer.valueOf(keywordInfo[0]))) {
@@ -144,8 +146,8 @@ public class ItemBean implements Serializable {
 		item.setImageList(fileList);
 		item.setStatusId(ItemStatus.DRAFT);
 		item.setDatabaseOperation(operation);
-		item.setKeywordList(mainKeywordList);
-		item.setExternalKeywordList(externalKeywordList);
+		item.setKeywordList(new ArrayList<>(mainKeywordList));
+		item.setExternalKeywordList(new ArrayList<>(externalKeywordList));
 		item = itemsService.modifyItem(item, userBean.getUser());
 		return FacesUtil.prepareRedirect("/item/viewItem?item="+item.getId());
 	}
