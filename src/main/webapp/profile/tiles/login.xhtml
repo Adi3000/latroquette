@@ -13,7 +13,58 @@
 			var registerDisplayed = false;
 			var forceLogin = "#{userBean.displayLoginBox}";
 			$(function() {
+				$("#userPlaceName")
+					.tooltip({
+			            tooltipClass: "ui-state-highlight"
+		          	}).autocomplete({
+						source: 
+							function( request, response ) {
+								$.getJSON(
+									_requestContextPath_+"/rest/search/places",
+									{
+										term : request.term
+									},function( data ) {
+							          	response( data );
+									}
+								);
+							},
+						minLength: 2,
+						select:
+							function (event, ui){
+								$(this).val(ui.item.name);
+								$(this).siblings('input[type="hidden"]').val(ui.item.id);
+								return false;
+							},
+						create: 
+							function () {
+					            $(this).data("ui-autocomplete")._renderItem = function (ul, place) {
+					                return $("<li />")
+										.attr( "data-value", place.id )
+					                    .append($("<a />").text(place.name + " (" + place.postalCodes + ")"))
+					                    .appendTo(ul);
+					            };
+				       		},
+				       	change: 
+				       		function(event, ui){
+				       			var field = $(this);
+				       			if(ui.item) {
+				       				field
+				       					.val(ui.item.name)
+										.siblings('input[type="hidden"]').val(ui.item.id);
+				       			}else{
+				       				field
+				       					.attr( "title", field.val() + " n'est pas valide" )
+	          							.tooltip( "open" );
+			       					field.siblings('input[type="hidden"]').val("")
+	         							setTimeout(function() {
+								          field.tooltip( "close" ).attr( "title", "" );
+							        }, 2500 );
+				       			}
+				       			
+				       		}
+			    });
 				$("#loginDiv").hide(0);
+				$("#passwordConfirm").hide(0);
 				$("#forgotPassword").hide(0);
 				$("#switchToLogin").click(function(){
 					$("#loginDiv").slideDown(600,"easeOutBounce");
@@ -27,7 +78,7 @@
 				$("#switchToArrow").click(function(){
 					$("#loginDiv").slideUp(600);
 				});
-				$("#forgotPasswordButton").click(function(){
+				$("#forgotPasswordButton a").click(function(){
 				    $("#forgotPassword").slideDown(600,"easeOutBounce");
 				    return false;
 				});
@@ -44,6 +95,7 @@
 						$("#registerTitle").hide(0);
 						$("#loginButton").show(0).removeAttr("disabled");
 						$("#registerButton").hide(0).attr("disabled","disabled");
+						$("#passwordConfirm").hide(400);
 						registerDisplayed = false;
 					}else{
 						$("#loginForm").animate({'width' : 700 }, function(){
@@ -54,6 +106,7 @@
 						$("#loginButton").hide(0).attr("disabled","disabled");
 						$("#registerTitle").show(0);
 						$("#registerButton").show(0).removeAttr("disabled");
+						$("#passwordConfirm").show(400);
 						registerDisplayed = true;
 					}
 				});
@@ -112,8 +165,17 @@
 									<div class="error"><h:message for="passwordField" /></div>
 								</div>
 							</div>
-                            <div class="loginField">
-                                <a href="#" id="forgotPasswordButton">Mot de passe oublié ?</a>
+							<div class="loginField" id="passwordConfirm">
+								<div class="label">
+									<h:outputLabel for="passwordConfirmField">#{text_profile.PASSWORD_LABEL_CONFIRM}</h:outputLabel>
+								</div>
+								<div class="field">
+									<h:inputSecret id="passwordConfirmField" value="#{userBean.passwordConfirm}" class="loginBox"/>
+									<span class="error"><h:message for="passwordConfirmField" /></span>
+								</div>
+							</div>
+                            <div class="loginField" id="forgotPasswordButton">
+                                <a href="#">Mot de passe oublié ?</a>
                             </div>
 							<div id="loginButtons">
 								<div>
@@ -126,24 +188,9 @@
 		    							<f:param name="qs" value="#{navigationBean.queryString}"/>    
 									</h:commandButton>
 								</div>
-								<div id="registerButton">
-									<h:commandButton value="S'enregistrer" action="#{userBean.registerUser}">
-										<f:param name="u" value="#{navigationBean.navigationPath}"/>            
-		    							<f:param name="qs" value="#{navigationBean.queryString}"/>   
-									</h:commandButton>
-								</div>
 							</div>
 						</div>
 						<div id="registerBorder" class="ui-corner-all">
-							<div class="loginField">
-								<div class="label">
-									<h:outputLabel for="passwordConfirmField">#{text_profile.PASSWORD_LABEL_CONFIRM}</h:outputLabel>
-								</div>
-								<div class="field">
-									<h:inputSecret id="passwordConfirmField" value="#{userBean.passwordConfirm}" class="loginBox"/>
-									<span class="error"><h:message for="passwordConfirmField" /></span>
-								</div>
-							</div>						
 							<div class="loginField">
 								<div class="label">
 									<h:outputLabel for="mailField">#{text_profile.MAILBOX_LABEL}</h:outputLabel>
@@ -152,7 +199,7 @@
 									<h:inputText id="mailField" value="#{userBean.mail}" class="loginBox">
 										<f:validator binding="#{userLoginValidator}" />
 									</h:inputText>
-									<span class="error"><h:message for="mailField"/></span>
+									<div class="error"><h:message for="mailField"/></div>
 								</div>
 							</div>						
 							<div class="loginField">
@@ -161,9 +208,26 @@
 								</div>
 								<div class="field">
 									<h:inputText id="mailConfirmField" value="#{userBean.mailConfirm}" class="loginBox"/>
-									<span class="error"><h:message for="mailConfirmField"/></span>
+									<div class="error"><h:message for="mailConfirmField"/></div>
 								</div>
-							</div>						
+							</div>
+							<div class="loginField">
+								<div class="label">
+									<h:outputLabel for="place">Ville / Code postal / Region</h:outputLabel>
+								</div>
+								<div class="field">
+									<input type="text" id="userPlaceName" class="loginBox"/>
+									<h:inputHidden value="#{userBean.placeId}" class="loginBox"/>
+								</div>
+							</div>
+							<div class="loginField">
+								<div id="registerButton">
+									<h:commandButton value="S'enregistrer" action="#{userBean.registerUser}">
+										<f:param name="u" value="#{navigationBean.navigationPath}"/>            
+		    							<f:param name="qs" value="#{navigationBean.queryString}"/>   
+									</h:commandButton>
+								</div>		
+							</div>
 						</div>
 					</h:form>
 				</div>

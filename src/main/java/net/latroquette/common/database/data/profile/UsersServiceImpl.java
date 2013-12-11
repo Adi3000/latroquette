@@ -219,7 +219,7 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	}
 	private void smfChangePasswordUser(User user, String clearPassword) throws ServiceException{
 		if(user.getSmfId() == null){
-			throw new IllegalStateException("Can't change password of user "+ user +", not registerd to SMF yet");
+			throw new ServiceException("Can't change password of user "+ user +", not registerd to SMF yet");
 		}
 		List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 		postParams.add(new BasicNameValuePair("member", user.getSmfId().toString()));

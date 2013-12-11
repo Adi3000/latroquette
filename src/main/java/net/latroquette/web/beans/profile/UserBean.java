@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import net.latroquette.common.database.data.place.PlacesService;
 import net.latroquette.common.database.data.profile.Role;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.database.data.profile.UsersService;
@@ -48,6 +49,11 @@ public class UserBean implements Serializable{
 	private transient String passwordConfirm;
 	private transient String mailConfirm;
 	private User user;
+	private Integer placeId;
+
+	@ManagedProperty(Services.PLACES_SERVICE_JSF)
+	private transient PlacesService placesService;
+	
 	private String password;
 	private String previousURI;
 	private String previousQueryString;
@@ -91,6 +97,19 @@ public class UserBean implements Serializable{
 	 */
 	public void setMailConfirm(String mailConfirm) {
 		this.mailConfirm = mailConfirm;
+	}
+	/**
+	 * @return the placeId
+	 */
+	public Integer getPlaceId() {
+		return placeId;
+	}
+
+	/**
+	 * @param placeId the placeId to set
+	 */
+	public void setPlaceId(Integer placeId) {
+		this.placeId = placeId;
 	}
 
 	/**
@@ -195,6 +214,9 @@ public class UserBean implements Serializable{
 		if(fc.isValidationFailed()){
 			setDisplayLoginBox(true);
 			return null;
+		}
+		if(getPlaceId() != null){
+			newUser.setPlace(placesService.getPlaceById(getPlaceId()));
 		}
 		newUser.setLogin(this.getLogin());
 		newUser.setPassword(this.getPassword());
@@ -313,6 +335,13 @@ public class UserBean implements Serializable{
 		SecurityUtil.checkUserLogged(this);
 	}
 	
+	/**
+	 * @param placesService the placesService to set
+	 */
+	public void setPlacesService(PlacesService placesService) {
+		this.placesService = placesService;
+	}
+
 	public Role getRole(){
 		return user.getRole();
 	}

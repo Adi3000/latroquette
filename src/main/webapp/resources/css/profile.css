@@ -8,21 +8,21 @@ legend
 	width:100%;
 }
 
+#registerBorder{
+	padding-top: 31px !important;
+	min-height: 140px !important;
+}
 
 #loginForm > div, #forgotPasswordForm > div, #changePasswordDiv form > div
 {
 	background: url("/resources/img/wood_texture.jpg") no-repeat;
-	padding-top: 15px;
 	display: inline-block;
 	vertical-align: middle;
-	padding-left: 20px;
-	min-height : 150px;
+	padding: 15px 5px 15px 20px;
+	min-height: 150px;
 	height : auto;
 	border: #A39979 solid 2px;
     box-shadow: #000 2px 2px 10px;
-}
-#registerBorder{
-	padding-top : 30px;
 }
 
 .field input.loginBox
@@ -52,6 +52,7 @@ legend
 }
 form h2
 {
+	margin: 0px 0px 5px 0px;
 	font-size: 1.0em;
 	text-align: center;
 	color: #5B3720;
@@ -100,6 +101,9 @@ h2#profileTitle{
 	height: 300px;
 	width: 650px;
 }
+#forgotPasswordButton{
+	text-align: center;
+}
 #largeLeftDiv, #largeRightDiv{
 	height: 312px;
 	width: 280px;
@@ -123,4 +127,8 @@ h2#profileTitle{
 .leftSmallDiv{
 	height: 126px;
 	padding-top: 20px;
+}
+#registerButton{
+	margin-top: 14px;
+	text-align: center;
 }

@@ -66,6 +66,8 @@ public class ItemBean implements Serializable {
 	private String itemId;
 	private String keywordIds;
 
+	private boolean creating;
+
 	/**
 	 * @return the title
 	 */
@@ -278,8 +280,9 @@ public class ItemBean implements Serializable {
 				}
 			}
 			keywordIds = CommonUtil.formatListToString(keywords);
-		}else{
+		}else if (!creating){
 			item = new Item();
+			creating =true;
 		}
 	}
 
