@@ -171,8 +171,7 @@ public class ItemBean implements Serializable {
 	public String removePic(String imageId){
 		File image = (File) CommonUtil.findById(item.getImageList(), imageId);
 		if(item.getId() != null){
-			image.setGarbageStatus(GarbageFileStatus.NOT_LINKED);
-			filesService.modifyFile(image, userBean.getUser());
+			itemsService.deleteImageFromItem(image, item, userBean.getUser());
 		}else{
 			filesService.removeFile(image);
 		}

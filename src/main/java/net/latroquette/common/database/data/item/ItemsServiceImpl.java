@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.latroquette.common.database.data.file.File;
+import net.latroquette.common.database.data.file.FilesService;
 import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
@@ -41,7 +43,16 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	private transient KeywordsService keywordsService;
 	@Autowired
 	private transient PlacesService placesService;
+	@Autowired
+	private transient FilesService filesService;
 	
+	/**
+	 * @param filesService the filesService to set
+	 */
+	public void setFilesService(FilesService filesService) {
+		this.filesService = filesService;
+	}
+
 	/**
 	 * @return the placesService
 	 */
@@ -73,6 +84,14 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	public ItemsServiceImpl() {
 		super();
 	}
+	
+	@TransactionalUpdate
+	public void deleteImageFromItem(File image, Item item, User user){
+		item.getImageList().remove(image);
+		modifyItem(item, user);
+		filesService.removeFile(image);
+	}
+
 	
 	/**
 	 * Search an item via Amazon Webservice

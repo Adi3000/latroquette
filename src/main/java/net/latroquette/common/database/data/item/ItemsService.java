@@ -2,6 +2,7 @@ package net.latroquette.common.database.data.item;
 
 import java.util.List;
 
+import net.latroquette.common.database.data.file.File;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.util.parameters.ParameterName;
 
@@ -10,6 +11,14 @@ import com.adi3000.common.database.hibernate.session.DAO;
 public interface ItemsService extends DAO<Item> {
 
 	
+	/**
+	 * Remove an image from an item
+	 * @param cat
+	 * @param pattern
+	 * @return
+	 */
+	public void deleteImageFromItem(File image, Item item, User user);
+
 	/**
 	 * Search an item via Amazon Webservice
 	 * @param cat
