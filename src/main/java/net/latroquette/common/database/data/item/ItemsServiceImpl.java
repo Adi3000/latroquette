@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.latroquette.common.database.data.file.File;
@@ -31,6 +32,7 @@ import com.adi3000.common.database.spring.TransactionalUpdate;
 import com.adi3000.common.util.CommonUtil;
 import com.adi3000.common.util.data.HibernateUtil;
 import com.adi3000.common.util.optimizer.CommonValues;
+import com.adi3000.common.util.security.Security;
 import com.amazon.ECS.client.jax.AWSECommerceServicePortType;
 import com.amazon.ECS.client.jax.ItemSearchRequest;
 
@@ -195,6 +197,29 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		Query req = searchItemQuery(itemFilter, CommonValues.ERROR_OR_INFINITE, true, false);
 		Integer nbItems = ((Long)req.iterate().next()).intValue();
 		return nbItems;
+	}
+	
+	public void setFiltersFromParameter(ItemFilter itemFilter, Map<String, String> parameterMap, User user){
+		boolean mayHaveStatusFilterPrivilege = Security.checkLoginState(user);
+		itemFilter.setFilters(parameterMap, Security.checkLoginState(user));
+		//Control filters
+		if(itemFilter.getItemStatusId() != null){
+			if(!mayHaveStatusFilterPrivilege){
+				//anonymous user, have no right to filter by privileges
+				itemFilter.setItemStatusId(null);
+			}else if(user.getRole() == null || !user.getRole().getValidateItems()){
+				if(	ItemStatus.DRAFT.getValue().equals(itemFilter.getItemStatusId()) ||
+					ItemStatus.FINISHED.getValue().equals(itemFilter.getItemStatusId()) ||
+					ItemStatus.EXPIRED.getValue().equals(itemFilter.getItemStatusId()) ){
+					//Force filter to search under owner id only for its drafts
+					itemFilter.setOwnerId(user.getId());
+				}else{
+					//If no right to validate item, then remove unauthorized filter
+					itemFilter.setItemStatusId(null);
+				}
+			}
+		}
+		
 	}
 	
 	@Transactional(readOnly=true)

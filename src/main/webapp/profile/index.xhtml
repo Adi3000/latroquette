@@ -31,9 +31,9 @@
 						</div>
 						<div class="rightSmallDiv">
 							<ul>
-								<li>Déposer un article</li>
-								<li>Retirer un article</li>
-								<li>Modifier un article</li>
+								<li><h:link outcome="/item/index?s=0" value="Soumettre mes brouillons" /></li>
+								<li><h:link outcome="/item/editItem.xhtml" value="Déposer une annonce" /></li>
+								<li><h:link outcome="/item/index?o=#{userBean.id}&amp;s=2" value="Gérer mes annonces en cours" /></li>
 							</ul>
 						</div>
 					</div>

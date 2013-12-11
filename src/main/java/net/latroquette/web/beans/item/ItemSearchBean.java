@@ -198,10 +198,9 @@ public class ItemSearchBean implements Serializable {
 	}
 
 	private void fillItemFilter(){
-		
 		Map<String, String> parameterMap = (Map<String, String>) FacesContext.getCurrentInstance() 
                 .getExternalContext().getRequestParameterMap();
-		itemFilter.setFilters(parameterMap, userBean.isValidateItems());
+		itemsService.setFiltersFromParameter(itemFilter, parameterMap, userBean.getUser());
 		if(itemFilter.getOwnerId() != null){
 			User user = usersService.getUserById(itemFilter.getOwnerId());
 			memberNameFilter = user.getLogin();

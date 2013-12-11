@@ -1,6 +1,7 @@
 package net.latroquette.common.database.data.item;
 
 import java.util.List;
+import java.util.Map;
 
 import net.latroquette.common.database.data.file.File;
 import net.latroquette.common.database.data.profile.User;
@@ -41,6 +42,14 @@ public interface ItemsService extends DAO<Item> {
 	 * @return
 	 */
 	public Item modifyItem(Item item, User user);
+	
+	/**
+	 * Make a filter from a request map with applying some authorization rules
+	 * @param itemFilter
+	 * @param parameterMap
+	 * @param user
+	 */
+	public void setFiltersFromParameter(ItemFilter itemFilter, Map<String, String> parameterMap, User user);
 	
 	/**
 	 * Search an item in database, return only {@link ParameterName}.NB_RESULT_TO_LOAD
