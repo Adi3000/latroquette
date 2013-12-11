@@ -9,6 +9,7 @@ import net.latroquette.web.beans.item.ViewableItem;
 
 import com.amazon.ECS.client.jax.BrowseNode;
 import com.amazon.ECS.client.jax.Item;
+import com.amazon.ECS.client.jax.Price;
 
 @XmlRootElement
 public class AmazonItem implements ViewableItem{
@@ -19,6 +20,9 @@ public class AmazonItem implements ViewableItem{
 	private String fullName;
 	private Integer id;
 	private String amazonId;
+	private String description;
+	private String formattedPrice;
+	private Double price;
 	private List<BrowseNode> browseNodes;
 	
 	public AmazonItem(Item amazonItem){
@@ -26,6 +30,14 @@ public class AmazonItem implements ViewableItem{
 		imageUrl = amazonItem.getLargeImage() != null ? amazonItem.getLargeImage().getURL() : null ;
 		name = amazonItem.getItemAttributes().getTitle();
 		amazonId = amazonItem.getASIN();
+		if(amazonItem.getOfferSummary()  != null){
+			Price price = amazonItem.getOfferSummary().getLowestUsedPrice() != null ? 
+					amazonItem.getOfferSummary().getLowestUsedPrice() : amazonItem.getOfferSummary().getLowestNewPrice();
+			if(price != null){
+				formattedPrice = price.getFormattedPrice();
+				this.price = price.getAmount().doubleValue() / 100;
+			}
+		}
 		browseNodes = amazonItem.getBrowseNodes() != null ? amazonItem.getBrowseNodes().getBrowseNode() : null;
 	}
 	/**
@@ -144,6 +156,42 @@ public class AmazonItem implements ViewableItem{
 	 */
 	public void setBrowseNodes(List<BrowseNode> browseNodes) {
 		this.browseNodes = browseNodes;
+	}
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	/**
+	 * @return the formattedPrice
+	 */
+	public String getFormattedPrice() {
+		return formattedPrice;
+	}
+	/**
+	 * @param formattedPrice the formattedPrice to set
+	 */
+	public void setFormattedPrice(String formattedPrice) {
+		this.formattedPrice = formattedPrice;
+	}
+	/**
+	 * @return the price
+	 */
+	public Double getPrice() {
+		return price;
+	}
+	/**
+	 * @param price the price to set
+	 */
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
 }

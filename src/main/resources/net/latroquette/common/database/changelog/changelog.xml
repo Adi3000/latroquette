@@ -101,4 +101,9 @@
     			relativeToChangelogFile="true" 
     			path="0.0.1/referentiel/10-supply_more_parameters.sql"/>
     </changeSet>
+    <changeSet id="0.0.1-11.0-re-enable_aws_product_advertising" author="adi3000">
+   	 	<sqlFile
+    			relativeToChangelogFile="true" 
+    			path="0.0.1/referentiel/11-re_enable_aws_service.sql"/>
+    </changeSet>
 </databaseChangeLog>

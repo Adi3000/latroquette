@@ -29,9 +29,8 @@ public class KeywordsTest {
 
 	@Test
 	public void testgetAmazonKeywordsForTitle() {
-		//TODO wait for secured AWS key
-//		List<ExternalKeyword> keywords = keywordsService.getAmazonKeywordsFromItem("Lego", true);
-//		assertFalse(keywords.isEmpty());
+		List<ExternalKeyword> keywords = keywordsService.getAmazonKeywordsFromItem("Lego", true);
+		assertFalse(keywords.isEmpty());
 	}
 
 }

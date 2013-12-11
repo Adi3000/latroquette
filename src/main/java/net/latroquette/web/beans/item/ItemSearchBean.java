@@ -197,6 +197,9 @@ public class ItemSearchBean implements Serializable {
 		this.usersService = usersService;
 	}
 
+	/**
+	 * Fill a request {@link ItemFilter} for an item
+	 */
 	private void fillItemFilter(){
 		Map<String, String> parameterMap = (Map<String, String>) FacesContext.getCurrentInstance() 
                 .getExternalContext().getRequestParameterMap();

@@ -17,7 +17,7 @@ import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.util.Services;
 import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.common.util.parameters.Parameters;
-import net.latroquette.service.amazon.AmazonWServiceClient;
+import net.latroquette.service.amazon.AmazonWService;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
@@ -47,12 +47,21 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	private transient PlacesService placesService;
 	@Autowired
 	private transient FilesService filesService;
+	@Autowired
+	private transient AmazonWService amazonWService;
 	
 	/**
 	 * @param filesService the filesService to set
 	 */
 	public void setFilesService(FilesService filesService) {
 		this.filesService = filesService;
+	}
+
+	/**
+	 * @param amazonWService the amazonWService to set
+	 */
+	public void setAmazonWService(AmazonWService amazonWService) {
+		this.amazonWService = amazonWService;
 	}
 
 	/**
@@ -105,10 +114,10 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	public List<AmazonItem> searchAmazonItems(String cat, String pattern){
 		List<AmazonItem> listItem = new ArrayList<AmazonItem>();
 		
-		AWSECommerceServicePortType port =  AmazonWServiceClient.CLIENT.getPort();
+		AWSECommerceServicePortType port =  amazonWService.getPort();
 		ItemSearchRequest itemSearch = new ItemSearchRequest();
 		itemSearch.setKeywords(pattern.replaceAll("\\W", "+"));
-		if(!AmazonWServiceClient.isValideCategory(cat)){
+		if(!AmazonWService.isValideCategory(cat)){
 			cat = "All";
 		}
 		itemSearch.setSearchIndex(cat);
@@ -116,9 +125,10 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		//Retrieve images and title informations
 		itemSearch.getResponseGroup().add("Small");
 		itemSearch.getResponseGroup().add("Images");
+		itemSearch.getResponseGroup().add("OfferSummary");
 		itemSearch.getResponseGroup().add("BrowseNodes");
 		
-		List<com.amazon.ECS.client.jax.Items> results = AmazonWServiceClient.itemSearch(port,itemSearch);
+		List<com.amazon.ECS.client.jax.Items> results = amazonWService.itemSearch(port,itemSearch);
 		if(results != null && !results.isEmpty()){
 			
 			for(com.amazon.ECS.client.jax.Items result : results){
@@ -134,6 +144,7 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		
 		return listItem;
 	}
+	
 	
 	/**
 	 * Get an item by its Id

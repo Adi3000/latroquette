@@ -20,6 +20,8 @@ public enum ParameterName {
 	XMPP_NODE,
 	XMPP_SECURE,
 	TOKEN_DELAY,
+	AMAZON_WS_SECRET_KEY,
+	AMAZON_WS_ACCESS_KEY,
 	
 	
 }

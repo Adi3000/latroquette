@@ -265,6 +265,9 @@ public class ItemBean implements Serializable {
 	public void setKeywordIds(String keywordIds) {
 		this.keywordIds = keywordIds;
 	}
+	/**
+	 * Load an item description
+	 */
 	public void loadItem(){
 		if(StringUtils.isNotEmpty(itemId) ){
 			item = itemsService.getItemById(Integer.valueOf(itemId));
@@ -287,6 +290,10 @@ public class ItemBean implements Serializable {
 		}
 	}
 
+	/**
+	 * Check if item is available and if we are editing, if the user is allowed
+	 * to do an operation
+	 */
 	public void checkItemAndUser(){
 		//First check if user is logged
 		boolean userCheck = userBean.isLoggedIn();
@@ -323,7 +330,12 @@ public class ItemBean implements Serializable {
 		return userBean.isLoggedIn() &&
 				item.isIdSet() &&  userBean.getId().equals(item.getUser().getId());
 	}
-	
+	/**
+	 * Controle authorization with modification of status on an item
+	 * @param status
+	 * @param needPrivileges
+	 * @return
+	 */
 	private String modifyStatus(ItemStatus status, boolean needPrivileges){
 		if(needPrivileges && !userBean.isValidateItems()){
 			logger.warn("User " + userBean.getId() + " try to set status "+status+ " to item " + itemId + " without sufficient privilieges");
@@ -340,6 +352,10 @@ public class ItemBean implements Serializable {
 			}
 		}
 	}
+	/**
+	 * Submit an item by the owner
+	 * @return
+	 */
 	public String validate(){
 		if(isOwner()){
 			return modifyStatus(ItemStatus.CREATED, false);
@@ -348,6 +364,10 @@ public class ItemBean implements Serializable {
 			return null;
 		}
 	}
+	/**
+	 * Close an affaire
+	 * @return
+	 */
 	public String end(){
 		if(isOwner()){
 			return modifyStatus(ItemStatus.FINISHED, false);
@@ -356,12 +376,24 @@ public class ItemBean implements Serializable {
 			return null;
 		}
 	}
+	/**
+	 * Approuve an Item by admin validation
+	 * @return
+	 */
 	public String approuve(){
 		return modifyStatus(ItemStatus.APPROUVED, true);
 	}
+	/**
+	 * Block a published items after validation
+	 * @return
+	 */
 	public String block(){
 		return modifyStatus(ItemStatus.BLOCKED, true);
 	}
+	/**
+	 * Disapprouve an item by admin validation
+	 * @return
+	 */
 	public String disapprouve(){
 		return modifyStatus(ItemStatus.DESAPPROUVED, true);
 	}

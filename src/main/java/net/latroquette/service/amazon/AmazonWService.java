@@ -3,10 +3,17 @@ package net.latroquette.service.amazon;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceException;
 
+import net.latroquette.common.util.parameters.ParameterName;
+import net.latroquette.common.util.parameters.Parameters;
+
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import com.amazon.ECS.client.jax.AWSECommerceService;
 import com.amazon.ECS.client.jax.AWSECommerceServicePortType;
@@ -15,11 +22,12 @@ import com.amazon.ECS.client.jax.ItemSearchRequest;
 import com.amazon.ECS.client.jax.OperationRequest;
 import com.amazon.ECS.client.jax.tools.AwsHandlerResolver;
 
-public class AmazonWServiceClient {
+@Service
+@Scope(value="singleton")
+public class AmazonWService {
 	
 	public static final String AWS_ACCESS_KEY = "AKIAJI5JPPYSQLRZXSNA"; 
 	public static final String AWS_SECRET_KEY= "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" ;
-	public static final AmazonWServiceClient CLIENT = new AmazonWServiceClient();
 	public static final String AWS_ASSOCIATE_TAG= "latronet-21" ;
 	private static final String AWS_END_POINT= "http://webservices.amazon.com/onca/xml" ;
 	private static final String AWS_SERVICE_VERSION= "2011-08-01" ;
@@ -32,29 +40,50 @@ public class AmazonWServiceClient {
 		    "petsupplies","pchardware","Shoes","software",
 		    "softwarevideogames","sportinggoods","toys"
     );
+	@Autowired
+	private AWSECommerceService service ;
+	@Autowired
+	private Parameters parameters;
 	
-	private AWSECommerceService service ; 
+	private String amazonAccessKey;
 	
-	private AmazonWServiceClient(){
-		service = new AWSECommerceService();
-		service.setHandlerResolver(new AwsHandlerResolver(AWS_SECRET_KEY));
-		
+	public AmazonWService(){}
+	
+	/**
+	 * @param service the service to set
+	 */
+	public void setService(AWSECommerceService service) {
+		this.service = service;
+	}
+	/**
+	 * @param parameters the parameters to set
+	 */
+	public void setParameters(Parameters parameters) {
+		this.parameters = parameters;
+	}
+
+	@PostConstruct
+	public void initializeWebService(){
+		setService(new AWSECommerceService());
+		String awsSecretKey = parameters.getStringValue(ParameterName.AMAZON_WS_SECRET_KEY);
+		amazonAccessKey = parameters.getStringValue(ParameterName.AMAZON_WS_ACCESS_KEY);
+		service.setHandlerResolver(new AwsHandlerResolver(awsSecretKey));
 	}
 
 	public AWSECommerceServicePortType getPort(){
 		return service.getAWSECommerceServicePortFR();
 	}
 	
-	public static List<com.amazon.ECS.client.jax.Items> itemSearch(AWSECommerceServicePortType port, ItemSearchRequest itemSearch){
+	public List<com.amazon.ECS.client.jax.Items> itemSearch(AWSECommerceServicePortType port, ItemSearchRequest itemSearch){
 		ItemSearch request = new ItemSearch();
-		request.setAWSAccessKeyId(AWS_ACCESS_KEY);
+		request.setAWSAccessKeyId(amazonAccessKey);
 		request.getRequest().add(itemSearch);
 		
 		Holder<OperationRequest> operationRequest = new Holder<OperationRequest>(); 
 		Holder<List<com.amazon.ECS.client.jax.Items>> items = new Holder<java.util.List<com.amazon.ECS.client.jax.Items>> ();
 		
 		try{
-			port.itemSearch("", AWS_ACCESS_KEY, AWS_ASSOCIATE_TAG, "", "", 
+			port.itemSearch("", amazonAccessKey, AWS_ASSOCIATE_TAG, "", "", 
 					itemSearch, request.getRequest(),operationRequest, items);
 		}catch(WebServiceException e){
 			throw e;
