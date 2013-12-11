@@ -169,6 +169,34 @@ public class ItemSearchBean implements Serializable {
 		this.memberNameFilter = memberNameFilter;
 	}
 
+	/**
+	 * @return the placeNameFilter
+	 */
+	public String getPlaceNameFilter() {
+		return placeNameFilter;
+	}
+
+	/**
+	 * @param placeNameFilter the placeNameFilter to set
+	 */
+	public void setPlaceNameFilter(String placeNameFilter) {
+		this.placeNameFilter = placeNameFilter;
+	}
+
+	/**
+	 * @param placesService the placesService to set
+	 */
+	public void setPlacesService(PlacesService placesService) {
+		this.placesService = placesService;
+	}
+
+	/**
+	 * @param usersService the usersService to set
+	 */
+	public void setUsersService(UsersService usersService) {
+		this.usersService = usersService;
+	}
+
 	private void fillItemFilter(){
 		
 		Map<String, String> parameterMap = (Map<String, String>) FacesContext.getCurrentInstance() 
