@@ -73,7 +73,7 @@
     			relativeToChangelogFile="true" 
     			path="0.0.1/modeling/06-smf_authentication.sql"/>
     </changeSet>
-    <changeSet id="0.0.1-06.9-forum_schema" author="adi3000">
+    <changeSet id="0.0.1-06.9-forum_schema" author="adi3000" context="test">
    	 	<sqlFile
     			relativeToChangelogFile="true"
     			path="0.0.1/modeling/07-0-add_forum_shema.sql"/>
