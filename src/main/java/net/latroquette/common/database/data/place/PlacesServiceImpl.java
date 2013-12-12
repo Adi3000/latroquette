@@ -29,6 +29,7 @@ public class PlacesServiceImpl extends AbstractDAO<Place> implements PlacesServi
 		return places;
 	}
 	
+	@Transactional
 	public Place getPlaceById(Integer placeId){
 		return getDataObjectById(placeId, Place.class);
 	}

@@ -84,7 +84,11 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	public User registerNewUser(User newUser)  throws ServiceException{
 		String clearPassword = newUser.getPassword();
 		User user = registerNewUser(newUser, User.NOT_VALIDATED, AuthenticationMethod.HTTP);
-		smfRegisterNewUser(newUser, clearPassword);
+		try {
+			smfRegisterNewUser(newUser, clearPassword);
+		} catch (SMFRestException e) {
+			logger.error("Can't create account for " + user + " on SMF ");
+		}
 		return user;
 
 	}
@@ -126,7 +130,7 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 					if(user.getSmfId() == null && Security.checkLoginState(user)){
 						try{
 							smfRegisterNewUser(user, password);
-						}catch(ServiceException e){
+						}catch(SMFRestException e){
 							logger.error("Can't create account for " + user + " on SMF ");
 						}
 					}
@@ -145,11 +149,16 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	@TransactionalUpdate
 	public void smfRegisterNewUser(Integer userId) throws ServiceException{
 		User user = getUserById(userId);
-		smfRegisterNewUser(user, Security.generateTokenID(user));
+		try {
+			smfRegisterNewUser(user, Security.generateTokenID(user));
+		} catch (SMFRestException e) {
+			logger.error("Can't register user to SMF. Need to be done manually",e);
+			throw new ServiceException("Can't register user to SMF. Need to be done manually",e);
+		}
 	}
 	
 	@TransactionalUpdate
-	public void smfRegisterNewUser(User user, String clearPassword) throws ServiceException{
+	public void smfRegisterNewUser(User user, String clearPassword) throws SMFRestException{
 		//Register to SMF only if user is allowed in Latroquette
 		if(!Security.checkLoginState(user)){
 			throw new IllegalStateException("User "+user+" is not allowed on this site"); 
@@ -166,24 +175,19 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 			}
 		}catch(JSONException e ){
 			logger.error("Can't parse JSON for " + user );
-			throw new ServiceException("Can't parse JSON for " + user , e);
+			throw new SMFRestException("Can't parse JSON for " + user , e);
 		}
 		List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 		postParams.add(new BasicNameValuePair("regOptions", regOptions.toString()));
 		
 		JSONObject jsonResult = null;
-		try {
-			jsonResult = SMFWSClientUtil.sendRequestPostQuery(SMFMethods.SMF_REGISTER_ENDPOINT, postParams);
-		} catch (SMFRestException e) {
-			logger.error("Error with SMF Rest Webservice", e);
-			throw new ServiceException(e);
-		}
+		jsonResult = SMFWSClientUtil.sendRequestPostQuery(SMFMethods.SMF_REGISTER_ENDPOINT, postParams);
 		
 		try {
 			user.setSmfId(Integer.valueOf(jsonResult.getInt("data")));
 		} catch (JSONException e) {
 			logger.error(jsonResult.toString() + "\n : Impossible to extract SMFId from Json result ", e);
-			throw new IllegalArgumentException(jsonResult.toString() + "\n : Impossible to extract SMFId from Json result ", e);
+			throw new SMFRestException(jsonResult.toString() + "\n : Impossible to extract SMFId from Json result ", e);
 		}
 		updateUser(user);
 	}

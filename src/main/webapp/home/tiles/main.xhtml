@@ -16,13 +16,32 @@
 		<ui:include src="/profile/tiles/login.xhtml" />
 		<div id="slidorion">
 			<div id="slider">
-				<div id="slide1" class="slide">
+				<ui:repeat var="item" value="#{itemSearchBean.itemsFound}">
+					<div class="item">
+						<div class="slide" >
+							<ui:repeat var="image" value="#{item.imageList}">
+								<h:graphicImage value="/image/p/s/#{image.name}" />
+							</ui:repeat>
+							<h:graphicImage value="/resources/img/aucune_image.jpg"/>
+						</div>
+						<div class="itemDetails">
+							<h2 class="itemTitle" >
+								<h:link outcome="/item/viewItem" value="#{item.title}">
+									<f:param name="item" value="#{item.id}" />
+								</h:link>
+							</h2>
+							<p class="itemDescription" >#{item.description}</p>
+							<ul class="itemWishies" />
+						</div>
+					</div>
+				</ui:repeat>
+				<div class="slide">
 					<img src="/resources/js/slidorion/img/spiderman.jpg" height="400" />
 				</div>
-				<div id="slide2" class="slide">
+				<div class="slide">
 					<img src="/resources/js/slidorion/img/kick-ass.jpg" height="400" />
 				</div>
-				<div id="slide3" class="slide">
+				<div class="slide">
 					<img src="/resources/js/slidorion/img/thor.jpg" height="400"/>
 				</div>
 			</div>

@@ -196,7 +196,14 @@ public class ItemSearchBean implements Serializable {
 	public void setUsersService(UsersService usersService) {
 		this.usersService = usersService;
 	}
-
+	
+	public void loadHomeItem(){
+		ItemFilter itemFilter = new ItemFilter();
+		if(userBean.isLoggedIn()){
+			//TODO precise category of wishies
+		}
+		itemsFound = itemsService.searchItem(itemFilter, null, false);
+	}
 	/**
 	 * Fill a request {@link ItemFilter} for an item
 	 */

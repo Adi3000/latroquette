@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.latroquette.common.util.ServiceException;
 import net.latroquette.common.util.parameters.ParameterName;
+import net.latroquette.rest.forum.SMFRestException;
 import net.latroquette.web.security.AuthenticationMethod;
 
 import com.adi3000.common.database.hibernate.session.DAO;
@@ -91,7 +92,7 @@ public interface UsersService extends DAO<User>{
 	 * @param clearPassword
 	 * @throws ServiceException
 	 */
-	public void smfRegisterNewUser(User user, String clearPassword) throws ServiceException;
+	public void smfRegisterNewUser(User user, String clearPassword) throws SMFRestException;
 
 	/**
 	 * Force the validation of an user
