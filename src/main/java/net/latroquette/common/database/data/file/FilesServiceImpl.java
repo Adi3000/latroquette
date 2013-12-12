@@ -103,7 +103,7 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 		}
 		fileName = fileName.replaceAll("[^\\p{ASCII}]", "");
         String prefix = String.valueOf(new Date().getTime()).concat("_").concat(FilenameUtils.getBaseName(fileName));
-        String suffix = FilenameUtils.getExtension(fileName);
+        String suffix = FilenameUtils.getExtension(fileName).toLowerCase();
         java.io.File resizedFile = null;
         OutputStream output = null;
         InputStream md5Is = null;

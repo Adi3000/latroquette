@@ -1,6 +1,7 @@
 package net.latroquette.web.beans.item;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -10,9 +11,13 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang.StringUtils;
+
+import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemFilter;
 import net.latroquette.common.database.data.item.ItemsService;
+import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.database.data.place.Place;
 import net.latroquette.common.database.data.place.PlacesService;
@@ -22,6 +27,7 @@ import net.latroquette.web.beans.profile.UserBean;
 
 import com.adi3000.common.util.security.User;
 import com.adi3000.common.web.faces.FacesUtil;
+import com.amazon.ECS.client.jax.Collections.Collection;
 @ManagedBean
 @RequestScoped
 public class ItemSearchBean implements Serializable {
@@ -47,7 +53,8 @@ public class ItemSearchBean implements Serializable {
 	private Integer count;
 	private List<Item> itemsFound; 
 	private String memberNameFilter; 
-	
+	private List<AmazonItem> pubItems;
+ 	
 	@ManagedProperty(value="#{navigationBean.actualKeyword}")
 	private MainKeyword actualKeyword;
 	@ManagedProperty(value="#{userBean}")
@@ -184,6 +191,13 @@ public class ItemSearchBean implements Serializable {
 	}
 
 	/**
+	 * @return the pubItems
+	 */
+	public List<AmazonItem> getPubItems() {
+		return pubItems;
+	}
+
+	/**
 	 * @param placesService the placesService to set
 	 */
 	public void setPlacesService(PlacesService placesService) {
@@ -203,6 +217,7 @@ public class ItemSearchBean implements Serializable {
 			//TODO precise category of wishies
 		}
 		itemsFound = itemsService.searchItem(itemFilter, null, false);
+		Collections.shuffle(itemsFound);
 	}
 	/**
 	 * Fill a request {@link ItemFilter} for an item
@@ -219,6 +234,17 @@ public class ItemSearchBean implements Serializable {
 			Place place = placesService.getPlaceById(itemFilter.getOwnerId());
 			placeNameFilter = place.getName().concat(" (").concat(place.getPostalCodes()).concat(")");
 		}
+	}
+	
+	public void fillPubItems(){
+		if(itemFilter != null && StringUtils.isNotEmpty(itemFilter.getPattern())){
+			pubItems = itemsService.searchAmazonItems(null, itemFilter.getPattern());
+		}else if(actualKeyword != null){
+			pubItems = itemsService.searchAmazonItems(null, actualKeyword.getName());
+		}else{
+			pubItems = itemsService.searchAmazonItems(null, "Lego");
+		}
+			
 	}
 
 }

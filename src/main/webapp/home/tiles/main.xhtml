@@ -5,62 +5,43 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition>
-		<h:outputScript name="js/slidorion/js/jquery.slidorion.min.js" target="head" />
-		<h:outputScript name="js/slidorion/js/jquery.easing.js" target="head" />
+		<f:metadata>
+	 		<f:event listener="#{itemSearchBean.loadHomeItem}" type="preRenderView" />
+	 	</f:metadata>
+		<h:outputScript name="js/slidorion/js/jquery.slidorion.js" target="head" />
+		<h:outputScript name="js/slidorion/js/jquery.cycle.lite.js" target="head" />
 		<h:outputStylesheet name="js/slidorion/css/slidorion.css" target="head" />
 		<h:outputScript target="head">
 			$(function() {
-				$('#slidorion').slidorion();
+				$('#slidorion').slidorion({hoverPause:true});
+				$('.slide').cycle();
 			});
 		</h:outputScript>
+		<h:outputStylesheet target="head">
+			.slide img{
+				height: 100%
+			}
+		</h:outputStylesheet>
 		<ui:include src="/profile/tiles/login.xhtml" />
 		<div id="slidorion">
 			<div id="slider">
 				<ui:repeat var="item" value="#{itemSearchBean.itemsFound}">
-					<div class="item">
-						<div class="slide" >
-							<ui:repeat var="image" value="#{item.imageList}">
-								<h:graphicImage value="/image/p/s/#{image.name}" />
-							</ui:repeat>
-							<h:graphicImage value="/resources/img/aucune_image.jpg"/>
-						</div>
-						<div class="itemDetails">
-							<h2 class="itemTitle" >
-								<h:link outcome="/item/viewItem" value="#{item.title}">
-									<f:param name="item" value="#{item.id}" />
-								</h:link>
-							</h2>
-							<p class="itemDescription" >#{item.description}</p>
-							<ul class="itemWishies" />
-						</div>
+					<div class="slide" >
+						<ui:repeat var="image" value="#{item.imageList}">
+							<h:graphicImage value="/image/p/#{image.name}" />
+						</ui:repeat>
+						<h:graphicImage value="/resources/img/aucune_image.jpg" rendered="#{empty itemSearchBean.itemsFound}"/>
 					</div>
 				</ui:repeat>
-				<div class="slide">
-					<img src="/resources/js/slidorion/img/spiderman.jpg" height="400" />
-				</div>
-				<div class="slide">
-					<img src="/resources/js/slidorion/img/kick-ass.jpg" height="400" />
-				</div>
-				<div class="slide">
-					<img src="/resources/js/slidorion/img/thor.jpg" height="400"/>
-				</div>
 			</div>
 			<div id="accordion">
-				<div class="link-header">Spiderman</div>
-				<div class="link-content">
-					<p>Based on Marvel Comics' superhero character, this is a story of Peter Parker who is a nerdy high-schooler; bullied by jocks and can't confess his crush for his stunning neighborhood girl Mary Jane Watson.</p>
-					<p>To say his life is "miserable" is an understatement. But one day while on an excursion to a laboratory a runaway radioactive spider bites him...</p>
-				</div>
-				<div class="link-header">Kick Ass</div>
-				<div class="link-content">
-					<p>Dave Lizewski is an unnoticed high school student and comic book fan with a few friends and who lives alone with his father. His life is not very difficult and his personal trials not that overwhelming.</p>
-					<p>However, one day he makes the simple decision to become a super-hero even though he has no powers or training.</p>
-				</div>
-				<div class="link-header">Thor</div>
-				<div class="link-content">
-					<p>The warrior Thor is cast out of the fantastic realm of Asgard by his father Odin for his arrogance and sent to Earth to live among humans.</p>
-					<p>Falling in love with scientist Jane Foster teaches Thor much-needed lessons, and his new-found strength comes into play as a villain from his homeland sends dark forces toward Earth.</p>
-				</div>
+				<ui:repeat var="item" value="#{itemSearchBean.itemsFound}">
+					<div class="link-header" >#{item.title}</div>
+					<div class="link-content">
+						<p>#{item.description}</p>
+						<h:link outcome="/item/viewItem?item=#{item.id}">Voir l'annonce</h:link>
+					</div>
+				</ui:repeat>
 			</div>
 		</div>
 	</ui:composition>

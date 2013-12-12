@@ -8,14 +8,15 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
-import org.apache.commons.lang.StringUtils;
-
+import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemsService;
 import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.util.Services;
 import net.latroquette.common.util.web.Navigation;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.adi3000.common.util.tree.Breadcrumb;
 import com.adi3000.common.web.faces.FacesUtil;
@@ -45,6 +46,7 @@ public class NavigationBean {
 	private String itemPattern;
 	@ManagedProperty(value="#{request.queryString}")
 	private String queryString;
+	private List<AmazonItem> pubItems;
 	/**
 	 * @return the actualKeyword
 	 */
@@ -149,6 +151,12 @@ public class NavigationBean {
 	 */
 	public String getItemPattern() {
 		return itemPattern;
+	}
+	/**
+	 * @return the pubItems
+	 */
+	public List<AmazonItem> getPubItems() {
+		return pubItems;
 	}
 	/**
 	 * @param itemPattern the itemPattern to set
