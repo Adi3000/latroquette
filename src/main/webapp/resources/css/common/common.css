@@ -156,7 +156,7 @@ fieldset
 }
 
 #content{
-	width:800px;
+	width:820px;
 }
 #menu,
 #content{
@@ -172,7 +172,7 @@ fieldset
 }
 #ads{
 	font-size: 0.8em;
-	width: 90px;
+	width: 110px;
 	background: #fff;
 	border: 1px solid #000;
 	padding : 0 2px 0 2px;
