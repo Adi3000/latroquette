@@ -16,6 +16,7 @@ public class AmazonItem implements ViewableItem{
 	
 	private String smallImageUrl;
 	private String imageUrl;
+	private String sourceUrl;
 	private String name;
 	private String fullName;
 	private Integer id;
@@ -27,6 +28,7 @@ public class AmazonItem implements ViewableItem{
 	
 	public AmazonItem(Item amazonItem){
 		smallImageUrl = amazonItem.getSmallImage() != null ? amazonItem.getSmallImage().getURL() : null;
+		sourceUrl = amazonItem.getDetailPageURL();
 		imageUrl = amazonItem.getLargeImage() != null ? amazonItem.getLargeImage().getURL() : null ;
 		name = amazonItem.getItemAttributes().getTitle();
 		amazonId = amazonItem.getASIN();
@@ -192,6 +194,18 @@ public class AmazonItem implements ViewableItem{
 	 */
 	public void setPrice(Double price) {
 		this.price = price;
+	}
+	/**
+	 * @return the sourceUrl
+	 */
+	public String getSourceUrl() {
+		return sourceUrl;
+	}
+	/**
+	 * @param sourceUrl the sourceUrl to set
+	 */
+	public void setSourceUrl(String sourceUrl) {
+		this.sourceUrl = sourceUrl;
 	}
 
 }

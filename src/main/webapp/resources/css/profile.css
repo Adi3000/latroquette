@@ -10,7 +10,7 @@ legend
 
 #registerBorder{
 	padding-top: 31px !important;
-	min-height: 140px !important;
+	min-height: 134px !important;
 }
 
 #loginForm > div, #forgotPasswordForm > div, #changePasswordDiv form > div
@@ -60,7 +60,7 @@ form h2
 	
 }
 #topHomepage{
-	height: 220px; 
+	height: 250px; 
 }
 #loginForm, #forgotPasswordForm, #changePasswordDiv form{
 	width:344px;
@@ -89,11 +89,7 @@ form h2
 	width: 100%;
 	text-align: center;
 }
-#switchToLogin{
-	position: relative;
-	left: 624px;
-	top: 178px;
-}
+
 h2#profileTitle{
 	margin-left: 16px;
 }
@@ -131,4 +127,22 @@ h2#profileTitle{
 #registerButton{
 	margin-top: 14px;
 	text-align: center;
+}
+#arrowDiv .forumButton, #arrowDiv .createItemButton, #switchToLogin, #switchToLogin a{
+	position: relative;
+	cursor: pointer;
+	color: inherit;
+	text-decoration: inherit;
+}
+#arrowDiv .forumButton{
+	left: 281px;
+	top: 195px;
+}
+#arrowDiv .createItemButton{
+	left: 362px;
+	top: -30px;
+}
+#switchToLogin{
+	left: 624px;
+	top: 178px;
 }

@@ -170,10 +170,19 @@ fieldset
 #mainDiv{
 	width: 700px;
 }
-#pubs{
-	width: 100px;
+#ads{
+	font-size: 0.8em;
+	width: 90px;
+	background: #fff;
+	border: 1px solid #000;
+	padding : 0 2px 0 2px;
+	text-align: center;
 }
-#pubs,#mainDiv{
+#ads h6{
+	font-size: 0.9em;
+	margin: 5px 0px 5px 0px;
+}
+#ads,#mainDiv{
 	display: inline-block;
 	vertical-align: top;
 }
@@ -220,4 +229,7 @@ ul.ui-autocomplete{
 
 #itemCategory{
 	width : 150px;
+}
+#ads a{
+	text-decoration: none;
 }

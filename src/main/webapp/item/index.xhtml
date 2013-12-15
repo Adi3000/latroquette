@@ -9,6 +9,7 @@
 		    <f:viewParam name="r" value="#{itemSearchBean.itemFilter.pattern}"/>            
 		    <f:viewParam name="p" value="#{itemSearchBean.page}"/>            
 	 		<f:event listener="#{itemSearchBean.loadSearch}" type="preRenderView" />
+	 		<f:event listener="#{itemSearchBean.fillPubItems}" type="preRenderView" />
 	 	</f:metadata>
 		<ui:define name="mainDiv"> 
 		 	<h:outputScript name="js/item.js" target="head" /> 

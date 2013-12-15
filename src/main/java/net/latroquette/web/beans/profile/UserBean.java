@@ -40,6 +40,7 @@ public class UserBean implements Serializable{
 	private static final Logger logger = LoggerFactory.getLogger(UserBean.class);
 
 	public static final String LOGIN_VIEW_URI = "profile/login";
+	public static final String SECURITY_VIEW_URI = "profile/security";
 	public static final String PARAMETER_REQUEST_URI = "u";
 	public static final String PARAMETER_QUERY_STRING = "qs";
 	/**
@@ -303,7 +304,7 @@ public class UserBean implements Serializable{
 	private void initPreviousURL(){
 		Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		String previousURI = params.get(PARAMETER_REQUEST_URI);
-		if(!StringUtils.isEmpty(previousURI) && !previousURI.contains(LOGIN_VIEW_URI)){
+		if(!StringUtils.isEmpty(previousURI) && !previousURI.contains(LOGIN_VIEW_URI) && !previousURI.contains(SECURITY_VIEW_URI)){
 			this.previousURI = params.get(PARAMETER_REQUEST_URI);
 			this.previousQueryString = params.get(PARAMETER_QUERY_STRING);
 		}
@@ -328,7 +329,10 @@ public class UserBean implements Serializable{
 	}
 	
 	public boolean isLoggedIn(){
-		return (Security.isUserLogged(user) && user.getLoginState() != null && user.getLoginState() >= User.NOT_VALIDATED) ;
+		return (Security.isUserLogged(user) && 
+				user.getLoginState() != null &&
+				SecurityUtil.checkCookies() &&
+				user.getLoginState() >= User.NOT_VALIDATED) ;
 	}
 	
 	public void checkUserLogged(){

@@ -23,12 +23,12 @@ public class ItemFilter {
 	private Integer ownerId;
 	private Integer itemStatusId;
 	private Integer placeId;
-	private Double distance;
+	private Integer distance;
 	private Integer keywordId;
 	
 	public ItemFilter(){}
 	public ItemFilter(String pattern, boolean searchOnDescription, 
-			Integer ownerId, Integer placeId, Double distance, Integer keywordId){
+			Integer ownerId, Integer placeId, Integer distance, Integer keywordId){
 		this.distance = distance;
 		this.pattern = pattern;
 		this.searchOnDescription = searchOnDescription;
@@ -54,7 +54,7 @@ public class ItemFilter {
 		setSearchOnDescription(!Boolean.valueOf(parameterMap.get(ONLY_TITLE_PARAM)));
 		String value = parameterMap.get(DISTANCE_PARAM);
 		if(value != null){
-			setDistance(Double.valueOf(value));
+			setDistance(Integer.valueOf(value));
 		}
 		value = parameterMap.get(STATUS_PARAM);
 		if(value != null && statusFilterPrivilege){
@@ -134,13 +134,13 @@ public class ItemFilter {
 	/**
 	 * @return the distance
 	 */
-	public Double getDistance() {
+	public Integer getDistance() {
 		return distance;
 	}
 	/**
 	 * @param distance the distance to set
 	 */
-	public void setDistance(Double distance) {
+	public void setDistance(Integer distance) {
 		this.distance = distance;
 	}
 	/**

@@ -11,6 +11,8 @@ import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.common.util.parameters.Parameters;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,10 @@ import com.amazon.ECS.client.jax.tools.AwsHandlerResolver;
 @Service
 @Scope(value="singleton")
 public class AmazonWService {
+	
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(AmazonWService.class);
 	
 	public static final String AWS_ACCESS_KEY = "AKIAJI5JPPYSQLRZXSNA"; 
 	public static final String AWS_SECRET_KEY= "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" ;
@@ -83,6 +89,7 @@ public class AmazonWService {
 		Holder<List<com.amazon.ECS.client.jax.Items>> items = new Holder<java.util.List<com.amazon.ECS.client.jax.Items>> ();
 		
 		try{
+			logger.debug("AWS request : [{}] keywords : {} ", itemSearch.getSearchIndex(), itemSearch.getKeywords() );
 			port.itemSearch("", amazonAccessKey, AWS_ASSOCIATE_TAG, "", "", 
 					itemSearch, request.getRequest(),operationRequest, items);
 		}catch(WebServiceException e){

@@ -11,13 +11,10 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang.StringUtils;
-
 import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemFilter;
 import net.latroquette.common.database.data.item.ItemsService;
-import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.database.data.place.Place;
 import net.latroquette.common.database.data.place.PlacesService;
@@ -25,14 +22,17 @@ import net.latroquette.common.database.data.profile.UsersService;
 import net.latroquette.common.util.Services;
 import net.latroquette.web.beans.profile.UserBean;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.adi3000.common.util.security.User;
 import com.adi3000.common.web.faces.FacesUtil;
-import com.amazon.ECS.client.jax.Collections.Collection;
 @ManagedBean
 @RequestScoped
 public class ItemSearchBean implements Serializable {
 
 	private static final long serialVersionUID = 6018699553817370156L;
+	
+	private static int HOME_ITEMS_TO_LOAD = 5;
 	
 	@ManagedProperty(Services.ITEMS_SERVICE_JSF)
 	private transient ItemsService itemsService;
@@ -218,6 +218,10 @@ public class ItemSearchBean implements Serializable {
 		}
 		itemsFound = itemsService.searchItem(itemFilter, null, false);
 		Collections.shuffle(itemsFound);
+		if(itemsFound.size() > HOME_ITEMS_TO_LOAD){
+			itemsFound = itemsFound.subList(0, HOME_ITEMS_TO_LOAD);
+		}
+		fillPubItems();
 	}
 	/**
 	 * Fill a request {@link ItemFilter} for an item

@@ -122,6 +122,8 @@
 			<h:panelGroup rendered="#{!userBean.loggedIn}">
 				<div id="arrowDiv">
 					<div id="switchToLogin">Connexion</div>
+					<a class="forumButton" href="/forum">Forum</a>
+					<h:link outcome="/item/editItem.xhtml" value="Nouvelle annonce" class="createItemButton"/>
 				</div>
 				<div id="forgotPassword">
 				    <h:form id="forgotPasswordForm">
@@ -234,7 +236,9 @@
 			</h:panelGroup>
 			<h:panelGroup rendered="#{userBean.loggedIn}">
 				<div id="arrowDiv">
-					<div id="switchToLogin">#{userBean.login}</div>
+					<div id="switchToLogin"><h:link outcome="/profile/index" >#{userBean.login}</h:link></div>
+					<a class="forumButton" href="/forum">Forum</a>
+					<h:link outcome="/item/editItem.xhtml" value="Nouvelle annonce" class="createItemButton"/>
 				</div>
 			</h:panelGroup>
 		</div>

@@ -24,6 +24,10 @@
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js" />
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.1.0/backbone.localStorage-min.js" />
 	<script type="text/javascript" src="/resources/js/common.js"/>
+	<h:outputStylesheet name="js/rondell/jquery.rondell.css" />
+	<h:outputScript name="js/modernizr-2.0.6.min.js" />
+	<h:outputScript name="js/jquery.mousewheel-3.0.6.min.js" />
+	<h:outputScript name="js/rondell/jquery.rondell.js" />
 	<h:outputStylesheet name="css/common/common.css" />
 	<title>La TroQuette</title>
 </h:head>
@@ -46,9 +50,9 @@
 		 				<ui:include src="/home/tiles/main.xhtml" />
 	 				</ui:insert>
  				</div>
- 				<ui:insert name="newsWatcher">
- 					<ui:include src="/home/tiles/pub.xhtml" />
-				</ui:insert>
+ 				<ui:insert name="ads">
+ 					<ui:include src="/home/tiles/ads.xhtml" />
+ 				</ui:insert>
 			</div>
 			<ui:include src="/home/tiles/chat.xhtml" />
 		</div>

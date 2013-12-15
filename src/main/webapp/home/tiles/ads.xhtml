@@ -5,16 +5,13 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition><!-- 
-	 --><f:metadata>
-	 		<f:event listener="#{itemSearchBean.fillPubItems}" type="preRenderComponent" />
-	 	</f:metadata><!-- 
-	 --><div id="pubs">
-			<h6>Pubs</h6>
-			<p>#{navigationBean.itemPattern}</p>
+	  --><div id="ads">
+			<h6>Et sur Amazon</h6>
 			<ui:repeat var="item" value="#{itemSearchBean.pubItems}">
+				<hr />
 				<div>
-					<h:outputText value="#{item.name}" />
-					<h:graphicImage value="#{item.smallImageUrl}" />
+					<a href="#{item.sourceUrl}" ><h:outputText value="#{item.name}" /></a>
+					<a href="#{item.sourceUrl}" ><h:graphicImage value="#{item.smallImageUrl}" /></a>
 					<h:outputText value="#{item.formattedPrice}" />
 				</div>
 			</ui:repeat>

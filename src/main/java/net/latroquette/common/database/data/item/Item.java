@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -25,6 +26,7 @@ import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.database.data.profile.User;
 
 import com.adi3000.common.database.hibernate.data.AbstractDataObject;
+import com.adi3000.common.util.CommonUtil;
 
 @Entity
 @Table(name = "items")
@@ -189,6 +191,10 @@ public class Item extends AbstractDataObject {
 	 */
 	public void setExternalKeywordList(List<ExternalKeyword> externalKeywordList) {
 		this.externalKeywordList = externalKeywordList;
+	}
+	@Transient
+	public String getHtmlDescription(){
+		return CommonUtil.parsePlainTextToHtml(getDescription());
 	}
 
 }
