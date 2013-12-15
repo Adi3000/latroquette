@@ -15,6 +15,9 @@
 		<ui:define name="mainDiv"> 
 			<h:outputStylesheet name="css/item.css" target="head" />
 			<h:outputScript name="js/_initEditItem.js" target="head" />
+			<h:outputScript target="head">
+				
+			</h:outputScript>
 			<h:form id="editItemForm" method="post" enctype="multipart/form-data">
 				<h:messages></h:messages>
 				<div id="itemDescription">
@@ -47,13 +50,12 @@
 						</ul>
 					</div>
 					<div id="itemTitle">
-						<div>
-							<div class="field">
-								<div class="labelTop">
-									<h:outputLabel for="title">Titre</h:outputLabel>
-								</div>
-								<h:inputText id="title" class="field" size="58" value="#{itemBean.title}" />
+						<div class="field">
+							<div class="labelTop">
+								<h:outputLabel for="title">Titre</h:outputLabel>
 							</div>
+							<h:inputText id="title" class="field" size="58" value="#{itemBean.title}" />
+							<div class="itemPreview" style="display:none;"><img src="" /></div>
 						</div>
 					</div>
 					<div>
@@ -77,12 +79,15 @@
 					<t:inputFileUpload id="choosePicButton" accept="image/png,image/jpeg" value="#{itemBean.newFile}" />
 					<div id="uploadPicButton"><h:commandButton value="Ajouter l'image" id="addPicButton" action="#{itemBean.uploadPic}"/></div>
 				</div>
-				<ul id="wishies">
-					<li>
-						<label>Cat&#233;gorie : </label> <input type="text" id="wishiesCategory" value="" />
-						<label>Objet : </label> <input type="text" id="wishiesField" value=""/>	<h:inputHidden id="wishiesList" value="#{itemBean.wishiesListString}"/>
-					</li>
-				</ul>
+				<div id="wishies">
+					<div class="label"><h:outputLabel for="wishField">Souhaits : </h:outputLabel></div>
+					<div class="field">
+						<h:inputText id="wishField" value="#{userBean.newWish}" />
+						<h:inputHidden id="wishSource" value="#{userBean.newWishSource}" />
+						<h:inputHidden id="wishCode" value="#{userBean.newWishCode}" />
+						<div class="itemPreview" style="display:none;"><img src="" /></div>
+					</div>
+				</div>
 				<div id="saveButton">
 					<h:commandButton value="Cr&#233;er" action="#{itemBean.createItem}" rendered="#{!itemBean.item.idSet}"/>
 					<h:commandButton value="Modifier" action="#{itemBean.updateItem}" rendered="#{itemBean.item.idSet}"/>

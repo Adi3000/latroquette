@@ -20,10 +20,11 @@ function addCategoryKeyword(keywordId, keywordTypeId,selectedCategoryArea){
 						category.append($("<span />").text(" > "));
 					}
 			});
-			category.append(
+			category.prepend(
 				$("<span />")
 					.addClass("ui-icon ui-icon-trash")
 					.text("x")
+					//adding click for removal event
 					.click(function(e){
 						$("#editItemForm\\:itemCategoryIds").val(removeFromStringList($("#editItemForm\\:itemCategoryIds").val(),keywordIdForList));
 						var keywordToRemove =  $(this).parent("li");
@@ -75,26 +76,87 @@ $(function() {
 	});
 	$("#uploadPicButton").hide(0);
 	
-	
 	$("#editItemForm\\:title").autocomplete({
 		source: function(request, response){
 			$.getJSON(
-					_requestContextPath_+"/rest/search/item",
+					_requestContextPath_+"/rest/search/item/amazon",
 					{
-						r : request.term, 
-						ot: "true",
-						a : "true"
+						term : request.term
 					},
 					function(data){
-						response ( $.map(data, function(item){
-							return {
-								label : item.title,
-								value : item.title
-							};
-						}));
+						response (data);
 					});
 		},
-		minLength : 2
+		minLength: 3,
+		select:
+			function (event, ui){
+			$(this).val(ui.item.name);
+			return false;
+		},
+		focus:
+			function (event, ui){
+			var preview = $(this).siblings(".itemPreview");
+			$("img",preview).attr("src",ui.item.imageUrl);
+			preview.show();
+			console.log(ui);
+		},
+		close:
+			function (event, ui){
+			$(this).siblings(".itemPreview").hide();
+		},
+		create: function () {
+			$(this).data("ui-autocomplete")._renderItem = function (ul, item) {
+				return $("<li />")
+				.attr( "data-value", item.amazonId )
+				.append($("<a />")
+						.append(
+								$("<span />").text(item.name)
+						)
+				)
+				.appendTo(ul);
+			};
+		}
+	});
+	$("#editItemForm\\:wishField").autocomplete({
+		source: function(request, response){
+			$.getJSON(
+					_requestContextPath_+"/rest/search/item/amazon",
+					{
+						term : request.term
+					},
+					function(data){
+						response (data);
+					});
+		},
+		minLength: 3,
+		select:
+			function (event, ui){
+			$(this).val(ui.item.name);
+			return false;
+		},
+		focus:
+			function (event, ui){
+				var preview = $(this).siblings(".itemPreview");
+				$("img",preview).attr("src",ui.item.imageUrl);
+				preview.show();
+				console.log(ui);
+			},
+		close:
+			function (event, ui){
+				$(this).siblings(".itemPreview").hide();
+		},
+		create: function () {
+			$(this).data("ui-autocomplete")._renderItem = function (ul, item) {
+				return $("<li />")
+					.attr( "data-value", item.amazonId )
+					.append($("<a />")
+							.append(
+								$("<span />").text(item.name)
+							)
+						)
+					.appendTo(ul);
+			};
+		}
 	});
 	$("#editItemForm #itemCategory > ul").menu({
 		focus: 

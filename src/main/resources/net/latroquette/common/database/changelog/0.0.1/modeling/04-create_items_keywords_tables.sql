@@ -1,4 +1,4 @@
-CREATE TABLE items_external_keywords
+CREATE TABLE IF NOT EXISTS items_external_keywords
 (
   item_id integer NOT NULL,
   ext_keyword_id integer NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE items_external_keywords
       ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE items_keywords
+CREATE TABLE IF NOT EXISTS items_keywords
 (
   item_id integer NOT NULL,
   keyword_id integer NOT NULL,

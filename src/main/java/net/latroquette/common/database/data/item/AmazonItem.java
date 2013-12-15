@@ -3,7 +3,10 @@ package net.latroquette.common.database.data.item;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
+import net.latroquette.common.database.data.item.wish.Wish;
+import net.latroquette.common.database.data.keyword.KeywordSource;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.web.beans.item.ViewableItem;
 
@@ -12,7 +15,7 @@ import com.amazon.ECS.client.jax.Item;
 import com.amazon.ECS.client.jax.Price;
 
 @XmlRootElement
-public class AmazonItem implements ViewableItem{
+public class AmazonItem implements ViewableItem, Wish{
 	
 	private String smallImageUrl;
 	private String imageUrl;
@@ -138,11 +141,9 @@ public class AmazonItem implements ViewableItem{
 	public void setAmazonId(String amazonId) {
 		this.amazonId = amazonId;
 	}
-	@Override
-	public int getSource() {
-		return ViewableItem.AMAZON_SOURCE;
+	public String getSource() {
+		return KeywordSource.AMAZON_SOURCE.getSourceId();
 	}
-	@Override
 	public List<MainKeyword> getCategories() {
 		// TODO Auto-generated method stub
 		return null;
@@ -150,6 +151,7 @@ public class AmazonItem implements ViewableItem{
 	/**
 	 * @return the browseNodes
 	 */
+	@XmlTransient
 	public List<BrowseNode> getBrowseNodes() {
 		return browseNodes;
 	}

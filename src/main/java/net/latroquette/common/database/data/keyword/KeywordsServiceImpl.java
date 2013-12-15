@@ -174,7 +174,7 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 	public ExternalKeyword getAmazonKeyword(BrowseNode amazonBrowseNode){
 		Criteria req = createCriteria(ExternalKeyword.class)
 				.add(Restrictions.eq("uid", amazonBrowseNode.getBrowseNodeId()))
-				.add(Restrictions.eq("source", ExternalKeyword.AMAZON_SOURCE))
+				.add(Restrictions.eq("source", KeywordSource.AMAZON_SOURCE.getSourceId()))
 				.setFetchMode("", FetchMode.SELECT)
 				.setCacheable(true)
 				.setCacheMode(CacheMode.NORMAL)

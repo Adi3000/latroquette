@@ -13,6 +13,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
+import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemFilter;
 import net.latroquette.common.database.data.item.ItemsService;
@@ -130,5 +131,13 @@ public class ItemSearch extends SpringBeanAutowiringSupport {
 				break;
 			}
 		return new GenericEntity<List<Keyword>>(result) {};
+	}
+	@GET
+	@Path("/amazon")
+	@WebMethod
+	public GenericEntity<List<AmazonItem>> getItems (@QueryParam("term") String pattern, 
+			@QueryParam("cat") String category ){
+		List<AmazonItem> itemsFound = itemsService.searchAmazonItems(category, pattern);
+		return new GenericEntity<List<AmazonItem>>(itemsFound) {};
 	}
 }

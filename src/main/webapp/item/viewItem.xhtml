@@ -63,22 +63,17 @@
 						<em>#{itemBean.item.user.login}</em>
 					</div>
 				</div>
-				<!--<div id="suggestedItem" class="field">
-					<ul>
-						<li class="selected">Choix1</li>
-						<li>Choix1</li>
-						<li>Choix1</li>
-						<li>Choix1</li>
-						<li>Choix1</li>
-					</ul>
-				</div>-->
 			</div>
-			<div id="clueForIdentifiecation">
-				<div>[Keywords]</div>
+			<div id="itemCategory">
+				<ul>
+					<ui:repeat var="keyword" value="#{itemBean.item.keywordList}">
+						<li><h:link href="/item/index?c=#{keyword.id}" value="#{keyword.name}" /></li>
+					</ui:repeat>
+				</ul>
 			</div>
 			<div>
 				<div class="field">
-					<p>#{itemBean.description}</p>
+					<p><h:outputText value="#{itemBean.item.htmlDescription}" escape="false" /></p>
 				</div>
 			</div>
 		</div>

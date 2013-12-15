@@ -14,6 +14,9 @@
 #itemTitle{
 	width: 380px;
 }
+#itemTitle .field{
+	width: 100%;
+}
 #suggestedItem{
 	width: 100%;
 	background-color: #ffffff;
@@ -37,8 +40,10 @@
 .label{
 	width : 100px;
 }
-
-#itemTitle, #clueForIdentifiecation{
+#itemTitle{
+	display: block;
+}
+#itemCategory{
 	display: inline-block;
 }
 
@@ -46,3 +51,16 @@
 	position: inherit;
 	vertical-align: middle;
 }
+#selectedCategory{
+	width: 650px;
+}
+.itemPreview{
+	position: absolute;
+	margin-left: 400px;
+	z-index: 20;
+}
+#wishies .itemPreview{
+	margin-top: -500px;
+	margin-left: 0px;
+}
+

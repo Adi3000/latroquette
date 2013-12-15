@@ -51,7 +51,10 @@ public class UserBean implements Serializable{
 	private transient String mailConfirm;
 	private User user;
 	private Integer placeId;
-
+	private String newWish;
+	private Integer newWishSource;
+	private String newWishCode;
+	
 	@ManagedProperty(Services.PLACES_SERVICE_JSF)
 	private transient PlacesService placesService;
 	
@@ -434,6 +437,48 @@ public class UserBean implements Serializable{
 		this.previousURI = previousURI;
 	}
 	
+	/**
+	 * @return the newWish
+	 */
+	public String getNewWish() {
+		return newWish;
+	}
+
+	/**
+	 * @param newWish the newWish to set
+	 */
+	public void setNewWish(String newWish) {
+		this.newWish = newWish;
+	}
+
+	/**
+	 * @return the newWishSource
+	 */
+	public Integer getNewWishSource() {
+		return newWishSource;
+	}
+
+	/**
+	 * @param newWishSource the newWishSource to set
+	 */
+	public void setNewWishSource(Integer newWishSource) {
+		this.newWishSource = newWishSource;
+	}
+
+	/**
+	 * @return the newWishCode
+	 */
+	public String getNewWishCode() {
+		return newWishCode;
+	}
+
+	/**
+	 * @param newWishCode the newWishCode to set
+	 */
+	public void setNewWishCode(String newWishCode) {
+		this.newWishCode = newWishCode;
+	}
+
 	/**
 	 * @return the displayLoginBox
 	 */

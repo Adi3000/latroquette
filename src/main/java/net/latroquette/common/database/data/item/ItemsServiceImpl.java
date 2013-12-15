@@ -141,10 +141,8 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 				}
 			}
 		}
-		
 		return listItem;
 	}
-	
 	
 	/**
 	 * Get an item by its Id
