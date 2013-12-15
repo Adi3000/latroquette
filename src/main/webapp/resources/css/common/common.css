@@ -1,9 +1,30 @@
 @CHARSET "UTF-8";
 
+/**
+ * jQueryUI override
+ **/
+.ui-widget {
+	font-size: 0.9em;
+}
+input.ui-button,
+.ui-button-text-only .ui-button-text{
+	padding: .2em .5em;
+}
+.ui-icon{
+	display: inline-block;
+	vertical-align: middle;
+}
+/**
+------------------------
+**/
 body{
-	font-family:Arial,Comic Sans MS, Serif;
+	font-family: Helvetica,Arial,sans-serif;
+	font-size: 0.9em;
 	margin : 0px;
 	padding : 0px;
+}
+.errorAlert{
+	padding: 2px;
 }
 #wallpaper, #logo{
 	width: 1000px;
@@ -14,9 +35,6 @@ body{
 	margin-right:  auto;
 	margin : 0px auto 0px auto;
 	height:	100%; 
-}
-.ui-widget {
-	font-size : 1em; 
 }
 #loadingDiv{
 	position: fixed;
@@ -48,7 +66,9 @@ body{
 {
 	background : #F5FFE0;
 }
-
+#toolbarLogin .forumButton{
+	float:right;
+}
 #titleHomePage {
 	height: 117px;
 }
@@ -83,6 +103,7 @@ fieldset
 	color:#000;
 	border:#000;
 	padding-bottom: 5px;
+	width : 100%;
 }
 
 .categorieJaune
@@ -102,6 +123,17 @@ fieldset
 	border: black;
 	background:-webkit-linear-gradient(top,#6B3617,#C48254);
 	-webkit-border-radius:2px;
+}
+#searchForm .field input{
+	border: 1px solid #000;
+}
+#searchForm .field{
+	width: auto;
+}
+#searchForm .createItemButton{
+	float: right;
+	margin-right: 20px;
+	margin-top: 2px;
 }
 
 #searchBox
@@ -179,12 +211,13 @@ fieldset
 	text-align: center;
 }
 #ads h6{
-	font-size: 0.9em;
+	font-size: 1em;
 	margin: 5px 0px 5px 0px;
 }
 #ads,#mainDiv{
 	display: inline-block;
 	vertical-align: top;
+	min-height: 600px;
 }
 
 ul{

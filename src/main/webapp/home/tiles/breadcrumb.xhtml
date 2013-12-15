@@ -5,15 +5,17 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <body>
 	<ui:composition>
-		<div id="breadcrumb">
-			<ui:repeat var="ancestor" value="#{navigationBean.breadcrumb}" varStatus="index">
-				<h:link outcome="#{ancestor.path}" >
-					<h:outputText rendered="#{ancestor.translated}" value="#{text_navigation[ancestor.label]}" />
-					<h:outputText rendered="#{!ancestor.translated}" value="#{ancestor.label}" />
-				</h:link>
-				<h:outputText rendered="#{!index.last}" value=" &gt; " />
-			</ui:repeat>
-		</div>
+		<h:panelGroup rendered="#{!navigationBean.onHomePage}">
+			<div id="breadcrumb">
+				<ui:repeat var="ancestor" value="#{navigationBean.breadcrumb}" varStatus="index">
+					<h:link outcome="#{ancestor.path}" >
+						<h:outputText rendered="#{ancestor.translated}" value="#{text_navigation[ancestor.label]}" />
+						<h:outputText rendered="#{!ancestor.translated}" value="#{ancestor.label}" />
+					</h:link>
+					<h:outputText rendered="#{!index.last}" value=" &gt; " />
+				</ui:repeat>
+			</div>
+		</h:panelGroup>
 	</ui:composition>
 </body>
 </html>

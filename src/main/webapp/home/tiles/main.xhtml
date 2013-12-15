@@ -25,16 +25,23 @@
 				height: 100%;
 				margin: 0 auto 0 auto;
 			}
+			.slide img.noImage{
+				margin-top: 55px;
+				height: 312px;
+				width: 312px;
+			}
 		</h:outputStylesheet>
 		<ui:include src="/profile/tiles/login.xhtml" />
 		<div id="hottestItem" class="slidorion">
 			<div class="slider">
 				<ui:repeat var="item" value="#{itemSearchBean.itemsFound}">
 					<div class="slide" >
-						<ui:repeat var="image" value="#{item.imageList}">
-							<h:graphicImage value="/image/p/#{image.name}" />
-						</ui:repeat>
-						<h:graphicImage value="/resources/img/aucune_image.jpg" rendered="#{empty itemSearchBean.itemsFound}"/>
+						<h:panelGroup rendered="#{!empty item.imageList}">
+							<ui:repeat var="image" value="#{item.imageList}">
+								<h:graphicImage value="/image/p/#{image.name}" />
+							</ui:repeat>
+						</h:panelGroup>
+						<h:graphicImage value="/resources/img/noimage.png"  class="noImage" rendered="#{empty item.imageList}"/>
 					</div>
 				</ui:repeat>
 			</div>

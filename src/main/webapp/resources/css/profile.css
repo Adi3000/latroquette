@@ -32,7 +32,6 @@ legend
 	border-style: solid;
 	border-color: #000;
 	border-width: 1px;
-	-webkit-border-radius : 5px 5px;
 }
 
 #loginForm, #forgotPasswordForm, #changePasswordDiv form{
@@ -68,7 +67,7 @@ form h2
 #loginDiv, #arrowDiv, #forgotPassword, #changePasswordDiv{
 	width:700px;
 	position: absolute;
-	margin-top: 10px;
+	margin-top: 20px;
 }
 #loginDiv, #arrowDiv{
 	z-index: 10;

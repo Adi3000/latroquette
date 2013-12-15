@@ -10,8 +10,8 @@
 			<ui:repeat var="item" value="#{itemSearchBean.pubItems}">
 				<hr />
 				<div>
-					<a href="#{item.sourceUrl}" ><h:outputText value="#{item.name}" /></a>
-					<a href="#{item.sourceUrl}" ><h:graphicImage value="#{item.smallImageUrl}" /></a>
+					<div><a href="#{item.sourceUrl}" ><h:outputText value="#{item.name}" /></a></div>
+					<div><a href="#{item.sourceUrl}" ><h:graphicImage value="#{item.smallImageUrl}" /></a></div>
 					<div><h:outputText value="#{item.formattedPrice}" /></div>
 				</div>
 			</ui:repeat>

@@ -14,23 +14,25 @@
 				<f:event listener="#{userBean.checkCookies}" type="preRenderView" />
 			</f:metadata>
 			<div id="toolbarLogin">
+				<div class="forumButton"><a href="/forum" class="button">Accéder au forum<span class="ui-icon ui-icon-arrowthick-1-e"></span></a></div>
 				<h:link 
 					outcome="/profile/login?register=true&amp;u=#{request.requestURI}&amp;qs=#{util:urlEncode(request.queryString)}" 
 					value="#{text_home.CONNEXION}" 
 					rendered="#{!userBean.loggedIn}"
+					styleClass="button"
 				/>
 				<h:form id="logoutForm" rendered="#{userBean.loggedIn}">
-					<h:link outcome="/profile/index">
-						<h:outputFormat value="#{text_home.WELCOME_MESSAGE}">
-							<f:param value="#{userBean.login}" />
-						</h:outputFormat>
-					</h:link>
-					<h:commandButton value="Logout" action="#{userBean.logoutUser}" />
 	                <h:panelGroup rendered="#{!userBean.validated}">
-	                   <div>
-	                       Compte non validé :<br /><h:commandLink value="Renvoyer un mail de validation" action="#{userBean.revalidate}" />
+	                   <div class="ui-state-error ui-corner-all errorAlert">
+	                       <span class="ui-icon ui-icon-alert"></span>
+	                       <strong>Compte non validé :</strong><h:commandLink value="Renvoyer un mail de validation" action="#{userBean.revalidate}" />
                        </div>
 	                </h:panelGroup>
+					<div>Bonjour #{userBean.login}</div>
+					<div>
+						<h:link outcome="/profile/index" styleClass="button" value="Mon profil"/>
+						<h:commandButton value="Logout" action="#{userBean.logoutUser}" />
+					</div>
 				</h:form>
 				<h:panelGroup rendered="#{userBean.admin or userBean.modifyKeywords}">
 					<div><h:link outcome="/admin/index" value="Console Admin" /></div>

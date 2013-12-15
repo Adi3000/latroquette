@@ -10,31 +10,30 @@
 		<div id="toolbar">
 			<h:form id="searchForm">
 				<fieldset>
+					<h:link outcome="/item/editItem.xhtml" styleClass="button createItemButton"><span class="ui-icon ui-icon-plus"></span>Déposer une annonce</h:link>
 					<div id="searchPart2">
-						<div id="cityBox">
+						<div id="cityBox" class="field">
 							<input type="text" id="searchCity" placeholder="Ville/Code postal" />
 							<h:inputHidden value="#{itemSearchBean.itemFilter.placeId}" />
 						</div>
 						<div id="distanceSlider" style="position: absolute;width : 250px; display:none;"></div>
-						<div id="distanceBox">
+						<div id="distanceBox"  class="field">
 							<h:outputLabel for="distance" >Sur&#160;</h:outputLabel>
 							<h:inputText id="distance" size="2" maxlength="3" style="border: 0; color: #f6931f; font-weight: bold;" value="#{itemSearchBean.itemFilter.distance}"/>
 							<h:outputLabel for="distance" id="labelDistance" >km</h:outputLabel>
 						</div>
 					</div>
 					<div id="searchPart1">
-						<div id="searchObjetBox" class="searchBox">
+						<div id="searchObjetBox" class="searchBox field">
 							<h:inputText id= "searchObjet" p:placeholder="Recherche" value="#{itemSearchBean.itemFilter.pattern}" />
 							<h:inputHidden id="searchObjetHidden"  />
 						</div>
-						<div id="searchMemberBox" class="searchBox">
+						<div id="searchMemberBox" class="searchBox field">
 							<h:inputText id="searchMember" p:placeholder="TroQMembre" value="#{itemSearchBean.memberNameFilter}"/>
 							<h:inputHidden id="searchMemberId"  value="#{itemSearchBean.itemFilter.ownerId}"/>
 						</div>
 					</div>
 					<h:commandButton value="Rechercher" action="#{itemSearchBean.search}" />
-					<h:link outcome="/item/editItem.xhtml" >Déposer une annonce</h:link>
-					<a href="/forum" >Forum</a>
 				</fieldset>
 			</h:form>
 		</div>

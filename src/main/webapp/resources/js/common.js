@@ -32,6 +32,10 @@ function addToStringList(list, e){
 	return list;
 }
 
+$(function(){
+	$( "input[type=submit],input[type=button], a.button, button" ).button();
+});
+
 /**
  * Protect window.console method calls, e.g. console is not defined on IE
  * unless dev tools are open, and IE doesn't define console.debug

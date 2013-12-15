@@ -22,5 +22,5 @@
 	<logger name="net.latroquette" level="DEBUG" />
 	<logger name="org.hibernate" level="INFO" />
 	<logger name="org.hibernate.SQL" level="DEBUG" />
-	<logger name="org.hibernate.type" level="INFO" />
+	<logger name="org.hibernate.type" level="TRACE" />
 </included>

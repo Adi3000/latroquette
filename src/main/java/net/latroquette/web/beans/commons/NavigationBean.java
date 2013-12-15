@@ -27,6 +27,7 @@ public class NavigationBean {
 	public static final String EDIT_ITEM_VIEW = "/item/editItem";
 	public static final String VIEW_ITEM_VIEW = "/item/viewItem";
 	private static final String SEARCH_ITEM_VIEW = "/item/index";
+	private static final String HOME_PAGE_VIEW = "/index";
 	@ManagedProperty(value="#{webConstantsBean.navigationMap}")
 	private Map<String, Navigation> navigationMap;
 	@ManagedProperty(value=Services.ITEMS_SERVICE_JSF)
@@ -163,6 +164,10 @@ public class NavigationBean {
 	 */
 	public void setItemPattern(String itemPattern) {
 		this.itemPattern = itemPattern;
+	}
+	
+	public boolean isOnHomePage(){
+		return HOME_PAGE_VIEW.equals(navigationPath);
 	}
 	@PostConstruct
 	public void refreshNavigation(){
