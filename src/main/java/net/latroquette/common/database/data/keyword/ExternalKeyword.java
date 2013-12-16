@@ -17,6 +17,10 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
 
+import net.latroquette.common.database.data.item.wish.Wish;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 
 import com.adi3000.common.database.hibernate.data.AbstractTreeNodeDataObject;
@@ -26,8 +30,9 @@ import com.adi3000.common.util.tree.TreeNode;
 @Entity
 @Table(name = "external_keywords")
 @SequenceGenerator(name = "external_keywords_ext_keyword_id_seq", sequenceName = "external_keywords_ext_keyword_id_seq", allocationSize=1)
+@Cache(region = "keywords", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ExternalKeyword extends AbstractTreeNodeDataObject<ExternalKeyword> implements Keyword, TreeNode<ExternalKeyword> {
-
+	public static final String EXTERNAL_KEYWORD_SOURCE= "xey";
 	/**
 	 * Amazon id for source_id field 
 	 */
@@ -176,5 +181,15 @@ public class ExternalKeyword extends AbstractTreeNodeDataObject<ExternalKeyword>
 	@Transient
 	public int getKeywordTypeId(){
 		return getKeywordType().getId();
+	}
+	public boolean equals(Object o){
+		if(o == null){
+			return false;
+		}
+		return this.equals((Wish)o);
+	}
+	public boolean equals(Wish wish){
+		return this.getSource().equals(wish.getSource()) &&
+				this.getUid().equals(wish.getUid());
 	}
 }

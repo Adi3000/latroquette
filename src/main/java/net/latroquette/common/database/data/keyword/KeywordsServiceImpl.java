@@ -9,6 +9,8 @@ import java.util.Set;
 import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.ItemsService;
 import net.latroquette.common.util.Services;
+import net.latroquette.common.util.parameters.ParameterName;
+import net.latroquette.common.util.parameters.Parameters;
 
 import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
@@ -31,6 +33,8 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 
 	@Autowired
 	private transient ItemsService itemsService;
+	@Autowired
+	private transient Parameters parameters;
 	
 	/**
 	 * @param itemsService the itemsService to set
@@ -362,6 +366,23 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 	
 	/**
 	 * Search a Keyword in database (External or not)
+	 */
+	@Transactional(readOnly=true)
+	public List<Keyword> searchKeyword(String name){
+		String likeValue = name.replaceAll("\\W", "_");
+		Criteria req = getSession().createCriteria(Keyword.class)
+				.add(Restrictions.like("name", likeValue, MatchMode.ANYWHERE).ignoreCase())
+				.add(Restrictions.isNotNull("ancestor"))
+				.setMaxResults(parameters.getIntValue(ParameterName.NB_RESULT_TO_LOAD))
+				.setCacheable(true)
+				.setCacheMode(CacheMode.NORMAL)
+				.setCacheRegion("keywords");
+		@SuppressWarnings("unchecked")
+		List<Keyword> list = req.list();
+		return list;
+	}
+	/**
+	 * Search a Keyword in database 
 	 */
 	@Transactional(readOnly=true)
 	public Collection<MainKeyword> searchMainKeyword(String name){

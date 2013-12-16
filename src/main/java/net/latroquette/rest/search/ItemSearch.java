@@ -17,6 +17,7 @@ import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemFilter;
 import net.latroquette.common.database.data.item.ItemsService;
+import net.latroquette.common.database.data.item.wish.Wish;
 import net.latroquette.common.database.data.keyword.ExternalKeyword;
 import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.keyword.KeywordType;
@@ -139,5 +140,12 @@ public class ItemSearch extends SpringBeanAutowiringSupport {
 			@QueryParam("cat") String category ){
 		List<AmazonItem> itemsFound = itemsService.searchAmazonItems(category, pattern);
 		return new GenericEntity<List<AmazonItem>>(itemsFound) {};
+	}
+	@GET
+	@Path("/wish")
+	@WebMethod
+	public GenericEntity<List<Wish>> getWish (@QueryParam("term") String pattern){
+		List<Wish> wishesFound = itemsService.searchWishes(pattern);
+		return new GenericEntity<List<Wish>>(wishesFound) {};
 	}
 }

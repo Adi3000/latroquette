@@ -79,15 +79,23 @@
 					<t:inputFileUpload id="choosePicButton" accept="image/png,image/jpeg" value="#{itemBean.newFile}" />
 					<div id="uploadPicButton"><h:commandButton value="Ajouter l'image" id="addPicButton" action="#{itemBean.uploadPic}"/></div>
 				</div>
+				<div id="saveButton">
+					<h:commandButton value="Cr&#233;er" action="#{itemBean.createItem}" rendered="#{!itemBean.item.idSet}"/>
+					<h:commandButton value="Modifier" action="#{itemBean.updateItem}" rendered="#{itemBean.item.idSet}"/>
+				</div>
+			</h:form>
+			<h:form id="wishesForm">
 				<div id="wishies">
 					<div class="label"><h:outputLabel for="wishField">Souhaits : </h:outputLabel></div>
 					<div class="field">
-						<h:inputText id="wishField" value="#{userBean.newWish}" />
-						<h:inputHidden id="wishSource" value="#{userBean.newWishSource}" />
-						<h:inputHidden id="wishCode" value="#{userBean.newWishCode}" />
+						<h:panelGroup id="userNewWish">
+							<h:inputText id="wishField" value="#{userBean.newWish}" />
+							<h:inputHidden id="wishSource" value="#{userBean.newWishSource}" />
+							<h:inputHidden id="wishCode" value="#{userBean.newWishCode}" />
+						</h:panelGroup>
 						<div class="itemPreview" style="display:none;"><img src="" /></div>
-						<h:commandButton value="Ajouter">
-					         <f:ajax execute="wishSource wishField wishCode" render="userWishies" />
+						<h:commandButton value="Ajouter" >
+					         <f:ajax render="userWishies userNewWish" execute="wishesForm" listener="#{userBean.addWish}"/>
 					    </h:commandButton>
 					</div>
 					<h:panelGroup id="userWishies">
@@ -97,10 +105,6 @@
 							</ui:repeat>
 						</ul>
 					</h:panelGroup>
-				</div>
-				<div id="saveButton">
-					<h:commandButton value="Cr&#233;er" action="#{itemBean.createItem}" rendered="#{!itemBean.item.idSet}"/>
-					<h:commandButton value="Modifier" action="#{itemBean.updateItem}" rendered="#{itemBean.item.idSet}"/>
 				</div>
 			</h:form>
 	  	</ui:define>

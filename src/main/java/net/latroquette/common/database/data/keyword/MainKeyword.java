@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
 
+import net.latroquette.common.database.data.item.wish.Wish;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.FetchMode;
@@ -54,6 +56,7 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	public static final Integer MAIN_ANCESTOR_RELATIONSHIP = 1;
 	public static final Integer CHILDREN_RELATIONSHIP = 2;
 	public static final Integer EXTERNAL_KEYWORD_RELATIONSHIP = 3;
+	public static final String MAIN_KEYWORD_SOURCE= "key";
 
 	/**
 	 * 
@@ -201,5 +204,25 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	@Transient
 	public int getKeywordTypeId(){
 		return getKeywordType().getId();
+	}
+	public boolean equals(Object o){
+		if(o == null){
+			return false;
+		}
+		return this.equals((Wish)o);
+	}
+	public boolean equals(Wish wish){
+		return this.getSource().equals(wish.getSource()) &&
+				this.getUid().equals(wish.getUid());
+	}
+	@Override
+	@Transient
+	public String getUid() {
+		return getId().toString();
+	}
+	@Override
+	@Transient
+	public String getSource() {
+		return KeywordSource.MAIN_KEYWORD_SOURCE.getSourceId();
 	}
 }

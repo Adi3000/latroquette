@@ -98,7 +98,6 @@ $(function() {
 			var preview = $(this).siblings(".itemPreview");
 			$("img",preview).attr("src",ui.item.imageUrl);
 			preview.show();
-			console.log(ui);
 		},
 		close:
 			function (event, ui){
@@ -117,10 +116,10 @@ $(function() {
 			};
 		}
 	});
-	$("#editItemForm\\:wishField").autocomplete({
+	$("#wishesForm\\:wishField").autocomplete({
 		source: function(request, response){
 			$.getJSON(
-					_requestContextPath_+"/rest/search/item/amazon",
+					_requestContextPath_+"/rest/search/item/wish",
 					{
 						term : request.term
 					},
@@ -132,14 +131,26 @@ $(function() {
 		select:
 			function (event, ui){
 			$(this).val(ui.item.name);
+			$("#wishesForm\\:wishCode").val(ui.item.uid);
+			$("#wishesForm\\:wishSource").val(ui.item.source);
 			return false;
 		},
+		change:
+			function(event, ui){
+	   			if(ui.item) {
+	   				$(this).val(ui.item.name);
+	   				$("#wishesForm\\:wishCode").val(ui.item.uid);
+	   				$("#wishesForm\\:wishSource").val(ui.item.source);
+	   			}else{
+	   				$("#wishesForm\\:wishCode").val("");
+	   				$("#wishesForm\\:wishSource").val("");
+	   			}
+	   		},
 		focus:
 			function (event, ui){
-				var preview = $(this).siblings(".itemPreview");
-				$("img",preview).attr("src",ui.item.imageUrl);
-				preview.show();
-				console.log(ui);
+//				var preview = $(this).siblings(".itemPreview");
+//				$("img",preview).attr("src",ui.item.imageUrl);
+//				preview.show();
 			},
 		close:
 			function (event, ui){

@@ -9,6 +9,8 @@ import java.util.Set;
 
 import net.latroquette.common.database.data.file.File;
 import net.latroquette.common.database.data.file.FilesService;
+import net.latroquette.common.database.data.item.wish.Wish;
+import net.latroquette.common.database.data.item.wish.WishedItem;
 import net.latroquette.common.database.data.keyword.Keyword;
 import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.database.data.keyword.MainKeyword;
@@ -22,6 +24,7 @@ import net.latroquette.service.amazon.AmazonWService;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -103,7 +106,36 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		filesService.removeFile(image);
 	}
 
-	
+	/**
+	 * Search a wishes within multiple resources
+	 * @param pattern
+	 * @return
+	 */
+	@TransactionalUpdate
+	public List<Wish> searchWishes(String pattern){
+		List<Wish> result = new ArrayList<>();
+		@SuppressWarnings("unchecked")
+		List<WishedItem> storedMatch = createCriteria(WishedItem.class)
+			.add(Restrictions.like("name", pattern.replaceAll("\\W", "%"), MatchMode.ANYWHERE).ignoreCase())
+			.setMaxResults(parameters.getIntValue(ParameterName.NB_RESULT_TO_LOAD))
+			.list();
+		if(storedMatch != null){
+			result.addAll(storedMatch);
+		}
+		List<AmazonItem> amazonResult = searchAmazonItems(null, pattern);
+		for(Wish wish : amazonResult){
+			if(!result.contains(wish)){
+				result.add(wish);
+			}
+		}
+		List<Keyword> keywordResult = keywordsService.searchKeyword(pattern);
+		for(Wish wish : keywordResult){
+			if(!result.contains(wish)){
+				result.add(wish);
+			}
+		}
+		return result;
+	}
 	/**
 	 * Search an item via Amazon Webservice
 	 * @param cat

@@ -209,5 +209,19 @@ public class AmazonItem implements ViewableItem, Wish{
 	public void setSourceUrl(String sourceUrl) {
 		this.sourceUrl = sourceUrl;
 	}
+	
+	public String getUid(){
+		return getAmazonId();
+	}
 
+	public boolean equals(Object o){
+		if(o == null){
+			return false;
+		}
+		return this.equals((Wish)o);
+	}
+	public boolean equals(Wish wish){
+		return this.getSource().equals(wish.getSource()) &&
+				this.getUid().equals(wish.getUid());
+	}
 }

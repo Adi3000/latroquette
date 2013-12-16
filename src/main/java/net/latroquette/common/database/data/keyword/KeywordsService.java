@@ -106,7 +106,10 @@ public interface KeywordsService extends DAO<Keyword>{
 	 * @return
 	 */
 	public MainKeyword getRootForMenu();
-	
+	/**
+	 * Search a Keyword in database
+	 */
+	public List<Keyword> searchKeyword(String name);
 	/**
 	 * Search a Keyword in database (External or not)
 	 */
