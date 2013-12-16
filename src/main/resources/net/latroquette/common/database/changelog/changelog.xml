@@ -109,6 +109,6 @@
     <changeSet id="0.0.1-12.0-create_wishes_tables" author="adi3000">
    	 	<sqlFile
     			relativeToChangelogFile="true" 
-    			path="0.0.1/referentiel/12-wishes_tables.sql"/>
+    			path="0.0.1/modeling/12-wishes_tables.sql"/>
     </changeSet>
 </databaseChangeLog>
