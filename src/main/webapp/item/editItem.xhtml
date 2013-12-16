@@ -86,7 +86,17 @@
 						<h:inputHidden id="wishSource" value="#{userBean.newWishSource}" />
 						<h:inputHidden id="wishCode" value="#{userBean.newWishCode}" />
 						<div class="itemPreview" style="display:none;"><img src="" /></div>
+						<h:commandButton value="Ajouter">
+					         <f:ajax execute="wishSource wishField wishCode" render="userWishies" />
+					    </h:commandButton>
 					</div>
+					<h:panelGroup id="userWishies">
+						<ul>
+							<ui:repeat var="wish" value="#{userBean.wishesList}">
+								<li>#{wish.name}</li>
+							</ui:repeat>
+						</ul>
+					</h:panelGroup>
 				</div>
 				<div id="saveButton">
 					<h:commandButton value="Cr&#233;er" action="#{itemBean.createItem}" rendered="#{!itemBean.item.idSet}"/>

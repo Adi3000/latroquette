@@ -2,6 +2,7 @@ package net.latroquette.common.database.data.item.wish;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -73,7 +74,7 @@ public class WishedItem extends AbstractDataObject implements Wish {
 	/**
 	 * @return the externalKeyword
 	 */
-	@ManyToOne(optional=true)
+	@ManyToOne(optional=true, fetch=FetchType.LAZY)
 	@JoinColumn(name="ext_keyword_id")
 	public ExternalKeyword getExternalKeyword() {
 		return externalKeyword;
@@ -89,7 +90,7 @@ public class WishedItem extends AbstractDataObject implements Wish {
 	/**
 	 * @return the mainKeyword
 	 */
-	@ManyToOne(optional=true)
+	@ManyToOne(optional=true, fetch=FetchType.LAZY)
 	@JoinColumn(name="keyword_id")
 	public MainKeyword getMainKeyword() {
 		return mainKeyword;

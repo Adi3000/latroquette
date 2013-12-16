@@ -2,6 +2,8 @@ package net.latroquette.web.beans.profile;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -15,6 +17,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import net.latroquette.common.database.data.item.wish.WishedItem;
 import net.latroquette.common.database.data.place.PlacesService;
 import net.latroquette.common.database.data.profile.Role;
 import net.latroquette.common.database.data.profile.User;
@@ -528,5 +531,8 @@ public class UserBean implements Serializable{
 		if(!SecurityUtil.checkCookies()){
 			logoutUser();
 		}
+	}
+	public List<WishedItem> getWishesList(){
+		return user.getWishesList() != null ? new ArrayList<WishedItem>(user.getWishesList()) : null;
 	}
 }

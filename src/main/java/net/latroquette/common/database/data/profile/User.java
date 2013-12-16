@@ -5,18 +5,24 @@ package net.latroquette.common.database.data.profile;
 
 
 import java.sql.Timestamp;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
 
+import net.latroquette.common.database.data.item.wish.WishedItem;
 import net.latroquette.common.database.data.place.Place;
 
 import org.hibernate.annotations.NaturalId;
@@ -53,6 +59,7 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	private Boolean xmppBlock;
 	private Timestamp lastDateXmpp;
 	private Integer smfId;
+	private Set<WishedItem> wishesList;
 	
 	@Id
 	@Column(name="user_id")
@@ -263,6 +270,22 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	 */
 	public void setLastDateXmpp(Timestamp lastDateXmpp) {
 		this.lastDateXmpp = lastDateXmpp;
+	}
+	/**
+	 * @return the wishesList
+	 */
+	@ManyToMany(cascade = {CascadeType.ALL},fetch=FetchType.EAGER)
+	@JoinTable(name="users_wishes", 
+		joinColumns={@JoinColumn(name="user_id")}, 
+		inverseJoinColumns={@JoinColumn(name="wish_id")})
+	public Set<WishedItem> getWishesList() {
+		return wishesList;
+	}
+	/**
+	 * @param wishesList the wishesList to set
+	 */
+	public void setWishesList(Set<WishedItem> wishesList) {
+		this.wishesList = wishesList;
 	}
 	
 }
