@@ -59,6 +59,7 @@
     			path="0.0.1/referentiel/03-init_navigation_map.sql"/>
     </changeSet>
     <changeSet id="0.0.1-00.4-items_keywords" author="adi3000">
+        <validCheckSum>7:681c872af416b11d5e3fe98972053bc6</validCheckSum>
    	 	<sqlFile
     			relativeToChangelogFile="true" 
     			path="0.0.1/modeling/04-create_items_keywords_tables.sql"/>
