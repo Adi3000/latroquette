@@ -3,7 +3,9 @@
 #itemImages > div{
 	display: inline-block;
 }
-
+#itemMenuCategory{
+	width: 150px;
+}
 #itemDescription{
 	width: 100%;
 }
@@ -52,15 +54,32 @@
 	vertical-align: middle;
 }
 #selectedCategory{
-	width: 650px;
+	width: 100%;
 }
-.itemPreview{
+.preview{
 	position: absolute;
 	margin-left: 400px;
 	z-index: 20;
+	background: #fff;
+	padding: 5px;
+	border: 1px solid #a46313;
+	background-color: #fff;
+	box-shadow: 1px 1px 5px #000;
+	cursor: default;
 }
-#wishies .itemPreview{
-	margin-top: -500px;
-	margin-left: 0px;
-}
+#wishies .preview{
+	margin-top: -30px;
+	margin-left: -300px;
 
+}
+#wishesForm, #editItemForm{
+	display: inline-block;
+	vertical-align: top;
+}
+#wishesForm{
+	margin-top: 23px;
+}
+#wishesForm .field{
+	width: 230px;
+	margin-left: 20px;
+}

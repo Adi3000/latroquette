@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.StringUtils;
+
 import net.latroquette.common.database.data.keyword.ExternalKeyword;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 
@@ -61,7 +63,7 @@ public class WishedItem extends AbstractDataObject implements Wish {
 	 */
 	@Column(name="ext_uid")
 	public String getUid() {
-		return uid;
+		return StringUtils.isEmpty(uid) ? getId().toString() : uid;
 	}
 
 	/**

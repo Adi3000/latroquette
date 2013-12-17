@@ -180,7 +180,6 @@ fieldset
 #bodyPart{
 	width : 100%;
 }
-
 #menu{
 	width: 175px;
 	margin: 0px;
@@ -259,10 +258,17 @@ ul.ui-autocomplete{
 	color: #888888;
 	font-style: italic;
 }
-
-#itemCategory{
-	width : 150px;
-}
 #ads a{
 	text-decoration: none;
+}
+#errorDiv *{
+	cursor: default;
+}
+#errorDiv{
+	position: absolute;
+	min-height: 30px;
+	margin-top: -80px;
+	z-index: 100;
+	margin-left: 200px;
+	padding: 5px;
 }

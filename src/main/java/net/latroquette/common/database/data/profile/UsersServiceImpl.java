@@ -4,6 +4,9 @@ package net.latroquette.common.database.data.profile;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.latroquette.common.database.data.item.wish.WishedItem;
+import net.latroquette.common.database.data.keyword.KeywordSource;
+import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.util.ServiceException;
 import net.latroquette.common.util.Services;
 import net.latroquette.common.util.parameters.ParameterName;
@@ -47,6 +50,16 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class);
 	@Autowired
 	private transient Parameters parameters;
+	@Autowired
+	private transient KeywordsService keywordsService;
+	
+	/**
+	 * @param keywordsService the keywordsService to set
+	 */
+	public void setKeywordsService(KeywordsService keywordsService) {
+		this.keywordsService = keywordsService;
+	}
+
 	/**
 	 * @param parameters the parameters to set
 	 */
@@ -468,5 +481,30 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 		user.setLoginState(User.BLOCKED);
 		updateUser(user);
 	}
-	
+	@TransactionalUpdate
+	public void addNewWish(WishedItem newWish, User user){
+		if(StringUtils.isEmpty(newWish.getSource())){
+			newWish.setSource(KeywordSource.WISHES_SOURCE.getSourceId());
+			if(newWish.getExternalKeyword() != null){
+				newWish.setExternalKeyword(
+						keywordsService.getExternalKeywordById(newWish.getExternalKeyword().getId())
+				);
+			}else if(newWish.getMainKeyword() != null){
+				newWish.setMainKeyword(
+						keywordsService.getKeywordById(newWish.getMainKeyword().getId())
+				);
+			}
+		}else{
+			WishedItem wish = (WishedItem) createCriteria(WishedItem.class)
+					.add(Restrictions.eq("uid",newWish.getUid()))
+					.add(Restrictions.eq("source",newWish.getSource()))
+					.setMaxResults(1)
+					.uniqueResult();
+			if(wish != null){
+				newWish = wish;
+			}
+		}
+		user.getWishesList().add(newWish);
+		updateUser(user);
+	}	
 }

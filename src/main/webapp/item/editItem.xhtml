@@ -1,11 +1,10 @@
-<!DOCTYPE html[
-    <!ENTITY eacute "&#225;"> 
-]>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:t="http://myfaces.apache.org/tomahawk">
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<f:metadata>
@@ -15,15 +14,12 @@
 		<ui:define name="mainDiv"> 
 			<h:outputStylesheet name="css/item.css" target="head" />
 			<h:outputScript name="js/_initEditItem.js" target="head" />
-			<h:outputScript target="head">
-				
-			</h:outputScript>
 			<h:form id="editItemForm" method="post" enctype="multipart/form-data">
 				<h:messages></h:messages>
 				<div id="itemDescription">
 					<div id="itemCategory">
 						<h:inputHidden id="itemCategoryIds" value="#{itemBean.keywordIds}" />
-						<ul id="selectedCategory"/>
+						<ul id="selectedCategory" class="ui-menu ui-widget ui-widget-content ui-corner-all selectedCategories"/>
 						<ul id="itemMenuCategory">
 							<li>
 								<a href="#">Categories</a>
@@ -55,7 +51,7 @@
 								<h:outputLabel for="title">Titre</h:outputLabel>
 							</div>
 							<h:inputText id="title" class="field" size="58" value="#{itemBean.title}" />
-							<div class="itemPreview" style="display:none;"><img src="" /></div>
+							<div class="preview  ui-corner-all" style="display:none;"><img src="" /></div>
 						</div>
 					</div>
 					<div>
@@ -86,25 +82,63 @@
 			</h:form>
 			<h:form id="wishesForm">
 				<div id="wishies">
-					<div class="label"><h:outputLabel for="wishField">Souhaits : </h:outputLabel></div>
-					<div class="field">
-						<h:panelGroup id="userNewWish">
-							<h:inputText id="wishField" value="#{userBean.newWish}" />
-							<h:inputHidden id="wishSource" value="#{userBean.newWishSource}" />
-							<h:inputHidden id="wishCode" value="#{userBean.newWishCode}" />
+					<fieldset>
+						<legend>Mes Souhaits</legend>
+						<div class="field">
+							<h:panelGroup id="userNewWish">
+								<h:inputText id="wishField" value="#{userBean.newWish}" p:placeholder="Nouveau souhait" />
+								<h:inputHidden id="wishSource" value="#{userBean.newWishSource}" />
+								<h:inputHidden id="wishCode" value="#{userBean.newWishCode}" />
+								<h:commandButton value="Ajouter" >
+							         <f:ajax render="wishField wishSource wishCode whishesCategoryIdsPanel userWishies" execute="wishesForm" listener="#{userBean.addWish}"/>
+							    </h:commandButton>
+								<div class="preview ui-corner-all" style="display:none;" />
+								<div>
+									<h:panelGroup id="whishesCategoryIdsPanel" styleClass="categoryIds">
+										<h:inputHidden id="whishesCategoryIds" value="#{userBean.newWishKeywordId}" />
+										<script type="text/javascript" >
+											console.log(!$("#wishesSelectedCategory").is(":empty"));
+											if(isEmpty($("#wishesForm\\:whishesCategoryIds").val()) &amp;&amp; !$("#wishesSelectedCategory").is(":empty")){
+												$("#wishesSelectedCategory").empty().hide(0)
+											}
+										</script>
+									</h:panelGroup>
+									<ul id="wishesSelectedCategory" class="ui-menu ui-widget ui-widget-content ui-corner-all selectedCategories"/>
+									<ul id="wishesMenuCategory">
+										<li>
+											<a href="#">Categories</a>
+											<ul>
+												<ui:repeat var="entry" value="#{menuBean.rootCategoriesEntries}">
+													<li data-keyword-id="#{entry.id}" data-keyword-type="#{entry.keywordType.id}">
+														<a href="#" >#{entry.name}</a>
+														<h:panelGroup rendered="#{!empty entry.children}">
+															<ul>
+																<ui:repeat var="subEntry" value="#{entry.children}">
+																	<li data-keyword-id="#{subEntry.id}" data-keyword-type="#{subEntry.keywordType.id}">
+																		<a href="#" >#{subEntry.name}</a>
+																		<h:panelGroup rendered="#{!empty subEntry.children}">
+																			<ul />
+																		</h:panelGroup>
+																	</li>
+																</ui:repeat>
+															</ul>
+														</h:panelGroup>
+													</li>
+												</ui:repeat>
+											</ul>
+										</li>
+									</ul>
+								</div>
+							</h:panelGroup>
+						</div>
+						<h:panelGroup id="userWishies">
+							<ul>
+								<ui:repeat var="wish" value="#{userBean.wishesList}">
+									<li>#{wish.name}</li>
+								</ui:repeat>
+							</ul>
 						</h:panelGroup>
-						<div class="itemPreview" style="display:none;"><img src="" /></div>
-						<h:commandButton value="Ajouter" >
-					         <f:ajax render="userWishies userNewWish" execute="wishesForm" listener="#{userBean.addWish}"/>
-					    </h:commandButton>
-					</div>
-					<h:panelGroup id="userWishies">
-						<ul>
-							<ui:repeat var="wish" value="#{userBean.wishesList}">
-								<li>#{wish.name}</li>
-							</ui:repeat>
-						</ul>
-					</h:panelGroup>
+					</fieldset>
 				</div>
 			</h:form>
 	  	</ui:define>

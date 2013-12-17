@@ -19,6 +19,9 @@ import javax.faces.event.ComponentSystemEvent;
 import javax.servlet.http.HttpServletRequest;
 
 import net.latroquette.common.database.data.item.wish.WishedItem;
+import net.latroquette.common.database.data.keyword.ExternalKeyword;
+import net.latroquette.common.database.data.keyword.KeywordType;
+import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.database.data.place.PlacesService;
 import net.latroquette.common.database.data.profile.Role;
 import net.latroquette.common.database.data.profile.User;
@@ -33,6 +36,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.adi3000.common.util.optimizer.CommonValues;
 import com.adi3000.common.util.security.Security;
 import com.adi3000.common.web.faces.FacesUtil;
 import com.adi3000.common.web.jsf.UtilsBean;
@@ -58,7 +62,7 @@ public class UserBean implements Serializable{
 	private String newWish;
 	private String newWishSource;
 	private String newWishCode;
-	
+	private String newWishKeywordId;
 	@ManagedProperty(Services.PLACES_SERVICE_JSF)
 	private transient PlacesService placesService;
 	
@@ -537,16 +541,51 @@ public class UserBean implements Serializable{
 		return user.getWishesList() != null ? new ArrayList<WishedItem>(user.getWishesList()) : null;
 	}
 	
+	/**
+	 * @return the newWishKeywordId
+	 */
+	public String getNewWishKeywordId() {
+		return newWishKeywordId;
+	}
+
+	/**
+	 * @param newWishKeywordId the newWishKeywordId to set
+	 */
+	public void setNewWishKeywordId(String newWishKeywordId) {
+		this.newWishKeywordId = newWishKeywordId;
+	}
+
 	public void addWish(AjaxBehaviorEvent event){
-		WishedItem wish = new WishedItem();
-		wish.setName(newWish);
-		wish.setSource(newWishSource);
-		wish.setUid(newWishCode);
-		user.getWishesList().add(wish);
-		usersService.updateUser(user);
-		newWish = null;
-		newWishSource = null;
-		newWishCode = null;
-		logger.debug("Passed through with {}",newWish);
+		if(StringUtils.isNotEmpty(newWish)){
+			WishedItem wish = new WishedItem();
+			if(StringUtils.isNotEmpty(newWishKeywordId)){
+				MainKeyword mainKeyword = null;
+				ExternalKeyword externalKeyword = null;
+				String[] keywordInfo = newWishKeywordId.split(CommonValues.INNER_SEPARATOR);
+				switch (KeywordType.get(Integer.valueOf(keywordInfo[0]))) {
+					case MAIN_KEYWORD:
+						mainKeyword = new MainKeyword();
+						mainKeyword.setId(Integer.valueOf(keywordInfo[1]));
+						break;
+					case EXTERNAL_KEYWORD:
+						externalKeyword = new ExternalKeyword();
+						externalKeyword.setId(Integer.valueOf(keywordInfo[1]));
+						break;
+					default:
+						break;
+				}
+				wish.setExternalKeyword(externalKeyword);
+				wish.setMainKeyword(mainKeyword);
+			}
+			wish.setName(newWish);
+			wish.setSource(newWishSource);
+			wish.setUid(newWishCode);
+			usersService.addNewWish(wish, user);
+			//Re-init field 
+			newWish = null;
+			newWishSource = null;
+			newWishCode = null;
+			newWishKeywordId = null;
+		}
 	}
 }
