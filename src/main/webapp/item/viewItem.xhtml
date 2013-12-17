@@ -67,7 +67,7 @@
 			<div id="itemCategory">
 				<ul>
 					<ui:repeat var="keyword" value="#{itemBean.item.keywordList}">
-						<li><h:link href="/item/index?c=#{keyword.id}" value="#{keyword.name}" /></li>
+						<li><h:link outcome="/item/index?c=#{keyword.id}" value="#{keyword.name}" /></li>
 					</ui:repeat>
 				</ul>
 			</div>

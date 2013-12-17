@@ -1,7 +1,9 @@
 package net.latroquette.common.database.data.item;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -45,9 +47,9 @@ public class Item extends AbstractDataObject {
 	private Timestamp updateDate;
 	private String title;
 	private String description;
-	private List<File> imageList;
-	private List<MainKeyword> keywordList;
-	private List<ExternalKeyword> externalKeywordList;
+	private Set<File> imageSet;
+	private Set<MainKeyword> keywordSet;
+	private Set<ExternalKeyword> externalKeywordSet;
 	
 	@Override
 	@Id
@@ -149,14 +151,19 @@ public class Item extends AbstractDataObject {
 	joinColumns={@JoinColumn(name="item_id")}, 
 	inverseJoinColumns={@JoinColumn(name="keyword_id")})
 	@XmlTransient
+	public Set<MainKeyword> getKeywordSet() {
+		return keywordSet;
+	}
+	@Transient
+	@XmlTransient
 	public List<MainKeyword> getKeywordList() {
-		return keywordList;
+		return new ArrayList<>(getKeywordSet());
 	}
 	/**
 	 * @param keywordList the keywordList to set
 	 */
-	public void setKeywordList(List<MainKeyword> keywordList) {
-		this.keywordList = keywordList;
+	public void setKeywordSet(Set<MainKeyword> keywordList) {
+		this.keywordSet = keywordList;
 	}
 	/**
 	 * @param id the id to set
@@ -168,11 +175,16 @@ public class Item extends AbstractDataObject {
     @JoinTable(name="items_files", 
                 joinColumns={@JoinColumn(name="item_id")}, 
                 inverseJoinColumns={@JoinColumn(name="file_id")})
-	public List<File> getImageList() {
-		return imageList;
+	@XmlTransient
+	public Set<File> getImageSet() {
+		return imageSet;
 	}
-	public void setImageList(List<File> imageList) {
-		this.imageList = imageList;
+	public void setImageSet(Set<File> imageList) {
+		this.imageSet = imageList;
+	}
+	@Transient
+	public List<File> getImageList(){
+		return new ArrayList<File>(getImageSet());
 	}
 	/**
 	 * @return the externalKeywordList
@@ -183,14 +195,19 @@ public class Item extends AbstractDataObject {
 	joinColumns={@JoinColumn(name="item_id")}, 
 	inverseJoinColumns={@JoinColumn(name="ext_keyword_id")})
 	@XmlTransient
+	public Set<ExternalKeyword> getExternalKeywordSet() {
+		return externalKeywordSet;
+	}
+	@Transient
+	@XmlTransient
 	public List<ExternalKeyword> getExternalKeywordList() {
-		return externalKeywordList;
+		return new ArrayList<>(getExternalKeywordSet());
 	}
 	/**
 	 * @param externalKeywordList the externalKeywordList to set
 	 */
-	public void setExternalKeywordList(List<ExternalKeyword> externalKeywordList) {
-		this.externalKeywordList = externalKeywordList;
+	public void setExternalKeywordSet(Set<ExternalKeyword> externalKeywordList) {
+		this.externalKeywordSet = externalKeywordList;
 	}
 	@Transient
 	public String getHtmlDescription(){

@@ -81,17 +81,17 @@
 				</div>
 			</h:form>
 			<h:form id="wishesForm">
-				<div id="wishies">
+				<div id="wishes">
 					<fieldset>
 						<legend>Mes Souhaits</legend>
 						<div class="field">
 							<h:panelGroup id="userNewWish">
 								<h:inputText id="wishField" value="#{userBean.newWish}" p:placeholder="Nouveau souhait" />
+								<h:commandButton value="Ajouter">
+							         <f:ajax render="wishField wishSource wishCode whishesCategoryIdsPanel userWishes" execute="wishesForm" listener="#{userBean.addWish}"/>
+							    </h:commandButton>
 								<h:inputHidden id="wishSource" value="#{userBean.newWishSource}" />
 								<h:inputHidden id="wishCode" value="#{userBean.newWishCode}" />
-								<h:commandButton value="Ajouter" >
-							         <f:ajax render="wishField wishSource wishCode whishesCategoryIdsPanel userWishies" execute="wishesForm" listener="#{userBean.addWish}"/>
-							    </h:commandButton>
 								<div class="preview ui-corner-all" style="display:none;" />
 								<div>
 									<h:panelGroup id="whishesCategoryIdsPanel" styleClass="categoryIds">
@@ -131,10 +131,16 @@
 								</div>
 							</h:panelGroup>
 						</div>
-						<h:panelGroup id="userWishies">
-							<ul>
+						<h:panelGroup id="userWishes">
+							<ul id="userWishes">
 								<ui:repeat var="wish" value="#{userBean.wishesList}">
-									<li>#{wish.name}</li>
+									<li>
+										<h:commandLink action="#{userBean.removeWish(wish.id)}" >
+											<f:ajax render=":wishesForm:userWishes"/>
+											<span class="ui-icon ui-icon-trash"></span>
+										</h:commandLink>
+										<div class="ui-widget-content ui-corner-all wishedItem" data-source="#{wish.source}" data-uid="#{wish.uid}">#{wish.name}&#160;</div>
+									</li>
 								</ui:repeat>
 							</ul>
 						</h:panelGroup>

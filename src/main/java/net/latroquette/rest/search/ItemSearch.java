@@ -136,10 +136,20 @@ public class ItemSearch extends SpringBeanAutowiringSupport {
 	@GET
 	@Path("/amazon")
 	@WebMethod
-	public GenericEntity<List<AmazonItem>> getItems (@QueryParam("term") String pattern, 
+	public GenericEntity<List<AmazonItem>> getAmazonItems (@QueryParam("term") String pattern, 
 			@QueryParam("cat") String category ){
 		List<AmazonItem> itemsFound = itemsService.searchAmazonItems(category, pattern);
 		return new GenericEntity<List<AmazonItem>>(itemsFound) {};
+	}
+	@GET
+	@Path("/amazon/byId")
+	@WebMethod
+	public GenericEntity<AmazonItem> getAmazonItemsById(@QueryParam("id") String id){
+		AmazonItem itemFound = itemsService.searchAmazonItemById(id);
+		if(itemFound == null){
+			return null;
+		}
+		return new GenericEntity<AmazonItem>(itemFound) {};
 	}
 	@GET
 	@Path("/wish")

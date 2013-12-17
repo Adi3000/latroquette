@@ -20,7 +20,13 @@ public interface ItemsService extends DAO<Item> {
 	 * @return
 	 */
 	public void deleteImageFromItem(File image, Item item, User user);
-
+	/**
+	 * Search an item via Amazon Webservice by its uid
+	 * @param cat
+	 * @param pattern
+	 * @return
+	 */
+	public AmazonItem searchAmazonItemById(String id);
 	/**
 	 * Search an item via Amazon Webservice
 	 * @param cat

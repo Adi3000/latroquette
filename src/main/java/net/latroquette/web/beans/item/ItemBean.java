@@ -2,7 +2,8 @@ package net.latroquette.web.beans.item;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -126,10 +127,10 @@ public class ItemBean implements Serializable {
 		for(File file : fileList){
 			file.setGarbageStatus(GarbageFileStatus.VALIDATE);
 		}
-		keywords = CommonUtil.parseStringToList(keywordIds);
+		keywords = new ArrayList<>(CommonUtil.parseStringToList(keywordIds));
 		String[] keywordInfo = null;
-		Set<MainKeyword> mainKeywordList = new HashSet<>();
-		Set<ExternalKeyword> externalKeywordList = new HashSet<>();
+		Set<MainKeyword> mainKeywordList = new LinkedHashSet<>();
+		Set<ExternalKeyword> externalKeywordList = new LinkedHashSet<>();
 		for(String keywordTypeAndId : keywords){
 			keywordInfo = keywordTypeAndId.split(CommonValues.INNER_SEPARATOR);
 			switch (KeywordType.get(Integer.valueOf(keywordInfo[0]))) {
@@ -143,11 +144,11 @@ public class ItemBean implements Serializable {
 				break;
 			}
 		}
-		item.setImageList(fileList);
+		item.setImageSet(new LinkedHashSet<>(fileList));
 		item.setStatusId(ItemStatus.DRAFT);
 		item.setDatabaseOperation(operation);
-		item.setKeywordList(new ArrayList<>(mainKeywordList));
-		item.setExternalKeywordList(new ArrayList<>(externalKeywordList));
+		item.setKeywordSet(new LinkedHashSet<>(mainKeywordList));
+		item.setExternalKeywordSet(new LinkedHashSet<>(externalKeywordList));
 		item = itemsService.modifyItem(item, userBean.getUser());
 		return FacesUtil.prepareRedirect("/item/viewItem?item="+item.getId());
 	}
@@ -169,7 +170,7 @@ public class ItemBean implements Serializable {
 	}
 	
 	public String removePic(String imageId){
-		File image = (File) CommonUtil.findById(item.getImageList(), imageId);
+		File image = (File) CommonUtil.findById(item.getImageSet(), imageId);
 		if(item.getId() != null){
 			itemsService.deleteImageFromItem(image, item, userBean.getUser());
 		}else{
@@ -180,7 +181,7 @@ public class ItemBean implements Serializable {
 	}
 	
 	public void setWishiesListString(String wishiesListString){
-		wishies = CommonUtil.parseStringToList(wishiesListString);
+		wishies = new ArrayList<>(CommonUtil.parseStringToList(wishiesListString));
 	}
 	
 	public String getWishiesListString(){
@@ -193,12 +194,12 @@ public class ItemBean implements Serializable {
 		this.userBean = userBean;
 	}
 	
-	public List<File> getFileList(){
-		if(CollectionUtils.isEmpty(fileList) && item != null){
-			this.fileList = item.getImageList();
+	public Collection<File> getFileList(){
+		if(CollectionUtils.isEmpty(fileList) && item != null && item.getImageSet() != null){
+			this.fileList = new ArrayList<>(item.getImageSet());
 		}
 		if(this.fileList == null){
-			this.fileList = new ArrayList<File>();
+			this.fileList = new ArrayList<>();
 		}
 		return this.fileList;
 	}
@@ -273,13 +274,13 @@ public class ItemBean implements Serializable {
 			item = itemsService.getItemById(Integer.valueOf(itemId));
 			keywords = new ArrayList<>();
 			//Loading keywords
-			if(item.getKeywordList() != null){
-				for(Keyword keyword : item.getKeywordList()){
+			if(item.getKeywordSet() != null){
+				for(Keyword keyword : item.getKeywordSet()){
 					keywords.add(keyword.getKeywordTypeId() + CommonValues.INNER_SEPARATOR + keyword.getId());
 				}
 			}
-			if(item.getExternalKeywordList() != null){
-				for(Keyword keyword : item.getExternalKeywordList()){
+			if(item.getExternalKeywordSet() != null){
+				for(Keyword keyword : item.getExternalKeywordSet()){
 					keywords.add(keyword.getKeywordTypeId() + CommonValues.INNER_SEPARATOR + keyword.getId());
 				}
 			}

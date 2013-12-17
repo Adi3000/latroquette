@@ -36,6 +36,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.adi3000.common.util.CommonUtil;
 import com.adi3000.common.util.optimizer.CommonValues;
 import com.adi3000.common.util.security.Security;
 import com.adi3000.common.web.faces.FacesUtil;
@@ -555,6 +556,11 @@ public class UserBean implements Serializable{
 		this.newWishKeywordId = newWishKeywordId;
 	}
 
+	public void removeWish(String wishId){
+		WishedItem wish = (WishedItem) CommonUtil.findById(user.getWishesList(), wishId);
+		user.getWishesList().remove(wish);
+		usersService.updateUser(user);
+	}
 	public void addWish(AjaxBehaviorEvent event){
 		if(StringUtils.isNotEmpty(newWish)){
 			WishedItem wish = new WishedItem();

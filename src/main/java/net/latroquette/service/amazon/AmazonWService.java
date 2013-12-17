@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import com.amazon.ECS.client.jax.AWSECommerceService;
 import com.amazon.ECS.client.jax.AWSECommerceServicePortType;
+import com.amazon.ECS.client.jax.ItemLookup;
+import com.amazon.ECS.client.jax.ItemLookupRequest;
 import com.amazon.ECS.client.jax.ItemSearch;
 import com.amazon.ECS.client.jax.ItemSearchRequest;
 import com.amazon.ECS.client.jax.OperationRequest;
@@ -35,8 +37,6 @@ public class AmazonWService {
 	public static final String AWS_ACCESS_KEY = "AKIAJI5JPPYSQLRZXSNA"; 
 	public static final String AWS_SECRET_KEY= "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" ;
 	public static final String AWS_ASSOCIATE_TAG= "latronet-21" ;
-	private static final String AWS_END_POINT= "http://webservices.amazon.com/onca/xml" ;
-	private static final String AWS_SERVICE_VERSION= "2011-08-01" ;
 	private static final List<String> AVAILABLE_CATEGORY = Arrays.asList( 
 			"all","apparel","appliances","baby","beauty","blended",
 		    "books","classical","dvd","electronics","boreignbooks",
@@ -91,6 +91,24 @@ public class AmazonWService {
 		try{
 			logger.debug("AWS request : [{}] keywords : {} ", itemSearch.getSearchIndex(), itemSearch.getKeywords() );
 			port.itemSearch("", amazonAccessKey, AWS_ASSOCIATE_TAG, "", "", 
+					itemSearch, request.getRequest(),operationRequest, items);
+		}catch(WebServiceException e){
+			throw e;
+		}
+		
+		return items.value;
+	}
+	public List<com.amazon.ECS.client.jax.Items> itemLookup(AWSECommerceServicePortType port, ItemLookupRequest itemSearch){
+		ItemLookup request = new ItemLookup();
+		request.setAWSAccessKeyId(amazonAccessKey);
+		request.getRequest().add(itemSearch);
+		
+		Holder<OperationRequest> operationRequest = new Holder<OperationRequest>(); 
+		Holder<List<com.amazon.ECS.client.jax.Items>> items = new Holder<java.util.List<com.amazon.ECS.client.jax.Items>> ();
+		
+		try{
+			logger.debug("AWS request : [{}] keywords : {} ", itemSearch.getSearchIndex(), itemSearch.getItemId() );
+			port.itemLookup("", amazonAccessKey, AWS_ASSOCIATE_TAG, "", "", 
 					itemSearch, request.getRequest(),operationRequest, items);
 		}catch(WebServiceException e){
 			throw e;

@@ -135,6 +135,21 @@ $(function() {
 								ui.item.desc = desc;
 							}
 						);
+					}else if(ui.item.source == "amz"){
+						$.getJSON(
+							_requestContextPath_+"/rest/search/item/amazon/byId", 
+							{
+								id : ui.item.uid 
+							},
+							function(data){
+								if(data && data != null && !isEmpty(data)){
+									var desc = null;
+									desc = $("<div />")
+												.append($("<img />").attr("src",data.imageUrl ));
+									ui.item.desc = desc;
+								}
+							}
+						);		
 					}
 				}
 				//Give time to item description to be loaded
@@ -167,6 +182,43 @@ $(function() {
 			};
 		}
 	});
+	$("#wishesForm").on("mouseover", ".wishedItem", function(){
+		var desc = null;
+		var item = $(this);
+		clearTimeout(loadingWishesPreview);
+		if($(this).attr("data-source") == "amz"){
+			$.getJSON(
+				_requestContextPath_+"/rest/search/item/amazon/byId", 
+				{
+					id : $(this).attr("data-uid") 
+				},
+				function(data){
+					if(data && data != null && !isEmpty(data)){
+						desc = $("<div />")
+									.append($("<img />").attr("src",data.imageUrl ));
+						if(!item.attr("data-done")){
+							item.append($("<a />").attr("href",data.sourceUrl).attr("title"," A partir de "+data.price+" € sur Amazon").text("[voir sur Amazon]"));
+							item.attr("data-done", true);
+						}
+					}
+				}
+			);
+		}
+		//Give time to item description to be loaded
+		loadingWishesPreview = setTimeout(function(){
+			if(desc && desc != null){
+				var preview = $("#wishesForm\\:wishField").siblings(".preview");
+				preview.empty();
+				preview.append(desc);
+				if(!preview.is(":visible")){
+					preview.fadeIn(300);
+				}
+			}
+		},500);
+	}).on("mouseout", ".wishedItem", function(){
+		clearTimeout(loadingWishesPreview);
+		$("#wishesForm\\:wishField").siblings(".preview").fadeOut(300);
+	})
 	$("#itemMenuCategory").selectKeywordByMenu();
 	$("#wishesMenuCategory").selectKeywordByMenu(1);
 	//To be able to prevent some bugs

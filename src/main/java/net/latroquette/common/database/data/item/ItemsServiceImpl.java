@@ -37,6 +37,7 @@ import com.adi3000.common.util.data.HibernateUtil;
 import com.adi3000.common.util.optimizer.CommonValues;
 import com.adi3000.common.util.security.Security;
 import com.amazon.ECS.client.jax.AWSECommerceServicePortType;
+import com.amazon.ECS.client.jax.ItemLookupRequest;
 import com.amazon.ECS.client.jax.ItemSearchRequest;
 
 @Repository(value=Services.ITEMS_SERVICE)
@@ -101,7 +102,7 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	
 	@TransactionalUpdate
 	public void deleteImageFromItem(File image, Item item, User user){
-		item.getImageList().remove(image);
+		item.getImageSet().remove(image);
 		modifyItem(item, user);
 		filesService.removeFile(image);
 	}
@@ -122,19 +123,54 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		if(storedMatch != null){
 			result.addAll(storedMatch);
 		}
-		List<AmazonItem> amazonResult = searchAmazonItems(null, pattern);
-		for(Wish wish : amazonResult){
-			if(!result.contains(wish)){
-				result.add(wish);
-			}
-		}
 		List<Keyword> keywordResult = keywordsService.searchKeyword(pattern);
 		for(Wish wish : keywordResult){
 			if(!result.contains(wish)){
 				result.add(wish);
 			}
 		}
+		List<AmazonItem> amazonResult = searchAmazonItems(null, pattern);
+		for(Wish wish : amazonResult){
+			if(!result.contains(wish)){
+				result.add(wish);
+			}
+		}
 		return result;
+	}
+	/**
+	 * Search an item via Amazon Webservice by its uid
+	 * @param cat
+	 * @param pattern
+	 * @return
+	 */
+	@Transactional
+	public AmazonItem searchAmazonItemById(String id){
+		AmazonItem amazonItem = null;
+		
+		AWSECommerceServicePortType port =  amazonWService.getPort();
+		ItemLookupRequest itemLookup = new ItemLookupRequest();
+		itemLookup.getItemId().add(id);
+		//Retrieve images and title informations
+		itemLookup.getResponseGroup().add("Small");
+		itemLookup.getResponseGroup().add("Images");
+		itemLookup.getResponseGroup().add("OfferSummary");
+		itemLookup.getResponseGroup().add("BrowseNodes");
+		
+		List<com.amazon.ECS.client.jax.Items> results = amazonWService.itemLookup(port,itemLookup);
+		if(results != null && !results.isEmpty()){
+			
+			for(com.amazon.ECS.client.jax.Items result : results){
+				List<com.amazon.ECS.client.jax.Item> itemsResults = result.getItem(); 
+				if( itemsResults != null && !itemsResults.isEmpty()){
+					for(com.amazon.ECS.client.jax.Item item : itemsResults){
+						amazonItem = new AmazonItem(item);
+						break;
+					}
+					break;
+				}
+			}
+		}
+		return amazonItem;
 	}
 	/**
 	 * Search an item via Amazon Webservice
@@ -184,9 +220,9 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	@Transactional(readOnly=true)
 	public Item getItemById(Integer itemId){
 		Item item = (Item)getSession().get(Item.class,	itemId);
-		HibernateUtil.initialize(item.getImageList());
-		HibernateUtil.initialize(item.getKeywordList());
-		HibernateUtil.initialize(item.getExternalKeywordList());
+		HibernateUtil.initialize(item.getImageSet());
+		HibernateUtil.initialize(item.getKeywordSet());
+		HibernateUtil.initialize(item.getExternalKeywordSet());
 		return item;
 	}
 	
@@ -220,7 +256,7 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		@SuppressWarnings("unchecked")
 		List<Item> items = (List<Item>)req.list();
 		for(Item item : items){
-			HibernateUtil.initialize(item.getImageList());
+			HibernateUtil.initialize(item.getImageSet());
 		}
 		return items;
 	}
@@ -331,9 +367,9 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		String sql = 
 				" SELECT "
 					.concat(field)
-					.concat(" FROM Item item left join item.keywordList keyword ")
+					.concat(" FROM Item item left join item.keywordSet keyword ")
 					.concat(" INNER JOIN item.user user ")
-					.concat(" LEFT JOIN item.keywordList keyword ")
+					.concat(" LEFT JOIN item.keywordSet keyword ")
 					.concat(" LEFT JOIN item.user.place place ")
 					.concat(restriction.toString())
 					.concat(countOnly ? "" : " order by item.creationDate");

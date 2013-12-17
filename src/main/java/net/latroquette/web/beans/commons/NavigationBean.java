@@ -184,8 +184,8 @@ public class NavigationBean {
 				actualKeyword = keywordsService.getKeywordById(Integer.valueOf(keywordId));
 			}else if (StringUtils.isNotEmpty(itemId)){
 				Item item = itemsService.getItemById(Integer.valueOf(itemId));
-				if(item != null && item.getKeywordList() != null && ! item.getKeywordList().isEmpty()){
-					actualKeyword = item.getKeywordList().get(0);
+				if(item != null && item.getKeywordSet() != null && ! item.getKeywordSet().isEmpty()){
+					actualKeyword = item.getKeywordSet().iterator().next();
 				}
 			}
 			if(actualKeyword != null){

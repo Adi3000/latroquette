@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 
 import com.adi3000.common.database.hibernate.data.AbstractDataObject;
@@ -15,6 +17,7 @@ import com.adi3000.common.database.hibernate.data.AbstractDataObject;
 @Entity
 @Table(name="roles")
 @SequenceGenerator(name = "roles_role_id_seq", sequenceName = "roles_role_id_seq", allocationSize=1)
+@Cache(region = "roles", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Role extends AbstractDataObject{
 	
 	/**
