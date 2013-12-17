@@ -9,6 +9,7 @@ import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.util.parameters.ParameterName;
 
 import com.adi3000.common.database.hibernate.session.DAO;
+import com.adi3000.common.database.spring.TransactionalUpdate;
 
 public interface ItemsService extends DAO<Item> {
 
