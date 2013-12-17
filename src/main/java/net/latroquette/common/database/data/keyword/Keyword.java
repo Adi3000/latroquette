@@ -2,9 +2,11 @@ package net.latroquette.common.database.data.keyword;
 
 import java.util.List;
 
+import net.latroquette.common.database.data.item.wish.Wish;
+
 import com.adi3000.common.database.hibernate.data.DataObject;
 
-public interface Keyword extends DataObject{
+public interface Keyword extends DataObject, Wish{
 	
 	public static final Integer MAIN_ANCESTOR_RELATIONSHIP = 1;
 	public static final Integer CHILDREN_RELATIONSHIP = 2;

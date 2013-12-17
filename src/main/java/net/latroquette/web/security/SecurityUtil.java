@@ -1,10 +1,14 @@
 package net.latroquette.web.security;
 
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.web.beans.profile.UserBean;
 
 import com.adi3000.common.util.security.Security;
 import com.adi3000.common.web.faces.FacesUtil;
+import com.adi3000.common.web.jsf.UtilsBean;
 
 public class SecurityUtil {
 	public static final String LOGIN_VIEW_PATH = "/profile/login";
@@ -14,8 +18,11 @@ public class SecurityUtil {
 	private static final String SMF_COOKIE = "SMFCookie455";
 	public static boolean checkUserLogged(UserBean user){
 		if (user == null || !Security.isUserLogged(user.getUser()) || !user.isActuallyLoggedIn()){
+			HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 			user.logoutUser();
 			user.setDisplayLoginBox(true);
+			user.setPreviousURI(request.getRequestURI());
+			user.setPreviousQueryString(UtilsBean.urlEncode(request.getQueryString()));
 			FacesUtil.navigationForward(LOGIN_VIEW_PATH);
 			return false;
 		}

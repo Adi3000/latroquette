@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.latroquette.common.database.data.file.File;
+import net.latroquette.common.database.data.item.wish.Wish;
 import net.latroquette.common.database.data.profile.User;
 import net.latroquette.common.util.parameters.ParameterName;
 
@@ -77,5 +78,11 @@ public interface ItemsService extends DAO<Item> {
 	 * @return
 	 */
 	public List<Item> searchItemByStatus(Integer page, ItemStatus itemStatus);
+	/**
+	 * Search a wishes within multiple resources
+	 * @param pattern
+	 * @return
+	 */
+	public List<Wish> searchWishes(String pattern);
 	
 }

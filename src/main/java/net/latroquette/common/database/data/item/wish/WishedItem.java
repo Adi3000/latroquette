@@ -123,5 +123,14 @@ public class WishedItem extends AbstractDataObject implements Wish {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	public boolean equals(Object o){
+		if(o == null){
+			return false;
+		}
+		return this.equals((Wish)o);
+	}
+	public boolean equals(Wish wish){
+		return this.getSource().equals(wish.getSource()) &&
+				this.getUid().equals(wish.getUid());
+	}
 }

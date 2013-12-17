@@ -14,6 +14,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ComponentSystemEvent;
 import javax.servlet.http.HttpServletRequest;
 
@@ -55,7 +56,7 @@ public class UserBean implements Serializable{
 	private User user;
 	private Integer placeId;
 	private String newWish;
-	private Integer newWishSource;
+	private String newWishSource;
 	private String newWishCode;
 	
 	@ManagedProperty(Services.PLACES_SERVICE_JSF)
@@ -457,14 +458,14 @@ public class UserBean implements Serializable{
 	/**
 	 * @return the newWishSource
 	 */
-	public Integer getNewWishSource() {
+	public String getNewWishSource() {
 		return newWishSource;
 	}
 
 	/**
 	 * @param newWishSource the newWishSource to set
 	 */
-	public void setNewWishSource(Integer newWishSource) {
+	public void setNewWishSource(String newWishSource) {
 		this.newWishSource = newWishSource;
 	}
 
@@ -534,5 +535,18 @@ public class UserBean implements Serializable{
 	}
 	public List<WishedItem> getWishesList(){
 		return user.getWishesList() != null ? new ArrayList<WishedItem>(user.getWishesList()) : null;
+	}
+	
+	public void addWish(AjaxBehaviorEvent event){
+		WishedItem wish = new WishedItem();
+		wish.setName(newWish);
+		wish.setSource(newWishSource);
+		wish.setUid(newWishCode);
+		user.getWishesList().add(wish);
+		usersService.updateUser(user);
+		newWish = null;
+		newWishSource = null;
+		newWishCode = null;
+		logger.debug("Passed through with {}",newWish);
 	}
 }
