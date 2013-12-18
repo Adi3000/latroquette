@@ -14,6 +14,10 @@
 		var _mainKeywordTypeId_ = "#{webConstantsBean.mainKeywordTypeId}";
 		var _externalKeywordTypeId_ = "#{webConstantsBean.externalKeywordTypeId}";
 		var _synonymKeywordTypeId_ = "#{webConstantsBean.synonymKeywordTypeId}";
+		var _amazonSource_ = "#{webConstantsBean.amazonSource}";
+		var _keywordSource_ = "#{webConstantsBean.keywordSource}";
+		var _externalKeywordSource_ = "#{webConstantsBean.externalKeywordSource}";
+		var _wishesSource_ = "#{webConstantsBean.wishesSource}";
 		var _requestContextPath_ = "#{facesContext.externalContext.requestContextPath}";
 	</h:outputScript>
 	<script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js" />
@@ -24,10 +28,11 @@
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.1.0/backbone.localStorage-min.js" />
 	<script type="text/javascript" src="/resources/js/common.js"/>
 	<h:outputStylesheet name="js/rondell/jquery.rondell.css" />
+	<h:outputStylesheet name="css/common/common.css" />
 	<h:outputScript name="js/modernizr-2.0.6.min.js" />
 	<h:outputScript name="js/jquery.mousewheel-3.0.6.min.js" />
 	<h:outputScript name="js/rondell/jquery.rondell.js" />
-	<h:outputStylesheet name="css/common/common.css" />
+	<h:outputScript name="js/slidorion/js/jquery.cycle.lite.js" target="head" />
 	<title>La TroQuette</title>
 </h:head>
 <h:body>

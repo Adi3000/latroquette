@@ -145,3 +145,17 @@ h2#profileTitle{
 	left: 624px;
 	top: 178px;
 }
+#profileConsole,#wishesForm{
+	display: inline-block;
+	vertical-align: top;
+}
+#wishesForm{
+	margin-top: 23px;
+	width: 310px;
+}
+#userWishes{
+	padding: 0px;
+	width: 300px;
+	height: 300px;
+	overflow-y: auto;
+}

@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:util="http://code.adi3000.com/common/web/jsf/util" >
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<f:metadata>
@@ -13,6 +14,12 @@
 	 	</f:metadata>
 		<ui:define name="mainDiv"> 
 		 	<h:outputScript name="js/item.js" target="head" /> 
+		 	<h:outputStylesheet name="css/item.css" target="head" /> 
+		 	<h:outputScript target="head">
+		 	$(function(){
+		 		$("#itemList .itemImages").cycle();
+		 	})
+		 	</h:outputScript>
 		 	<!-- <h:outputScript target="head" >
 				$(function() {
 					showLoadingDiv("Recherche en cours... Veuillez patienter...");
@@ -40,17 +47,30 @@
 								<h:graphicImage value="/image/p/s/#{image.name}" />
 							</ui:repeat> 
 						</div>
-						<div class="itemInfos" >
-							<div class="login">#{item.user.login}</div>
-						</div>
-						<div class="itemDetails">
-							<h2 class="itemTitle" >
-								<h:link outcome="/item/viewItem" value="#{item.title}">
-									<f:param name="item" value="#{item.id}" />
-								</h:link>
-							</h2>
-							<p class="itemDescription" >#{item.description}</p>
-							<ul class="itemWishies" />
+						<div class="itemInfoDetails">
+							<div class="itemInfos" >
+								<div class="date">
+								<span>déposé le</span>
+								<span>
+									<h:outputText value="#{item.updateDate}" >
+								    	<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+									</h:outputText>
+								</span>
+								</div>
+								<div class="login">par <span>#{item.user.login}</span></div>
+								<h:panelGroup rendered="#{item.user.place != null}">
+									<div class="place">#{item.user.place.name}</div>
+								</h:panelGroup>
+							</div>
+							<div class="itemDetails">
+								<h2 class="itemTitle" >
+									<h:link outcome="/item/viewItem" value="#{item.title}">
+										<f:param name="item" value="#{item.id}" />
+									</h:link>
+								</h2>
+								<div class="itemDescription" >#{util:limit(item.description,200)}</div>
+								<ul class="itemWishies" />
+							</div>
 						</div>
 					</div>
 				</ui:repeat>

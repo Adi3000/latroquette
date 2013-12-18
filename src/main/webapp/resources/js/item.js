@@ -31,4 +31,29 @@ jQuery.fn.addItems = function(json) {
     });
     
 };
-
+$(function() {
+  	if($("#itemImages > *").is("*")){
+	    $("#itemImages .itemImage").rondell({
+			preset: "scroller",
+			theme: "light",
+			center: {left: 350, top: 100 },
+			center: {left: 350, top: 100 },
+			visibleItems: "5",
+			strings: { 
+				prev : '&lt;&lt;', next : '&gt;&gt;', more: 'Plus...', 
+				loadingError : 'Erreur au chargement de l\'image <strong>%s</strong>'},
+			repeating: true,
+			autoRotation: {
+				enabled: true,
+				direction: 1,
+				once: false,
+				delay: 5000
+			},
+			currentLayer : 1,
+			lightbox: {
+			    enabled: true,
+			    displayReferencedImages: true
+			} 
+	    });
+	}
+  });

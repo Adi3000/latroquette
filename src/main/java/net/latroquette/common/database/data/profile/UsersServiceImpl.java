@@ -504,7 +504,7 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 				newWish = wish;
 			}
 		}
-		user.getWishesList().add(newWish);
+		user.getWishesSet().add(newWish);
 		updateUser(user);
 	}	
 }

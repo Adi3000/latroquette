@@ -310,7 +310,7 @@ public class UserBean implements Serializable{
 		xmppSession = null;
 		SecurityUtil.removeTokenCookie();
 		user.setLoginState(User.ANONYMOUS);
-		return "/index";
+		return FacesUtil.prepareRedirect("/index");
 	}
 	
 	private void initPreviousURL(){
@@ -539,7 +539,7 @@ public class UserBean implements Serializable{
 		}
 	}
 	public List<WishedItem> getWishesList(){
-		return user.getWishesList() != null ? new ArrayList<WishedItem>(user.getWishesList()) : null;
+		return user.getWishesSet() != null ? new ArrayList<WishedItem>(user.getWishesSet()) : null;
 	}
 	
 	/**
@@ -556,10 +556,11 @@ public class UserBean implements Serializable{
 		this.newWishKeywordId = newWishKeywordId;
 	}
 
-	public void removeWish(String wishId){
-		WishedItem wish = (WishedItem) CommonUtil.findById(user.getWishesList(), wishId);
-		user.getWishesList().remove(wish);
+	public String removeWish(String wishId){
+		WishedItem wish = (WishedItem) CommonUtil.findById(user.getWishesSet(), wishId);
+		user.getWishesSet().remove(wish);
 		usersService.updateUser(user);
+		return null;
 	}
 	public void addWish(AjaxBehaviorEvent event){
 		if(StringUtils.isNotEmpty(newWish)){

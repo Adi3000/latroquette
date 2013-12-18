@@ -6,60 +6,31 @@
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<f:metadata>
-		    <f:viewParam name="register" value="true"/>            
+		    <f:viewParam name="register" value="true"/>
 	 		<f:event listener="#{userBean.checkUserLogged}" type="preRenderView" />
 	 	</f:metadata>
 		<ui:define name="mainDiv">
+			<h:outputScript name="js/_initEditWishes.js" target="head" />
 			<h:outputStylesheet name="css/profile.css" target="head" />
-			<div>
-				<h2 id="profileTitle">Bonjour #{userBean.login}</h2>
-				<div id="centerTop">
-					<div id="largeLeftDiv">
-						<div class="rightSmallDiv">
-							<ul>
-								<li>Messagerie</li>
-								<li>Déconnexion</li>
-							</ul>						
-						</div>
-						<div class="rightSmallDiv">
-							<ul>
-								<li>Avatar</li>
-								<li>Mes informations personnelles</li>
-								<li>Disponibilités/Vacances</li>
-								<li>Mes avis</li>
-							</ul>
-						</div>
-						<div class="rightSmallDiv">
-							<ul>
-								<li><h:link outcome="/item/index?s=0" value="Soumettre mes brouillons" /></li>
-								<li><h:link outcome="/item/editItem.xhtml" value="Déposer une annonce" /></li>
-								<li><h:link outcome="/item/index?o=#{userBean.id}&amp;s=2" value="Gérer mes annonces en cours" /></li>
-							</ul>
-						</div>
-					</div>
-					<div id="largeRightDiv">
-						<div class="leftSmallDiv">
-							<ul>
-								<li>TroQueurs Favoris</li>
-								<li>Discussions instantannée</li>
-								<li>Le Journal</li>
-								<li>Livre d'or</li>
-							</ul>
-						</div>
-						<div class="leftSmallDiv">
-							<ul>
-								<li>Echanges effectués</li>
-								<li>Echanges en cours</li>
-								<li>Recherche à suivre</li>
-								<li>Donner un avis</li>
-							</ul>
-						</div>
-					</div>
+			<div id="profileConsole">
+				<h2>Gestion du profil #{userBean.login}</h2>
+				<div class="rightSmallDiv">
+					<ul>
+						<li><h:link outcome="/profile/edit" value="Modifier mon profil" /></li>
+						<li>Messagerie</li>
+					</ul>
 				</div>
-<!-- 					<div> -->
-<!-- 						<h:link outcome="infos">Mon profil</h:link> -->
-<!-- 					</div> -->
+				<div class="rightSmallDiv">
+					<ul>
+						<li><h:link outcome="/item/index?s=0" value="Soumettre mes brouillons" /></li>
+						<li><h:link outcome="/item/editItem.xhtml" value="Déposer une annonce" /></li>
+						<li><h:link outcome="/item/index?o=#{userBean.id}&amp;s=2" value="Gérer mes annonces en cours" /></li>
+					</ul>
+				</div>
 			</div>
+			<ui:insert name="wishes">
+				<ui:include src="/home/tiles/editWishes.xhtml" />
+			</ui:insert>
 		</ui:define>
 	</ui:composition>
 </body>

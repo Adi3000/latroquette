@@ -5,6 +5,8 @@ package net.latroquette.common.database.data.profile;
 
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -20,6 +22,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
 
 import net.latroquette.common.database.data.item.wish.WishedItem;
@@ -59,7 +62,7 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	private Boolean xmppBlock;
 	private Timestamp lastDateXmpp;
 	private Integer smfId;
-	private Set<WishedItem> wishesList;
+	private Set<WishedItem> wishesSet;
 	
 	@Id
 	@Column(name="user_id")
@@ -278,14 +281,21 @@ public class User extends AbstractDataObject implements com.adi3000.common.util.
 	@JoinTable(name="users_wishes", 
 		joinColumns={@JoinColumn(name="user_id")}, 
 		inverseJoinColumns={@JoinColumn(name="wish_id")})
-	public Set<WishedItem> getWishesList() {
-		return wishesList;
+	@XmlTransient
+	public Set<WishedItem> getWishesSet() {
+		return wishesSet;
 	}
+	@Transient
+	@XmlTransient
+	public List<WishedItem> getWishesList(){
+		return new ArrayList<>(getWishesSet());
+	}
+	
 	/**
 	 * @param wishesList the wishesList to set
 	 */
-	public void setWishesList(Set<WishedItem> wishesList) {
-		this.wishesList = wishesList;
+	public void setWishesSet(Set<WishedItem> wishesList) {
+		this.wishesSet = wishesList;
 	}
 	
 }

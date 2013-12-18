@@ -13,7 +13,9 @@
 	 	</f:metadata>
 		<ui:define name="mainDiv"> 
 			<h:outputStylesheet name="css/item.css" target="head" />
+			<h:outputScript name="js/item.js" target="head" />
 			<h:outputScript name="js/_initEditItem.js" target="head" />
+			<h:outputScript name="js/_initEditWishes.js" target="head" />
 			<h:form id="editItemForm" method="post" enctype="multipart/form-data">
 				<h:messages></h:messages>
 				<div id="itemDescription">
@@ -63,11 +65,11 @@
 				</div>
 				<div id="itemImages">
 					<ui:repeat var="image" value="#{itemBean.fileList}">
-						<div class="uploadedImage">
+						<div class="uploadedImage itemImage">
 							<a href="#" rel="lightbox[uploadPic]">
 								<h:graphicImage value="/image/#{image.id}" />
 							</a>
-							<div class="removePic"><h:commandLink action="#{itemBean.removePic(image.id)}" value="Supprimer" /></div>
+							<div class="removePic"><h:commandLink action="#{itemBean.removePic(image.id)}" value="Supprimer" styleClass="button" /></div>
 						</div>
 					</ui:repeat>
 				</div>
@@ -78,75 +80,12 @@
 				<div id="saveButton">
 					<h:commandButton value="Cr&#233;er" action="#{itemBean.createItem}" rendered="#{!itemBean.item.idSet}"/>
 					<h:commandButton value="Modifier" action="#{itemBean.updateItem}" rendered="#{itemBean.item.idSet}"/>
+					<h:link value="Annuler" outcome="/item/viewItem?item=#{itemBean.itemId}" rendered="#{itemBean.item.idSet}" styleClass="button" />
 				</div>
 			</h:form>
-			<h:form id="wishesForm">
-				<div id="wishes">
-					<fieldset>
-						<legend>Mes Souhaits</legend>
-						<div class="field">
-							<h:panelGroup id="userNewWish">
-								<h:inputText id="wishField" value="#{userBean.newWish}" p:placeholder="Nouveau souhait" />
-								<h:commandButton value="Ajouter">
-							         <f:ajax render="wishField wishSource wishCode whishesCategoryIdsPanel userWishes" execute="wishesForm" listener="#{userBean.addWish}"/>
-							    </h:commandButton>
-								<h:inputHidden id="wishSource" value="#{userBean.newWishSource}" />
-								<h:inputHidden id="wishCode" value="#{userBean.newWishCode}" />
-								<div class="preview ui-corner-all" style="display:none;" />
-								<div>
-									<h:panelGroup id="whishesCategoryIdsPanel" styleClass="categoryIds">
-										<h:inputHidden id="whishesCategoryIds" value="#{userBean.newWishKeywordId}" />
-										<script type="text/javascript" >
-											console.log(!$("#wishesSelectedCategory").is(":empty"));
-											if(isEmpty($("#wishesForm\\:whishesCategoryIds").val()) &amp;&amp; !$("#wishesSelectedCategory").is(":empty")){
-												$("#wishesSelectedCategory").empty().hide(0)
-											}
-										</script>
-									</h:panelGroup>
-									<ul id="wishesSelectedCategory" class="ui-menu ui-widget ui-widget-content ui-corner-all selectedCategories"/>
-									<ul id="wishesMenuCategory">
-										<li>
-											<a href="#">Categories</a>
-											<ul>
-												<ui:repeat var="entry" value="#{menuBean.rootCategoriesEntries}">
-													<li data-keyword-id="#{entry.id}" data-keyword-type="#{entry.keywordType.id}">
-														<a href="#" >#{entry.name}</a>
-														<h:panelGroup rendered="#{!empty entry.children}">
-															<ul>
-																<ui:repeat var="subEntry" value="#{entry.children}">
-																	<li data-keyword-id="#{subEntry.id}" data-keyword-type="#{subEntry.keywordType.id}">
-																		<a href="#" >#{subEntry.name}</a>
-																		<h:panelGroup rendered="#{!empty subEntry.children}">
-																			<ul />
-																		</h:panelGroup>
-																	</li>
-																</ui:repeat>
-															</ul>
-														</h:panelGroup>
-													</li>
-												</ui:repeat>
-											</ul>
-										</li>
-									</ul>
-								</div>
-							</h:panelGroup>
-						</div>
-						<h:panelGroup id="userWishes">
-							<ul id="userWishes">
-								<ui:repeat var="wish" value="#{userBean.wishesList}">
-									<li>
-										<h:commandLink action="#{userBean.removeWish(wish.id)}" >
-											<f:ajax render=":wishesForm:userWishes"/>
-											<span class="ui-icon ui-icon-trash"></span>
-										</h:commandLink>
-										<div class="ui-widget-content ui-corner-all wishedItem" data-source="#{wish.source}" data-uid="#{wish.uid}">#{wish.name}&#160;</div>
-									</li>
-								</ui:repeat>
-							</ul>
-						</h:panelGroup>
-					</fieldset>
-				</div>
-			</h:form>
+			<ui:insert name="wishes">
+				<ui:include src="/home/tiles/editWishes.xhtml" />
+			</ui:insert>
 	  	</ui:define>
 	</ui:composition>
 </body>

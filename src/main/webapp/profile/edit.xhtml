@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<body>
+	<ui:composition template="/home/template/mainLayout.xhtml">
+		<f:metadata>
+		    <f:viewParam name="register" value="true"/>            
+	 		<f:event listener="#{userBean.checkUserLogged}" type="preRenderView" />
+	 	</f:metadata>
+		<ui:define name="mainDiv">
+			<h:outputStylesheet name="css/profile.css" target="head" />
+			<div>
+				<h2 id="profileTitle">Bonjour #{userBean.login}</h2>
+				<div id="centerTop">
+					<div id="largeLeftDiv">
+						<div class="rightSmallDiv">
+							<ul>
+								<li>Messagerie</li>
+								<li>Déconnexion</li>
+							</ul>						
+						</div>
+						<div class="rightSmallDiv">
+							<ul>
+								<li>Avatar</li>
+								<li>Modifier mon profil</li>
+								<li>Disponibilités/Vacances</li>
+								<li>Mes avis</li>
+							</ul>
+						</div>
+						<div class="rightSmallDiv">
+							<ul>
+								<li><h:link outcome="/item/index?s=0" value="Soumettre mes brouillons" /></li>
+								<li><h:link outcome="/item/editItem.xhtml" value="Déposer une annonce" /></li>
+								<li><h:link outcome="/item/index?o=#{userBean.id}&amp;s=2" value="Gérer mes annonces en cours" /></li>
+							</ul>
+						</div>
+					</div>
+					<div id="largeRightDiv">
+						<div class="leftSmallDiv">
+							<ul>
+								<li>TroQueurs Favoris</li>
+								<li>Discussions instantannée</li>
+								<li>Le Journal</li>
+								<li>Livre d'or</li>
+							</ul>
+						</div>
+						<div class="leftSmallDiv">
+							<ul>
+								<li>Echanges effectués</li>
+								<li>Echanges en cours</li>
+								<li>Recherche à suivre</li>
+								<li>Donner un avis</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+<!-- 					<div> -->
+<!-- 						<h:link outcome="infos">Mon profil</h:link> -->
+<!-- 					</div> -->
+			</div>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

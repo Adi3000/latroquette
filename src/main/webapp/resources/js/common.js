@@ -256,7 +256,16 @@ $(function(){
 			});
 		}
 	});
-	$( "input[type=submit],input[type=button], a.button, button" ).button();
+	$( "input[type=submit],input[type=button], a.button, button" ).each(function(){
+		$(this).button();
+		if($(this).hasClass("disabled")){
+			$(this).button( "option", "disabled", true );
+		};
+	});
+	//To be able to prevent some bugs
+	$(".preview").click(function(){
+		$(this).fadeOut(300);
+	});
 });
 
 /**

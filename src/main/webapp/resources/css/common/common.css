@@ -272,3 +272,34 @@ ul.ui-autocomplete{
 	margin-left: 200px;
 	padding: 5px;
 }
+.preview{
+	position: absolute;
+	margin-left: 400px;
+	z-index: 20;
+	background: #fff;
+	padding: 5px;
+	border: 1px solid #a46313;
+	background-color: #fff;
+	box-shadow: 1px 1px 5px #000;
+	cursor: default;
+}
+#wishesForm .field{
+	width: 240px;
+	margin-left: 20px;
+}
+#wishesMenuCategory{
+	width: 170px;
+}
+.wishedItem{
+	width: 250px;
+	display: inline-block;
+	vertical-align: middle;
+	padding: 5px;
+}
+#mainDiv .ui-icon {
+	position: inherit;
+	vertical-align: middle;
+}
+.selectedCategories li span{
+	vertical-align: middle;
+}

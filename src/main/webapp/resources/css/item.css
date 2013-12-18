@@ -47,53 +47,66 @@
 	display: inline-block;
 }
 
-#mainDiv .ui-icon {
-	position: inherit;
-	vertical-align: middle;
-}
 #selectedCategory{
 	width: 100%;
-}
-.preview{
-	position: absolute;
-	margin-left: 400px;
-	z-index: 20;
-	background: #fff;
-	padding: 5px;
-	border: 1px solid #a46313;
-	background-color: #fff;
-	box-shadow: 1px 1px 5px #000;
-	cursor: default;
 }
 #wishes .preview{
 	margin-top: -30px;
 	margin-left: -430px;
-
 }
-#wishesForm, #editItemForm{
+#wishesForm, #editItemForm, #itemDescription,#userWishes{
 	display: inline-block;
 	vertical-align: top;
+}
+#editItemForm,#itemDescription{
+	width: 386px;
 }
 #wishesForm{
 	margin-top: 23px;
 	width: 310px;
 }
-#wishesForm .field{
-	width: 240px;
-	margin-left: 20px;
+.overflow-y{
+	height: 300px;
+	overflow-y: auto;
+	cursor: default;
 }
-#wishesMenuCategory{
-	width: 170px;
-}
-#userWishes{
+ul#userWishes, div#userWishes ul{
 	padding: 0px;
 	width: 300px;
 	height: 300px;
 	overflow-y: auto;
 }
-#userWishes li .wishedItem{
-	width: 250px;
+div#userWishes ul{
+	width: 300px;
+}
+#saveButton{
+	position: relative;
+	left: 75%;
+}
+#editButton{
+	width: 100%;
+	text-align: center;
+}
+#itemList .itemInfoDetails,
+#itemList .itemImages{
 	display: inline-block;
-	vertical-align: middle;
+	vertical-align: top;
+}
+#itemList .itemImages{
+	display: inline-block;
+	width: 150px;
+	height: 150px;
+}
+#itemList .itemInfos,
+#itemList .itemDetails{
+	width: 500px;
+	margin-left: 10px;
 	padding: 5px;
+}
+#itemList .item{
+	height: 150px;
+	border-bottom: 1px solid #000;
+}
+#itemList .itemTitle{
+	margin: 5px;
 }

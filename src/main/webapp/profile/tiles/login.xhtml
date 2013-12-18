@@ -12,112 +12,8 @@
 		<h:outputScript target="head" rendered="#{!userBean.loggedIn}">
 			var registerDisplayed = false;
 			var forceLogin = "#{userBean.displayLoginBox}";
-			$(function() {
-				$("#userPlaceName")
-					.tooltip({
-			            tooltipClass: "ui-state-highlight"
-		          	}).autocomplete({
-						source: 
-							function( request, response ) {
-								$.getJSON(
-									_requestContextPath_+"/rest/search/places",
-									{
-										term : request.term
-									},function( data ) {
-							          	response( data );
-									}
-								);
-							},
-						minLength: 2,
-						select:
-							function (event, ui){
-								$(this).val(ui.item.name);
-								$(this).siblings('input[type="hidden"]').val(ui.item.id);
-								return false;
-							},
-						create: 
-							function () {
-					            $(this).data("ui-autocomplete")._renderItem = function (ul, place) {
-					                return $("<li />")
-										.attr( "data-value", place.id )
-					                    .append($("<a />").text(place.name + " (" + place.postalCodes + ")"))
-					                    .appendTo(ul);
-					            };
-				       		},
-				       	change: 
-				       		function(event, ui){
-				       			var field = $(this);
-				       			if(ui.item) {
-				       				field
-				       					.val(ui.item.name)
-										.siblings('input[type="hidden"]').val(ui.item.id);
-				       			}else{
-				       				field
-				       					.attr( "title", field.val() + " n'est pas valide" )
-	          							.tooltip( "open" );
-			       					field.siblings('input[type="hidden"]').val("")
-	         							setTimeout(function() {
-								          field.tooltip( "close" ).attr( "title", "" );
-							        }, 2500 );
-				       			}
-				       			
-				       		}
-			    });
-				$("#loginDiv").hide(0);
-				$("#passwordConfirm").hide(0);
-				$("#forgotPassword").hide(0);
-				$("#switchToLogin").click(function(){
-					$("#loginDiv").slideDown(600,"easeOutBounce");
-				});
-				$("#switchToLogin").click(function(){
-					$("#arrowDiv").hide(600);
-				});
-				$("#switchToArrow").click(function(){
-					$("#arrowDiv").show(600);
-				});
-				$("#switchToArrow").click(function(){
-					$("#loginDiv").slideUp(600);
-				});
-				$("#forgotPasswordButton a").click(function(){
-				    $("#forgotPassword").slideDown(600,"easeOutBounce");
-				    return false;
-				});
-				$("#forgotPasswordClose").click(function(){
-				    $("#forgotPassword").slideUp(600);
-				});
-				$("#displayRegister").click(function(){
-					if(registerDisplayed){
-						$("#registerBorder").slideUp(400, function(){
-							$("#loginForm").animate({'width' : 344 }); 
-						});
-						$(this).val("S'inscrire");
-						$("#loginTitle").show(0);
-						$("#registerTitle").hide(0);
-						$("#loginButton").show(0).removeAttr("disabled");
-						$("#registerButton").hide(0).attr("disabled","disabled");
-						$("#passwordConfirm").hide(400);
-						registerDisplayed = false;
-					}else{
-						$("#loginForm").animate({'width' : 700 }, function(){
-							$("#registerBorder").slideDown(400);
-						});
-						$(this).val("Annuler");
-						$("#loginTitle").hide(0);
-						$("#loginButton").hide(0).attr("disabled","disabled");
-						$("#registerTitle").show(0);
-						$("#registerButton").show(0).removeAttr("disabled");
-						$("#passwordConfirm").show(400);
-						registerDisplayed = true;
-					}
-				});
-				$("#registerBorder").hide(0);
-				$("#registerTitle").hide(0);
-				$("#registerButton").hide(0).attr("disabled","disabled");
-				if(forceLogin  == "true"){
-					$("#switchToLogin").click();
-				}
-			});
 		</h:outputScript>
+		<h:outputScript name="js/_initLogin.js" target="head" />
 		<div id="topHomepage">
 			<h:panelGroup rendered="#{!userBean.loggedIn}">
 				<div id="arrowDiv">
@@ -154,7 +50,7 @@
 									<h:outputLabel for="loginField">#{text_profile.LOGIN_LABEL}</h:outputLabel>
 								</div>
 								<div class="field">
-									<h:inputText id="loginField" value="#{userBean.login}" class="loginBox" required="true"/>
+									<h:inputText id="loginField" value="#{userBean.login}" class="loginBox" required="true" tabindex="10"/>
 								</div>
 								<div class="error"><h:message for="loginField"/></div>
 							</div>
@@ -163,7 +59,7 @@
 									<h:outputLabel for="passwordField">#{text_profile.PASSWORD_LABEL}</h:outputLabel>
 								</div>
 								<div class="field">
-									<h:inputSecret id="passwordField" value="#{userBean.password}" class="loginBox" required="true" />
+									<h:inputSecret id="passwordField" value="#{userBean.password}" class="loginBox" required="true" tabindex="20"/>
 									<div class="error"><h:message for="passwordField" /></div>
 								</div>
 							</div>
@@ -172,7 +68,7 @@
 									<h:outputLabel for="passwordConfirmField">#{text_profile.PASSWORD_LABEL_CONFIRM}</h:outputLabel>
 								</div>
 								<div class="field">
-									<h:inputSecret id="passwordConfirmField" value="#{userBean.passwordConfirm}" class="loginBox"/>
+									<h:inputSecret id="passwordConfirmField" value="#{userBean.passwordConfirm}" class="loginBox"  tabindex="30"/>
 									<span class="error"><h:message for="passwordConfirmField" /></span>
 								</div>
 							</div>
@@ -181,13 +77,13 @@
                             </div>
 							<div id="loginButtons">
 								<div>
-									<input type="button" id="switchToArrow" value="&lt;&#160;Retour"/>
-									<input type="button" id="displayRegister" value="S'inscrire"/>
+									<input type="button" id="switchToArrow" value="&lt;&#160;Retour" tabindex="100"/>
+									<input type="button" id="displayRegister" value="S'inscrire" tabindex="90"/>
 								</div>
 								<div id="loginButton">
-									<h:commandButton value="Login" action="#{userBean.loginUser}" >
-										<f:param name="u" value="#{navigationBean.navigationPath}"/>            
-		    							<f:param name="qs" value="#{navigationBean.queryString}"/>    
+									<h:commandButton value="Login" action="#{userBean.loginUser}" tabindex="40">
+										<f:param name="u" value="#{param.u}"/>            
+		    							<f:param name="qs" value="#{param.qs}"/>    
 									</h:commandButton>
 								</div>
 							</div>
@@ -198,7 +94,7 @@
 									<h:outputLabel for="mailField">#{text_profile.MAILBOX_LABEL}</h:outputLabel>
 								</div>
 								<div class="field">
-									<h:inputText id="mailField" value="#{userBean.mail}" class="loginBox">
+									<h:inputText id="mailField" value="#{userBean.mail}" class="loginBox" tabindex="50" >
 										<f:validator binding="#{userLoginValidator}" />
 									</h:inputText>
 									<div class="error"><h:message for="mailField"/></div>
@@ -209,7 +105,7 @@
 									<h:outputLabel for="mailConfirmField">#{text_profile.MAILBOX_LABEL_CONFIRM}</h:outputLabel>
 								</div>
 								<div class="field">
-									<h:inputText id="mailConfirmField" value="#{userBean.mailConfirm}" class="loginBox"/>
+									<h:inputText id="mailConfirmField" value="#{userBean.mailConfirm}" class="loginBox"  tabindex="60" />
 									<div class="error"><h:message for="mailConfirmField"/></div>
 								</div>
 							</div>
@@ -218,13 +114,13 @@
 									<label for="place">Ville / Code postal / Region</label>
 								</div>
 								<div class="field">
-									<input type="text" id="userPlaceName" class="loginBox"/>
+									<input type="text" id="userPlaceName" class="loginBox" tabindex="70"/>
 									<h:inputHidden value="#{userBean.placeId}" class="loginBox"/>
 								</div>
 							</div>
 							<div class="loginField">
 								<div id="registerButton">
-									<h:commandButton value="S'enregistrer" action="#{userBean.registerUser}">
+									<h:commandButton value="S'enregistrer" action="#{userBean.registerUser}" tabindex="80">
 										<f:param name="u" value="#{navigationBean.navigationPath}"/>            
 		    							<f:param name="qs" value="#{navigationBean.queryString}"/>   
 									</h:commandButton>

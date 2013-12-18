@@ -12,31 +12,19 @@
 	</f:metadata>	 
 	<ui:define name="mainDiv">
 		<h:outputStylesheet name="css/item.css" />
-		<h:outputScript target="head" >
-		  $(function() {
-		    $("#itemImages > *").rondell({
-				preset: "scroller",
-				theme: "light",
-				center: {left: 350, top: 100 },
-				center: {left: 350, top: 100 },
-				visibleItems: "5",
-				strings: { 
-					prev : '&lt;&lt;', next : '&gt;&gt;', more: 'Plus...', 
-					loadingError : 'Erreur au chargement de l\'image <strong>%s</strong>'},
-				repeating: true,
-				autoRotation: {
-					enabled: true,
-					direction: 1,
-					once: false,
-					delay: 5000
-				},
-				currentLayer : 1,
-				lightbox: {
-				    enabled: true,
-				    displayReferencedImages: true
-				} 
-		    });
-		  });
+		<h:outputScript name="js/item.js" target="head" />
+		<h:outputScript target="head">
+			$(function(){
+				$(".overflow-y").dblclick(function(){
+					$(this)
+						.animate({ "height": $(this).get(0).scrollHeight})
+						.css("cursor", "auto");
+				}).mouseout(function(){
+					$(this).animate({ "height": 300}, function(){
+						$(this).removeAttr("style");
+					})
+				});
+			});
 		</h:outputScript>
 		<h:messages></h:messages>
 		<h:form>
@@ -45,52 +33,53 @@
 				<h:commandButton value="Desapprouver" action="#{itemBean.disapprouve}" rendered="#{!itemBean.validated}"/>
 				<h:commandButton value="Bloquer" action="#{itemBean.disapprouve}" rendered="#{itemBean.validated}"/>
 			</h:panelGroup>
-			<h:panelGroup rendered="#{itemBean.owner}">
-				<h:commandLink value="Valider" action="#{itemBean.validate}"  rendered="#{itemBean.draft}"/>&#160;
-				<h:commandLink value="Supprimer" action="#{itemBean.end}" />&#160;
-				<h:link value="Modifier"  outcome="/item/editItem?item=#{itemBean.itemId}"/>
-			</h:panelGroup>
 		</h:form>
+		<div id="itemCategory" style="display:none;">
+			<ul>
+				<ui:repeat var="keyword" value="#{itemBean.item.keywordList}">
+					<li><h:link outcome="/item/index?c=#{keyword.id}" value="#{keyword.name}" /></li>
+				</ui:repeat>
+			</ul>
+		</div>
 		<div id="itemDescription">
 			<div id="itemTitle">
+				<h2>#{itemBean.title}</h2>
 				<div>
-					<div class="field">
-						<h2>#{itemBean.title}</h2>
-					</div>
+					<em>#{itemBean.item.user.login}</em>
+					<h:panelGroup styleClass="place" rendered="#{itemBean.item.user.place != null}">à #{itemBean.item.user.place.name} (#{itemBean.item.user.place.postalCodes})</h:panelGroup>
 				</div>
-				<div>
-					<div class="field">
-						<em>#{itemBean.item.user.login}</em>
-					</div>
-				</div>
-			</div>
-			<div id="itemCategory">
-				<ul>
-					<ui:repeat var="keyword" value="#{itemBean.item.keywordList}">
-						<li><h:link outcome="/item/index?c=#{keyword.id}" value="#{keyword.name}" /></li>
-					</ui:repeat>
-				</ul>
 			</div>
 			<div>
-				<div class="field">
-					<p><h:outputText value="#{itemBean.item.htmlDescription}" escape="false" /></p>
-				</div>
+				<p class="overflow-y"><h:outputText value="#{itemBean.item.htmlDescription}" escape="false" /></p>
 			</div>
+		</div>
+		<div id="userWishes">
+			<h3>#{itemBean.item.user.login} recherche : </h3>
+			<ul>
+				<ui:repeat var="wish" value="#{itemBean.item.user.wishesList}">
+				<li>
+					<div class="ui-widget-content ui-corner-all wishedItem" data-source="#{wish.source}" data-uid="#{wish.uid}">#{wish.name}&#160;</div>
+				</li>
+				</ui:repeat>
+			</ul>
 		</div>
 		<div id="itemImages">
 			<ui:repeat var="image" value="#{itemBean.fileList}">
-				<div>
+				<div class="itemImage">
 					<a href="/image/#{image.id}" rel="rondell" target="_blank">
 						<h:graphicImage value="/image/#{image.id}"/>
 					</a>
 				</div>
 			</ui:repeat>
 		</div>
-		<ul id="wishies">
-			<li>
-				<span>Categorie : </span><span>Objet : </span>
-			</li>
-		</ul>
+		<h:form id="editButton">
+			<h:panelGroup rendered="#{itemBean.owner}">
+				<h:commandLink value="Valider" action="#{itemBean.validate}"  rendered="#{itemBean.draft and userBean.validated}" styleClass="button"/>&#160;
+				<h:panelGroup rendered="#{itemBean.draft and !userBean.validated}"><input type="button" value="Valider" title="Impossible de valider tant que vous n'avez pas validé votre email" class="button disabled"/>&#160;</h:panelGroup>
+				<h:commandLink value="Supprimer" action="#{itemBean.end}" styleClass="button" />&#160;
+				<h:link value="Modifier"  outcome="/item/editItem?item=#{itemBean.itemId}" styleClass="button" />
+			</h:panelGroup>
+		</h:form>
   	</ui:define>
 	</ui:composition>
 </body>

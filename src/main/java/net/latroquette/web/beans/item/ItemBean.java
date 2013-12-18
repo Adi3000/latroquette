@@ -64,7 +64,7 @@ public class ItemBean implements Serializable {
 	private Item item;
 	private UploadedFile newFile;
 	private List<String> wishies;
-	private List<String> keywords;
+	private Set<String> keywords;
 	private List<File> fileList;
 	private String itemId;
 	private String keywordIds;
@@ -127,7 +127,7 @@ public class ItemBean implements Serializable {
 		for(File file : fileList){
 			file.setGarbageStatus(GarbageFileStatus.VALIDATE);
 		}
-		keywords = new ArrayList<>(CommonUtil.parseStringToList(keywordIds));
+		keywords = new LinkedHashSet<>(CommonUtil.parseStringToList(keywordIds));
 		String[] keywordInfo = null;
 		Set<MainKeyword> mainKeywordList = new LinkedHashSet<>();
 		Set<ExternalKeyword> externalKeywordList = new LinkedHashSet<>();
@@ -272,7 +272,7 @@ public class ItemBean implements Serializable {
 	public void loadItem(){
 		if(StringUtils.isNotEmpty(itemId) ){
 			item = itemsService.getItemById(Integer.valueOf(itemId));
-			keywords = new ArrayList<>();
+			keywords = new LinkedHashSet<>();
 			//Loading keywords
 			if(item.getKeywordSet() != null){
 				for(Keyword keyword : item.getKeywordSet()){

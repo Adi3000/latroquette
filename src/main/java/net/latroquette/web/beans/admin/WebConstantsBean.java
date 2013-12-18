@@ -7,6 +7,7 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
+import net.latroquette.common.database.data.keyword.KeywordSource;
 import net.latroquette.common.database.data.keyword.KeywordType;
 import net.latroquette.common.util.LaTroquetteService;
 import net.latroquette.common.util.Services;
@@ -26,6 +27,10 @@ public class WebConstantsBean {
 	private final String externalKeywordPrefix = EXTERNAL_KEYWORD_PREFIX;
 	private final String additionnalKeywordPrefix = ADDITIONNAL_KEYWORD_PREFIX;
 	private final String additionnalExternalKeywordPrefix = ADDITIONNAL_EXTERNAL_KEYWORD_PREFIX;
+	private final String amazonSource = KeywordSource.AMAZON_SOURCE.getSourceId();
+	private final String keywordSource = KeywordSource.MAIN_KEYWORD_SOURCE.getSourceId();
+	private final String externalKeywordSource = KeywordSource.EXTERNAL_KEYWORD_SOURCE.getSourceId();
+	private final String wishesSource = KeywordSource.WISHES_SOURCE.getSourceId();
 	private final String booleanTrue = Boolean.TRUE.toString();
 	private final String booleanFalse = Boolean.FALSE.toString();
 	
@@ -109,6 +114,19 @@ public class WebConstantsBean {
 	 */
 	public String getSynonymKeywordTypeId(){
 		return String.valueOf(KeywordType.SYNONYME_KEYWORD.getId());
+	}
+	
+	public String getAmazonSource(){
+		return amazonSource;
+	}
+	public String getKeywordSource(){
+		return keywordSource;
+	}
+	public String getExternalKeywordSource(){
+		return externalKeywordSource;
+	}
+	public String getWishesSource(){
+		return wishesSource;
 	}
 
 	@PostConstruct
