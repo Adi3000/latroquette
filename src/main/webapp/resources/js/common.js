@@ -65,6 +65,18 @@ function isEmpty(o){
 		return $.isEmptyObject(o);
 	}
 }
+function formatTimestamp(timestamp){
+	var date = new Date(timestamp * 1000),
+		datevalues = [
+	       date.getFullYear()
+	      ,date.getMonth()+1
+	      ,date.getDate()
+	      ,date.getHours()
+	      ,date.getMinutes()
+	      ,date.getSeconds()
+	   ];
+	return datevalues;
+}
 /**
  * Check if list contains e
  * @param list
@@ -198,6 +210,9 @@ $(function(){
 				}
 			});
 		},
+		/**
+		 * Add a menu for selecting some keyword
+		 */
 		selectKeywordByMenu: function(max,url){
 			var $selectedCategoryArea = $(this).siblings(".selectedCategories");
 			if(!url || url == null || url == ""){
@@ -262,7 +277,53 @@ $(function(){
 						return false;
 					}
 			});
-		}
+		},
+		userInfo:
+			function(){
+				var userLogin = $(this).attr("data-login");
+				var $this = $(this);
+				$.getJSON(
+						_requestContextPath_+"/rest/authentication/userInfo",
+						{
+							login : userLogin,
+						},
+						function(user){
+							var $div = $("<div />").addClass("user-card");
+							if(user.place){
+								$div.append($("<div />")
+										.addClass("place")
+										.append($("<span />")
+											.text(user.place.name + " (" + user.place.postalCodesList + ")")));
+							}
+							$div.append($("<div />")
+								.addClass("profile")
+								.append($("<a />")
+									.attr("href","/item/index.jsf?o="+user.id)
+									.text("Voir tous ses articles")));
+							if(typeof converse != 'undefined'){	
+								$div.append($("<div />")
+									.addClass("xmpp")
+									.append($("<span />")
+										.addClass("xmpp-add")
+										.click(function(){
+											converse.addContact(user.login);
+										})
+										.text("Ajouter aux contacts instantanés")));
+							}
+							$this.after($div);
+						}
+				);
+				$this.powerTip({
+					placement : 'se',
+					mouseOnToPopup : true
+				})
+				.data('powertipjq', function(){
+					var tip = $(this).siblings(".user-card").clone();
+					tip.css("display", "block");
+					return tip;
+				});
+			}
+		
 	});
 	$( "input[type=submit],input[type=button], a.button, button" ).each(function(){
 		$(this).button();
@@ -270,6 +331,7 @@ $(function(){
 			$(this).button( "option", "disabled", true );
 		};
 	});
+	$(".userInfo").userInfo();
 	//To be able to prevent some bugs
 	$(".preview").click(function(){
 		$(this).fadeOut(300);

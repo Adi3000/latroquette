@@ -33,7 +33,28 @@ jQuery.fn.addItems = function(page,json) {
     			{"href" : "/item/viewItem.jsf?item="+data.id,
     			"title"	: data.title
     			}).text(data.title);
-    	
+    	var date = formatTimestamp(data.updateDate);
+    	$(options.itemInfos, newItem)
+    		.append($("<div />").addClass("date")
+				.append($("<span />").text("déposé le"))
+				.append($("<span />").text(
+					date[2]+ "/" + date[1] + "/" + date[0] 
+					+ " à " + (date[3] < 10 ? "0" +date[3] : date[3]) + ":" + (date[3] < 10 ? "0" +date[3] : date[3]))));
+		if(data.place){
+			$(options.itemInfos, newItem)
+				.append($("<div />")
+					.addClass("place")
+					.attr("title",data.place.postalCodes)
+					.text(data.place.name));
+		}
+		$(options.itemInfos, newItem)
+			.append($("<div />").addClass("login")
+				.append($("<span />").text("par"))
+				.append($("<span />")
+					.addClass("userInfo"
+					.text(data.user.login)
+					.userInfo())));
+		
     	$(options.itemTitle,newItem).append(itemLink);
     	$(options.itemDescription,newItem).text(data.description);
     	var login = $("<div />").addClass("login").text(data.user.login);
