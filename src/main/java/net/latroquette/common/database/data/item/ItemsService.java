@@ -3,6 +3,8 @@ package net.latroquette.common.database.data.item;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import net.latroquette.common.database.data.file.File;
 import net.latroquette.common.database.data.item.wish.Wish;
 import net.latroquette.common.database.data.profile.User;
@@ -90,5 +92,14 @@ public interface ItemsService extends DAO<Item> {
 	 * @return
 	 */
 	public List<Wish> searchWishes(String pattern);
-	
+	/**
+	 * Get the max loaded result by page 
+	 * @param searchString
+	 * @param searchOnDescription
+	 * @param page
+	 * @param countOnly
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public int getNbResultByPage();	
 }

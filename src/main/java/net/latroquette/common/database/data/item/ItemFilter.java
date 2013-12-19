@@ -5,12 +5,13 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 
 import com.adi3000.common.util.optimizer.CommonValues;
+import com.adi3000.common.web.jsf.RequestURIFilter;
 
 /**
  * Filter for itemSearch
  *
  */
-public class ItemFilter {
+public class ItemFilter implements RequestURIFilter{
 
 	public static final String DISTANCE_PARAM="d"; 
 	public static final String PLACE_PARAM="pl"; 

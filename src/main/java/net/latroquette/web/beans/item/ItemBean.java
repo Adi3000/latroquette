@@ -124,6 +124,9 @@ public class ItemBean implements Serializable {
 	
 	private String registerItem(DatabaseOperation operation){
 		
+		if(StringUtils.isEmpty(keywordIds) || StringUtils.isEmpty(item.getTitle())){
+			return null;
+		}
 		for(File file : fileList){
 			file.setGarbageStatus(GarbageFileStatus.VALIDATE);
 		}

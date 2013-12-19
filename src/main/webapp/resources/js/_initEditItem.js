@@ -55,10 +55,23 @@ $(function() {
 	
 	if(!isEmpty($("#editItemForm\\:itemCategoryIds").val())){
 		var keywordIdsList = $("#editItemForm\\:itemCategoryIds").val().split(_separator_);
+		var $selectedCategoryArea = $("#selectedCategory");
+		var $inputCategoryIds = $selectedCategoryArea.siblings("input[type=hidden]").is("*") ?
+				$selectedCategoryArea.siblings("input[type=hidden]") : 
+				$selectedCategoryArea.siblings(".categoryIds").children("input[type=hidden]");
 		var keywordInfo;
 		for(var i=0; i < keywordIdsList.length; i++){
 			keywordInfo = keywordIdsList[i].split(_innerSeparator_);
-			addCategoryKeyword(keywordInfo[1],keywordInfo[0], $("#selectedCategory"));
+			$.getJSON(
+				_requestContextPath_+"/rest/search/item/breadcrumb", 
+				{
+					i : keywordInfo[1], 
+					t : keywordInfo[0]
+				},
+				function(data){
+					renderCategoryKeyword(data,keywordInfo[1], keywordInfo[0],$selectedCategoryArea, $inputCategoryIds);
+				}
+			);
 		}
 	}
 });

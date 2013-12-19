@@ -1,7 +1,8 @@
-jQuery.fn.addItems = function(json) {
-    var o = $(this[0]);
+jQuery.fn.addItems = function(page,json) {
     var options = {
-    		source : "#addItems > .item",
+    		source : "#addItems",
+    		itemClass :  " .item",
+    		pageClass :  " .page",
     		destination : ".itemList",
     		imagesDestination : ".itemImages",
     		itemInfos : ".itemInfos",
@@ -9,8 +10,18 @@ jQuery.fn.addItems = function(json) {
     		itemTitle : ".itemTitle",
     		itemDescription : ".itemDescription",
     };
+    var newPageAnchor = $(options.source + " > " +options.pageClass).clone();
+    console.log(newPageAnchor.html());
+    newPageAnchor.attr("id","page_"+page);
+    $(".page-current-index",newPageAnchor).text(page);
+    $(".page-index",newPageAnchor).each(function(i,e){
+    	if($(e).attr("data-index") <= page){
+    		$("a",$(e)).attr("href","#page_"+$(e).attr("data-index"));
+    	}
+    });
+    newPageAnchor.insertBefore(options.source) ;
     $.each(json, function(i, data){
-    	var newItem = $(options.source).clone();
+    	var newItem = $(options.source + " > " +options.itemClass).clone();
     	$.each(data.imageList, function(j, image){
     		$(options.imagesDestination,newItem).append(
     				$("<img />")
@@ -27,7 +38,8 @@ jQuery.fn.addItems = function(json) {
     	$(options.itemDescription,newItem).text(data.description);
     	var login = $("<div />").addClass("login").text(data.user.login);
     	$(options.itemInfos, newItem).append(login);
-    	newItem.appendTo(o);
+    	newItem.insertBefore(options.source) ;
+    	$(options.imagesDestination, newItem).cycle();
     });
     
 };

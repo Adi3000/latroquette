@@ -107,6 +107,26 @@
 		<filter-name>MyFacesExtensionsFilter</filter-name>
 		<servlet-name>Faces Servlet</servlet-name>
 	</filter-mapping>
+	<filter>
+		<filter-name>LaTroquetteFilter</filter-name>
+		<filter-class>net.latroquette.web.servlet.LaTroquetteFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>LaTroquetteFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter>
+		<filter-name>NoCacheFilter</filter-name>
+		<filter-class>com.adi3000.common.web.jsf.NoCacheFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>NoCacheFilter</filter-name>
+		<servlet-name>Faces Servlet</servlet-name>
+	</filter-mapping>
+	<error-page>
+	    <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+	    <location>/reload.html?faces-redirect=true</location>
+	</error-page>
 	<error-page>
     	<!-- Missing login -->
 	    <error-code>401</error-code>

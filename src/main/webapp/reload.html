@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script type="text/javascript">
+		var currentURL = location.pathname;
+		if(currentURL != "/reload.html"){
+			setTimeout(function(){
+				location.reload(true);
+			},1000);
+		}
+	</script>
+</head>
+<body>
+	<div>Chargement...</div>
+	<div>Veuillez <a href="/">cliquez ici</a> si la page ne se charge pas</div>
+</body>

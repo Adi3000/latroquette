@@ -26,6 +26,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +44,7 @@ import com.amazon.ECS.client.jax.ItemSearchRequest;
 
 @Repository(value=Services.ITEMS_SERVICE)
 public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
-	
+	private static final Logger logger = LoggerFactory.getLogger(ItemsServiceImpl.class);
 	@Autowired
 	private transient Parameters parameters;
 	@Autowired
@@ -243,6 +245,18 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	}
 	
 	/**
+	 * Get the max loaded result by page 
+	 * @param searchString
+	 * @param searchOnDescription
+	 * @param page
+	 * @param countOnly
+	 * @return
+	 */
+	@Transactional(readOnly=true)
+	public int getNbResultByPage(){
+		return parameters.getIntValue(ParameterName.NB_RESULT_TO_LOAD);
+	}
+	/**
 	 * Search an item in database, return only {@link ParameterName}.NB_RESULT_TO_LOAD
 	 * @param searchString
 	 * @param searchOnDescription
@@ -372,7 +386,7 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 					.concat(" LEFT JOIN item.keywordSet keyword ")
 					.concat(" LEFT JOIN item.user.place place ")
 					.concat(restriction.toString())
-					.concat(countOnly ? "" : " order by item.creationDate");
+					.concat(countOnly ? "" : " order by item.creationDate desc");
 		Query req = createQuery(sql);
 		
 		//-----------------------------

@@ -87,6 +87,10 @@ div#userWishes ul{
 	width: 100%;
 	text-align: center;
 }
+/* #itemList{ */
+/* 	overflow-y: auto; */
+/* 	height: 700px; */
+/* } */
 #itemList .itemInfoDetails,
 #itemList .itemImages{
 	display: inline-block;
@@ -109,4 +113,8 @@ div#userWishes ul{
 }
 #itemList .itemTitle{
 	margin: 5px;
+}
+#itemList .page{
+	width : 100%;
+	border-bottom: 1px solid #000;
 }

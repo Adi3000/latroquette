@@ -1,6 +1,7 @@
 package net.latroquette.web.beans.item;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.adi3000.common.util.security.User;
 import com.adi3000.common.web.faces.FacesUtil;
+import com.adi3000.common.web.jsf.Page;
 @ManagedBean
 @RequestScoped
 public class ItemSearchBean implements Serializable {
@@ -50,6 +52,7 @@ public class ItemSearchBean implements Serializable {
 	private ItemFilter itemFilter;
 	@ManagedProperty(value="#{param.p}")
 	private Integer page;
+	private List<Page<ItemFilter>> pageList;
 	private Integer count;
 	private List<Item> itemsFound; 
 	private String memberNameFilter; 
@@ -85,8 +88,19 @@ public class ItemSearchBean implements Serializable {
 	}
 	public void loadSearch(){
 		initCount();
+		if(page == null){
+			page = 1;
+		}
 		if(count > 0){
 			this.itemsFound = itemsService.searchItem(itemFilter, page, false);
+		}
+		if(count > itemsFound.size()){
+			int itemToLoad = itemsService.getNbResultByPage();
+			int nbPage = Double.valueOf(Math.ceil((double)count/(double)itemToLoad)).intValue();
+			pageList = new ArrayList<>(nbPage);
+			for(int i=1; i <= nbPage; i++ ){
+				pageList.add(new Page<>(i, itemFilter));
+			}
 		}
 	}
 	/**
@@ -249,6 +263,9 @@ public class ItemSearchBean implements Serializable {
 			pubItems = itemsService.searchAmazonItems(null, "Lego");
 		}
 			
+	}
+	public List<Page<ItemFilter>> getPageList(){
+		return pageList;
 	}
 
 }

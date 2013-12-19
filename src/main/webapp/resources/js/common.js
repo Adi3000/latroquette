@@ -76,10 +76,6 @@ function containsInStringList(list, e){
 		return false;
 	}
 	var check = getRegExMatcher(e);
-	console.log(check[0]);
-	list.match(list.match(check[0]) != null );
-	console.log(check[1]);
-	list.match(list.match(check[1]) != null );
 	return list.match(check[0]) != null || list.match(check[1]) != null;
 }
 /**
@@ -141,32 +137,44 @@ function addCategoryKeyword(keywordId, keywordTypeId,selectedCategoryArea){
 			t : keywordTypeId
 		},
 		function(data){
-			var category = $("<li />")
-							.attr("data-keyword-id", keywordId)
-							.attr("data-keyword-type", keywordTypeId);
-			category.appendBreadcrumb(data);
-			category.prepend(
-				$("<span />")
-					.addClass("ui-icon ui-icon-trash")
-					.text("x")
-					//adding click for removal event
-					.click(function(e){
-						$inputCategoryIds.val(removeFromStringList($inputCategoryIds.val(),keywordIdForList));
-						var keywordToRemove =  $(this).parent("li");
-						keywordToRemove.remove();
-						if(selectedCategoryArea.is(":empty")){
-							selectedCategoryArea.hide();
-						}
-						removeErrorMessage(selectedCategoryArea.attr("id")+"_is_full");
-					})
-				);
-			selectedCategoryArea.append(category);
+			renderCategoryKeyword(data, keywordId, keywordTypeId,selectedCategoryArea, $inputCategoryIds);
 			$inputCategoryIds.val(addToStringList($inputCategoryIds.val(),keywordIdForList));
-			if(!selectedCategoryArea.is(":visible")){
-				selectedCategoryArea.show(300);
-			}
 		}
 	);
+}
+/**
+ * Render a category Keyword into selectedCategoryArea element with data for breadcrumb infos
+ * Use inputCategoryIds.val() element as reference when adding removal event
+ * @param data
+ * @param keywordId
+ * @param keywordTypeId
+ * @param selectedCategoryArea
+ * @param inputCategoryIds
+ */
+function renderCategoryKeyword(data,keywordId, keywordTypeId,selectedCategoryArea, inputCategoryIds){
+	var category = $("<li />")
+		.attr("data-keyword-id", keywordId)
+		.attr("data-keyword-type", keywordTypeId);
+	category.appendBreadcrumb(data);
+	category.prepend(
+	$("<span />")
+		.addClass("ui-icon ui-icon-trash")
+		.text("x")
+		//adding click for removal event
+		.click(function(e){
+			inputCategoryIds.val(removeFromStringList(inputCategoryIds.val(),keywordIdForList));
+			var keywordToRemove =  $(this).parent("li");
+			keywordToRemove.remove();
+			if(selectedCategoryArea.is(":empty")){
+				selectedCategoryArea.hide();
+			}
+			removeErrorMessage(selectedCategoryArea.attr("id")+"_is_full");
+		})
+	);
+	selectedCategoryArea.append(category);
+	if(!selectedCategoryArea.is(":visible")){
+		selectedCategoryArea.show(300);
+	}
 }
 $(function(){
 	$.fn.extend({
