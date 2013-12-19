@@ -16,7 +16,7 @@ import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.util.Services;
 import net.latroquette.common.util.web.Navigation;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.adi3000.common.util.tree.Breadcrumb;
 import com.adi3000.common.web.faces.FacesUtil;

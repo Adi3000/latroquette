@@ -10,6 +10,7 @@
 		<f:metadata>
 		    <f:viewParam name="item" value="#{itemBean.itemId}"/>            
 	 		<f:event listener="#{itemBean.checkItemAndUser}" type="preRenderView" />
+	 		<f:event listener="#{itemSearchBean.fillPubItems}" type="preRenderView" />
 	 	</f:metadata>
 		<ui:define name="mainDiv"> 
 			<h:outputStylesheet name="css/item.css" target="head" />

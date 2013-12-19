@@ -2,29 +2,27 @@ package net.latroquette.common.database.data.profile;
 
 import javax.xml.bind.annotation.XmlElement;
 
-import net.latroquette.common.database.data.place.Place;
-
 /**
  * Utility to get a {@link User} copy for info with 
  * some additionnal XmlInformation like mail
  */
-public class UserInfo extends User {
+public class UserAdminInfo extends User {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5330321265720514011L;
 
-	@XmlElement(name="place")
-	public Place getPlaceExported(){
-		return super.getPlace();
+	@XmlElement(name="mail")
+	public String getMailExported(){
+		return super.getMail();
 	}
 	
-	public UserInfo(User user){
+	public UserAdminInfo(User user){
 		if(user != null){
 			this.setId(user.getId());
 			this.setLogin(user.getLogin());
-			this.setPlace(user.getPlace());
+			this.setMail(user.getMail());
 		}
 	}
 }

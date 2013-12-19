@@ -21,7 +21,7 @@ import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.util.Services;
 import net.latroquette.web.beans.profile.UserBean;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.adi3000.common.database.hibernate.DatabaseOperation;
 import com.adi3000.common.util.CommonUtil;

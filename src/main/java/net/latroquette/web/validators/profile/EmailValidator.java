@@ -10,7 +10,7 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 @FacesValidator("net.latroquette.web.validators.profile.EmailValidator")
 public class EmailValidator implements Validator {

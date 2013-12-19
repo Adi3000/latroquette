@@ -21,7 +21,7 @@ import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.common.util.parameters.Parameters;
 import net.latroquette.service.amazon.AmazonWService;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
@@ -186,7 +186,7 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		
 		AWSECommerceServicePortType port =  amazonWService.getPort();
 		ItemSearchRequest itemSearch = new ItemSearchRequest();
-		itemSearch.setKeywords(pattern.replaceAll("\\W", "+"));
+		itemSearch.setKeywords(StringUtils.stripAccents(pattern).replaceAll("\\W", "+"));
 		if(!AmazonWService.isValideCategory(cat)){
 			cat = "All";
 		}

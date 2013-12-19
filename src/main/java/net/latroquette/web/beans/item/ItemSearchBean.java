@@ -16,14 +16,16 @@ import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.Item;
 import net.latroquette.common.database.data.item.ItemFilter;
 import net.latroquette.common.database.data.item.ItemsService;
+import net.latroquette.common.database.data.item.wish.WishedItem;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.database.data.place.Place;
 import net.latroquette.common.database.data.place.PlacesService;
 import net.latroquette.common.database.data.profile.UsersService;
 import net.latroquette.common.util.Services;
+import net.latroquette.web.beans.admin.MenuBean;
 import net.latroquette.web.beans.profile.UserBean;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.adi3000.common.util.security.User;
 import com.adi3000.common.web.faces.FacesUtil;
@@ -58,6 +60,8 @@ public class ItemSearchBean implements Serializable {
 	private String memberNameFilter; 
 	private List<AmazonItem> pubItems;
  	
+	@ManagedProperty(value="#{menuBean}")
+	private MenuBean menuBean;
 	@ManagedProperty(value="#{navigationBean.actualKeyword}")
 	private MainKeyword actualKeyword;
 	@ManagedProperty(value="#{userBean}")
@@ -225,6 +229,12 @@ public class ItemSearchBean implements Serializable {
 		this.usersService = usersService;
 	}
 	
+	/**
+	 * @param menuBean the menuBean to set
+	 */
+	public void setMenuBean(MenuBean menuBean) {
+		this.menuBean = menuBean;
+	}
 	public void loadHomeItem(){
 		ItemFilter itemFilter = new ItemFilter();
 		if(userBean.isLoggedIn()){
@@ -253,16 +263,22 @@ public class ItemSearchBean implements Serializable {
 			placeNameFilter = place.getName().concat(" (").concat(place.getPostalCodes()).concat(")");
 		}
 	}
-	
+
+
 	public void fillPubItems(){
 		if(itemFilter != null && StringUtils.isNotEmpty(itemFilter.getPattern())){
 			pubItems = itemsService.searchAmazonItems(null, itemFilter.getPattern());
 		}else if(actualKeyword != null){
 			pubItems = itemsService.searchAmazonItems(null, actualKeyword.getName());
+		}else if(userBean.isLoggedIn() && ! userBean.getUser().getWishesSet().isEmpty()){
+			List<WishedItem> wishes = userBean.getWishesList();
+			Collections.shuffle(wishes);
+			pubItems = itemsService.searchAmazonItems(null, wishes.iterator().next().getName());
 		}else{
-			pubItems = itemsService.searchAmazonItems(null, "Lego");
+			List<MainKeyword> menuRootEntries = new ArrayList<>(menuBean.getRootCategoriesEntries());
+			Collections.shuffle(menuRootEntries);
+			pubItems = itemsService.searchAmazonItems(null, menuRootEntries.iterator().next().getName());
 		}
-			
 	}
 	public List<Page<ItemFilter>> getPageList(){
 		return pageList;

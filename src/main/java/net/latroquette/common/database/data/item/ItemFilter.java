@@ -2,7 +2,7 @@ package net.latroquette.common.database.data.item;
 
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.adi3000.common.util.optimizer.CommonValues;
 import com.adi3000.common.web.jsf.RequestURIFilter;

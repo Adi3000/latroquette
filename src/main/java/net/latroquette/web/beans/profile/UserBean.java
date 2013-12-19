@@ -32,7 +32,7 @@ import net.latroquette.common.util.Services;
 import net.latroquette.web.security.AuthenticationMethod;
 import net.latroquette.web.security.SecurityUtil;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -213,7 +213,6 @@ public class UserBean implements Serializable{
 		usersService.changePassword(getPassword(), user);
 	}
 	public String changePassword(){
-		FacesContext fc = FacesContext.getCurrentInstance();
 		updatePassword();
 		return "/index";
 	}

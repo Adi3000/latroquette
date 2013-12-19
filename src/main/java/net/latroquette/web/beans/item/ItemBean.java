@@ -30,7 +30,7 @@ import net.latroquette.web.beans.profile.UserBean;
 import net.latroquette.web.security.SecurityUtil;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

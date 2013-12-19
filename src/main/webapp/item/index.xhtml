@@ -53,12 +53,14 @@
 				<h3>
 					Résultat de la recherche <h:panelGroup rendered="#{!empty itemSearchBean.itemFilter.pattern}">"#{itemSearchBean.itemFilter.pattern}"</h:panelGroup> : #{itemSearchBean.count} résultats
 				</h3>
-				<div class="page" id="page_#{itemSearchBean.page}">
-					<span>Page <span class="page-current-index" />#{itemSearchBean.page}</span> ::
-					<ui:repeat var="page" value="#{itemSearchBean.pageList}">
-						<span><h:link outcome="/item/index?#{page.requestURI}" value="#{page.index}" /></span>
-					</ui:repeat>
-				</div>
+				<h:panelGroup rendered="#{!empty itemSearchBean.pageList}">
+					<div class="page" id="page_#{itemSearchBean.page}">
+						<span>Page <span class="page-current-index" />#{itemSearchBean.page}</span> ::
+						<ui:repeat var="page" value="#{itemSearchBean.pageList}">
+							<span><h:link outcome="/item/index?#{page.requestURI}" value="#{page.index}" /></span>
+						</ui:repeat>
+					</div>
+				</h:panelGroup>
 			</div>
 			<div id="itemList">
 				<ui:repeat var="item" value="#{itemSearchBean.itemsFound}">
@@ -71,17 +73,17 @@
 						<div class="itemInfoDetails">
 							<div class="itemInfos" >
 								<div class="date">
-								<span>déposé le</span>
-								<span>
-									<h:outputText value="#{item.updateDate}" >
-								    	<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-									</h:outputText>
-								</span>
+									<span>déposé le</span>
+									<span>
+										<h:outputText value="#{item.updateDate}" >
+									    	<f:convertDateTime pattern="dd/MM/yyyy à HH:mm" />
+										</h:outputText>
+									</span>
 								</div>
-								<div class="login">par <span>#{item.user.login}</span></div>
 								<h:panelGroup rendered="#{item.user.place != null}">
-									<div class="place">#{item.user.place.name}</div>
+									<div class="place" title="#{item.user.place.postalCodes}">#{item.user.place.name}</div>
 								</h:panelGroup>
+								<div class="login">par <span class="userInfo" data-login="#{item.user.login}">#{item.user.login}</span></div>
 							</div>
 							<div class="itemDetails">
 								<h2 class="itemTitle" >
@@ -114,12 +116,14 @@
 						</div>
 					</div>
 				</div>
-				<div class="page">
-					<span>Aller à la page ::</span>
-					<ui:repeat var="page" value="#{itemSearchBean.pageList}">
-						<span><h:link outcome="/item/index?#{page.requestURI}" value="#{page.index}" /></span>
-					</ui:repeat>
-				</div>
+				<h:panelGroup rendered="#{!empty itemSearchBean.pageList}">
+					<div class="page">
+						<span>Aller à la page ::</span>
+						<ui:repeat var="page" value="#{itemSearchBean.pageList}">
+							<span><h:link outcome="/item/index?#{page.requestURI}" value="#{page.index}" /></span>
+						</ui:repeat>
+					</div>
+				</h:panelGroup>
 			</div>
 		</ui:define>
 	</ui:composition>

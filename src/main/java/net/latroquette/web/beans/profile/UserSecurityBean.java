@@ -13,7 +13,7 @@ import net.latroquette.common.database.data.profile.UsersService;
 import net.latroquette.common.util.Services;
 import net.latroquette.web.security.AuthenticationMethod;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.adi3000.common.web.faces.FacesUtil;
 

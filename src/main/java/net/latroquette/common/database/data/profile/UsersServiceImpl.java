@@ -19,7 +19,7 @@ import net.latroquette.rest.forum.SMFRestException;
 import net.latroquette.rest.forum.SMFWSClientUtil;
 import net.latroquette.web.security.AuthenticationMethod;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jettison.json.JSONException;

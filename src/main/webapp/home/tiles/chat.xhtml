@@ -30,7 +30,7 @@
         <h:outputScript  library="js" name="converse/libs/otr/otr.min.js" target="head" />
         <h:outputScript  library="js" name="converse/libs/jed.js" target="head" />
         <h:outputScript  library="js" name="converse/libs/jquery.tinysort.min.js" target="head" />
-        <h:outputScript  library="js" name="converse/converse.js" target="head" />
+        <h:outputScript  library="js" name="converse/converse.js" target="head" rendered="#{userBean.xmppSession != null and userBean.xmppSession.valid }" />
         <h:outputScript  library="js" name="converse/locale/fr/LC_MESSAGES/fr.js" target="head" />
         <h:outputScript target="head" rendered="#{userBean.xmppSession != null and userBean.xmppSession.valid }">
             $(function(){
