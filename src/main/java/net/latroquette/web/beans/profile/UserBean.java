@@ -191,7 +191,17 @@ public class UserBean implements Serializable{
 			}
 		}
 	}
-	public String changePassword(){
+	public String updateUser(){
+		if(StringUtils.isNotEmpty(passwordConfirm)){
+			updatePassword();
+		}
+		if(getPlaceId() != null){
+			user.setPlace(placesService.getPlaceById(getPlaceId()));
+		}
+		usersService.updateUser(user);
+		return "/profile/index";
+	}
+	private void updatePassword(){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if(StringUtils.isEmpty(passwordConfirm) || !passwordConfirm.equals(password)){
 			FacesMessage msg = new FacesMessage("Probleme de mot de passe [302]", 
@@ -201,6 +211,10 @@ public class UserBean implements Serializable{
 			fc.validationFailed();
 		}
 		usersService.changePassword(getPassword(), user);
+	}
+	public String changePassword(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		updatePassword();
 		return "/index";
 	}
 	public String registerUser()

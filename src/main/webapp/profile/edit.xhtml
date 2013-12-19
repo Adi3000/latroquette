@@ -10,55 +10,52 @@
 	 		<f:event listener="#{userBean.checkUserLogged}" type="preRenderView" />
 	 	</f:metadata>
 		<ui:define name="mainDiv">
+			<h:outputScript name="js/_initProfile.js" target="head" />
 			<h:outputStylesheet name="css/profile.css" target="head" />
 			<div>
-				<h2 id="profileTitle">Bonjour #{userBean.login}</h2>
-				<div id="centerTop">
-					<div id="largeLeftDiv">
-						<div class="rightSmallDiv">
-							<ul>
-								<li>Messagerie</li>
-								<li>Déconnexion</li>
-							</ul>						
+				<h:form id="modifyProfile">
+					<div class="loginField">
+						<div class="label">
+							<h:outputLabel for="loginField">#{text_profile.LOGIN_LABEL}</h:outputLabel>
 						</div>
-						<div class="rightSmallDiv">
-							<ul>
-								<li>Avatar</li>
-								<li>Modifier mon profil</li>
-								<li>Disponibilités/Vacances</li>
-								<li>Mes avis</li>
-							</ul>
+						<div class="field">
+							<h:inputText id="loginField" value="#{userBean.login}" class="loginBox" tabindex="10"/>
 						</div>
-						<div class="rightSmallDiv">
-							<ul>
-								<li><h:link outcome="/item/index?s=0" value="Soumettre mes brouillons" /></li>
-								<li><h:link outcome="/item/editItem.xhtml" value="Déposer une annonce" /></li>
-								<li><h:link outcome="/item/index?o=#{userBean.id}&amp;s=2" value="Gérer mes annonces en cours" /></li>
-							</ul>
+						<div class="error"><h:message for="loginField"/></div>
+					</div>
+					<div class="loginField">
+						<div class="label">
+							<h:outputLabel for="passwordField">#{text_profile.PASSWORD_LABEL}</h:outputLabel>
+						</div>
+						<div class="field">
+							<h:inputSecret id="passwordField" value="#{userBean.password}" class="loginBox" tabindex="20"/>
+							<div class="error"><h:message for="passwordField" /></div>
 						</div>
 					</div>
-					<div id="largeRightDiv">
-						<div class="leftSmallDiv">
-							<ul>
-								<li>TroQueurs Favoris</li>
-								<li>Discussions instantannée</li>
-								<li>Le Journal</li>
-								<li>Livre d'or</li>
-							</ul>
+					<div class="loginField" id="passwordConfirm">
+						<div class="label">
+							<h:outputLabel for="passwordConfirmField">#{text_profile.PASSWORD_LABEL_CONFIRM}</h:outputLabel>
 						</div>
-						<div class="leftSmallDiv">
-							<ul>
-								<li>Echanges effectués</li>
-								<li>Echanges en cours</li>
-								<li>Recherche à suivre</li>
-								<li>Donner un avis</li>
-							</ul>
+						<div class="field">
+							<h:inputSecret id="passwordConfirmField" value="#{userBean.passwordConfirm}" class="loginBox"  tabindex="30"/>
+							<span class="error"><h:message for="passwordConfirmField" /></span>
 						</div>
 					</div>
-				</div>
-<!-- 					<div> -->
-<!-- 						<h:link outcome="infos">Mon profil</h:link> -->
-<!-- 					</div> -->
+					<div class="loginField">
+						<div class="label">
+							<label for="place">Ville / Code postal / Region</label>
+						</div>
+						<div class="field">
+							<input type="text" id="userPlaceName" class="loginBox" tabindex="70"/>
+							<h:inputHidden value="#{userBean.placeId}" class="loginBox"/>
+						</div>
+					</div>
+					<div class="loginField">
+						<div id="registerButton">
+							<h:commandButton value="Modifier" action="#{userBean.updateUser}" tabindex="80" />
+						</div>		
+					</div>
+				</h:form>
 			</div>
 		</ui:define>
 	</ui:composition>

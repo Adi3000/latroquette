@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets" >
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 		<f:metadata>
@@ -14,6 +14,7 @@
 			<h:outputStylesheet name="css/profile.css" target="head" />
 			<div id="profileConsole">
 				<h2>Gestion du profil #{userBean.login}</h2>
+				<div><h:panelGroup rendered="#{userBean.user.place != null}">Localisation : #{userBean.user.place.name} (#{userBean.user.place.postalCodesList[0]})</h:panelGroup></div>
 				<div class="rightSmallDiv">
 					<ul>
 						<li><h:link outcome="/profile/edit" value="Modifier mon profil" /></li>

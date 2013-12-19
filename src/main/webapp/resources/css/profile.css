@@ -159,3 +159,6 @@ h2#profileTitle{
 	height: 300px;
 	overflow-y: auto;
 }
+#modifyProfile .loginField .label{
+	width: 220px;
+}

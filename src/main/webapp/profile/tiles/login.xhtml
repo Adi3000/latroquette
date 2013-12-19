@@ -13,6 +13,7 @@
 			var registerDisplayed = false;
 			var forceLogin = "#{userBean.displayLoginBox}";
 		</h:outputScript>
+		<h:outputScript name="js/_initProfile.js" target="head" />
 		<h:outputScript name="js/_initLogin.js" target="head" />
 		<div id="topHomepage">
 			<h:panelGroup rendered="#{!userBean.loggedIn}">
