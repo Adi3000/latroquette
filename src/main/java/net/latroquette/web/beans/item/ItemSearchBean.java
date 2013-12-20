@@ -97,6 +97,8 @@ public class ItemSearchBean implements Serializable {
 		}
 		if(count > 0){
 			this.itemsFound = itemsService.searchItem(itemFilter, page, false);
+		}else{
+			this.itemsFound = new ArrayList<>(0);
 		}
 		if(count > itemsFound.size()){
 			int itemToLoad = itemsService.getNbResultByPage();
