@@ -30,7 +30,7 @@ body{
 	width: 1000px;
 }
 #wallpaper{
-	background-color: #F5FFE0;
+	background-color: #F5F1DF;
 	margin-left: auto;
 	margin-right:  auto;
 	margin : 0px auto 0px auto;
@@ -64,7 +64,7 @@ body{
 }
 #enTete
 {
-	background : #F5FFE0;
+	background : #F5F1DF;
 }
 #toolbarLogin .forumButton{
 	float:right;

@@ -21,7 +21,7 @@ import com.adi3000.common.database.hibernate.data.AbstractDataObject;
 @Entity
 @Table(name = "wishes")
 @SequenceGenerator(name = "wishes_wish_id_seq", sequenceName = "wishes_wish_id_seq", allocationSize=1)
-public class WishedItem extends AbstractDataObject implements Wish {
+public class WishedItem extends AbstractDataObject implements Wish, SuitableItem {
 
 	/**
 	 * 
@@ -134,5 +134,12 @@ public class WishedItem extends AbstractDataObject implements Wish {
 	public boolean equals(Wish wish){
 		return this.getSource().equals(wish.getSource()) &&
 				this.getUid().equals(wish.getUid());
+	}
+
+	@Override
+	public boolean equals(SuitableItem suitableItem) {
+		// TODO Auto-generated method stub
+		return this.getSource().equals(suitableItem.getSource()) &&
+				this.getId().equals(suitableItem.getId());
 	}
 }

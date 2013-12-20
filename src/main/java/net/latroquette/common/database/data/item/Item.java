@@ -23,7 +23,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import net.latroquette.common.database.data.file.File;
+import net.latroquette.common.database.data.item.wish.SuitableItem;
 import net.latroquette.common.database.data.keyword.ExternalKeyword;
+import net.latroquette.common.database.data.keyword.KeywordSource;
 import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.database.data.profile.User;
 
@@ -34,12 +36,13 @@ import com.adi3000.common.util.CommonUtil;
 @Table(name = "items")
 @XmlRootElement
 @SequenceGenerator(name = "items_item_id_seq", sequenceName = "items_item_id_seq", allocationSize=1)
-public class Item extends AbstractDataObject {
+public class Item extends AbstractDataObject implements SuitableItem{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3249513332241986469L;
+	public static final String ITEM_SOURCE = "itm";
 	private Integer id;
 	private User user;
 	private Integer statusId;
@@ -212,6 +215,28 @@ public class Item extends AbstractDataObject {
 	@Transient
 	public String getHtmlDescription(){
 		return CommonUtil.parsePlainTextToHtml(getDescription());
+	}
+	@Override
+	@Transient
+	public String getName() {
+		return getTitle();
+	}
+	@Override
+	@Transient
+	public String getSource() {
+		return KeywordSource.ITEM_SOURCE.getSourceId();
+	}
+	@Override
+	public boolean equals(Object object){
+		if(object == null){
+			return false;
+		}
+		return equals((SuitableItem)object);
+	}
+	@Override
+	public boolean equals(SuitableItem suitableItem) {
+		return this.getId().equals(suitableItem.getId()) &&
+				this.getSource().equals(suitableItem.getSource());
 	}
 
 }
