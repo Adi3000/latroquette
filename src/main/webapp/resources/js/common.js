@@ -6,6 +6,21 @@ function showLoadingDiv(text){
 	$("#loadingText").text(text);
 	$("#loadingDiv").show();
 }
+function limit(text, maxLength){
+	console.log(text.length);
+	console.log(maxLength);
+	if(text.length <= maxLength){
+		return text;
+	}else{
+		//trim the string to the maximum length
+		var trimmedString = text.substr(0, maxLength);
+
+		//re-trim if we are in the middle of a word
+		trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
+		console.log(trimmedString);
+		return trimmedString + "...";
+	}
+}
 /**
  * Display an error message within content with specified code error
  * @param code
@@ -331,7 +346,9 @@ $(function(){
 			$(this).button( "option", "disabled", true );
 		};
 	});
-	$(".userInfo").userInfo();
+	if($(".userInfo").is("*")){
+		$(".userInfo").userInfo();
+	}
 	//To be able to prevent some bugs
 	$(".preview").click(function(){
 		$(this).fadeOut(300);

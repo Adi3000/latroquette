@@ -41,7 +41,7 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FilesServiceImpl.class.getName());
 	private static final String MDSUM_ALGORITHM = "MD5";
-	
+	private static final int MAX_FILENAME_LENGTH = 100-40; //SQL field - prefix and suffix approximate length
 	@Autowired
 	private transient Parameters parameters;
 	
@@ -102,6 +102,9 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 			return null;
 		}
 		fileName = fileName.replaceAll("[^\\p{ASCII}]", "");
+		if(fileName.length() > MAX_FILENAME_LENGTH){
+			fileName = fileName.substring(0, MAX_FILENAME_LENGTH);
+		}
         String prefix = String.valueOf(new Date().getTime()).concat("_").concat(FilenameUtils.getBaseName(fileName));
         String suffix = FilenameUtils.getExtension(fileName).toLowerCase();
         java.io.File resizedFile = null;

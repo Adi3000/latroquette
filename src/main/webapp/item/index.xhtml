@@ -73,7 +73,7 @@
 						<div class="itemInfoDetails">
 							<div class="itemInfos" >
 								<div class="date">
-									<span>déposé le</span>
+									déposé le
 									<span>
 										<h:outputText value="#{item.updateDate}" >
 									    	<f:convertDateTime pattern="dd/MM/yyyy à HH:mm" />
@@ -87,11 +87,11 @@
 							</div>
 							<div class="itemDetails">
 								<h2 class="itemTitle" >
-									<h:link outcome="/item/viewItem" value="#{item.title}">
+									<h:link outcome="/item/viewItem" value="#{util:limit(item.title,50)}" title="#{item.title}">
 										<f:param name="item" value="#{item.id}" />
 									</h:link>
 								</h2>
-								<div class="itemDescription" >#{util:limit(item.description,200)}</div>
+								<div class="itemDescription" >#{util:limit(item.description,250)}</div>
 								<ul class="itemWishies" />
 							</div>
 						</div>

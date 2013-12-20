@@ -11,7 +11,6 @@ jQuery.fn.addItems = function(page,json) {
     		itemDescription : ".itemDescription",
     };
     var newPageAnchor = $(options.source + " > " +options.pageClass).clone();
-    console.log(newPageAnchor.html());
     newPageAnchor.attr("id","page_"+page);
     $(".page-current-index",newPageAnchor).text(page);
     $(".page-index",newPageAnchor).each(function(i,e){
@@ -32,7 +31,7 @@ jQuery.fn.addItems = function(page,json) {
     	var itemLink = $("<a />").attr(
     			{"href" : "/item/viewItem.jsf?item="+data.id,
     			"title"	: data.title
-    			}).text(data.title);
+    			}).text(limit(data.title,50));
     	var date = formatTimestamp(data.updateDate);
     	$(options.itemInfos, newItem)
     		.append($("<div />").addClass("date")
@@ -40,25 +39,26 @@ jQuery.fn.addItems = function(page,json) {
 				.append($("<span />").text(
 					date[2]+ "/" + date[1] + "/" + date[0] 
 					+ " à " + (date[3] < 10 ? "0" +date[3] : date[3]) + ":" + (date[3] < 10 ? "0" +date[3] : date[3]))));
+    	var divPlace = $("<div />").addClass("place").text(" ");
 		if(data.place){
-			$(options.itemInfos, newItem)
-				.append($("<div />")
-					.addClass("place")
-					.attr("title",data.place.postalCodes)
-					.text(data.place.name));
+			divPlace.attr("title",data.place.postalCodes)
+					.text(data.place.name);
 		}
+		$(options.itemInfos, newItem).append(divPlace);
 		$(options.itemInfos, newItem)
-			.append($("<div />").addClass("login")
-				.append($("<span />").text("par"))
-				.append($("<span />")
-					.addClass("userInfo"
-					.text(data.user.login)
-					.userInfo())));
-		
+			.append(
+			$("<div />")
+				.addClass("login")
+				.text("par ")
+				.append(
+					$("<span />")
+						.attr("data-login",data.user.login)
+						.addClass("userInfo")
+						.text(data.user.login)));
+
+		$(".userInfo",newItem).userInfo();
     	$(options.itemTitle,newItem).append(itemLink);
-    	$(options.itemDescription,newItem).text(data.description);
-    	var login = $("<div />").addClass("login").text(data.user.login);
-    	$(options.itemInfos, newItem).append(login);
+    	$(options.itemDescription,newItem).text(limit(data.description,250));
     	newItem.insertBefore(options.source) ;
     	$(options.imagesDestination, newItem).cycle();
     });

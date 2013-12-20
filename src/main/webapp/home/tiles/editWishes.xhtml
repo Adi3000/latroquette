@@ -24,7 +24,6 @@
 								<h:panelGroup id="whishesCategoryIdsPanel" styleClass="categoryIds">
 									<h:inputHidden id="whishesCategoryIds" value="#{userBean.newWishKeywordId}" />
 									<script type="text/javascript" >
-										console.log(!$("#wishesSelectedCategory").is(":empty"));
 										if(isEmpty($("#wishesForm\\:whishesCategoryIds").val()) &amp;&amp; !$("#wishesSelectedCategory").is(":empty")){
 											$("#wishesSelectedCategory").empty().hide(0)
 										}
