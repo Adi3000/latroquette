@@ -297,46 +297,48 @@ $(function(){
 			function(){
 				var userLogin = $(this).attr("data-login");
 				var $this = $(this);
-				$.getJSON(
-						_requestContextPath_+"/rest/authentication/userInfo",
-						{
-							login : userLogin,
-						},
-						function(user){
-							var $div = $("<div />").addClass("user-card");
-							if(user.place){
+				if(!isEmpty(userLogin)){
+					$.getJSON(
+							_requestContextPath_+"/rest/authentication/userInfo",
+							{
+								login : userLogin,
+							},
+							function(user){
+								var $div = $("<div />").addClass("user-card");
+								if(user.place){
+									$div.append($("<div />")
+											.addClass("place")
+											.append($("<span />")
+												.text(user.place.name + " (" + user.place.postalCodesList + ")")));
+								}
 								$div.append($("<div />")
-										.addClass("place")
+									.addClass("profile")
+									.append($("<a />")
+										.attr("href","/item/index.jsf?o="+user.id)
+										.text("Voir tous ses articles")));
+								if(typeof converse != 'undefined'){	
+									$div.append($("<div />")
+										.addClass("xmpp")
 										.append($("<span />")
-											.text(user.place.name + " (" + user.place.postalCodesList + ")")));
+											.addClass("xmpp-add")
+											.click(function(){
+												converse.addContact(user.login);
+											})
+											.text("Ajouter aux contacts instantanés")));
+								}
+								$this.after($div);
 							}
-							$div.append($("<div />")
-								.addClass("profile")
-								.append($("<a />")
-									.attr("href","/item/index.jsf?o="+user.id)
-									.text("Voir tous ses articles")));
-							if(typeof converse != 'undefined'){	
-								$div.append($("<div />")
-									.addClass("xmpp")
-									.append($("<span />")
-										.addClass("xmpp-add")
-										.click(function(){
-											converse.addContact(user.login);
-										})
-										.text("Ajouter aux contacts instantanés")));
-							}
-							$this.after($div);
-						}
-				);
-				$this.powerTip({
-					placement : 'se',
-					mouseOnToPopup : true
-				})
-				.data('powertipjq', function(){
-					var tip = $(this).siblings(".user-card").clone();
-					tip.css("display", "block");
-					return tip;
-				});
+					);
+					$this.powerTip({
+						placement : 'se',
+						mouseOnToPopup : true
+					})
+					.data('powertipjq', function(){
+						var tip = $(this).siblings(".user-card").clone();
+						tip.css("display", "block");
+						return tip;
+					});
+				}
 			}
 		
 	});
