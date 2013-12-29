@@ -261,7 +261,7 @@ public class ItemSearchBean implements Serializable {
 			memberNameFilter = user.getLogin();
 		}
 		if(itemFilter.getPlaceId() != null){
-			Place place = placesService.getPlaceById(itemFilter.getOwnerId());
+			Place place = placesService.getPlaceById(itemFilter.getPlaceId());
 			placeNameFilter = place.getName().concat(" (").concat(place.getPostalCodes()).concat(")");
 		}
 	}
