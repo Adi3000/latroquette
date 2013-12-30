@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
 
+import net.latroquette.common.database.data.item.wish.SuitableItem;
 import net.latroquette.common.database.data.item.wish.Wish;
 
 import org.hibernate.annotations.Cache;
@@ -224,5 +225,10 @@ public class MainKeyword extends AbstractTreeNodeDataObject<MainKeyword> impleme
 	@Transient
 	public String getSource() {
 		return KeywordSource.MAIN_KEYWORD_SOURCE.getSourceId();
+	}
+	@Override
+	public boolean equals(SuitableItem suitableItem) {
+		return this.getSource().equals(suitableItem.getSource()) &&
+				this.getId().equals(suitableItem.getId());
 	}
 }

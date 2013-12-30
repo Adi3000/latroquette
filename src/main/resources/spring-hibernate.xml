@@ -43,7 +43,9 @@
 				<value>net.latroquette.common.database.data.profile.Role</value>
 				<value>net.latroquette.common.database.data.place.Place</value>
 				<value>net.latroquette.common.database.data.item.Item</value>
+				<value>net.latroquette.common.database.data.item.ItemList</value>
 				<value>net.latroquette.common.database.data.item.wish.WishedItem</value>
+				<value>net.latroquette.common.database.data.item.wish.Offer</value>
 				<value>net.latroquette.common.database.data.file.File</value>
 				<value>net.latroquette.common.database.data.keyword.ExternalKeyword</value>
 				<value>net.latroquette.common.database.data.keyword.MainKeyword</value>

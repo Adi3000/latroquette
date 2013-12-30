@@ -9,6 +9,7 @@ import java.util.Set;
 
 import net.latroquette.common.database.data.file.File;
 import net.latroquette.common.database.data.file.FilesService;
+import net.latroquette.common.database.data.item.wish.SuitableItem;
 import net.latroquette.common.database.data.item.wish.Wish;
 import net.latroquette.common.database.data.item.wish.WishedItem;
 import net.latroquette.common.database.data.keyword.Keyword;
@@ -114,7 +115,7 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	 * @param pattern
 	 * @return
 	 */
-	@TransactionalUpdate
+	@Transactional(readOnly=true)
 	public List<Wish> searchWishes(String pattern){
 		List<Wish> result = new ArrayList<>();
 		@SuppressWarnings("unchecked")
@@ -139,6 +140,32 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		}
 		return result;
 	}
+	@Transactional(readOnly=true)
+	public List<SuitableItem> searchSuitableItem(String pattern, User user){
+		List<SuitableItem> result = new ArrayList<>();
+		List<Wish> wishes = searchWishes(pattern);
+		result.addAll(wishes);
+		result.addAll(0,getItemsByPattern(pattern, user));
+		return result;
+	}
+	
+	/**
+	 * Return Item list matching the pattern returning {@code user} items first
+	 * @param pattern
+	 * @param user
+	 * @return
+	 */
+	private List<Item> getItemsByPattern(String pattern, User user){
+		String hql = " from Item where lower(title) like :pattern" +
+				" order by nullif(user_id,:userId), title ";
+		
+		@SuppressWarnings("unchecked")
+		List<Item> result = createQuery(hql)
+				.setString("pattern",  "%"+ pattern.replaceAll("\\W", "%")+"%")
+				.setInteger("userId", user.getId())
+				.list();
+		return result;
+	}
 	/**
 	 * Search an item via Amazon Webservice by its uid
 	 * @param cat
@@ -150,6 +177,10 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		AmazonItem amazonItem = null;
 		
 		AWSECommerceServicePortType port =  amazonWService.getPort();
+		if(port == null){
+			logger.error("Can't connect to AWS !!!");
+			return amazonItem;
+		}
 		ItemLookupRequest itemLookup = new ItemLookupRequest();
 		itemLookup.getItemId().add(id);
 		//Retrieve images and title informations
@@ -185,6 +216,10 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 		List<AmazonItem> listItem = new ArrayList<AmazonItem>();
 		
 		AWSECommerceServicePortType port =  amazonWService.getPort();
+		if(port == null){
+			logger.error("Can't connect to AWS !!!");
+			return listItem;
+		}
 		ItemSearchRequest itemSearch = new ItemSearchRequest();
 		itemSearch.setKeywords(StringUtils.stripAccents(pattern).replaceAll("\\W", "+"));
 		if(!AmazonWService.isValideCategory(cat)){

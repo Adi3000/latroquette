@@ -138,7 +138,6 @@ public class WishedItem extends AbstractDataObject implements Wish, SuitableItem
 
 	@Override
 	public boolean equals(SuitableItem suitableItem) {
-		// TODO Auto-generated method stub
 		return this.getSource().equals(suitableItem.getSource()) &&
 				this.getId().equals(suitableItem.getId());
 	}

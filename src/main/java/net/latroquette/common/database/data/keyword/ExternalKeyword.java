@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
 
+import net.latroquette.common.database.data.item.wish.SuitableItem;
 import net.latroquette.common.database.data.item.wish.Wish;
 
 import org.hibernate.annotations.Cache;
@@ -191,5 +192,10 @@ public class ExternalKeyword extends AbstractTreeNodeDataObject<ExternalKeyword>
 	public boolean equals(Wish wish){
 		return this.getSource().equals(wish.getSource()) &&
 				this.getUid().equals(wish.getUid());
+	}
+	@Override
+	public boolean equals(SuitableItem suitableItem) {
+		return this.getSource().equals(suitableItem.getSource()) &&
+				this.getId().equals(suitableItem.getId());
 	}
 }

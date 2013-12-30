@@ -80,6 +80,17 @@
 				<h:link value="Modifier"  outcome="/item/editItem?item=#{itemBean.itemId}" styleClass="button" />
 			</h:panelGroup>
 		</h:form>
+		<h:form id="offer">
+			<div class="field">
+				<div>
+					
+				</div>
+				<div class="labelTop">
+					<h:outputLabel for="message">Message</h:outputLabel>
+				</div>
+				<h:inputTextarea id="message" cols="45" rows="5" value="#{offerBean.message}"  />
+			</div>				
+		</h:form>
   	</ui:define>
 	</ui:composition>
 </body>

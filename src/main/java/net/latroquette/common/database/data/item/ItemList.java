@@ -9,12 +9,28 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import net.latroquette.common.database.data.item.wish.SuitableItem;
 import net.latroquette.common.database.data.item.wish.WishedItem;
 import net.latroquette.common.database.data.keyword.KeywordSource;
 import net.latroquette.common.database.data.profile.User;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import com.adi3000.common.database.hibernate.data.AbstractDataObject;
 
@@ -22,6 +38,9 @@ import com.adi3000.common.database.hibernate.data.AbstractDataObject;
  * @author XJBU125
  *
  */
+@Entity
+@Table(name="item_lists")
+@SequenceGenerator(name = "item_lists_item_list_id_seq", sequenceName = "item_lists_item_list_id_seq", allocationSize=1)
 public class ItemList extends AbstractDataObject implements Collection<SuitableItem> {
 
 	/**
@@ -38,6 +57,12 @@ public class ItemList extends AbstractDataObject implements Collection<SuitableI
 	/**
 	 * @return the itemsList
 	 */
+	@OneToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@JoinTable(name="item_lines", 
+		joinColumns={@JoinColumn(name="item_list_id")}, 
+	    inverseJoinColumns={@JoinColumn(name="item_id")}
+	)
 	public Set<Item> getItemsList() {
 		return itemsList;
 	}
@@ -52,6 +77,12 @@ public class ItemList extends AbstractDataObject implements Collection<SuitableI
 	/**
 	 * @return the wisheslist
 	 */
+	@OneToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@JoinTable(name="item_lines", 
+		joinColumns={@JoinColumn(name="item_list_id")},
+		inverseJoinColumns={@JoinColumn(name="wish_id")}
+	)
 	public Set<WishedItem> getWisheslist() {
 		return wisheslist;
 	}
@@ -74,6 +105,8 @@ public class ItemList extends AbstractDataObject implements Collection<SuitableI
 	/**
 	 * @return the user
 	 */
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="user_id")
 	public User getUser() {
 		return user;
 	}
@@ -88,6 +121,7 @@ public class ItemList extends AbstractDataObject implements Collection<SuitableI
 	/**
 	 * @return the creationDate
 	 */
+	@Column(name="item_list_creation_date")
 	public Date getCreationDate() {
 		return creationDate;
 	}
@@ -103,8 +137,18 @@ public class ItemList extends AbstractDataObject implements Collection<SuitableI
 	 * @see com.adi3000.common.database.hibernate.data.AbstractDataObject#getId()
 	 */
 	@Override
+	@Id
+	@Column(name="offer_id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_lists_item_list_id_seq")
 	public Integer getId() {
 		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	@Override
@@ -113,6 +157,7 @@ public class ItemList extends AbstractDataObject implements Collection<SuitableI
 	}
 
 	@Override
+	@Transient
 	public boolean isEmpty() {
 		return getItemsList().isEmpty() && getWisheslist().isEmpty();
 	}
@@ -129,7 +174,8 @@ public class ItemList extends AbstractDataObject implements Collection<SuitableI
 				throw new IllegalArgumentException("Invalid SuitableItem from : " + item.getSource());
 		}
 	}
-	private Collection<SuitableItem> getList(){
+	@Transient
+	public Collection<SuitableItem> getList(){
 		list = new ArrayList<>(this.size());
 		list.addAll(getItemsList());
 		list.addAll(getWisheslist());
