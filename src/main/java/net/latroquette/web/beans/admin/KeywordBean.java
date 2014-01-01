@@ -53,6 +53,7 @@ public class KeywordBean implements Serializable{
 	private MainKeyword parentKeyword;
 	private String keywordId;
 	private List<MainKeyword> orphanMainKeywords;
+	private List<MainKeyword> keywordList;
 	private List<ExternalKeyword> orphanExternalKeywords;
 	private Collection<MainKeyword> additionnalMainKeywords;
 	private Collection<ExternalKeyword> additionnalExternalKeywords;
@@ -78,7 +79,7 @@ public class KeywordBean implements Serializable{
 			FacesUtil.navigationRedirect("/profile/login");
 		}
 	}
-	public String loadKeyword(){
+	public void loadKeyword(){
 		
 		if(StringUtils.isNotBlank(keywordId)){
 			parentKeyword = keywordsService.getKeywordById(Integer.valueOf(keywordId), true);
@@ -89,13 +90,13 @@ public class KeywordBean implements Serializable{
 		}
 		orphanMainKeywords = keywordsService.getOrphanMainKeywords();
 		orphanExternalKeywords = keywordsService.getOrphanExternalKeywords();
+		keywordList = isRoot() ? orphanMainKeywords : parentKeyword.getChildren();
 		if(additionnalExternalKeywords == null){
 			additionnalExternalKeywords = new HashSet<ExternalKeyword>();
 		}
 		if(additionnalMainKeywords == null){
 			additionnalMainKeywords = new HashSet<MainKeyword>();
 		}
-		return null;
 	}
 	
 	public String searchKeyword(){
@@ -284,7 +285,7 @@ public class KeywordBean implements Serializable{
 	}
 	
 	public List<MainKeyword> getKeywordList(){
-		return isRoot() ? orphanMainKeywords : parentKeyword.getChildren();
+		return keywordList;
 	}
 	
 	/**

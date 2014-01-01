@@ -74,7 +74,10 @@
 						<div>
 							<h3>
 								<a href="keywords.xhtml?keyword=#{keyword.id}">#{keyword.name}</a>
-								<em><h:outputLabel for="check_menu">Affich&#233; dans le menu</h:outputLabel><h:selectBooleanCheckbox id="check_menu" value="#{keyword.inMenu}" /></em>
+								<em>
+									<h:outputLabel for="check_menu">Affich&#233; dans le menu</h:outputLabel>
+									<h:selectBooleanCheckbox id="check_menu" value="#{keyword.inMenu}" />
+								</em>
 							</h3>
 							<div class="childrenZone" data-id="#{keyword.id}">
 								<em class="dropTip">

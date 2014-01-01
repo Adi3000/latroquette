@@ -1,5 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>com.adi3000</groupId>
+		<artifactId>webapp</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+  	</parent>
 	<properties>
     	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     	<org.springframework.version>3.2.4.RELEASE</org.springframework.version>
@@ -19,20 +24,6 @@
 		<url>code.adi3000.com/nexus</url>
 		<system>Nexus</system>
 	</ciManagement>
-	<distributionManagement>
-		<!-- use the following if you're not using a snapshot version. -->
-		<repository>
-			<id>release</id>
-			<name>Nexus Snapshot Repository</name>
-			<url>http://code.adi3000.com/nexus/content/repositories/releases</url>
-		</repository>
-		<!-- use the following if you ARE using a snapshot version. -->
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>Nexus Snapshot Repository</name>
-			<url>http://code.adi3000.com/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
 	<build>
 		<filters>
 			<filter>src/main/filters/environment/${filter.environment}/filters.properties</filter>
@@ -48,142 +39,7 @@
 				<targetPath>${project.build.directory}/test-classes</targetPath>
 			</resource>
 		</resources>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<useDefaultDelimiters>false</useDefaultDelimiters>
-					<escapeString>\</escapeString>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.liquibase</groupId>
-				<artifactId>liquibase-maven-plugin</artifactId>
-				<version>3.0.2</version>
-				<executions>
-					<execution>
-						<id>liquibase-update</id>
-						<phase>process-resources</phase>
-						<configuration>
-							<propertyFile>liquibase.properties</propertyFile>
-							<changeLogFile>net/latroquette/common/database/changelog/changelog.xml</changeLogFile>
-							<propertyFileWillOverride>true</propertyFileWillOverride>
-							<skip>${liquibase.update.skip}</skip>
-							<contexts>production</contexts>
-						</configuration>
-						<goals>
-							<goal>update</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>liquibase-test-update</id>
-						<phase>process-test-resources</phase>
-						<configuration>
-							<propertyFile>liquibase.properties</propertyFile>
-							<changeLogFile>net/latroquette/common/database/changelog/changelog.xml</changeLogFile>
-							<propertyFileWillOverride>true</propertyFileWillOverride>
-							<skip>${liquibase.update.skip.test}</skip>
-							<contexts>test</contexts>
-						</configuration>
-						<goals>
-							<goal>update</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.2</version>
-				<configuration>
-					<warSourceExcludes>resources/development-bundle/**</warSourceExcludes>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
-				<configuration>
-					<target>
-						<!-- calls deploy script -->
-						<sshexec 
-							host="adi3000.com" trust="yes" 
-							username="tomcat-deploy"
-							keyfile="${tomcat.deploy.keyfile}"
- 							command="sh ${tomcat.deploy.script} ${project.groupId}:${project.artifactId}:${project.version}" />
-						<!-- SSH -->
-						<taskdef name="sshexec"
-							classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec"
-							classpathref="maven.plugin.classpath" />
-					</target>
-				</configuration>
-				<executions>
-					<execution>
-						<id>ant-liquibase-update</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<!-- calls deploy script -->
-								<sshexec 
-									host="adi3000.com" trust="yes" 
-									username="tomcat-deploy"
-									keyfile="${tomcat.deploy.keyfile}"
-		 							command="sh ${tomcat.updatedb.script} ${project.scm.url} ${filter.environment}" />
-								<!-- SSH -->
-								<taskdef name="sshexec"
-									classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec"
-									classpathref="maven.plugin.classpath" />
-							</target>
-							<skip>${liquibase.ant.update.skip}</skip>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-				    <dependency>
-						<groupId>org.apache.ant</groupId>
-						<artifactId>ant-jsch</artifactId>
-						<version>1.9.2</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-war-plugin</artifactId>
-			    <configuration>
-			        <webResources>
-			            <resource>
-			                <filtering>true</filtering>
-			                <directory>src/main/webapp</directory>
-			                <includes>
-			                    <include>**/web.xml</include>
-			                </includes>
-			            </resource>
-			        </webResources>
-			        <warSourceDirectory>src/main/webapp</warSourceDirectory>
-			        <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-			    </configuration>
-			</plugin>
-		</plugins>
-	</build>
+    </build>
 	<dependencies>
 		  <dependency>
 			<groupId>org.glassfish</groupId>
@@ -196,11 +52,6 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.0.13</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -264,6 +115,12 @@
 			<groupId>com.adi3000</groupId>
 			<artifactId>commons-adi3000</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>postgresql</groupId>
@@ -312,6 +169,11 @@
 		    <groupId>javax.mail</groupId>
 		    <artifactId>mail</artifactId>
 		    <version>1.4.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.5</version>
 		</dependency>
 	</dependencies>
 	<profiles>
