@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
 import javax.servlet.http.Part;
 
 import net.latroquette.common.database.data.profile.User;
@@ -27,7 +28,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,10 +39,14 @@ import com.adi3000.common.util.security.Security;
 @Repository(value=Services.FILES_SERVICE)
 public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6158180124983151251L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(FilesServiceImpl.class.getName());
 	private static final String MDSUM_ALGORITHM = "MD5";
 	private static final int MAX_FILENAME_LENGTH = 100-40; //SQL field - prefix and suffix approximate length
-	@Autowired
+	@Inject
 	private transient Parameters parameters;
 	
 	/**

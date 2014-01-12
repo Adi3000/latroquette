@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import net.latroquette.common.database.data.item.AmazonItem;
 import net.latroquette.common.database.data.item.ItemsService;
 import net.latroquette.common.util.Services;
@@ -19,7 +21,6 @@ import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +32,13 @@ import com.amazon.ECS.client.jax.BrowseNode;
 @Repository(value=Services.KEYWORDS_SERVICE)
 public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements KeywordsService{
 
-	@Autowired
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -351992532829047773L;
+	@Inject
 	private transient ItemsService itemsService;
-	@Autowired
+	@Inject
 	private transient Parameters parameters;
 	
 	/**

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceException;
 
@@ -13,7 +14,6 @@ import net.latroquette.common.util.parameters.Parameters;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -46,9 +46,9 @@ public class AmazonWService {
 		    "petsupplies","pchardware","Shoes","software",
 		    "softwarevideogames","sportinggoods","toys"
     );
-	@Autowired
+	@Inject
 	private AWSECommerceService service ;
-	@Autowired
+	@Inject
 	private Parameters parameters;
 	
 	private String amazonAccessKey;

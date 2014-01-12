@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.inject.Inject;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +22,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.adi3000.common.web.ServletUtils;
@@ -45,9 +45,9 @@ public class ImageServlet extends HttpServlet {
 	private static final int DEFAULT_BUFFER_SIZE = 10240; // 10KB.
 
     // Actions ------------------------------------------------------------------------------------
-	@Autowired
+	@Inject
 	private transient FilesService filesService; 
-	@Autowired
+	@Inject
 	private transient Parameters parameters;
 		
     /**

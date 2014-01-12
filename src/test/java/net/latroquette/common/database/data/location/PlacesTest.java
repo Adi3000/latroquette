@@ -3,6 +3,8 @@ package net.latroquette.common.database.data.location;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import net.latroquette.common.database.data.place.Place;
 import net.latroquette.common.database.data.place.PlaceType;
 import net.latroquette.common.database.data.place.PlacesService;
@@ -12,7 +14,6 @@ import net.latroquette.common.test.utils.TestUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -23,7 +24,7 @@ public class PlacesTest extends ListDbUnitTestCase implements LatroquetteTest{
 	private static List<String> DBU_FILES = Arrays.asList(
 			 PLACES_DBU_RESOURCE
 		);
-	@Autowired
+	@Inject
 	private transient PlacesService placesService;
 	/**
 	 * @param locationsService the locationsService to set

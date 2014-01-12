@@ -19,7 +19,7 @@ import com.adi3000.common.web.faces.FacesUtil;
 @ViewScoped
 public class RoleBean {
 	@ManagedProperty(value=Services.USERS_SERVICE_JSF)
-	private transient UsersService usersService;
+	private UsersService usersService;
 	@ManagedProperty(value="#{userBean}")
 	private UserBean userBean;
 	/**

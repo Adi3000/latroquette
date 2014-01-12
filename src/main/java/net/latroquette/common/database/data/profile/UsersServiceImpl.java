@@ -4,6 +4,8 @@ package net.latroquette.common.database.data.profile;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import net.latroquette.common.database.data.item.wish.WishedItem;
 import net.latroquette.common.database.data.keyword.KeywordSource;
 import net.latroquette.common.database.data.keyword.KeywordsService;
@@ -32,7 +34,6 @@ import org.jivesoftware.smack.BOSHConnectionExtended;
 import org.jivesoftware.smack.XMPPException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,10 +48,14 @@ import com.adi3000.common.web.jsf.UtilsBean;
 @Repository(value=Services.USERS_SERVICE)
 public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9027832218062595734L;
 	private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class);
-	@Autowired
+	@Inject
 	private transient Parameters parameters;
-	@Autowired
+	@Inject
 	private transient KeywordsService keywordsService;
 	
 	/**
@@ -66,7 +71,7 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	public void setParameters(Parameters parameters) {
 		this.parameters = parameters;
 	}
-	@Autowired
+	@Inject
 	private RolesDAO rolesDAO;
 	/**
 	 * @param rolesDAO the rolesDAO to set

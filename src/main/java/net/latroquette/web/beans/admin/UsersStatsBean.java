@@ -31,7 +31,7 @@ public class UsersStatsBean implements Serializable{
 	private static final long serialVersionUID = -2127848308811905982L;
 
 	@ManagedProperty(value=Services.USERS_SERVICE_JSF)
-	private transient UsersService usersService;
+	private UsersService usersService;
 	
 	@ManagedProperty(value="#{userBean}")
 	private UserBean userBean;

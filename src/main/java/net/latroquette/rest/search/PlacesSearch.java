@@ -5,6 +5,7 @@ package net.latroquette.rest.search;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.ws.rs.GET;
@@ -18,7 +19,6 @@ import javax.ws.rs.ext.Provider;
 import net.latroquette.common.database.data.place.Place;
 import net.latroquette.common.database.data.place.PlacesService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 /**
@@ -31,7 +31,7 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 @WebService
 public class PlacesSearch extends SpringBeanAutowiringSupport{
 	
-	@Autowired
+	@Inject
 	private transient PlacesService placesService;
 	
 	/**

@@ -3,6 +3,7 @@ package net.latroquette.rest.search;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.ws.rs.GET;
@@ -26,7 +27,6 @@ import net.latroquette.common.database.data.keyword.MainKeyword;
 import net.latroquette.common.util.Services;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.adi3000.common.util.tree.Breadcrumb;
@@ -41,9 +41,9 @@ import com.adi3000.common.util.tree.Breadcrumb;
 @WebService(name=Services.ITEM_SEARCH_WEB_SERVICE)
 public class ItemSearch extends SpringBeanAutowiringSupport {
 	
-	@Autowired
+	@Inject
 	private transient ItemsService itemsService;
-	@Autowired
+	@Inject
 	private transient KeywordsService keywordsService;
 	/**
 	 * @param keywordsService the keywordsService to set

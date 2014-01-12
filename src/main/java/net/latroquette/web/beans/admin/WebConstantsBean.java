@@ -37,7 +37,7 @@ public class WebConstantsBean {
 	private Map<String, Navigation> navigationMap;
 	
 	@ManagedProperty(value=Services.LA_TROQUETTE_SERVICE_JSF)
-	private transient LaTroquetteService laTroquetteService;
+	private LaTroquetteService laTroquetteService;
 	
 	/**
 	 * @param laTroquetteService the laTroquetteService to set

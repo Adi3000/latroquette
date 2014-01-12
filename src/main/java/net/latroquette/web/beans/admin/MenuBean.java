@@ -21,7 +21,7 @@ import com.adi3000.common.web.faces.ui.tree.TreeNodeList;
 public class MenuBean implements Serializable{
 
 	@ManagedProperty(value=Services.KEYWORDS_SERVICE_JSF)
-	private transient KeywordsService keywordsService;
+	private KeywordsService keywordsService;
 	
 	/**
 	 * @param keywordsService the keywordsService to set

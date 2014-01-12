@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import net.latroquette.common.database.data.file.File;
 import net.latroquette.common.database.data.file.FilesService;
 import net.latroquette.common.database.data.item.wish.SuitableItem;
@@ -29,7 +31,6 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,16 +46,20 @@ import com.amazon.ECS.client.jax.ItemSearchRequest;
 
 @Repository(value=Services.ITEMS_SERVICE)
 public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -873140092536495709L;
 	private static final Logger logger = LoggerFactory.getLogger(ItemsServiceImpl.class);
-	@Autowired
+	@Inject
 	private transient Parameters parameters;
-	@Autowired
+	@Inject
 	private transient KeywordsService keywordsService;
-	@Autowired
+	@Inject
 	private transient PlacesService placesService;
-	@Autowired
+	@Inject
 	private transient FilesService filesService;
-	@Autowired
+	@Inject
 	private transient AmazonWService amazonWService;
 	
 	/**

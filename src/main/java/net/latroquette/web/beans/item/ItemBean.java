@@ -46,11 +46,11 @@ public class ItemBean implements Serializable {
 	private static final Logger logger = LoggerFactory.getLogger(ItemBean.class);
 	
 	@ManagedProperty(value=Services.ITEMS_SERVICE_JSF)
-	private transient ItemsService itemsService;
+	private ItemsService itemsService;
 	@ManagedProperty(value=Services.FILES_SERVICE_JSF)
-	private transient FilesService filesService;
+	private FilesService filesService;
 	@ManagedProperty(value=Services.KEYWORDS_SERVICE_JSF)
-	private transient KeywordsService keywordsService;
+	private KeywordsService keywordsService;
 	@ManagedProperty(value="#{request.requestURI}")
 	private String navigationPath;
 	

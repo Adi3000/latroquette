@@ -3,6 +3,8 @@ package net.latroquette.common.database.data.profile;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import net.latroquette.common.test.LatroquetteTest;
 import net.latroquette.common.test.dbunit.ListDbUnitTestCase;
 import net.latroquette.common.test.utils.TestUtils;
@@ -10,7 +12,6 @@ import net.latroquette.common.util.ServiceException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -18,7 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = {TestUtils.SPRING_CONFIG})
 public class UsersTest extends ListDbUnitTestCase implements LatroquetteTest {
 
-	@Autowired
+	@Inject
 	private transient UsersService usersService;
 	/**
 	 * @param usersService the usersService to set

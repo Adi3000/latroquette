@@ -35,6 +35,7 @@ import net.latroquette.web.security.SecurityUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
 
 import com.adi3000.common.util.CommonUtil;
 import com.adi3000.common.util.optimizer.CommonValues;
@@ -65,7 +66,7 @@ public class UserBean implements Serializable{
 	private String newWishCode;
 	private String newWishKeywordId;
 	@ManagedProperty(Services.PLACES_SERVICE_JSF)
-	private transient PlacesService placesService;
+	private PlacesService placesService;
 	
 	private String password;
 	private String previousURI;
@@ -74,7 +75,7 @@ public class UserBean implements Serializable{
 	private XMPPSession xmppSession;
 	
 	@ManagedProperty(value=Services.USERS_SERVICE_JSF)
-	private transient UsersService usersService;
+	private UsersService usersService;
 	/**
 	 * @param usersService the usersService to set
 	 */

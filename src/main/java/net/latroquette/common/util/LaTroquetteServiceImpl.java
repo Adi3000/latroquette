@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import net.latroquette.common.util.web.Navigation;
 import net.latroquette.common.util.web.NavigationDao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service(Services.LA_TROQUETTE_SERVICE)
 public class LaTroquetteServiceImpl implements LaTroquetteService{
 
-	@Autowired
+	@Inject
 	private NavigationDao navigationDao;
 	
 	@Transactional(readOnly=true)

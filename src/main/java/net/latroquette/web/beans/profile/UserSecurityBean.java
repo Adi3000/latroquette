@@ -28,7 +28,7 @@ public class UserSecurityBean implements Serializable{
 	private static final String mail_purpose = "mail";
 	private static final String password_purpose = "password";
 	@ManagedProperty(value=Services.USERS_SERVICE_JSF)
-	private transient UsersService usersService;
+	private UsersService usersService;
 	
 	private String mailToken;
 	private boolean validated;

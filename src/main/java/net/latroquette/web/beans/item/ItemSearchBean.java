@@ -39,11 +39,11 @@ public class ItemSearchBean implements Serializable {
 	private static int HOME_ITEMS_TO_LOAD = 5;
 	
 	@ManagedProperty(Services.ITEMS_SERVICE_JSF)
-	private transient ItemsService itemsService;
+	private ItemsService itemsService;
 	@ManagedProperty(Services.PLACES_SERVICE_JSF)
-	private transient PlacesService placesService;
+	private PlacesService placesService;
 	@ManagedProperty(Services.USERS_SERVICE_JSF)
-	private transient UsersService usersService;
+	private UsersService usersService;
 
 	/**
 	 * @param itemsService the itemsService to set

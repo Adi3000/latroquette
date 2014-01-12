@@ -2,6 +2,7 @@ package net.latroquette.rest.security;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jws.WebService;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -20,7 +21,6 @@ import net.latroquette.common.util.ServiceException;
 import net.latroquette.common.util.Services;
 import net.latroquette.web.security.AuthenticationMethod;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.adi3000.common.web.jsf.UtilsBean;
@@ -29,7 +29,7 @@ import com.adi3000.common.web.jsf.UtilsBean;
 @WebService(name=Services.AUTHENTICATION_WEB_SERVICE)
 public class Authentication extends SpringBeanAutowiringSupport{
 	
-	@Autowired
+	@Inject
 	private UsersService usersService;
 	/**
 	 * @param usersService the usersService to set

@@ -17,6 +17,10 @@ import com.adi3000.common.database.hibernate.session.AbstractDAO;
 @Repository(value=Services.PLACES_SERVICE)
 public class PlacesServiceImpl extends AbstractDAO<Place> implements PlacesService {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6014217481023357782L;
 	private static final double KILOMETER_CONVERSION = 1.609;
 	private static final double EARTH_RADIUS = 3958.75;
 	@Transactional(readOnly=true)
