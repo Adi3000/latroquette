@@ -16,10 +16,14 @@ import com.adi3000.common.util.optimizer.CommonValues;
 @Repository(value=Services.PARAMETERS_SERVICE)
 public class ParametersImpl extends AbstractDAO<Parameter> implements Parameters {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1228729854739115057L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(ParametersImpl.class.getName());
 
 	public ParametersImpl(){
-		super();
+		super(Parameter.class);
 	}
 	//TODO make this work and enable load in memory for this cache for fast access
 	@Transactional(readOnly=true)

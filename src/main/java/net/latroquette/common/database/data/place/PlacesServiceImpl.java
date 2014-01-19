@@ -3,7 +3,6 @@ package net.latroquette.common.database.data.place;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-
 import net.latroquette.common.util.Services;
 
 import org.hibernate.Criteria;
@@ -17,6 +16,11 @@ import com.adi3000.common.database.hibernate.session.AbstractDAO;
 @Repository(value=Services.PLACES_SERVICE)
 public class PlacesServiceImpl extends AbstractDAO<Place> implements PlacesService {
 	
+	public PlacesServiceImpl() {
+		super(Place.class);
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * 
 	 */
@@ -33,9 +37,9 @@ public class PlacesServiceImpl extends AbstractDAO<Place> implements PlacesServi
 		return places;
 	}
 	
-	@Transactional
+	@Transactional(readOnly=true)
 	public Place getPlaceById(Integer placeId){
-		return getDataObjectById(placeId, Place.class);
+		return get(placeId);
 	}
 	/**
 	 * Return a {@link Place} by its name or code postal

@@ -2,7 +2,6 @@ package net.latroquette.common.database.data.profile;
 
 import java.util.List;
 
-import net.latroquette.common.database.data.item.wish.WishedItem;
 import net.latroquette.common.util.ServiceException;
 import net.latroquette.common.util.parameters.ParameterName;
 import net.latroquette.rest.forum.SMFRestException;
@@ -182,10 +181,4 @@ public interface UsersService extends DAO<User>{
 	 */
 	void smfActivateUser(Integer userId) throws ServiceException;
 	
-	/**
-	 * Add a wish to a user
-	 * @param newWish
-	 * @param user
-	 */
-	public void addNewWish(WishedItem newWish, User user);
 }

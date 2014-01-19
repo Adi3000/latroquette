@@ -105,7 +105,7 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	}
 
 	public ItemsServiceImpl() {
-		super();
+		super(Item.class);
 	}
 	
 	@TransactionalUpdate
@@ -261,7 +261,7 @@ public class ItemsServiceImpl extends AbstractDAO<Item> implements ItemsService{
 	 */
 	@Transactional(readOnly=true)
 	public Item getItemById(Integer itemId){
-		Item item = (Item)getSession().get(Item.class,	itemId);
+		Item item = get(itemId);
 		HibernateUtil.initialize(item.getImageSet());
 		HibernateUtil.initialize(item.getKeywordSet());
 		HibernateUtil.initialize(item.getExternalKeywordSet());

@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:t="http://myfaces.apache.org/tomahawk">
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
 <body>
 	<ui:composition template="/home/template/mainLayout.xhtml">
 	<f:metadata>
@@ -80,17 +81,9 @@
 				<h:link value="Modifier"  outcome="/item/editItem?item=#{itemBean.itemId}" styleClass="button" />
 			</h:panelGroup>
 		</h:form>
-		<h:form id="offer">
-			<div class="field">
-				<div>
-					
-				</div>
-				<div class="labelTop">
-					<h:outputLabel for="message">Message</h:outputLabel>
-				</div>
-				<h:inputTextarea id="message" cols="45" rows="5" value="#{offerBean.message}"  />
-			</div>				
-		</h:form>
+		<ui:insert name="offers">
+			<ui:include src="/home/tiles/offers.xhtml" />
+		</ui:insert>
   	</ui:define>
 	</ui:composition>
 </body>

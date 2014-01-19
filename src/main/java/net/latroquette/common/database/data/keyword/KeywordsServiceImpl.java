@@ -32,6 +32,12 @@ import com.amazon.ECS.client.jax.BrowseNode;
 @Repository(value=Services.KEYWORDS_SERVICE)
 public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements KeywordsService{
 
+	public KeywordsServiceImpl() {
+		super(Keyword.class);
+		// TODO Auto-generated constructor stub
+	}
+
+
 	/**
 	 * 
 	 */
@@ -40,7 +46,10 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 	private transient ItemsService itemsService;
 	@Inject
 	private transient Parameters parameters;
-	
+	@Inject
+	private transient MainKeywordDAO mainKeywordDAO;
+	@Inject
+	private transient ExternalKeywordDAO externalKeywordDAO;
 	/**
 	 * @param itemsService the itemsService to set
 	 */
@@ -69,7 +78,7 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 				Hibernate.initialize(child.getExternalKeywords());
 			}
 		}else{
-			keyword = (MainKeyword) super.getDataObjectById(id, MainKeyword.class);
+			keyword = mainKeywordDAO.get(id);
 		}		
 		return keyword; 
 	}
@@ -297,7 +306,7 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 	 */
 	@Transactional(readOnly=true)
 	public ExternalKeyword getExternalKeywordById(Integer id){
-		ExternalKeyword keyword = (ExternalKeyword) getSession().get(ExternalKeyword.class,id);
+		ExternalKeyword keyword = externalKeywordDAO.get(id);
 		return keyword;
 	}
 
@@ -416,11 +425,11 @@ public class KeywordsServiceImpl extends AbstractDAO<Keyword> implements Keyword
 		List<Keyword> children = new ArrayList<>();
 		switch (keywordType) {
 			case EXTERNAL_KEYWORD:
-					parentKeyword = (Keyword) getSession().get(ExternalKeyword.class, id);
+					parentKeyword = (Keyword) externalKeywordDAO.get(id);
 				break;
 			case MAIN_KEYWORD:
 					getSession().enableFilter(MENU_KEYWORD_EXCLUDE_SYNONYME_FILTER);
-					parentKeyword = (Keyword) getSession().get(MainKeyword.class, id);
+					parentKeyword = (Keyword) mainKeywordDAO.get(id);
 					getSession().enableFilter(MENU_KEYWORD_EXCLUDE_SYNONYME_FILTER);
 					children.addAll(((MainKeyword)parentKeyword).getExternalKeywords());
 				break;

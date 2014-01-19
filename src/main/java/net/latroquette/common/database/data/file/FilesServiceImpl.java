@@ -57,7 +57,7 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 	}
 
 	public FilesServiceImpl(){
-		super();
+		super(File.class);
 	}
 	
 	@Transactional(readOnly=false)
@@ -193,7 +193,7 @@ public class FilesServiceImpl extends AbstractDAO<File> implements FilesService{
 	 */
 	@Transactional(readOnly=true)
 	public File getFileById(Integer id){
-		File file = this.getDataObjectById(id, File.class);
+		File file = this.get(id);
 		if(file == null){
 			return null;
 		}

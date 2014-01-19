@@ -169,6 +169,9 @@ public class ItemList extends AbstractDataObject implements Collection<SuitableI
 			case ITEM_SOURCE:
 				return getItemsList().contains((Item)item);
 			case WISHES_SOURCE:
+			case AMAZON_SOURCE:
+			case EXTERNAL_KEYWORD_SOURCE:
+			case MAIN_KEYWORD_SOURCE:
 				return getWisheslist().contains((WishedItem)item);
 			default:
 				throw new IllegalArgumentException("Invalid SuitableItem from : " + item.getSource());
@@ -207,6 +210,9 @@ public class ItemList extends AbstractDataObject implements Collection<SuitableI
 		case ITEM_SOURCE:
 			return getItemsList().add((Item)e);
 		case WISHES_SOURCE:
+		case AMAZON_SOURCE:
+		case EXTERNAL_KEYWORD_SOURCE:
+		case MAIN_KEYWORD_SOURCE:
 			return getWisheslist().add((WishedItem)e);
 		default:
 			throw new IllegalArgumentException("Invalid SuitableItem from : " + e.getSource());
@@ -222,6 +228,9 @@ public class ItemList extends AbstractDataObject implements Collection<SuitableI
 				case ITEM_SOURCE:
 					result |= getItemsList().remove((Item)item);
 				case WISHES_SOURCE:
+				case AMAZON_SOURCE:
+				case EXTERNAL_KEYWORD_SOURCE:
+				case MAIN_KEYWORD_SOURCE:
 					result |= getWisheslist().remove((WishedItem)item);
 				default:
 					throw new IllegalArgumentException("Invalid SuitableItem from : " + item.getSource());

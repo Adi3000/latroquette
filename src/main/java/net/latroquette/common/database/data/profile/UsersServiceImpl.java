@@ -6,9 +6,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import net.latroquette.common.database.data.item.wish.WishedItem;
-import net.latroquette.common.database.data.keyword.KeywordSource;
-import net.latroquette.common.database.data.keyword.KeywordsService;
 import net.latroquette.common.util.ServiceException;
 import net.latroquette.common.util.Services;
 import net.latroquette.common.util.parameters.ParameterName;
@@ -48,6 +45,10 @@ import com.adi3000.common.web.jsf.UtilsBean;
 @Repository(value=Services.USERS_SERVICE)
 public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	
+	public UsersServiceImpl() {
+		super(User.class);
+		// TODO Auto-generated constructor stub
+	}
 	/**
 	 * 
 	 */
@@ -55,15 +56,6 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 	private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class);
 	@Inject
 	private transient Parameters parameters;
-	@Inject
-	private transient KeywordsService keywordsService;
-	
-	/**
-	 * @param keywordsService the keywordsService to set
-	 */
-	public void setKeywordsService(KeywordsService keywordsService) {
-		this.keywordsService = keywordsService;
-	}
 
 	/**
 	 * @param parameters the parameters to set
@@ -489,30 +481,4 @@ public class UsersServiceImpl extends AbstractDAO<User> implements UsersService{
 		user.setLoginState(User.BLOCKED);
 		updateUser(user);
 	}
-	@TransactionalUpdate
-	public void addNewWish(WishedItem newWish, User user){
-		if(StringUtils.isEmpty(newWish.getSource())){
-			newWish.setSource(KeywordSource.WISHES_SOURCE.getSourceId());
-			if(newWish.getExternalKeyword() != null){
-				newWish.setExternalKeyword(
-						keywordsService.getExternalKeywordById(newWish.getExternalKeyword().getId())
-				);
-			}else if(newWish.getMainKeyword() != null){
-				newWish.setMainKeyword(
-						keywordsService.getKeywordById(newWish.getMainKeyword().getId())
-				);
-			}
-		}else{
-			WishedItem wish = (WishedItem) createCriteria(WishedItem.class)
-					.add(Restrictions.eq("uid",newWish.getUid()))
-					.add(Restrictions.eq("source",newWish.getSource()))
-					.setMaxResults(1)
-					.uniqueResult();
-			if(wish != null){
-				newWish = wish;
-			}
-		}
-		user.getWishesSet().add(newWish);
-		updateUser(user);
-	}	
 }

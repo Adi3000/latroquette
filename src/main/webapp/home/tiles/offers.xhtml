@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+<body>
+	<ui:composition>
+		<h:form id="offer">
+			<div class="field">
+				<div>
+					
+				</div>
+				<div class="labelTop">
+					<h:outputLabel for="message">Message</h:outputLabel>
+				</div>
+				<div class="againstItem">
+					<fieldset>
+						<legend>Objets proposés</legend>
+						<div class="field">
+							<h:panelGroup id="userNewOffer">
+								<h:inputText id="offerItem1" value="#{offerBean.newItem1}" p:placeholder="Proposition" />
+								<h:commandButton value="Ajouter">
+							         <f:ajax render="offerItem1 offerItem1Source offerItem1Code offerItem1CategoryIdsPanel offerItemList1" execute="offer" listener="#{offerBean.addItem1}"/>
+							    </h:commandButton>
+								<h:inputHidden id="offerItem1Source" value="#{offerBean.newItem1Source}" />
+								<h:inputHidden id="offerItem1Code" value="#{offerBean.newItem1Code}" />
+								<div class="preview ui-corner-all" style="display:none;" />
+								<div>
+									<h:panelGroup id="offerItem1CategoryIdsPanel" styleClass="categoryIds">
+										<h:inputHidden id="offerItem1CategoryIds" value="#{offerBean.newItem1KeywordId}" />
+										<script type="text/javascript" >
+											if(isEmpty($("#wishesForm\\:whishesCategoryIds").val()) &amp;&amp; !$("#wishesSelectedCategory").is(":empty")){
+												$("#wishesSelectedCategory").empty().hide(0)
+											}
+										</script>
+									</h:panelGroup>
+									<ul id="offerItem1SelectedCategory" class="ui-menu ui-widget ui-widget-content ui-corner-all selectedCategories"/>
+									<ul id="offerItem1MenuCategory">
+										<li>
+											<a href="#">Categories</a>
+											<ul>
+												<ui:repeat var="entry" value="#{menuBean.rootCategoriesEntries}">
+													<li data-keyword-id="#{entry.id}" data-keyword-type="#{entry.keywordType.id}">
+														<a href="#" >#{entry.name}</a>
+														<h:panelGroup rendered="#{!empty entry.children}">
+															<ul>
+																<ui:repeat var="subEntry" value="#{entry.children}">
+																	<li data-keyword-id="#{subEntry.id}" data-keyword-type="#{subEntry.keywordType.id}">
+																		<a href="#" >#{subEntry.name}</a>
+																		<h:panelGroup rendered="#{!empty subEntry.children}">
+																			<ul />
+																		</h:panelGroup>
+																	</li>
+																</ui:repeat>
+															</ul>
+														</h:panelGroup>
+													</li>
+												</ui:repeat>
+											</ul>
+										</li>
+									</ul>
+								</div>
+							</h:panelGroup>
+						</div>
+						<h:panelGroup id="offerItemList1">
+							<ul id="offerItemList1">
+								<ui:repeat var="item" value="#{offerBean.itemList1}">
+									<li>
+										<h:commandLink action="#{offerBean.removeItem1(item.id,item.source)}" >
+											<f:ajax render=":wishesForm:userWishes"/>
+											<span class="ui-icon ui-icon-trash"></span>
+										</h:commandLink>
+										<div class="ui-widget-content ui-corner-all offerItem" data-source="#{item.source}" data-uid="#{item.uid}">#{item.name}&#160;</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</h:panelGroup>
+					</fieldset>
+				</div>
+				<h:inputTextarea id="message" cols="45" rows="5" value="#{offerBean.message}"  />
+			</div>				
+		</h:form>
+	</ui:composition>
+</body>
+</html>

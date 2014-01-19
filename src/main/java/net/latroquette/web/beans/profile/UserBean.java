@@ -18,6 +18,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ComponentSystemEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import net.latroquette.common.database.data.item.wish.OffersService;
 import net.latroquette.common.database.data.item.wish.WishedItem;
 import net.latroquette.common.database.data.keyword.ExternalKeyword;
 import net.latroquette.common.database.data.keyword.KeywordType;
@@ -35,7 +36,6 @@ import net.latroquette.web.security.SecurityUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
 
 import com.adi3000.common.util.CommonUtil;
 import com.adi3000.common.util.optimizer.CommonValues;
@@ -76,6 +76,15 @@ public class UserBean implements Serializable{
 	
 	@ManagedProperty(value=Services.USERS_SERVICE_JSF)
 	private UsersService usersService;
+	@ManagedProperty(value=Services.OFFERS_SERVICE_JSF)
+	private OffersService offersService;
+	/**
+	 * @param offersService the offersService to set
+	 */
+	public void setOffersService(OffersService offersService) {
+		this.offersService = offersService;
+	}
+
 	/**
 	 * @param usersService the usersService to set
 	 */
@@ -601,7 +610,7 @@ public class UserBean implements Serializable{
 			wish.setName(newWish);
 			wish.setSource(newWishSource);
 			wish.setUid(newWishCode);
-			usersService.addNewWish(wish, user);
+			offersService.addNewWish(wish, user);
 			//Re-init field 
 			newWish = null;
 			newWishSource = null;

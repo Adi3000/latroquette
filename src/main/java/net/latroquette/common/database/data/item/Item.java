@@ -238,5 +238,9 @@ public class Item extends AbstractDataObject implements SuitableItem{
 		return this.getId().equals(suitableItem.getId()) &&
 				this.getSource().equals(suitableItem.getSource());
 	}
+	@Override
+	public void setName(String name) {
+		setTitle(name);
+	}
 
 }
