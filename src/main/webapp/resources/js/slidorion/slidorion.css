@@ -2,10 +2,10 @@
 .slidorion {
 	width: 650px;			/* Set to slidorion width. Is equal to .slider + .accordion width */
 	height: 450px;			/* Set to slidorion height. Is equal to .slider and .accordion height */
-	background: #DDCDB0;
+	background: #acc85d;
 	padding: 10px;
-	border: 1px solid #DCC398;
-	box-shadow: 0 0 34px #DCC398;
+	border: 1px solid #627823;
+	box-shadow: 0 0 34px #627823;
 	margin: 0 auto 0 auto;
 }
 
@@ -24,12 +24,23 @@
 	width: 100%;
 	height: 100%;
 }
-
+.slide{
+	background: #DDCDB0;
+}
+.slide img{
+	height: 100%;
+	margin: 0 auto 0 auto;
+}
+.slide img.noImage{
+	margin-top: 55px;
+	height: 312px;
+	width: 312px;
+}
 .accordion {
 	width: 45%;
 	height: 100%;
 	font-family: Verdana;
-	background: #eee;
+	background: #A0CF19;
 	box-shadow: -3px 0px 3px -1px rgba(51,51,51,0.3);
 	position: relative;
 	z-index:999;
@@ -41,10 +52,10 @@
 	padding: 8px 14px;
 	font-size: 12px;
 	font-weight: bold;
-	color: #333;
+	color: #fff;
 	background: #E4BD7B;
 	background: -moz-linear-gradient(top, #E4BD7B 59%, #C8AA60 100%);
-	background: -webkit-linear-gradient(top, #E4BD7B 59%,#C8AA60 100%);
+	background: -webkit-linear-gradient(top, #222 59%,#A0CF19 100%);
 	background: -o-linear-gradient(top, #E4BD7B 59%,#C8AA60 100%);
 	background: -ms-linear-gradient(top, #E4BD7B 59%,#C8AA60 100%);
 	background: linear-gradient(top, #E4BD7B 59%,#C8AA60 100%);
@@ -56,7 +67,7 @@
 }
 
 .accordion .header:hover {
-	background: #E4BD7B;
+	background: #718c29;
 	cursor: pointer;
 }
 
@@ -74,13 +85,14 @@
 	margin: 0;
 	padding: 16px;
 	border: none;
-	background: #E4BD7B;
+	background: #A0CF19;
 	background: -moz-linear-gradient(top, #E4BD7B 0%, #ffffff 10%);
-	background: -webkit-linear-gradient(top, #E4BD7B 0%,#ffffff 10%);
+	background: -webkit-linear-gradient(top, #A0CF19 0%,#222 10%);
 	background: -o-linear-gradient(top, #E4BD7B 0%,#ffffff 10%);
 	background: -ms-linear-gradient(top, #E4BD7B 0%,#ffffff 10%);
-	background: linear-gradient(top, #E4BD7B 0%,#ffffff 10%);
+	background: linear-gradient(top, #A0CF19 0%,#ffffff 10%);
 	overflow:auto;
+	color: #fff;
 }
 
 .accordion .content p {

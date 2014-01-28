@@ -6,17 +6,12 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <body>
 	<ui:composition>
-		<h:outputScript type='text/javascript' name="js/jquery-vertical-mega-menu-1/jquery.hoverIntent.minified.js" target="head"/>
-		<h:outputScript type='text/javascript' name="js/jquery-vertical-mega-menu-1/jquery.dcverticalmegamenu.1.1.js" target="head"/>
-		<h:outputStylesheet name="js/jquery-vertical-mega-menu-1/vertical_menu.css" rel="stylesheet" type="text/css" target="head"/>
+<!-- 		<h:outputScript type='text/javascript' name="js/jquery-vertical-mega-menu-1/jquery.hoverIntent.minified.js" target="head"/> -->
+<!-- 		<h:outputScript type='text/javascript' name="js/jquery-vertical-mega-menu-1/jquery.dcverticalmegamenu.1.1.js" target="head"/> -->
+<!-- 		<h:outputStylesheet name="js/jquery-vertical-mega-menu-1/vertical_menu.css" rel="stylesheet" type="text/css" target="head"/> -->
 		<h:outputScript target="head">
-			$(document).ready(function($){
-				$('#mega-1').dcVerticalMegaMenu({
-					rowItems: '3',
-					speed: 'fast',
-					effect: 'slide',
-					direction: 'right'
-				});
+			$(function(){
+				$('#mega-1').menu();
 			});
 		</h:outputScript>
 		<div>

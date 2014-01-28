@@ -3,9 +3,9 @@
 /**
  * jQueryUI override
  **/
-.ui-widget {
-	font-size: 0.9em;
-}
+/* .ui-widget { */
+/* 	font-size: 0.9em; */
+/* } */
 input.ui-button,
 .ui-button-text-only .ui-button-text{
 	padding: .2em .5em;
@@ -13,6 +13,14 @@ input.ui-button,
 .ui-icon{
 	display: inline-block;
 	vertical-align: middle;
+	margin-top: -5px;
+}
+.ui-menu .ui-menu-icon {
+	margin-top: 0px;
+}
+.menu > .ui-menu-item .ui-menu {
+    width: 175px;
+    z-index: 20;
 }
 /**
 ------------------------
@@ -22,6 +30,7 @@ body{
 	font-size: 0.9em;
 	margin : 0px;
 	padding : 0px;
+	background-color: #CECECE;
 }
 .errorAlert{
 	padding: 2px;
@@ -30,12 +39,15 @@ body{
 	width: 1000px;
 }
 #wallpaper{
-	background-color: #F5F1DF;
+/* 	background-color: #CECECE; */
 	margin-left: auto;
 	margin-right:  auto;
 	margin : 0px auto 0px auto;
 	height:	100%; 
 }
+/* #enTete{ */
+/* 	background-color: #CECECE; */
+/* } */
 #loadingDiv{
 	position: fixed;
 	width: 100%;
@@ -62,15 +74,12 @@ body{
 	color : red;
 	font-style: italic;
 }
-#enTete
-{
-	background : #F5F1DF;
-}
+
 #toolbarLogin .forumButton{
 	float:right;
 }
 #titleHomePage {
-	height: 117px;
+	height: 137px;
 }
 #logo{
 	position: absolute;
@@ -86,9 +95,9 @@ body{
 }
 
 #titleHomePage > p{
-	padding-top: 58px;
-	margin-right: 200px;
-	margin-left: 366px;
+	padding-top: 20px;
+	margin-left: 480px;
+	margin-top: -10px;
 }
 
 #titleHomePage h2{
@@ -121,8 +130,12 @@ fieldset
 	width: 100%;
 	color: black;
 	border: black;
-	background:-webkit-linear-gradient(top,#6B3617,#C48254);
-	-webkit-border-radius:2px;
+	background: -webkit-linear-gradient(top,#CECECE,#A0CF19);
+	background: -moz-linear-gradient(top,#CECECE,#A0CF19);
+	background: -o-linear-gradient(top,#CECECE,#A0CF19);
+	background: -ms-linear-gradient(top,#CECECE,#A0CF19);
+	background: linear-gradient(top,#CECECE,#A0CF19);
+	border-radius: 2px;
 }
 #searchForm .field input{
 	border: 1px solid #000;
