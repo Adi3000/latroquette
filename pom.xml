@@ -178,9 +178,18 @@
 	</dependencies>
 	<profiles>
 		<profile>
-			<id>development</id>
+			<id>local</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<filter.environment>local</filter.environment>
+			</properties>
+		</profile>
+		<profile>
+			<id>development</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
 				<filter.environment>development</filter.environment>
